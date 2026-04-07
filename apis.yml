@@ -1,7 +1,11 @@
 aid: avaya
-url: https://raw.githubusercontent.com/api-evangelist/avaya/refs/heads/main/apis.yml
+url: 
+  https://raw.githubusercontent.com/api-evangelist/avaya/refs/heads/main/apis.yml
 modified: '2026-03-23'
 apis: []
 common:
   - type: Website
     url: https://www.avaya.com
+description: >-
+  Avaya delivers smarter customer experiences, greater business efficiency, and lower
+  costs through AI-powered communication and collaboration tools.
