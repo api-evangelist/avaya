@@ -1,0 +1,18 @@
+generated: '2026-09-14'
+method: searched
+source: https://www.avaya.com/en/products/infinity-platform/
+plan_count: 0
+note: >-
+  Avaya publishes no plans, tiers, list prices or API quotas anywhere on its public site. Both
+  /en/pricing/ and /en/products/infinity-platform/pricing/ return HTTP 404; every product page routes
+  to a sales contact or a demo request, and the developer hub requires a client id and secret
+  "obtained from Avaya" rather than a self-serve signup. This is a contracted enterprise CCaaS/UCaaS
+  motion — pricing is negotiated per account and per deployment model (cloud, hybrid, on-premises) —
+  so the honest record is zero published plans, not an omitted file.
+onboarding: sales-gated
+plans: []
+evidence:
+  - {url: 'https://www.avaya.com/en/pricing/', status: 404}
+  - {url: 'https://www.avaya.com/en/products/infinity-platform/pricing/', status: 404}
+  - {url: 'https://developers.avayacloud.com/avaya-infinity/docs/obtaining-a-client-id-and-secret-from-avaya', status: 200}
+  - {url: 'https://www.avaya.com/en/contacts/', status: 200}

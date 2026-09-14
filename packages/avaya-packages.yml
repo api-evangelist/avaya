@@ -1,0 +1,149 @@
+generated: '2026-09-14'
+method: searched
+source: https://www.npmjs.com/search?q=%40avaya — registry metadata read from registry.npmjs.org
+note: >-
+  Avaya ships first-party JavaScript/TypeScript client libraries under the @avaya npm scope only.
+  PyPI (avaya, avaya-sdk, avaya-cpaas all 404), Maven Central and pkg.go.dev return no first-party
+  Avaya client library. NuGet carries AvayaCPaaS (0.8.3), which is a community/legacy CPaaS wrapper
+  and is NOT marked official here because first-party authorship could not be established.
+  Version and published date are read from registry.npmjs.org for each package.
+packages:
+  - language: javascript
+    registry: npm
+    name: "@avaya/infinity-omni-sdk-core"
+    url: https://www.npmjs.com/package/@avaya/infinity-omni-sdk-core
+    install: npm install @avaya/infinity-omni-sdk-core
+    official: true
+    version: 1.0.4
+    published: '2026-06-30'
+    note: Common and core functionality of the Avaya Infinity Omni SDKs; required by the messaging modules.
+  - language: javascript
+    registry: npm
+    name: "@avaya/infinity-omni-sdk-messaging"
+    url: https://www.npmjs.com/package/@avaya/infinity-omni-sdk-messaging
+    install: npm install @avaya/infinity-omni-sdk-messaging
+    official: true
+    version: 1.0.4
+    published: '2026-06-30'
+    note: Avaya Infinity web messaging module.
+  - language: javascript
+    registry: npm
+    name: "@avaya/infinity-omni-sdk-messaging-ui"
+    url: https://www.npmjs.com/package/@avaya/infinity-omni-sdk-messaging-ui
+    install: npm install @avaya/infinity-omni-sdk-messaging-ui
+    official: true
+    version: 1.0.4
+    published: '2026-06-30'
+    note: Customizable prebuilt messaging UI for Avaya Infinity.
+  - language: javascript
+    registry: npm
+    name: "@avaya/infinity-elements-api"
+    url: https://www.npmjs.com/package/@avaya/infinity-elements-api
+    install: npm install @avaya/infinity-elements-api
+    official: true
+    version: 1.3.2
+    published: '2026-08-26'
+    note: >-
+      InfinityElement API for web components to interact with the Avaya Infinity workspace.
+      Most recently published Avaya package found in any registry.
+  - language: javascript
+    registry: npm
+    name: "@avaya/infinity-elements-sdk"
+    url: https://www.npmjs.com/package/@avaya/infinity-elements-sdk
+    install: npm install -g @avaya/infinity-elements-sdk
+    official: true
+    version: 1.0.3
+    published: '2026-07-06'
+    note: >-
+      Ships the `infinity` CLI binary (bin/infinity.js) for scaffolding InfinityElement projects.
+      Command surface captured in cli/avaya-cli.yml.
+  - language: javascript
+    registry: npm
+    name: "@avaya/axp-omni-sdk-core"
+    url: https://www.npmjs.com/package/@avaya/axp-omni-sdk-core
+    install: npm install @avaya/axp-omni-sdk-core
+    official: true
+    version: 1.1.0
+    published: '2024-10-08'
+    note: >-
+      Avaya Experience Platform Omni SDK core. Last published 2024-10-08 — nearly two years behind the
+      Infinity SDKs, consistent with Avaya's platform emphasis moving to Infinity.
+  - language: javascript
+    registry: npm
+    name: "@avaya/axp-omni-sdk-messaging"
+    url: https://www.npmjs.com/package/@avaya/axp-omni-sdk-messaging
+    install: npm install @avaya/axp-omni-sdk-messaging
+    official: true
+    version: 1.1.0
+    published: '2024-10-08'
+  - language: javascript
+    registry: npm
+    name: "@avaya/axp-omni-sdk-calling"
+    url: https://www.npmjs.com/package/@avaya/axp-omni-sdk-calling
+    install: npm install @avaya/axp-omni-sdk-calling
+    official: true
+    version: 1.1.0
+    published: '2024-10-08'
+  - language: javascript
+    registry: npm
+    name: "@avaya/axp-omni-sdk-messaging-ui"
+    url: https://www.npmjs.com/package/@avaya/axp-omni-sdk-messaging-ui
+    install: npm install @avaya/axp-omni-sdk-messaging-ui
+    official: true
+    version: 1.1.0
+    published: '2024-10-08'
+  - language: javascript
+    registry: npm
+    name: "@avaya/neo"
+    url: https://www.npmjs.com/package/@avaya/neo
+    install: npm install @avaya/neo
+    official: true
+    version: 3.87.0
+    published: '2026-03-20'
+    note: Avaya NEO CSS library — the design system behind Avaya's web surfaces. UI, not an API client.
+  - language: javascript
+    registry: npm
+    name: "@avaya/neo-react"
+    url: https://www.npmjs.com/package/@avaya/neo-react
+    install: npm install @avaya/neo-react
+    official: true
+    version: 1.4.25
+    published: '2025-11-20'
+    note: React component library for NEO; source at https://github.com/avaya-dux/neo-react-library
+  - language: javascript
+    registry: npm
+    name: "@avaya/neo-icons"
+    url: https://www.npmjs.com/package/@avaya/neo-icons
+    install: npm install @avaya/neo-icons
+    official: true
+    version: 1.8.23
+    published: '2025-11-04'
+  - language: javascript
+    registry: npm
+    name: "@avaya/neo-angular"
+    url: https://www.npmjs.com/package/@avaya/neo-angular
+    install: npm install @avaya/neo-angular
+    official: true
+    version: 0.0.1-alpha.8
+    published: '2024-02-27'
+    note: Still on an alpha tag after two and a half years; source at https://github.com/avaya-dux/neo-angular-library
+  - language: javascript
+    registry: npm
+    name: "@avaya/cpaas"
+    url: https://www.npmjs.com/package/@avaya/cpaas
+    install: npm install @avaya/cpaas
+    official: true
+    version: 0.9.1
+    published: '2020-08-27'
+    note: >-
+      Node helper for Avaya CPaaS (the former Zang Cloud; repository git+https://github.com/zang-cloud/zang-node.git).
+      Last release 2020-08-27 — six years stale and never reached 1.0; treat as abandoned.
+registries_checked:
+  - {registry: npm, result: '14 first-party @avaya packages found'}
+  - {registry: pypi, result: 'no first-party package (avaya, avaya-sdk, avaya-cpaas all HTTP 404)'}
+  - {registry: nuget, result: 'AvayaCPaaS 0.8.3 present; first-party authorship not established, not marked official'}
+  - {registry: maven-central, result: 'no first-party Avaya client library returned'}
+  - {registry: pkg.go.dev, result: 'no first-party Avaya client library'}
+  - {registry: rubygems, result: 'no first-party Avaya client library'}
+  - {registry: crates.io, result: 'no first-party Avaya client library'}
+  - {registry: packagist, result: 'no first-party Avaya client library'}

@@ -1,0 +1,54 @@
+generated: '2026-09-14'
+method: searched
+source: https://developers.avayacloud.com/avaya-infinity/docs/infinity-elements
+note: Client-side and embeddable surfaces, distinct from the server-side REST APIs in openapi/.
+families:
+  - family: Avaya Infinity Elements
+    kind: web-components
+    description: >-
+      Custom web components (React wrapped with r2wc, built with Vite) that embed inside the Avaya
+      Infinity agent workspace. Elements declare properties the workspace binds at runtime and obtain a
+      workspace-issued JWT through ElementAPI getAvayaJwt().
+    docs: https://developers.avayacloud.com/avaya-infinity/docs/infinity-elements
+    loaders:
+      - {package: "@avaya/infinity-elements-api", version: 1.3.2, published: '2026-08-26', role: runtime API the element calls}
+      - {package: "@avaya/infinity-elements-sdk", version: 1.0.3, published: '2026-07-06', role: scaffolding CLI}
+  - family: Avaya Infinity Omni SDK
+    kind: embedded-messaging
+    description: >-
+      Web messaging client plus a prebuilt, customizable messaging UI that drops a live customer
+      conversation into a web property and speaks to the Infinity messaging surface.
+    docs: https://developers.avayacloud.com/avaya-infinity/docs/omni-sdk-web
+    loaders:
+      - {package: "@avaya/infinity-omni-sdk-core", version: 1.0.4, published: '2026-06-30'}
+      - {package: "@avaya/infinity-omni-sdk-messaging", version: 1.0.4, published: '2026-06-30'}
+      - {package: "@avaya/infinity-omni-sdk-messaging-ui", version: 1.0.4, published: '2026-06-30', role: prebuilt UI}
+  - family: AXP Omni SDK
+    kind: embedded-messaging-and-calling
+    description: >-
+      The Avaya Experience Platform generation of the same idea — web messaging, web calling and a
+      messaging UI — plus native Android and iOS SDKs documented on the hub.
+    docs: https://developers.avayacloud.com/avaya-experience-platform/docs/omni-sdk-introduction
+    loaders:
+      - {package: "@avaya/axp-omni-sdk-core", version: 1.1.0, published: '2024-10-08'}
+      - {package: "@avaya/axp-omni-sdk-messaging", version: 1.1.0, published: '2024-10-08'}
+      - {package: "@avaya/axp-omni-sdk-calling", version: 1.1.0, published: '2024-10-08'}
+      - {package: "@avaya/axp-omni-sdk-messaging-ui", version: 1.1.0, published: '2024-10-08', role: prebuilt UI}
+    note: >-
+      Android and iOS Messaging SDKs for AXP were withdrawn after 2024-03-31 per the deprecation notice;
+      the web packages above have not been republished since 2024-10-08.
+  - family: Avaya NEO design system
+    kind: ui-library
+    description: >-
+      Avaya's design system — CSS library, React component library, icon set and an Angular port —
+      used to build surfaces that look native to Avaya products.
+    repository: https://github.com/avaya-dux
+    loaders:
+      - {package: "@avaya/neo", version: 3.87.0, published: '2026-03-20'}
+      - {package: "@avaya/neo-react", version: 1.4.25, published: '2025-11-20'}
+      - {package: "@avaya/neo-icons", version: 1.8.23, published: '2025-11-04'}
+      - {package: "@avaya/neo-angular", version: 0.0.1-alpha.8, published: '2024-02-27', note: still alpha}
+  - family: Workspaces Widget Framework
+    kind: embedded-widget
+    description: Framework for embedding third-party widgets inside the AXP agent workspace.
+    docs: https://developers.avayacloud.com/avaya-experience-platform/docs/workspaces-widget-framework-overview

@@ -1,0 +1,93 @@
+generated: '2026-09-14'
+method: derived
+source: >-
+  derived from the 40 harvested OpenAPI documents in openapi/; compliance claims searched at
+  https://www.avaya.com/en/trust-center/compliance/ and https://www.avaya.com/en/trust-center/
+standards:
+  - id: openapi-3.0
+    conforms: true
+    evidence: 'all 40 harvested documents declare openapi: 3.0.x with paths, components.schemas and securitySchemes'
+  - id: oauth2
+    conforms: true
+    evidence: >-
+      components.securitySchemes OAuth2 (type oauth2) with clientCredentials and password flows in
+      openapi/avaya-infinity-workflow-sessions-openapi.yml; the platform token endpoint is a Keycloak
+      realm at /auth/realms/avaya/protocol/openid-connect/token
+  - id: oidc
+    conforms: true
+    evidence: >-
+      Token issuance runs through the OpenID Connect endpoints of a per-tenant Keycloak realm; an
+      example spec references
+      https://dev-11.ixcc-sandbox.avayacloud.com/auth/realms/YOPXPM/.well-known/openid-configuration.
+      The discovery document is per-tenant and therefore not anonymously probeable.
+  - id: rfc7807-problem-details
+    conforms: true
+    evidence: '58 harvested 4xx/5xx responses declare application/problem+json with the type/title/status/detail envelope'
+  - id: rfc9457-problem-details
+    conforms: true
+    evidence: 'same envelope; RFC 9457 obsoletes RFC 7807 — Avaya does not name either RFC by number in its docs'
+  - id: rfc9727-api-catalog
+    conforms: true
+    evidence: >-
+      https://developers.avayacloud.com/.well-known/api-catalog returns application/linkset+json (650
+      bytes) naming both API products. Saved verbatim to well-known/avaya-api-catalog.json. The two
+      child catalogs it links to both 404.
+  - id: jwt-bearer
+    conforms: true
+    evidence: 'BearerAuth http/bearer with bearerFormat JWT across 34 of 40 specs'
+  - id: rfc9116-security-txt
+    conforms: false
+    evidence: 'no /.well-known/security.txt on any Avaya host — probed 2026-09-14, all 404 or SPA shell'
+  - id: rfc8594-sunset-header
+    conforms: false
+    evidence: 'no Sunset or Deprecation response header declared in any harvested operation and none documented'
+  - id: idempotency-key
+    conforms: false
+    evidence: 'zero matches for /idempot/i across all 367 operations and the published docs'
+  - id: ietf-ratelimit-headers
+    conforms: false
+    partial: true
+    evidence: >-
+      The RateLimit-Limit/Remaining/Reset/Policy family is documented at
+      https://developers.avayacloud.com/avaya-experience-platform/docs/http-headers but marked
+      "Coming Soon" and not implemented
+  - id: json-api
+    conforms: false
+    evidence: 'plain JSON resource representations; no JSON:API document structure'
+  - id: odata
+    conforms: false
+  - id: scim
+    conforms: false
+    evidence: >-
+      AXP Admin - User manages users, groups, profiles and resource partitions with 42 operations but
+      uses Avaya-proprietary schemas — no urn:ietf:params:scim:schemas URN appears anywhere in the
+      contract, so an identity platform that already speaks SCIM needs a bespoke connector
+  - id: fhir
+    conforms: false
+  - id: asyncapi
+    conforms: false
+    evidence: 'Avaya publishes webhook subscription APIs but no AsyncAPI document — see asyncapi/avaya-webhooks.yml'
+domain_standards:
+  note: >-
+    Contact-center and enterprise-telephony APIs have no widely adopted machine-readable domain
+    standard of the SCIM/FHIR/OpenRTB kind, and Avaya declares none in its contract. The adjacent
+    telecom standard that would apply is CAMARA / GSMA Open Gateway; nothing in the harvested
+    contract declares a CAMARA API family, a Sparkplug topic namespace, an X12/HL7v2 message type or
+    an ISO 20022 shape. This is recorded as an honest absence — reward-only, not a penalty.
+  candidates_probed:
+    - {id: camara, present: false, evidence: 'no CAMARA API name, path or schema in any of the 40 specs'}
+    - {id: tmforum-open-api, present: false, evidence: 'no TMF6xx resource shape or TMF path convention observed'}
+    - {id: scim2, present: false, evidence: 'AXP Admin - User is proprietary; no SCIM URN'}
+compliance_program:
+  published: true
+  url: https://www.avaya.com/en/trust-center/compliance/
+  trust_center: https://www.avaya.com/en/trust-center/
+  named_certifications:
+    - {name: FedRAMP, scope: Avaya Government Cloud, evidence: 'https://www.avaya.com/en/trust-center/ describes Avaya Government Cloud as FedRAMP-authorized'}
+  claimed_postures:
+    - {name: HIPAA, scope: healthcare provider solutions, evidence: 'https://www.avaya.com/llms.txt and https://www.avaya.com/en/solutions/healthcare-provider/ describe HIPAA-compliant communications'}
+  note: >-
+    Avaya operates a public Trust Center with Security, Privacy, Compliance and Artificial Intelligence
+    sections. FedRAMP (Government Cloud) is the one certification named on the landing pages; a SOC 2
+    or ISO 27001 report number is not published anonymously. Recorded conservatively — named
+    certification for FedRAMP, claimed posture for HIPAA.

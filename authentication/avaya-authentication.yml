@@ -1,0 +1,110 @@
+generated: '2026-09-14'
+method: derived
+source: openapi/avaya-axp-admin-account-openapi.yml, openapi/avaya-axp-admin-element-inventory-openapi.yml,
+  openapi/avaya-axp-admin-group-openapi.yml, openapi/avaya-axp-admin-match-openapi.yml, openapi/avaya-axp-admin-timetable-openapi.yml,
+  openapi/avaya-axp-admin-user-openapi.yml, openapi/avaya-axp-admin-voice-openapi.yml, openapi/avaya-axp-analytics-historical-data-v1-openapi.yml,
+  openapi/avaya-axp-analytics-historical-data-v2-openapi.yml, openapi/avaya-axp-analytics-producer-management-openapi.yml,
+  openapi/avaya-axp-auth-openapi.yml, openapi/avaya-axp-customer-journey-openapi.yml ...
+summary:
+  types:
+  - apiKey
+  - http
+  - oauth2
+  api_key_in:
+  - header
+  oauth2_flows:
+  - clientCredentials
+  - password
+schemes:
+- name: BearerAuth
+  type: http
+  scheme: bearer
+  bearerFormat: JWT
+  description: This API uses Bearer Token Authorization Flow
+  sources:
+  - openapi/avaya-axp-admin-account-openapi.yml
+  - openapi/avaya-axp-admin-element-inventory-openapi.yml
+  - openapi/avaya-axp-admin-group-openapi.yml
+  - openapi/avaya-axp-admin-match-openapi.yml
+  - openapi/avaya-axp-admin-timetable-openapi.yml
+  - openapi/avaya-axp-admin-user-openapi.yml
+  - openapi/avaya-axp-admin-voice-openapi.yml
+  - openapi/avaya-axp-analytics-historical-data-v1-openapi.yml
+  - openapi/avaya-axp-analytics-historical-data-v2-openapi.yml
+  - openapi/avaya-axp-analytics-producer-management-openapi.yml
+  - openapi/avaya-axp-customer-journey-openapi.yml
+  - openapi/avaya-axp-digital-custom-chat-openapi.yml
+  - openapi/avaya-axp-digital-custom-messaging-openapi.yml
+  - openapi/avaya-axp-digital-notification-openapi.yml
+  - openapi/avaya-axp-digital-sdk-auth-openapi.yml
+  - openapi/avaya-axp-digital-signed-media-uri-openapi.yml
+  - openapi/avaya-axp-draft-retrieval-openapi.yml
+  - openapi/avaya-axp-draft-save-openapi.yml
+  - openapi/avaya-axp-notification-openapi.yml
+  - openapi/avaya-axp-routing-queue-metrics-openapi.yml
+  - openapi/avaya-axp-transcript-retrieval-openapi.yml
+  - openapi/avaya-axp-transcript-save-openapi.yml
+  - openapi/avaya-infinity-analytics-historical-openapi.yml
+  - openapi/avaya-infinity-groups-management-openapi.yml
+  - openapi/avaya-infinity-messaging-openapi.yml
+  - openapi/avaya-infinity-notification-service-openapi.yml
+  - openapi/avaya-infinity-notifications-openapi.yml
+  - openapi/avaya-infinity-outbound-openapi.yml
+  - openapi/avaya-infinity-profile-management-openapi.yml
+  - openapi/avaya-infinity-queue-management-openapi.yml
+  - openapi/avaya-infinity-queue-metrics-openapi.yml
+  - openapi/avaya-infinity-transcription-interactions-openapi.yml
+  - openapi/avaya-infinity-transcripts-openapi.yml
+  - openapi/avaya-infinity-user-management-openapi.yml
+  - openapi/avaya-infinity-workflow-execution-openapi.yml
+  - openapi/avaya-infinity-workflow-openapi.yml
+- name: AppKey
+  type: apiKey
+  in: header
+  parameter: appkey
+  description: This API needs an appKey as header
+  sources:
+  - openapi/avaya-axp-admin-account-openapi.yml
+  - openapi/avaya-axp-admin-element-inventory-openapi.yml
+  - openapi/avaya-axp-admin-group-openapi.yml
+  - openapi/avaya-axp-admin-match-openapi.yml
+  - openapi/avaya-axp-admin-timetable-openapi.yml
+  - openapi/avaya-axp-admin-user-openapi.yml
+  - openapi/avaya-axp-admin-voice-openapi.yml
+  - openapi/avaya-axp-analytics-historical-data-v1-openapi.yml
+  - openapi/avaya-axp-analytics-historical-data-v2-openapi.yml
+  - openapi/avaya-axp-auth-openapi.yml
+  - openapi/avaya-axp-customer-journey-openapi.yml
+  - openapi/avaya-axp-digital-custom-chat-openapi.yml
+  - openapi/avaya-axp-digital-custom-messaging-openapi.yml
+  - openapi/avaya-axp-digital-notification-openapi.yml
+  - openapi/avaya-axp-digital-sdk-auth-openapi.yml
+  - openapi/avaya-axp-digital-signed-media-uri-openapi.yml
+  - openapi/avaya-axp-draft-retrieval-openapi.yml
+  - openapi/avaya-axp-draft-save-openapi.yml
+  - openapi/avaya-axp-notification-openapi.yml
+  - openapi/avaya-axp-routing-queue-metrics-openapi.yml
+  - openapi/avaya-axp-transcript-retrieval-openapi.yml
+  - openapi/avaya-axp-transcript-save-openapi.yml
+- name: OAuth2
+  type: oauth2
+  flows:
+  - flow: clientCredentials
+    tokenUrl: https://{{server}}/auth/realms/avaya/protocol/openid-connect/token
+    scopes: 1
+  - flow: password
+    tokenUrl: https://{{server}}/auth/realms/avaya/protocol/openid-connect/token
+    scopes: 1
+  description: |-
+    OAuth2 authentication for Workflow Sessions API
+
+    **Client Credentials:**
+    - Client ID: portal-client-id
+    - Client Secret: portal-client-secret
+
+    **Configuration:**
+    - Token URL: https://{{server}}/auth/realms/avaya/protocol/openid-connect/token
+    - Grant Type: client_credentials or password
+    - Scope: workflows:execute
+  sources:
+  - openapi/avaya-infinity-workflow-sessions-openapi.yml

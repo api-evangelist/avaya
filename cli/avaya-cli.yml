@@ -1,0 +1,38 @@
+generated: '2026-09-14'
+method: searched
+source: https://www.npmjs.com/package/@avaya/infinity-elements-sdk
+name: infinity
+description: >-
+  First-party CLI shipped inside @avaya/infinity-elements-sdk as the `infinity` binary
+  (bin/infinity.js). It scaffolds, serves and builds Avaya Infinity Elements — the React/web-component
+  extensions that embed inside the Avaya Infinity agent workspace. It is a project-scaffolding and
+  build tool for the extensibility framework, not a general-purpose API client for the Infinity or AXP
+  REST surface; there is no `avaya` CLI that calls the platform APIs.
+package: "@avaya/infinity-elements-sdk"
+version: 1.0.3
+published: '2026-07-06'
+install:
+  - method: npm
+    command: npm install -g @avaya/infinity-elements-sdk
+commands:
+  - command: infinity init <name>
+    group: scaffold
+    description: Create a new InfinityElement project. The element name must satisfy the W3C custom-element naming rules.
+  - command: infinity dev
+    group: develop
+    description: Start the local Vite development server for the element.
+  - command: infinity build
+    group: build
+    description: Produce a production build of the element for upload to the workspace.
+flows:
+  - name: Build and ship an Infinity Element
+    steps:
+      - infinity init my-element
+      - implement element properties (variables) exposed to the workspace
+      - call ElementAPI getAvayaJwt() for the workspace-issued token
+      - infinity dev to iterate locally
+      - infinity build and publish the bundle
+    docs: https://developers.avayacloud.com/avaya-infinity/docs/infinity-elements
+related:
+  api_surface: openapi/avaya-infinity-workflow-sessions-openapi.yml
+  components: components/avaya-components.yml

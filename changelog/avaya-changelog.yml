@@ -1,0 +1,53 @@
+generated: '2026-09-14'
+method: searched
+source: https://developers.avayacloud.com/avaya-infinity/changelog
+note: >-
+  Both developer hubs publish a dated changelog. The Avaya Infinity changelog (below) is the active one;
+  https://developers.avayacloud.com/avaya-experience-platform/changelog exists as a sibling surface.
+  Entries are narrative release notes, not versioned API releases — no entry names an API version and
+  none is marked breaking.
+scheme: dated-entries
+current_version:
+  avaya-infinity: '1.0'
+  avaya-experience-platform: '1.0.63'
+changelog_urls:
+  - https://developers.avayacloud.com/avaya-infinity/changelog
+  - https://developers.avayacloud.com/avaya-experience-platform/changelog
+entries:
+  - date: '2026-08-28'
+    title: NEW CRM Integration (Aug 2026)
+    kind: added
+    highlights: Generic CRM integration capability added to the Avaya Infinity platform.
+  - date: '2026-04-03'
+    title: Updated Element API Documentation (Mar 2026)
+    kind: improved
+    highlights: Element API documentation revised.
+  - date: '2026-02-06'
+    title: Updated Element API Documentation (February 2026)
+    kind: improved
+    highlights: Further Element API documentation enhancements.
+  - date: '2026-01-22'
+    title: Updated Workflow Sessions & Access Token API Documentation
+    kind: improved
+    highlights: Workflow Sessions and Access Token API reference refined.
+  - date: '2026-01-15'
+    title: Updated Custom Messaging API and Documentation (Jan 2026)
+    kind: improved
+    highlights: Custom Messaging API and its documentation updated.
+  - date: '2026-01-12'
+    title: New Avaya Infinity Extensibility Framework (Jan 2026)
+    kind: added
+    highlights: Extensibility framework (IEF) introduced for building platform extensions.
+  - date: '2025-09-29'
+    title: NEW Avaya Infinity APIs (Sept 2025)
+    kind: added
+    highlights: The Avaya Infinity API suite released.
+  - date: '2025-07-18'
+    title: New Omni SDK (June 2025)
+    kind: added
+    highlights: Omni-channel SDK made available.
+  - date: '2025-06-17'
+    title: Welcome to Avaya Infinity
+    kind: announcement
+    highlights: Avaya Infinity developer hub launch.
+breaking_changes_in_window: 0

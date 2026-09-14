@@ -1,5 +1,47 @@
 aid: avaya
 url: https://raw.githubusercontent.com/api-evangelist/avaya/refs/heads/main/apis.yml
+name: Avaya
+description: 'Avaya is a global enterprise communications company whose developer surface spans two cloud platforms: Avaya
+  Infinity, the cloud-native customer experience platform launched in 2025, and Avaya Experience Platform (AXP), the CCaaS
+  generation that preceded it. Between them they publish 40 OpenAPI 3.0 documents and 367 operations across administration
+  (users, groups, profiles, queues, timetables, extensions, Communication Manager and hybrid cloud gateways), customer journey
+  and engagement history, digital chat and custom messaging, transcripts, historical and real-time analytics, workflow sessions,
+  outbound campaigns, and a webhook/WebSocket event surface. Authentication is a bearer JWT issued by a per-tenant Keycloak
+  realm, carried alongside a tenant appkey header; every path is rooted at an account id and the Infinity host itself is per-tenant.
+  Avaya publishes an llms.txt, an RFC 9727 API catalog, a public Postman workspace and first-party JavaScript SDKs, but no
+  MCP server, no idempotency mechanism and no public pricing.'
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/avaya.png
+created: '2026-01-01'
+modified: '2026-09-14'
+specificationVersion: '0.23'
+type: Index
+position: Producing
+tags: &id001
+- Communications
+- Contact Center
+- Collaboration
+- Artificial Intelligence
+- UCaaS
+- CCaaS
+- Customer Experience
+- Telephony
+- Webhooks
+- Enterprise Software
+- Unified Communications
+- Customer Service
+tags_raw: &id002
+- communications
+- contact-center
+- collaboration
+- artificial-intelligence
+- ucaas
+- ccaas
+- customer-experience
+- telephony
+- webhooks
+- enterprise-software
+- unified-communications
+- customer-service
 deliveryModel:
   model: unknown
   open_source: false
@@ -11,7 +53,6 @@ deliveryModel:
   - none
   generated: '2026-08-28'
   method: derived
-specificationVersion: '0.23'
 accessModel:
   pricing: unknown
   onboarding: unknown
@@ -23,37 +64,306 @@ accessModel:
   source: []
   generated: '2026-07-22'
   method: derived
-modified: '2026-04-19'
-apis: []
-common:
-- type: DomainSecurity
-  url: security/avaya-domain-security.yml
-- type: Website
-  url: https://www.avaya.com
-- type: Portal
-  url: https://developers.avaya.com/
-- type: GitHubOrganization
-  url: https://github.com/avaya-dev
-- type: LinkedIn
-  url: https://www.linkedin.com/company/avaya/
-description: >-
-  Avaya delivers smarter customer experiences, greater business efficiency, and lower costs through AI-powered communication and collaboration tools.
-name: Avaya
-tags:
-- Communications
-- Contact Center
-- Collaboration
-- Artificial Intelligence
-- UCaaS
-tags_raw:
-- Communications
-- Contact Center
-- Collaboration
-- AI
-- UCaaS
-created: '2026-01-01'
-type: Index
-image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/avaya.png
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
+apis:
+- name: Avaya Infinity Platform APIs
+  description: 'REST APIs for the Avaya Infinity cloud customer experience platform: user and group management, queue configuration
+    and real-time queue metrics, customer profiles, transcripts and interaction transcription, historical analytics, messaging,
+    outbound campaign management, workflow sessions and a webhook notifications surface. Bearer JWT from the tenant Keycloak
+    realm (client_credentials, 900s access token) plus a per-tenant host.'
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/avaya.png
+  humanURL: https://developers.avayacloud.com/avaya-infinity/reference
+  baseURL: https://core.{customerId}.ec.avayacloud.com
+  tags: *id001
+  tags_raw: *id002
+  properties:
+  - type: Documentation
+    url: https://developers.avayacloud.com/avaya-infinity/docs/introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-infinity/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-infinity/docs/quick-start
+  - type: Authentication
+    url: https://developers.avayacloud.com/avaya-infinity/docs/how-to-authenticate-with-avaya-infinitytm-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-infinity/changelog
+  - type: Webhooks
+    url: asyncapi/avaya-webhooks.yml
+  - type: OpenAPI
+    url: openapi/avaya-infinity-access-token-openapi.yml
+  - type: OpenAPI
+    url: openapi/avaya-infinity-analytics-historical-openapi.yml
+  - type: OpenAPI
+    url: openapi/avaya-infinity-groups-management-openapi.yml
+  - type: OpenAPI
+    url: openapi/avaya-infinity-messaging-openapi.yml
+  - type: OpenAPI
+    url: openapi/avaya-infinity-notification-service-openapi.yml
+  - type: OpenAPI
+    url: openapi/avaya-infinity-notifications-openapi.yml
+  - type: OpenAPI
+    url: openapi/avaya-infinity-outbound-openapi.yml
+  - type: OpenAPI
+    url: openapi/avaya-infinity-profile-management-openapi.yml
+  - type: OpenAPI
+    url: openapi/avaya-infinity-queue-management-openapi.yml
+  - type: OpenAPI
+    url: openapi/avaya-infinity-queue-metrics-openapi.yml
+  - type: OpenAPI
+    url: openapi/avaya-infinity-transcription-interactions-openapi.yml
+  - type: OpenAPI
+    url: openapi/avaya-infinity-transcripts-openapi.yml
+  - type: OpenAPI
+    url: openapi/avaya-infinity-user-management-openapi.yml
+  - type: OpenAPI
+    url: openapi/avaya-infinity-workflow-execution-openapi.yml
+  - type: OpenAPI
+    url: openapi/avaya-infinity-workflow-openapi.yml
+  - type: OpenAPI
+    url: openapi/avaya-infinity-workflow-sessions-openapi.yml
+- name: Avaya Experience Platform (AXP) APIs
+  description: 'REST APIs for Avaya Experience Platform, Avaya''s CCaaS platform: account, user, group, profile, resource
+    partition, match/queue/category and timetable administration; voice administration across Communication Manager, Avaya
+    Aura Device Services, Avaya Cloud Office, MS Teams and hybrid cloud gateways; customer journey and engagement history;
+    digital custom chat and async messaging; drafts; transcripts; historical and producer analytics; and webhook or WebSocket
+    notification subscriptions. Bearer JWT plus a tenant appkey header, served from seven regional hosts.'
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/avaya.png
+  humanURL: https://developers.avayacloud.com/avaya-experience-platform/reference
+  baseURL: https://na.api.avayacloud.com
+  tags: *id001
+  tags_raw: *id002
+  properties:
+  - type: Documentation
+    url: https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started-introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-experience-platform/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started
+  - type: Authentication
+    url: https://developers.avayacloud.com/avaya-experience-platform/docs/how-to-authenticate-with-axp-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-experience-platform/changelog
+  - type: Postman
+    url: https://www.postman.com/avaya-axp/avaya-experience-platform
+  - type: Webhooks
+    url: asyncapi/avaya-webhooks.yml
+  - type: OpenAPI
+    url: openapi/avaya-axp-admin-account-openapi.yml
+  - type: OpenAPI
+    url: openapi/avaya-axp-admin-element-inventory-openapi.yml
+  - type: OpenAPI
+    url: openapi/avaya-axp-admin-group-openapi.yml
+  - type: OpenAPI
+    url: openapi/avaya-axp-admin-match-openapi.yml
+  - type: OpenAPI
+    url: openapi/avaya-axp-admin-timetable-openapi.yml
+  - type: OpenAPI
+    url: openapi/avaya-axp-admin-user-openapi.yml
+  - type: OpenAPI
+    url: openapi/avaya-axp-admin-voice-openapi.yml
+  - type: OpenAPI
+    url: openapi/avaya-axp-analytics-historical-data-v1-openapi.yml
+  - type: OpenAPI
+    url: openapi/avaya-axp-analytics-historical-data-v2-openapi.yml
+  - type: OpenAPI
+    url: openapi/avaya-axp-analytics-producer-management-openapi.yml
+  - type: OpenAPI
+    url: openapi/avaya-axp-auth-openapi.yml
+  - type: OpenAPI
+    url: openapi/avaya-axp-customer-journey-openapi.yml
+  - type: OpenAPI
+    url: openapi/avaya-axp-digital-custom-chat-openapi.yml
+  - type: OpenAPI
+    url: openapi/avaya-axp-digital-custom-messaging-openapi.yml
+  - type: OpenAPI
+    url: openapi/avaya-axp-digital-notification-openapi.yml
+  - type: OpenAPI
+    url: openapi/avaya-axp-digital-sdk-auth-openapi.yml
+  - type: OpenAPI
+    url: openapi/avaya-axp-digital-signed-media-openapi.yml
+  - type: OpenAPI
+    url: openapi/avaya-axp-digital-signed-media-uri-openapi.yml
+  - type: OpenAPI
+    url: openapi/avaya-axp-draft-retrieval-openapi.yml
+  - type: OpenAPI
+    url: openapi/avaya-axp-draft-save-openapi.yml
+  - type: OpenAPI
+    url: openapi/avaya-axp-notification-openapi.yml
+  - type: OpenAPI
+    url: openapi/avaya-axp-routing-queue-metrics-openapi.yml
+  - type: OpenAPI
+    url: openapi/avaya-axp-transcript-retrieval-openapi.yml
+  - type: OpenAPI
+    url: openapi/avaya-axp-transcript-save-openapi.yml
+common:
+- type: Website
+  url: https://www.avaya.com/en/
+- type: DeveloperPortal
+  url: https://developers.avayacloud.com/
+- type: Documentation
+  url: https://developers.avayacloud.com/avaya-infinity/docs/introduction
+- type: APIReference
+  url: https://developers.avayacloud.com/avaya-infinity/reference
+- type: GettingStarted
+  url: https://developers.avayacloud.com/avaya-infinity/docs/quick-start
+- type: Support
+  url: https://support.avaya.com/support/en/public
+- type: Blog
+  url: https://www.avaya.com/en/blogs/
+- type: GitHubOrganization
+  url: https://github.com/avaya
+- type: LinkedIn
+  url: https://www.linkedin.com/company/avaya/
+- type: SignUp
+  url: https://developers.avayacloud.com/avaya-infinity/docs/obtaining-a-client-id-and-secret-from-avaya
+- type: PrivacyPolicy
+  url: https://www.avaya.com/en/privacy/commitment/
+- type: TermsOfService
+  url: https://www.avaya.com/en/legal/
+- type: Postman
+  url: https://www.postman.com/avaya-axp/avaya-experience-platform
+- type: Pricing
+  url: plans/avaya-plans-pricing.yml
+- type: Plans
+  url: plans/avaya-plans-pricing.yml
+- type: RateLimits
+  url: rate-limits/avaya-rate-limits.yml
+- type: Packages
+  url: packages/avaya-packages.yml
+- type: SDKs
+  url: packages/avaya-packages.yml
+- type: CLI
+  url: cli/avaya-cli.yml
+- type: Components
+  url: components/avaya-components.yml
+- type: WellKnown
+  url: well-known/avaya-well-known.yml
+- type: APICatalog
+  url: well-known/avaya-api-catalog.json
+- type: LLMsTxt
+  url: llms/avaya-llms.txt
+- type: Webhooks
+  url: asyncapi/avaya-webhooks.yml
+- type: AgentSkill
+  url: skills/_index.yml
+- type: Conventions
+  url: conventions/avaya-conventions.yml
+- type: ErrorCatalog
+  url: errors/avaya-problem-types.yml
+- type: DataModel
+  url: data-model/avaya-data-model.yml
+- type: Lifecycle
+  url: lifecycle/avaya-lifecycle.yml
+- type: StatusPage
+  url: https://status.avayacloud.com/
+- type: Deprecation
+  url: https://developers.avayacloud.com/avaya-experience-platform/docs/api-deprecation-notices
+- type: ChangeLog
+  url: changelog/avaya-changelog.yml
+- type: Conformance
+  url: conformance/avaya-conformance.yml
+- type: Compliance
+  url: https://www.avaya.com/en/trust-center/compliance/
+- type: TrustCenter
+  url: security/avaya-trust-center.yml
+- type: VulnerabilityDisclosure
+  url: security/avaya-vulnerability-disclosure.yml
+- type: Security
+  url: https://support.avaya.com/css/public/documents/100045520
+- type: DomainSecurity
+  url: security/avaya-domain-security.yml
+- type: Authentication
+  url: authentication/avaya-authentication.yml
+- type: OAuthScopes
+  url: scopes/avaya-scopes.yml
+- type: AgenticAccess
+  url: agentic-access/avaya-agentic-access.yml
+- type: X-MCPServerCandidate
+  url: mcp/avaya-mcp.yml
+- type: Overlay
+  url: overlays/avaya-axp-admin-account-overlay.yaml
+- type: Overlay
+  url: overlays/avaya-axp-admin-element-inventory-overlay.yaml
+- type: Overlay
+  url: overlays/avaya-axp-admin-group-overlay.yaml
+- type: Overlay
+  url: overlays/avaya-axp-admin-match-overlay.yaml
+- type: Overlay
+  url: overlays/avaya-axp-admin-timetable-overlay.yaml
+- type: Overlay
+  url: overlays/avaya-axp-admin-user-overlay.yaml
+- type: Overlay
+  url: overlays/avaya-axp-admin-voice-overlay.yaml
+- type: Overlay
+  url: overlays/avaya-axp-analytics-historical-data-v1-overlay.yaml
+- type: Overlay
+  url: overlays/avaya-axp-analytics-historical-data-v2-overlay.yaml
+- type: Overlay
+  url: overlays/avaya-axp-analytics-producer-management-overlay.yaml
+- type: Overlay
+  url: overlays/avaya-axp-auth-overlay.yaml
+- type: Overlay
+  url: overlays/avaya-axp-customer-journey-overlay.yaml
+- type: Overlay
+  url: overlays/avaya-axp-digital-custom-chat-overlay.yaml
+- type: Overlay
+  url: overlays/avaya-axp-digital-custom-messaging-overlay.yaml
+- type: Overlay
+  url: overlays/avaya-axp-digital-notification-overlay.yaml
+- type: Overlay
+  url: overlays/avaya-axp-digital-sdk-auth-overlay.yaml
+- type: Overlay
+  url: overlays/avaya-axp-digital-signed-media-overlay.yaml
+- type: Overlay
+  url: overlays/avaya-axp-digital-signed-media-uri-overlay.yaml
+- type: Overlay
+  url: overlays/avaya-axp-draft-retrieval-overlay.yaml
+- type: Overlay
+  url: overlays/avaya-axp-draft-save-overlay.yaml
+- type: Overlay
+  url: overlays/avaya-axp-notification-overlay.yaml
+- type: Overlay
+  url: overlays/avaya-axp-routing-queue-metrics-overlay.yaml
+- type: Overlay
+  url: overlays/avaya-axp-transcript-retrieval-overlay.yaml
+- type: Overlay
+  url: overlays/avaya-axp-transcript-save-overlay.yaml
+- type: Overlay
+  url: overlays/avaya-infinity-access-token-overlay.yaml
+- type: Overlay
+  url: overlays/avaya-infinity-analytics-historical-overlay.yaml
+- type: Overlay
+  url: overlays/avaya-infinity-groups-management-overlay.yaml
+- type: Overlay
+  url: overlays/avaya-infinity-messaging-overlay.yaml
+- type: Overlay
+  url: overlays/avaya-infinity-notification-service-overlay.yaml
+- type: Overlay
+  url: overlays/avaya-infinity-notifications-overlay.yaml
+- type: Overlay
+  url: overlays/avaya-infinity-outbound-overlay.yaml
+- type: Overlay
+  url: overlays/avaya-infinity-profile-management-overlay.yaml
+- type: Overlay
+  url: overlays/avaya-infinity-queue-management-overlay.yaml
+- type: Overlay
+  url: overlays/avaya-infinity-queue-metrics-overlay.yaml
+- type: Overlay
+  url: overlays/avaya-infinity-transcription-interactions-overlay.yaml
+- type: Overlay
+  url: overlays/avaya-infinity-transcripts-overlay.yaml
+- type: Overlay
+  url: overlays/avaya-infinity-user-management-overlay.yaml
+- type: Overlay
+  url: overlays/avaya-infinity-workflow-execution-overlay.yaml
+- type: Overlay
+  url: overlays/avaya-infinity-workflow-overlay.yaml
+- type: Overlay
+  url: overlays/avaya-infinity-workflow-sessions-overlay.yaml
+x-enrichment:
+  date: '2026-09-14'
+  status: enriched
+  artifacts_added: 103
+  pass: local-v3

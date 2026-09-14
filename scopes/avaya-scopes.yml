@@ -1,0 +1,30 @@
+generated: '2026-09-14'
+method: derived
+source: openapi/avaya-infinity-workflow-sessions-openapi.yml
+schemes:
+- name: OAuth2
+  source: openapi/avaya-infinity-workflow-sessions-openapi.yml
+  flows:
+  - flow: clientCredentials
+    tokenUrl: https://{{server}}/auth/realms/avaya/protocol/openid-connect/token
+  - flow: password
+    tokenUrl: https://{{server}}/auth/realms/avaya/protocol/openid-connect/token
+  description: |-
+    OAuth2 authentication for Workflow Sessions API
+
+    **Client Credentials:**
+    - Client ID: portal-client-id
+    - Client Secret: portal-client-secret
+
+    **Configuration:**
+    - Token URL: https://{{server}}/auth/realms/avaya/protocol/openid-connect/token
+    - Grant Type: client_credentials or password
+    - Scope: workflows:execute
+scopes:
+- scope: workflows:execute
+  description: Read & Write access to workflow sessions
+  flows:
+  - clientCredentials
+  - password
+  sources:
+  - openapi/avaya-infinity-workflow-sessions-openapi.yml

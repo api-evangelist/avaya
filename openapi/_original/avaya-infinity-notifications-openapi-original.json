@@ -1,0 +1,1453 @@
+{
+ "openapi": "3.0.3",
+ "x-explorer-enabled": false,
+ "x-samples-languages": [
+  "curl",
+  "node",
+  "java",
+  "javascript",
+  "python",
+  "go"
+ ],
+ "info": {
+  "title": "Notifications API",
+  "description": "Subscribe to and manage real-time event streams from the Avaya Infinity contact center platform. Register webhook endpoints to receive live notifications for agent activity (login, logout, ready/not-ready state changes) and interaction lifecycle events (created, completed, transferred). Subscriptions are time-limited and must be renewed before expiry to remain active.\n\n## Endpoints\n\n### Create Subscription\n\n`POST /subscriptions`\n\nCreates a new webhook subscription for one or more event families.\n\n[View API Reference \u2192](https://developers.avayacloud.com/avaya-infinity/reference/createsubscription)\n\n### List Subscriptions\n\n`GET /subscriptions`\n\nReturns a paginated list of existing subscriptions.\n\n[View API Reference \u2192](https://developers.avayacloud.com/avaya-infinity/reference/listsubscriptions)\n\n### Get Subscription\n\n`GET /subscriptions/{subscriptionId}`\n\nReturns a single subscription by its ID.\n\n[View API Reference \u2192](https://developers.avayacloud.com/avaya-infinity/reference/getsubscription)\n\n### Update Subscription\n\n`PATCH /subscriptions/{subscriptionId}`\n\nPartially updates a subscription's event families, events, or transport configuration.\n\n[View API Reference \u2192](https://developers.avayacloud.com/avaya-infinity/reference/updatesubscription)\n\n### Renew Subscription\n\n`POST /subscriptions/{subscriptionId}:renew`\n\nRenews an active or inactive subscription before or after expiry, optionally updating the webhook auth token.\n\n[View API Reference \u2192](https://developers.avayacloud.com/avaya-infinity/reference/renewsubscription)\n\n### Delete Subscription\n\n`DELETE /subscriptions/{subscriptionId}`\n\nPermanently deletes a subscription by its ID.\n\n[View API Reference \u2192](https://developers.avayacloud.com/avaya-infinity/reference/deletesubscription)\n\n## Getting Started\n\n### Find Your Customer Subdomain\n\nYour subdomain is found in your Infinity portal URL and is required for all API calls.\n\n**Example:** If your portal URL is:\n\n```\nhttps://core.avaya1234.ec.avayacloud.com/app/core-config-ui/\n```\n\nYour subdomain is: **`avaya1234`**\n\nAll API requests use this format:\n\n```\nhttps://core.{customerId}.ec.avayacloud.com/api/events/v1/...\n```\n\n### Authentication\n\nAll endpoints require Bearer token authentication. To get started, contact Avaya Support to request a `client_id` and `client_secret` provisioned with the `EVENT_NOTIFICATION` scope. Once you have your credentials, [generate an access token](https://developers.avayacloud.com/avaya-infinity/reference/access-token).\n\n### Working with Subscriptions\n\nSubscriptions follow a simple lifecycle:\n\n1. **Create** \u2014 register your webhook endpoint and select the event families and events to receive\n2. **Active** \u2014 your webhook receives events in real time while the subscription is active\n3. **Renew** \u2014 call the Renew endpoint before `expiresIn` reaches zero to keep the subscription active\n4. **Inactive** \u2014 if not renewed in time, the subscription becomes `INACTIVE` and stops delivering events; it can be reactivated via the Renew endpoint\n\nThe `expiresIn` field in every response shows the seconds remaining before the subscription expires.\n\n### Common Integration Patterns\n\n**Agent Activity Monitoring** \u2014 Subscribe to the `AGENT` family to track login, logout, ready, and not-ready state changes in real time for workforce management or reporting dashboards.\n\n**Interaction Lifecycle Tracking** \u2014 Subscribe to the `INTERACTION` family to trigger downstream workflows when interactions are created, completed, or transferred.\n\n**Webhook Token Rotation** \u2014 Use the Renew endpoint to update your `authToken` at the same time as renewing the subscription, keeping your webhook verification token fresh without recreating the subscription.\n",
+  "version": "1.0.0",
+  "contact": {
+   "name": "Avaya Developer Support",
+   "url": "https://developers.avayacloud.com/avaya-infinity/"
+  }
+ },
+ "tags": [
+  {
+   "name": "Subscriptions",
+   "description": "Subscriptions can be created to register for streams of real-time event notifications.\n"
+  }
+ ],
+ "security": [
+  {},
+  {
+   "BearerAuth": []
+  }
+ ],
+ "servers": [
+  {
+   "url": "https://core.{customerId}.ec.avayacloud.com/api/events/v1",
+   "description": "Production",
+   "variables": {
+    "customerId": {
+     "description": "Your organization subdomain identifier (e.g., avaya1234)",
+     "default": "avaya1234"
+    }
+   }
+  }
+ ],
+ "paths": {
+  "/subscriptions": {
+   "post": {
+    "tags": [
+     "Subscriptions"
+    ],
+    "summary": "Create Subscription",
+    "description": "Creates a new webhook subscription for one or more event families. Specify the event `family`, the individual `events` to filter on (or `ALL`), and the `transport` configuration including your webhook endpoint and optional auth token.\n\n## Finding Your Customer Subdomain\n\nYour subdomain is found in your Avaya Infinity portal URL and is required for all API calls.\n\n**Example:** If your portal URL is:\n\n```\nhttps://core.avaya1234.ec.avayacloud.com/app/core-config-ui/\n```\n\nYour subdomain is: **`avaya1234`**\n\n**To use this API:**\n\n1. **Find your subdomain** from your Infinity portal URL (as shown above)\n2. **Get your Bearer token** using the `EVENT_NOTIFICATION` client credential (see Authentication below)\n3. **In the API explorer on the right:**\n   * Click on `{customerId}` in the URL field and replace it with your actual subdomain\n   * Paste your Bearer token in the Credentials section\n   * Fill out the request body with your event families, events, and webhook transport details\n\n## Authentication\n\nThis endpoint requires a valid OAuth 2.0 Bearer token. To get started, contact Avaya Support to request a `client_id` and `client_secret` provisioned with the `EVENT_NOTIFICATION` scope.\n\nOnce you have your credentials, [generate an access token](https://developers.avayacloud.com/avaya-infinity/reference/access-token) and include it in the `Authorization: Bearer <token>` header of each request.\n\n```\nPOST https://core.avaya1234.ec.avayacloud.com/auth/realms/avaya/protocol/openid-connect/token\nContent-Type: application/x-www-form-urlencoded\n\ngrant_type=client_credentials&client_id=<your_client_id>&client_secret=<your_client_secret>&scope=EVENT_NOTIFICATION\n```\n\n## Working with Subscriptions\n\nA newly created subscription will have `status: ACTIVE` and begin delivering events to your webhook immediately.\n\nThe `expiresIn` field in the response shows the seconds remaining before the subscription expires. Call the Renew Subscription endpoint before this value reaches zero to keep the subscription active.\n\n## Important Notes\n\n* The `family` field accepts up to 3 values: `AGENT`, `INTERACTION`, `QUEUE`, or `ALL` (must be the only value if used).\n* The `events` field accepts up to 25 event types. Use `ALL` to receive every event for the selected family.\n* The `authToken` and `authTokenHeader` fields are optional but recommended for webhook verification.\n* Your account/tenant is automatically derived from your Bearer token \u2014 no separate account identifier is required.\n\n## DOS Protection & Rate Limiting\n\n* This endpoint implements DOS protection and rate limiting.\n\n## Security Implementation Guidelines\n\n* Never expose your `client_secret` or Bearer token to client-side applications.\n* Use `authToken` and `authTokenHeader` to verify incoming webhook payloads are from Avaya.\n* Implement proper error handling \u2014 avoid surfacing internal error details to end users.\n",
+    "operationId": "createSubscription",
+    "parameters": [
+     {
+      "in": "header",
+      "name": "Authorization",
+      "description": "OAuth 2.0 Bearer token. Required.",
+      "schema": {
+       "type": "string"
+      },
+      "required": true
+     }
+    ],
+    "requestBody": {
+     "description": "Create a new Subscription",
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/CreateSubscription"
+       },
+       "examples": {
+        "Create Agent & Interaction Webhook Subscription": {
+         "$ref": "#/components/examples/CreateAgentAndInteractionWebhookSubscription"
+        }
+       }
+      }
+     }
+    },
+    "responses": {
+     "201": {
+      "description": "Subscription created successfully. Returns the full subscription object including the system-generated `subscriptionId` and `expiresIn` value.",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Subscription"
+        },
+        "examples": {
+         "Agent & Interaction Webhook Subscription Response": {
+          "$ref": "#/components/examples/AgentAndInteractionWebhookSubscriptionResponse"
+         }
+        }
+       }
+      }
+     },
+     "400": {
+      "$ref": "#/components/responses/BadRequest"
+     },
+     "401": {
+      "$ref": "#/components/responses/Unauthorized"
+     },
+     "403": {
+      "$ref": "#/components/responses/Forbidden"
+     },
+     "500": {
+      "$ref": "#/components/responses/InternalServer"
+     }
+    },
+    "deprecated": false
+   },
+   "get": {
+    "tags": [
+     "Subscriptions"
+    ],
+    "summary": "List Subscriptions",
+    "description": "Returns a paginated list of existing notification subscriptions for your account.\n\n## Finding Your Customer Subdomain\n\nYour subdomain is found in your Avaya Infinity portal URL and is required for all API calls.\n\n**Example:** If your portal URL is:\n\n```\nhttps://core.avaya1234.ec.avayacloud.com/app/core-config-ui/\n```\n\nYour subdomain is: **`avaya1234`**\n\n**To use this API:**\n\n1. **Find your subdomain** from your Infinity portal URL (as shown above)\n2. **Get your Bearer token** using the `EVENT_NOTIFICATION` client credential (see Authentication below)\n3. **In the API explorer on the right:**\n   * Click on `{customerId}` in the URL field and replace it with your actual subdomain\n   * Paste your Bearer token in the Credentials section\n   * Use `pageNumber` and `pageSize` to paginate results as needed\n\n## Authentication\n\nThis endpoint requires a valid OAuth 2.0 Bearer token. To get started, contact Avaya Support to request a `client_id` and `client_secret` provisioned with the `EVENT_NOTIFICATION` scope.\n\nOnce you have your credentials, [generate an access token](https://developers.avayacloud.com/avaya-infinity/reference/access-token) and include it in the `Authorization: Bearer <token>` header of each request.\n\n```\nPOST https://core.avaya1234.ec.avayacloud.com/auth/realms/avaya/protocol/openid-connect/token\nContent-Type: application/x-www-form-urlencoded\n\ngrant_type=client_credentials&client_id=<your_client_id>&client_secret=<your_client_secret>&scope=EVENT_NOTIFICATION\n```\n\n## Important Notes\n\n* Results are scoped to your account \u2014 derived automatically from your Bearer token.\n* Default page size is 10, maximum is 25.\n* Use the `links.next` and `links.prev` URLs in the response to navigate between pages.\n\n## DOS Protection & Rate Limiting\n\n* This endpoint implements DOS protection and rate limiting.\n\n## Security Implementation Guidelines\n\n* Never expose your `client_secret` or Bearer token to client-side applications.\n* Implement proper error handling \u2014 avoid surfacing internal error details to end users.\n",
+    "operationId": "listSubscriptions",
+    "parameters": [
+     {
+      "in": "header",
+      "name": "Authorization",
+      "description": "OAuth 2.0 Bearer token. Required.",
+      "schema": {
+       "type": "string"
+      },
+      "required": true
+     },
+     {
+      "name": "pageNumber",
+      "in": "query",
+      "description": "The page number of the records to retrieve. Default value is 1.",
+      "required": false,
+      "schema": {
+       "type": "integer",
+       "format": "int32",
+       "example": 1,
+       "default": 1,
+       "minimum": 1
+      }
+     },
+     {
+      "name": "pageSize",
+      "in": "query",
+      "description": "The max number of records to retrieve per page. Default value is 10, max value is 25.",
+      "required": false,
+      "schema": {
+       "type": "integer",
+       "format": "int32",
+       "example": 10,
+       "default": 10,
+       "minimum": 1,
+       "maximum": 25
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Paginated list of subscriptions returned successfully.",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/SubscriptionPage"
+        },
+        "examples": {
+         "default": {
+          "$ref": "#/components/examples/SubscriptionPage"
+         }
+        }
+       }
+      }
+     },
+     "401": {
+      "$ref": "#/components/responses/Unauthorized"
+     },
+     "403": {
+      "$ref": "#/components/responses/Forbidden"
+     },
+     "500": {
+      "$ref": "#/components/responses/InternalServer"
+     }
+    },
+    "deprecated": false
+   }
+  },
+  "/subscriptions/{subscriptionId}": {
+   "parameters": [
+    {
+     "$ref": "#/components/parameters/subscriptionId"
+    }
+   ],
+   "get": {
+    "tags": [
+     "Subscriptions"
+    ],
+    "summary": "Get Subscription",
+    "description": "Returns a single notification subscription by its `subscriptionId`.\n\n## Finding Your Customer Subdomain\n\nYour subdomain is found in your Avaya Infinity portal URL and is required for all API calls.\n\n**Example:** If your portal URL is:\n\n```\nhttps://core.avaya1234.ec.avayacloud.com/app/core-config-ui/\n```\n\nYour subdomain is: **`avaya1234`**\n\n**To use this API:**\n\n1. **Find your subdomain** from your Infinity portal URL (as shown above)\n2. **Get your Bearer token** using the `EVENT_NOTIFICATION` client credential (see Authentication below)\n3. **In the API explorer on the right:**\n   * Click on `{customerId}` in the URL field and replace it with your actual subdomain\n   * Paste your Bearer token in the Credentials section\n   * Enter the `subscriptionId` of the subscription you want to retrieve\n\n## Authentication\n\nThis endpoint requires a valid OAuth 2.0 Bearer token. To get started, contact Avaya Support to request a `client_id` and `client_secret` provisioned with the `EVENT_NOTIFICATION` scope.\n\nOnce you have your credentials, [generate an access token](https://developers.avayacloud.com/avaya-infinity/reference/access-token) and include it in the `Authorization: Bearer <token>` header of each request.\n\n```\nPOST https://core.avaya1234.ec.avayacloud.com/auth/realms/avaya/protocol/openid-connect/token\nContent-Type: application/x-www-form-urlencoded\n\ngrant_type=client_credentials&client_id=<your_client_id>&client_secret=<your_client_secret>&scope=EVENT_NOTIFICATION\n```\n\n## Working with Subscription IDs\n\nSubscription IDs are system-generated UUIDs in the format `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx`, returned in the response body when a subscription is created. Use the `subscriptionId` from `POST /subscriptions` or `GET /subscriptions` to reference a specific subscription.\n\n## Important Notes\n\n* Returns a `404` if no subscription exists with the specified ID.\n\n## DOS Protection & Rate Limiting\n\n* This endpoint implements DOS protection and rate limiting.\n\n## Security Implementation Guidelines\n\n* Never expose your `client_secret` or Bearer token to client-side applications.\n* Implement proper error handling \u2014 avoid surfacing internal error details to end users.\n",
+    "operationId": "getSubscription",
+    "parameters": [
+     {
+      "in": "header",
+      "name": "Authorization",
+      "description": "OAuth 2.0 Bearer token. Required.",
+      "schema": {
+       "type": "string"
+      },
+      "required": true
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Subscription details returned successfully.",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Subscription"
+        }
+       }
+      }
+     },
+     "401": {
+      "$ref": "#/components/responses/Unauthorized"
+     },
+     "403": {
+      "$ref": "#/components/responses/Forbidden"
+     },
+     "404": {
+      "$ref": "#/components/responses/NotFound"
+     },
+     "500": {
+      "$ref": "#/components/responses/InternalServer"
+     }
+    },
+    "deprecated": false
+   },
+   "delete": {
+    "tags": [
+     "Subscriptions"
+    ],
+    "summary": "Delete Subscription",
+    "description": "Permanently deletes an existing subscription by its `subscriptionId`. Once deleted, the subscription cannot be recovered and will stop delivering events immediately.\n\n## Finding Your Customer Subdomain\n\nYour subdomain is found in your Avaya Infinity portal URL and is required for all API calls.\n\n**Example:** If your portal URL is:\n\n```\nhttps://core.avaya1234.ec.avayacloud.com/app/core-config-ui/\n```\n\nYour subdomain is: **`avaya1234`**\n\n**To use this API:**\n\n1. **Find your subdomain** from your Infinity portal URL (as shown above)\n2. **Get your Bearer token** using the `EVENT_NOTIFICATION` client credential (see Authentication below)\n3. **In the API explorer on the right:**\n   * Click on `{customerId}` in the URL field and replace it with your actual subdomain\n   * Paste your Bearer token in the Credentials section\n   * Enter the `subscriptionId` of the subscription to delete\n\n## Authentication\n\nThis endpoint requires a valid OAuth 2.0 Bearer token. To get started, contact Avaya Support to request a `client_id` and `client_secret` provisioned with the `EVENT_NOTIFICATION` scope.\n\nOnce you have your credentials, [generate an access token](https://developers.avayacloud.com/avaya-infinity/reference/access-token) and include it in the `Authorization: Bearer <token>` header of each request.\n\n```\nPOST https://core.avaya1234.ec.avayacloud.com/auth/realms/avaya/protocol/openid-connect/token\nContent-Type: application/x-www-form-urlencoded\n\ngrant_type=client_credentials&client_id=<your_client_id>&client_secret=<your_client_secret>&scope=EVENT_NOTIFICATION\n```\n\n## Important Notes\n\n* **This action cannot be undone.** Confirm the correct `subscriptionId` before proceeding.\n* Returns `204 No Content` on success \u2014 no response body is returned.\n* Returns a `404` if no subscription exists with the specified ID.\n\n## DOS Protection & Rate Limiting\n\n* This endpoint implements DOS protection and rate limiting.\n\n## Security Implementation Guidelines\n\n* Never expose your `client_secret` or Bearer token to client-side applications.\n* Implement proper error handling \u2014 avoid surfacing internal error details to end users.\n",
+    "operationId": "deleteSubscription",
+    "parameters": [
+     {
+      "in": "header",
+      "name": "Authorization",
+      "description": "OAuth 2.0 Bearer token. Required.",
+      "schema": {
+       "type": "string"
+      },
+      "required": true
+     }
+    ],
+    "responses": {
+     "204": {
+      "description": "Subscription deleted successfully. No content returned."
+     },
+     "401": {
+      "$ref": "#/components/responses/Unauthorized"
+     },
+     "403": {
+      "$ref": "#/components/responses/Forbidden"
+     },
+     "404": {
+      "$ref": "#/components/responses/NotFound"
+     },
+     "500": {
+      "$ref": "#/components/responses/InternalServer"
+     }
+    },
+    "deprecated": false
+   },
+   "patch": {
+    "tags": [
+     "Subscriptions"
+    ],
+    "summary": "Update Subscription",
+    "description": "Partially updates a subscription's event families, events, or transport configuration. Only fields included in the request body will be modified.\n\n## Finding Your Customer Subdomain\n\nYour subdomain is found in your Avaya Infinity portal URL and is required for all API calls.\n\n**Example:** If your portal URL is:\n\n```\nhttps://core.avaya1234.ec.avayacloud.com/app/core-config-ui/\n```\n\nYour subdomain is: **`avaya1234`**\n\n**To use this API:**\n\n1. **Find your subdomain** from your Infinity portal URL (as shown above)\n2. **Get your Bearer token** using the `EVENT_NOTIFICATION` client credential (see Authentication below)\n3. **In the API explorer on the right:**\n   * Click on `{customerId}` in the URL field and replace it with your actual subdomain\n   * Paste your Bearer token in the Credentials section\n   * Enter the `subscriptionId` and provide only the fields you want to change\n\n## Authentication\n\nThis endpoint requires a valid OAuth 2.0 Bearer token. To get started, contact Avaya Support to request a `client_id` and `client_secret` provisioned with the `EVENT_NOTIFICATION` scope.\n\nOnce you have your credentials, [generate an access token](https://developers.avayacloud.com/avaya-infinity/reference/access-token) and include it in the `Authorization: Bearer <token>` header of each request.\n\n```\nPOST https://core.avaya1234.ec.avayacloud.com/auth/realms/avaya/protocol/openid-connect/token\nContent-Type: application/x-www-form-urlencoded\n\ngrant_type=client_credentials&client_id=<your_client_id>&client_secret=<your_client_secret>&scope=EVENT_NOTIFICATION\n```\n\n## Important Notes\n\n* All fields are optional \u2014 only fields explicitly provided will be modified.\n* Returns a `404` if no subscription exists with the specified ID.\n\n## DOS Protection & Rate Limiting\n\n* This endpoint implements DOS protection and rate limiting.\n\n## Security Implementation Guidelines\n\n* Never expose your `client_secret` or Bearer token to client-side applications.\n* Implement proper error handling \u2014 avoid surfacing internal error details to end users.\n",
+    "operationId": "updateSubscription",
+    "parameters": [
+     {
+      "in": "header",
+      "name": "Authorization",
+      "description": "OAuth 2.0 Bearer token. Required.",
+      "schema": {
+       "type": "string"
+      },
+      "required": true
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/PatchSubscription"
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "Subscription updated successfully. Returns the full updated subscription object.",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Subscription"
+        },
+        "examples": {
+         "Agent & Interaction Webhook Subscription Response": {
+          "$ref": "#/components/examples/AgentAndInteractionWebhookSubscriptionResponse"
+         }
+        }
+       }
+      }
+     },
+     "400": {
+      "$ref": "#/components/responses/BadRequest"
+     },
+     "401": {
+      "$ref": "#/components/responses/Unauthorized"
+     },
+     "403": {
+      "$ref": "#/components/responses/Forbidden"
+     },
+     "500": {
+      "$ref": "#/components/responses/InternalServer"
+     }
+    },
+    "deprecated": false
+   }
+  },
+  "/subscriptions/{subscriptionId}:renew": {
+   "parameters": [
+    {
+     "$ref": "#/components/parameters/subscriptionId"
+    }
+   ],
+   "post": {
+    "tags": [
+     "Subscriptions"
+    ],
+    "summary": "Renew Subscription",
+    "description": "Renews an existing subscription before or after it has expired. Use this endpoint to keep a subscription `ACTIVE` indefinitely, or to reactivate an `INACTIVE` subscription. Optionally update the webhook `authToken` at the same time.\n\n## Finding Your Customer Subdomain\n\nYour subdomain is found in your Avaya Infinity portal URL and is required for all API calls.\n\n**Example:** If your portal URL is:\n\n```\nhttps://core.avaya1234.ec.avayacloud.com/app/core-config-ui/\n```\n\nYour subdomain is: **`avaya1234`**\n\n**To use this API:**\n\n1. **Find your subdomain** from your Infinity portal URL (as shown above)\n2. **Get your Bearer token** using the `EVENT_NOTIFICATION` client credential (see Authentication below)\n3. **In the API explorer on the right:**\n   * Click on `{customerId}` in the URL field and replace it with your actual subdomain\n   * Paste your Bearer token in the Credentials section\n   * Enter the `subscriptionId` to renew and optionally provide a new `authToken`\n\n## Authentication\n\nThis endpoint requires a valid OAuth 2.0 Bearer token. To get started, contact Avaya Support to request a `client_id` and `client_secret` provisioned with the `EVENT_NOTIFICATION` scope.\n\nOnce you have your credentials, [generate an access token](https://developers.avayacloud.com/avaya-infinity/reference/access-token) and include it in the `Authorization: Bearer <token>` header of each request.\n\n```\nPOST https://core.avaya1234.ec.avayacloud.com/auth/realms/avaya/protocol/openid-connect/token\nContent-Type: application/x-www-form-urlencoded\n\ngrant_type=client_credentials&client_id=<your_client_id>&client_secret=<your_client_secret>&scope=EVENT_NOTIFICATION\n```\n\n## Working with Subscription Renewal\n\nThe `expiresIn` field in every subscription response shows the seconds remaining before expiry. Call this endpoint before `expiresIn` reaches zero to avoid the subscription becoming `INACTIVE`.\n\nIf a subscription has already become `INACTIVE`, this endpoint can still be used to reactivate it \u2014 event delivery will resume immediately upon successful renewal.\n\nTo rotate your webhook verification token at the same time as renewing, include the new `authToken` value in the request body.\n\n## Important Notes\n\n* The request body is optional. If omitted, the subscription is renewed without changing any transport configuration.\n* Returns a `404` if no subscription exists with the specified ID.\n\n## DOS Protection & Rate Limiting\n\n* This endpoint implements DOS protection and rate limiting.\n\n## Security Implementation Guidelines\n\n* Never expose your `client_secret` or Bearer token to client-side applications.\n* Rotate your webhook `authToken` regularly to maintain security.\n* Implement proper error handling \u2014 avoid surfacing internal error details to end users.\n",
+    "operationId": "renewSubscription",
+    "parameters": [
+     {
+      "in": "header",
+      "name": "Authorization",
+      "description": "OAuth 2.0 Bearer token. Required.",
+      "schema": {
+       "type": "string"
+      },
+      "required": true
+     }
+    ],
+    "requestBody": {
+     "description": "Optionally update the webhook authToken during renewal.",
+     "required": false,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/RenewSubscription"
+       },
+       "examples": {
+        "Renew Susbscription & Update authToken": {
+         "$ref": "#/components/examples/RenewSubscriptionAndAuthToken"
+        }
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "Subscription renewed successfully. Returns the full updated subscription object with a refreshed `expiresIn` value.",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Subscription"
+        },
+        "examples": {
+         "default": {
+          "$ref": "#/components/examples/AgentAndInteractionWebhookSubscriptionResponse"
+         }
+        }
+       }
+      }
+     },
+     "400": {
+      "$ref": "#/components/responses/BadRequest"
+     },
+     "401": {
+      "$ref": "#/components/responses/Unauthorized"
+     },
+     "403": {
+      "$ref": "#/components/responses/Forbidden"
+     },
+     "404": {
+      "$ref": "#/components/responses/NotFound"
+     },
+     "500": {
+      "$ref": "#/components/responses/InternalServer"
+     }
+    },
+    "deprecated": false
+   }
+  },
+  "/accounts/{accountId}/subscriptions": {
+   "parameters": [
+    {
+     "$ref": "#/components/parameters/accountId"
+    }
+   ],
+   "post": {
+    "tags": [
+     "Subscriptions"
+    ],
+    "summary": "Create Subscription (Deprecated)",
+    "description": "**DEPRECATED**: This endpoint will be removed in a future version. Use `POST /subscriptions` instead.\n",
+    "operationId": "createSubscriptionLegacy",
+    "deprecated": true,
+    "parameters": [
+     {
+      "in": "header",
+      "name": "Authorization",
+      "schema": {
+       "type": "string"
+      },
+      "required": false
+     }
+    ],
+    "requestBody": {
+     "description": "Create a new Subscription",
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/CreateSubscription"
+       },
+       "examples": {
+        "Create Agent & Interaction Webhook Subscription": {
+         "$ref": "#/components/examples/CreateAgentAndInteractionWebhookSubscription"
+        }
+       }
+      }
+     }
+    },
+    "responses": {
+     "201": {
+      "description": "Created",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Subscription"
+        },
+        "examples": {
+         "Agent & Interaction Webhook Subscription Response": {
+          "$ref": "#/components/examples/AgentAndInteractionWebhookSubscriptionResponse"
+         }
+        }
+       }
+      }
+     },
+     "400": {
+      "$ref": "#/components/responses/BadRequest"
+     },
+     "401": {
+      "$ref": "#/components/responses/Unauthorized"
+     },
+     "403": {
+      "$ref": "#/components/responses/Forbidden"
+     },
+     "500": {
+      "$ref": "#/components/responses/InternalServer"
+     }
+    }
+   },
+   "get": {
+    "tags": [
+     "Subscriptions"
+    ],
+    "summary": "List Subscriptions (Deprecated)",
+    "description": "**DEPRECATED**: This endpoint will be removed in a future version. Use `GET /subscriptions` instead.\n",
+    "operationId": "listSubscriptionsLegacy",
+    "deprecated": true,
+    "parameters": [
+     {
+      "name": "pageNumber",
+      "in": "query",
+      "description": "The page number of the records to retrieve. Default value is 1.",
+      "required": false,
+      "schema": {
+       "type": "integer",
+       "format": "int32",
+       "example": 1,
+       "default": 1,
+       "minimum": 1
+      }
+     },
+     {
+      "name": "pageSize",
+      "in": "query",
+      "description": "The max number of records to retrieve per page. Default value is 10, max value is 25.",
+      "required": false,
+      "schema": {
+       "type": "integer",
+       "format": "int32",
+       "example": 10,
+       "default": 10,
+       "minimum": 1,
+       "maximum": 25
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "OK",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/SubscriptionPage"
+        },
+        "examples": {
+         "default": {
+          "$ref": "#/components/examples/SubscriptionPage"
+         }
+        }
+       }
+      }
+     },
+     "401": {
+      "$ref": "#/components/responses/Unauthorized"
+     },
+     "403": {
+      "$ref": "#/components/responses/Forbidden"
+     },
+     "500": {
+      "$ref": "#/components/responses/InternalServer"
+     }
+    }
+   }
+  },
+  "/accounts/{accountId}/subscriptions/{subscriptionId}": {
+   "parameters": [
+    {
+     "$ref": "#/components/parameters/accountId"
+    },
+    {
+     "$ref": "#/components/parameters/subscriptionId"
+    }
+   ],
+   "get": {
+    "tags": [
+     "Subscriptions"
+    ],
+    "summary": "Get Subscription (Deprecated)",
+    "description": "**DEPRECATED**: This endpoint will be removed in a future version. Use `GET /subscriptions/{subscriptionId}` instead.\n",
+    "operationId": "getSubscriptionLegacy",
+    "deprecated": true,
+    "responses": {
+     "200": {
+      "description": "OK",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Subscription"
+        }
+       }
+      }
+     },
+     "401": {
+      "$ref": "#/components/responses/Unauthorized"
+     },
+     "403": {
+      "$ref": "#/components/responses/Forbidden"
+     },
+     "404": {
+      "$ref": "#/components/responses/NotFound"
+     },
+     "500": {
+      "$ref": "#/components/responses/InternalServer"
+     }
+    }
+   },
+   "delete": {
+    "tags": [
+     "Subscriptions"
+    ],
+    "summary": "Delete Subscription (Deprecated)",
+    "description": "**DEPRECATED**: This endpoint will be removed in a future version. Use `DELETE /subscriptions/{subscriptionId}` instead.\n",
+    "operationId": "deleteSubscriptionLegacy",
+    "deprecated": true,
+    "responses": {
+     "204": {
+      "description": "No Content"
+     },
+     "401": {
+      "$ref": "#/components/responses/Unauthorized"
+     },
+     "403": {
+      "$ref": "#/components/responses/Forbidden"
+     },
+     "404": {
+      "$ref": "#/components/responses/NotFound"
+     },
+     "500": {
+      "$ref": "#/components/responses/InternalServer"
+     }
+    }
+   },
+   "patch": {
+    "tags": [
+     "Subscriptions"
+    ],
+    "summary": "Update Subscription (Deprecated)",
+    "description": "**DEPRECATED**: This endpoint will be removed in a future version. Use `PATCH /subscriptions/{subscriptionId}` instead.\n",
+    "operationId": "updateSubscriptionLegacy",
+    "deprecated": true,
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/PatchSubscription"
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "Subscription updated successfully",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Subscription"
+        },
+        "examples": {
+         "Agent & Interaction Webhook Subscription Response": {
+          "$ref": "#/components/examples/AgentAndInteractionWebhookSubscriptionResponse"
+         }
+        }
+       }
+      }
+     },
+     "400": {
+      "$ref": "#/components/responses/BadRequest"
+     },
+     "401": {
+      "$ref": "#/components/responses/Unauthorized"
+     },
+     "403": {
+      "$ref": "#/components/responses/Forbidden"
+     },
+     "500": {
+      "$ref": "#/components/responses/InternalServer"
+     }
+    }
+   }
+  },
+  "/accounts/{accountId}/subscriptions/{subscriptionId}:renew": {
+   "parameters": [
+    {
+     "$ref": "#/components/parameters/accountId"
+    },
+    {
+     "$ref": "#/components/parameters/subscriptionId"
+    }
+   ],
+   "post": {
+    "tags": [
+     "Subscriptions"
+    ],
+    "summary": "Renew Subscription (Deprecated)",
+    "description": "**DEPRECATED**: This endpoint will be removed in a future version. Use `POST /subscriptions/{subscriptionId}:renew` instead.\n",
+    "operationId": "renewSubscriptionLegacy",
+    "deprecated": true,
+    "parameters": [
+     {
+      "in": "header",
+      "name": "Authorization",
+      "schema": {
+       "type": "string"
+      },
+      "required": false
+     }
+    ],
+    "requestBody": {
+     "description": "Renew an existing subscription and update the authToken",
+     "required": false,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/RenewSubscription"
+       },
+       "examples": {
+        "Renew Susbscription & Update authToken": {
+         "$ref": "#/components/examples/RenewSubscriptionAndAuthToken"
+        }
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "OK",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Subscription"
+        },
+        "examples": {
+         "default": {
+          "$ref": "#/components/examples/AgentAndInteractionWebhookSubscriptionResponse"
+         }
+        }
+       }
+      }
+     },
+     "400": {
+      "$ref": "#/components/responses/BadRequest"
+     },
+     "401": {
+      "$ref": "#/components/responses/Unauthorized"
+     },
+     "403": {
+      "$ref": "#/components/responses/Forbidden"
+     },
+     "404": {
+      "$ref": "#/components/responses/NotFound"
+     },
+     "500": {
+      "$ref": "#/components/responses/InternalServer"
+     }
+    }
+   }
+  }
+ },
+ "components": {
+  "parameters": {
+   "accountId": {
+    "name": "accountId",
+    "description": "The unique 26 character internal id that represents the customer account.",
+    "required": true,
+    "in": "path",
+    "schema": {
+     "type": "string",
+     "minLength": 26,
+     "maxLength": 26,
+     "pattern": "^[0-9a-zA-Z]{26}$",
+     "example": "001d01022054849399088a81ad"
+    }
+   },
+   "subscriptionId": {
+    "name": "subscriptionId",
+    "description": "The unique 36 character internal id that represents the subscription.",
+    "required": true,
+    "in": "path",
+    "schema": {
+     "type": "string",
+     "minLength": 36,
+     "maxLength": 36,
+     "pattern": "^[0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{12}$",
+     "example": "fdbec917-e76e-4645-8120-4eac46f29487"
+    }
+   }
+  },
+  "responses": {
+   "BadRequest": {
+    "description": "Constraint Violation",
+    "content": {
+     "application/problem+json": {
+      "schema": {
+       "$ref": "#/components/schemas/Problem"
+      },
+      "examples": {
+       "default": {
+        "$ref": "#/components/examples/ErrorConstraintViolation"
+       }
+      }
+     }
+    }
+   },
+   "Unauthorized": {
+    "description": "Unauthorized",
+    "content": {
+     "application/problem+json": {
+      "schema": {
+       "$ref": "#/components/schemas/Problem"
+      },
+      "examples": {
+       "default": {
+        "$ref": "#/components/examples/ErrorUnauthorized"
+       }
+      }
+     }
+    }
+   },
+   "Forbidden": {
+    "description": "Forbidden",
+    "content": {
+     "application/problem+json": {
+      "schema": {
+       "$ref": "#/components/schemas/Problem"
+      },
+      "examples": {
+       "default": {
+        "$ref": "#/components/examples/ErrorForbidden"
+       }
+      }
+     }
+    }
+   },
+   "NotFound": {
+    "description": "Not Found",
+    "content": {
+     "application/problem+json": {
+      "schema": {
+       "$ref": "#/components/schemas/Problem"
+      },
+      "examples": {
+       "default": {
+        "$ref": "#/components/examples/ErrorNotFound"
+       }
+      }
+     }
+    }
+   },
+   "InternalServer": {
+    "description": "Internal Server Error",
+    "content": {
+     "application/problem+json": {
+      "schema": {
+       "$ref": "#/components/schemas/Problem"
+      },
+      "examples": {
+       "default": {
+        "$ref": "#/components/examples/ErrorInternalServerError"
+       }
+      }
+     }
+    }
+   }
+  },
+  "schemas": {
+   "CreateSubscription": {
+    "type": "object",
+    "description": "Request payload for creating a subscription",
+    "required": [
+     "family",
+     "events",
+     "transport"
+    ],
+    "properties": {
+     "family": {
+      "$ref": "#/components/schemas/Family"
+     },
+     "events": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 25,
+      "description": "The collection of events to filter on within the chosen family. To receive all events associated with a family then specify 'ALL' here. Event types vary depending on family selected, see developers guide for more details on the events for each family.",
+      "example": [
+       "ALL"
+      ],
+      "items": {
+       "type": "string",
+       "minLength": 1,
+       "maxLength": 256
+      }
+     },
+     "transport": {
+      "$ref": "#/components/schemas/Transport"
+     }
+    }
+   },
+   "SubscriptionResponse": {
+    "type": "object",
+    "description": "Request payload for creating a subscription",
+    "required": [
+     "family",
+     "events",
+     "transport"
+    ],
+    "properties": {
+     "family": {
+      "$ref": "#/components/schemas/Family"
+     },
+     "events": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 25,
+      "description": "The collection of events to filter on within the chosen family. To receive all events associated with a family then specify 'ALL' here. Event types vary depending on family selected, see developers guide for more details on the events for each family.",
+      "example": [
+       "ALL"
+      ],
+      "items": {
+       "type": "string",
+       "minLength": 1,
+       "maxLength": 256
+      }
+     },
+     "transport": {
+      "$ref": "#/components/schemas/TransportResponse"
+     }
+    }
+   },
+   "RenewSubscription": {
+    "type": "object",
+    "description": "Request payload for renewing a subscription",
+    "required": [
+     "transport"
+    ],
+    "properties": {
+     "transport": {
+      "$ref": "#/components/schemas/RenewTransport"
+     }
+    }
+   },
+   "Family": {
+    "type": "array",
+    "description": "The families of events the subscription applies to. Maximum of 3.",
+    "maxItems": 3,
+    "items": {
+     "type": "string",
+     "enum": [
+      "AGENT",
+      "INTERACTION",
+      "QUEUE",
+      "ALL"
+     ],
+     "minLength": 1
+    },
+    "oneOf": [
+     {
+      "items": {
+       "enum": [
+        "ALL"
+       ]
+      },
+      "minItems": 1,
+      "maxItems": 1
+     },
+     {
+      "items": {
+       "not": {
+        "enum": [
+         "ALL"
+        ]
+       }
+      }
+     }
+    ]
+   },
+   "Transport": {
+    "type": "object",
+    "description": "Transport settings for the subscription.",
+    "required": [
+     "type",
+     "method",
+     "endpoint",
+     "authToken",
+     "authTokenHeader"
+    ],
+    "properties": {
+     "type": {
+      "type": "string",
+      "description": "The transport type for which notifications should be received.",
+      "enum": [
+       "WEBHOOK"
+      ],
+      "default": "WEBHOOK",
+      "minLength": 1
+     },
+     "method": {
+      "type": "string",
+      "description": "HTTP method used for the transport.",
+      "enum": [
+       "POST",
+       "PUT"
+      ],
+      "default": "POST"
+     },
+     "endpoint": {
+      "type": "string",
+      "maxLength": 2048,
+      "description": "The endpoint (URL) for the subscription. Required for 'WEBHOOK' subscriptions."
+     },
+     "authToken": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256,
+      "description": "Optional authentication token included in webhook deliveries for verification. Must be used with `authTokenHeader`."
+     },
+     "authTokenHeader": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256,
+      "description": "The header name used to deliver the `authToken` in webhook requests. Must be used with `authToken`.",
+      "default": "auth-token"
+     }
+    },
+    "oneOf": [
+     {
+      "required": [
+       "endpoint"
+      ],
+      "properties": {
+       "type": {
+        "enum": [
+         "WEBHOOK"
+        ]
+       },
+       "endpoint": {
+        "format": "uri"
+       }
+      }
+     }
+    ]
+   },
+   "TransportResponse": {
+    "type": "object",
+    "description": "Transport settings for the subscription.",
+    "required": [
+     "type"
+    ],
+    "properties": {
+     "type": {
+      "type": "string",
+      "description": "The transport type for which notifications should be received.",
+      "enum": [
+       "WEBHOOK"
+      ],
+      "default": "WEBHOOK"
+     },
+     "method": {
+      "type": "string",
+      "description": "HTTP method used for the transport.",
+      "enum": [
+       "POST",
+       "PUT"
+      ]
+     },
+     "endpoint": {
+      "type": "string",
+      "maxLength": 2048,
+      "description": "The endpoint (URL) for the subscription."
+     },
+     "authToken": {
+      "type": "string",
+      "minLength": 0,
+      "maxLength": 256,
+      "description": "Optional authentication token included in webhook deliveries for verification."
+     },
+     "authTokenHeader": {
+      "type": "string",
+      "minLength": 0,
+      "maxLength": 256,
+      "description": "The header name used to deliver the `authToken` in webhook requests.",
+      "default": "auth-token"
+     }
+    }
+   },
+   "RenewTransport": {
+    "type": "object",
+    "description": "Transport settings for subscription renewal. Use to update the webhook auth token.",
+    "required": [
+     "authToken"
+    ],
+    "properties": {
+     "authToken": {
+      "type": "string",
+      "minLength": 0,
+      "maxLength": 256,
+      "description": "Updated authentication token for webhook verification. Replaces the existing authToken on renewal."
+     }
+    }
+   },
+   "Subscription": {
+    "allOf": [
+     {
+      "type": "object",
+      "description": "Subscription details of a successful response",
+      "properties": {
+       "subscriptionId": {
+        "type": "string",
+        "minLength": 36,
+        "maxLength": 36,
+        "pattern": "^[0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{12}$",
+        "description": "The unique 36 character UUID that identifies the subscription.",
+        "example": "fdbec917-e76e-4645-8120-4eac46f29487"
+       },
+       "createdAt": {
+        "type": "string",
+        "description": "The datetime in ISO 8601 format that the subscription was created.",
+        "format": "date-time",
+        "example": "2020-08-01T14:25:23.162Z"
+       },
+       "expiresAt": {
+        "type": "string",
+        "description": "The datetime in ISO 8601 format that the subscription expires.",
+        "format": "date-time",
+        "example": "2020-08-08T14:25:23.177Z"
+       },
+       "expiresIn": {
+        "type": "integer",
+        "description": "Seconds remaining before the subscription expires, calculated at the time of the response. Call the Renew Subscription endpoint before this value reaches zero to keep the subscription active.",
+        "format": "int64",
+        "example": 900
+       },
+       "status": {
+        "type": "string",
+        "enum": [
+         "ACTIVE",
+         "INACTIVE",
+         "PENDING"
+        ],
+        "minLength": 1,
+        "maxLength": 256,
+        "readOnly": true,
+        "description": "Current status of the subscription. `ACTIVE` means events are being delivered. `INACTIVE` means the subscription has expired or been deactivated. `PENDING` means the subscription is being set up.",
+        "example": "ACTIVE"
+       }
+      }
+     },
+     {
+      "$ref": "#/components/schemas/SubscriptionResponse"
+     }
+    ]
+   },
+   "PatchSubscription": {
+    "type": "object",
+    "description": "Request payload for updating a subscription. All fields are optional.",
+    "properties": {
+     "family": {
+      "$ref": "#/components/schemas/Family"
+     },
+     "events": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 25,
+      "description": "Updated list of events to filter on. Use 'ALL' to receive all events for the selected family.",
+      "example": [
+       "ALL"
+      ],
+      "items": {
+       "type": "string",
+       "minLength": 1,
+       "maxLength": 256
+      }
+     },
+     "transport": {
+      "$ref": "#/components/schemas/Transport"
+     }
+    }
+   },
+   "SubscriptionPage": {
+    "type": "object",
+    "description": "A page containing the current list of subscriptions with links to the previous and next pages.",
+    "properties": {
+     "pagination": {
+      "$ref": "#/components/schemas/Pagination"
+     },
+     "subscriptions": {
+      "type": "array",
+      "items": {
+       "$ref": "#/components/schemas/Subscription"
+      }
+     },
+     "links": {
+      "$ref": "#/components/schemas/Links"
+     }
+    }
+   },
+   "Problem": {
+    "type": "object",
+    "description": "Problem detail as defined by RFC 7807 \u2014 a standard way to carry machine-readable error details in HTTP responses.\n",
+    "required": [
+     "type",
+     "title",
+     "status"
+    ],
+    "additionalProperties": false,
+    "properties": {
+     "type": {
+      "type": "string",
+      "format": "uri",
+      "description": "A URI identifying the problem type.\n",
+      "default": "about:blank",
+      "example": "https://developers.avayacloud.com/avaya-infinity/docs/error-handling#constraint-violation"
+     },
+     "title": {
+      "type": "string",
+      "description": "A short, human-readable summary of the problem type.\n",
+      "example": "Service Unavailable",
+      "nullable": true
+     },
+     "status": {
+      "type": "integer",
+      "format": "int32",
+      "description": "The HTTP status code for this occurrence of the problem.\n",
+      "minimum": 100,
+      "maximum": 600,
+      "exclusiveMaximum": true,
+      "example": 503,
+      "nullable": true
+     },
+     "detail": {
+      "type": "string",
+      "description": "A human-readable explanation specific to this occurrence of the problem.\n",
+      "example": "Connection to database timed out",
+      "nullable": true
+     },
+     "instance": {
+      "type": "string",
+      "format": "uri",
+      "description": "A URI identifying the specific occurrence of the problem.\n",
+      "nullable": true
+     },
+     "violations": {
+      "type": "array",
+      "description": "A list of field-level validation violations, present on 400 responses.\n",
+      "nullable": true,
+      "items": {
+       "type": "object",
+       "properties": {
+        "field": {
+         "type": "string",
+         "description": "The name of the field that caused the violation.\n",
+         "example": "family"
+        },
+        "message": {
+         "type": "string",
+         "description": "A human-readable explanation of the violation.\n",
+         "example": "must not be null"
+        },
+        "code": {
+         "type": "integer",
+         "format": "int32",
+         "description": "A stable violation code. Use this in error handling logic \u2014 the message text may change.\n",
+         "example": 20006
+        }
+       }
+      },
+      "example": [
+       {
+        "field": "family",
+        "message": "must not be null",
+        "code": 20002
+       }
+      ]
+     }
+    }
+   },
+   "Pagination": {
+    "type": "object",
+    "properties": {
+     "pageNumber": {
+      "type": "integer",
+      "format": "int32",
+      "minimum": 1,
+      "maximum": 1000,
+      "description": "The current page number."
+     },
+     "pageSize": {
+      "type": "integer",
+      "format": "int32",
+      "minimum": 1,
+      "maximum": 25,
+      "description": "The max number of records that can be retrieved on this page."
+     },
+     "total": {
+      "type": "integer",
+      "format": "int32",
+      "description": "The total number of records."
+     },
+     "totalPages": {
+      "type": "integer",
+      "format": "int32",
+      "description": "The total number of pages available."
+     }
+    }
+   },
+   "Links": {
+    "type": "object",
+    "properties": {
+     "prev": {
+      "type": "string",
+      "description": "URL of the previous page. Blank if currently on the first page."
+     },
+     "next": {
+      "type": "string",
+      "description": "URL of the next page. Blank if currently on the last page."
+     }
+    }
+   }
+  },
+  "securitySchemes": {
+   "BearerAuth": {
+    "type": "http",
+    "scheme": "bearer",
+    "description": "OAuth 2.0 Bearer Token authentication using the client credentials flow.\n\nTo get started, contact Avaya Support to request a `client_id` and `client_secret` provisioned with the `EVENT_NOTIFICATION` scope.\n\nOnce you have your credentials, [generate an access token](https://developers.avayacloud.com/avaya-infinity/reference/access-token) and include it as: `Authorization: Bearer <access_token>`\n\n```\nPOST https://core.avaya1234.ec.avayacloud.com/auth/realms/avaya/protocol/openid-connect/token\nContent-Type: application/x-www-form-urlencoded\n\ngrant_type=client_credentials&client_id=<your_client_id>&client_secret=<your_client_secret>&scope=EVENT_NOTIFICATION\n```\n",
+    "bearerFormat": "JWT"
+   }
+  },
+  "examples": {
+   "CreateAgentAndInteractionWebhookSubscription": {
+    "description": "Create Agent & Interaction Webhook Subscription",
+    "value": {
+     "family": [
+      "AGENT",
+      "INTERACTION"
+     ],
+     "events": [
+      "Agent.LoggedIn",
+      "Agent.LoggedOut",
+      "Agent.Ready",
+      "Agent.NotReady",
+      "Interaction.Created",
+      "Interaction.Completed"
+     ],
+     "transport": {
+      "type": "WEBHOOK",
+      "method": "POST",
+      "endpoint": "https://webhook.site/ccc61bd0-a607-4ba0-b891-a9d7484d6196",
+      "authToken": "eyJ0eXAiOiJKV1QiLCJub25jZSI6Ildp...",
+      "authTokenHeader": "my-custom-header"
+     }
+    }
+   },
+   "RenewSubscriptionAndAuthToken": {
+    "description": "Renew Subscription and authToken",
+    "value": {
+     "transport": {
+      "authToken": "eyJ0eXAiOiJKV1QiLCJub25jZSI6Ildp..."
+     }
+    }
+   },
+   "AgentAndInteractionWebhookSubscriptionResponse": {
+    "description": "Subscription Response",
+    "value": {
+     "subscriptionId": "fdbec917-e76e-4645-8120-4eac46f29487",
+     "createdAt": "2020-08-01T14:25:23.162Z",
+     "expiresAt": "2020-08-08T14:25:23.177Z",
+     "expiresIn": 900,
+     "status": "ACTIVE",
+     "family": [
+      "AGENT",
+      "INTERACTION"
+     ],
+     "events": [
+      "Agent.LoggedIn",
+      "Agent.LoggedOut",
+      "Agent.Ready",
+      "Agent.NotReady",
+      "Interaction.Created",
+      "Interaction.Completed"
+     ],
+     "transport": {
+      "type": "WEBHOOK",
+      "method": "POST",
+      "endpoint": "https://webhook.site/fdbec917-e76e-4645-8120-4eac46f29487",
+      "authToken": "eyJ0eXAiOiJKV1QiLCJub25jZSI6Ildp...",
+      "authTokenHeader": "my-custom-header"
+     }
+    }
+   },
+   "SubscriptionPage": {
+    "value": {
+     "pagination": {
+      "pageNumber": 2,
+      "pageSize": 20,
+      "total": 60
+     },
+     "subscriptions": [
+      {
+       "subscriptionId": "fdbec917-e76e-4645-8120-4eac46f29487",
+       "createdAt": "2020-08-01T14:25:23.162Z",
+       "expiresAt": "2020-08-08T14:25:23.177Z",
+       "expiresIn": 900,
+       "status": "ACTIVE",
+       "family": "AGENT",
+       "events": [
+        "ALL"
+       ],
+       "transport": {
+        "type": "WEBHOOK",
+        "method": "POST",
+        "endpoint": "https://webhook.site/ccc61bd0-a607-4ba0-b891-a9d7484d6196",
+        "authToken": "eyJ0eXAiOiJKV1QiLCJub25jZSI6Ildp...",
+        "authTokenHeader": "my-custom-header"
+       }
+      }
+     ],
+     "links": {
+      "prev": "/api/events/v1/subscriptions?pageNumber=1&pageSize=20",
+      "next": "/api/events/v1/subscriptions?pageNumber=3&pageSize=20"
+     }
+    }
+   },
+   "ErrorConstraintViolation": {
+    "description": "Constraint Violation",
+    "value": {
+     "type": "https://developers.avayacloud.com/avaya-infinity/docs/error-handling#constraint-violation",
+     "title": "Constraint Violation",
+     "status": 400,
+     "detail": "A problem that indicates a syntactically correct, yet semantically illegal request. The Server can not process this request until the client resolves the semantic errors described in the violations section.",
+     "violations": [
+      {
+       "field": "family",
+       "message": "must not be null"
+      }
+     ]
+    }
+   },
+   "ErrorUnauthorized": {
+    "description": "Unauthorized",
+    "value": {
+     "type": "https://developers.avayacloud.com/avaya-infinity/docs/error-handling#unauthorized",
+     "title": "Unauthorized",
+     "status": 401,
+     "detail": "This operation requires authentication. See https://developers.avayacloud.com/avaya-infinity/docs/how-to-authenticate-with-avaya-infinitytm-apis"
+    }
+   },
+   "ErrorForbidden": {
+    "description": "Forbidden",
+    "value": {
+     "type": "https://developers.avayacloud.com/avaya-infinity/docs/error-handling#forbidden",
+     "title": "Forbidden",
+     "status": 403,
+     "detail": "According to the access control policy the current user and/or accountId does not have permission to access this resource."
+    }
+   },
+   "ErrorNotFound": {
+    "description": "Not Found",
+    "value": {
+     "type": "https://developers.avayacloud.com/avaya-infinity/docs/error-handling#resource-not-found",
+     "title": "Resource Not Found",
+     "status": 404,
+     "detail": "Resource not found."
+    }
+   },
+   "ErrorInternalServerError": {
+    "description": "Server Error",
+    "value": {
+     "type": "https://developers.avayacloud.com/avaya-infinity/docs/error-handling#server-error",
+     "title": "Server Error",
+     "status": 500,
+     "detail": "An internal server error was encountered."
+    }
+   }
+  }
+ }
+}

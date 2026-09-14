@@ -1,0 +1,126 @@
+generated: '2026-09-14'
+method: searched
+source: live probe of every host this record knows, 2026-09-14
+note: >-
+  One real document was found: an RFC 9727 API catalog served by the ReadMe-hosted developer hub at
+  developers.avayacloud.com. That host is otherwise a single-page-app catch-all — it answers HTTP 200
+  with the same 1,377,743-byte HTML shell for every path, including the negative control — so
+  path_echo_control is recorded as failed for it and every OTHER path on that host is scored as a miss.
+  The api-catalog hit is kept because it is distinguishable on content, not status: it returns
+  Content-Type application/linkset+json with a 650-byte linkset document naming the two Avaya API
+  products, which the catch-all shell does not produce. The two child catalogs the linkset points at
+  (/avaya-infinity/.well-known/api-catalog and /avaya-experience-platform/.well-known/api-catalog)
+  both return HTTP 404 — the index advertises catalogs Avaya does not serve.
+  ixcc-sandbox.avayacloud.com is likewise a catch-all (identical 1,266-byte HTML on every path
+  including the negative control) and yields no documents.
+  The production API hosts (<region>.api.avayacloud.com) sit behind a WAF returning 403 to an
+  anonymous crawler, so their well-known surface could not be read either way.
+  The OIDC discovery document Avaya's own OpenAPI points at lives at
+  https://core.{customerId}.ec.avayacloud.com/auth/realms/avaya/.well-known/openid-configuration —
+  a per-tenant Keycloak realm with no anonymous host to probe.
+hit_count: 1
+hosts:
+  - host: https://www.avaya.com
+    path_echo_control: passed
+    documents:
+      - {path: /.well-known/security.txt, status: 404}
+      - {path: /.well-known/openid-configuration, status: 404}
+      - {path: /.well-known/oauth-authorization-server, status: 404}
+      - {path: /.well-known/oauth-protected-resource, status: 404}
+      - {path: /.well-known/api-catalog, status: 404}
+      - {path: /.well-known/ai-plugin.json, status: 404}
+      - {path: /.well-known/ucp.json, status: 404}
+      - {path: /.well-known/acp.json, status: 404}
+      - {path: /.well-known/aauth-resource.json, status: 404}
+      - {path: /.well-known/apis.json, status: 404}
+      - {path: /apis.json, status: 404}
+      - {path: /apis.yml, status: 404}
+      - {path: /.well-known/agent-card.json, status: 404}
+      - {path: /.well-known/agent.json, status: 404}
+      - {path: /.well-known/avaya-negative-control-7f3ab91c.json, status: 404}
+  - host: https://avaya.com
+    path_echo_control: passed
+    documents:
+      - {path: /.well-known/security.txt, status: 404}
+      - {path: /.well-known/openid-configuration, status: 404}
+      - {path: /.well-known/oauth-authorization-server, status: 404}
+      - {path: /.well-known/api-catalog, status: 404}
+      - {path: /.well-known/agent-card.json, status: 404}
+      - {path: /.well-known/agent.json, status: 404}
+      - {path: /.well-known/avaya-negative-control-7f3ab91c.json, status: 404}
+  - host: https://developers.avayacloud.com
+    path_echo_control: failed
+    soft_404_control:
+      path: /.well-known/avaya-negative-control-7f3ab91c.json
+      status: 200
+      bytes: 1377743
+      content_type: text/html; charset=utf-8
+      note: ReadMe SuperHub SPA catch-all; identical body served for every unmatched path.
+    documents:
+      - path: /.well-known/api-catalog
+        status: 200
+        content_type: application/linkset+json; charset=utf-8
+        bytes: 650
+        file: avaya-api-catalog.json
+        note: >-
+          Genuine RFC 9727 linkset. Anchors https://developers.avayacloud.com/avaya-infinity and
+          https://developers.avayacloud.com/avaya-experience-platform, each with a service-doc link to
+          its reference. Distinguished from the catch-all by content-type and body.
+      - {path: /.well-known/security.txt, status: 200, note: 'SPA shell, not a document — counted as a miss'}
+      - {path: /.well-known/ai-plugin.json, status: 200, note: 'SPA shell — miss'}
+      - {path: /.well-known/ucp.json, status: 200, note: 'SPA shell — miss'}
+      - {path: /.well-known/acp.json, status: 200, note: 'SPA shell — miss'}
+      - {path: /.well-known/aauth-resource.json, status: 200, note: 'SPA shell — miss'}
+      - {path: /.well-known/apis.json, status: 200, note: 'SPA shell — miss'}
+      - {path: /apis.json, status: 200, note: 'SPA shell — miss'}
+      - {path: /apis.yml, status: 200, note: 'SPA shell — miss'}
+      - {path: /.well-known/agent-card.json, status: 200, note: 'SPA shell, not an AgentCard — miss'}
+      - {path: /.well-known/agent.json, status: 200, note: 'SPA shell, not an AgentCard — miss'}
+      - {path: /.well-known/openid-configuration, status: 404}
+      - {path: /.well-known/oauth-authorization-server, status: 404}
+      - {path: /.well-known/oauth-protected-resource, status: 404}
+  - host: https://na.api.avayacloud.com
+    path_echo_control: passed
+    note: Production AXP API host. WAF answers 403 to an anonymous crawler on HTML paths; the API gateway answers a real 404 JSON on catalog paths.
+    documents:
+      - {path: /.well-known/api-catalog, status: 404}
+      - {path: /apis.json, status: 404}
+      - {path: /.well-known/security.txt, status: 403}
+      - {path: /.well-known/openid-configuration, status: 403}
+      - {path: /.well-known/oauth-authorization-server, status: 403}
+      - {path: /.well-known/agent-card.json, status: 403}
+      - {path: /.well-known/agent.json, status: 403}
+      - {path: /.well-known/avaya-negative-control-7f3ab91c.json, status: 403}
+  - host: https://avaya-infinity.readme.io
+    path_echo_control: passed
+    documents:
+      - {path: /.well-known/security.txt, status: 404}
+      - {path: /.well-known/api-catalog, status: 404}
+      - {path: /.well-known/agent-card.json, status: 404}
+      - {path: /.well-known/agent.json, status: 404}
+      - {path: /.well-known/avaya-negative-control-7f3ab91c.json, status: 404}
+  - host: https://avaya-experience-platform.readme.io
+    path_echo_control: passed
+    documents:
+      - {path: /.well-known/security.txt, status: 404}
+      - {path: /.well-known/api-catalog, status: 404}
+      - {path: /.well-known/agent-card.json, status: 404}
+      - {path: /.well-known/agent.json, status: 404}
+      - {path: /.well-known/avaya-negative-control-7f3ab91c.json, status: 404}
+  - host: https://support.avaya.com
+    path_echo_control: passed
+    documents:
+      - {path: /.well-known/security.txt, status: 404}
+      - {path: /.well-known/api-catalog, status: 404}
+      - {path: /.well-known/agent-card.json, status: 404}
+      - {path: /.well-known/agent.json, status: 404}
+      - {path: /.well-known/avaya-negative-control-7f3ab91c.json, status: 404}
+  - host: https://ixcc-sandbox.avayacloud.com
+    path_echo_control: failed
+    soft_404_control:
+      path: /.well-known/avaya-negative-control-7f3ab91c.json
+      status: 200
+      bytes: 1266
+      content_type: text/html
+      note: Catch-all; identical 1,266-byte HTML on every path. No documents recorded.
+    documents: []

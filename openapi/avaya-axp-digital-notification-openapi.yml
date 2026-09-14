@@ -1,0 +1,2050 @@
+openapi: 3.0.2
+x-explorer-enabled: false
+x-samples-languages:
+- curl
+- node
+- java
+- javascript
+- python
+- go
+info:
+  title: Digital - Notification
+  description: Manage webhook subscriptions for digital events.
+  contact:
+    name: Avaya API Team
+    url: https://developers.avayacloud.com/onecloud-ccaas
+    email: apiteam@avaya.com
+  license:
+    name: Avaya Software Development Kit (SDK) Software License Terms
+    url: http://support.avaya.com/css/P8/documents/101038288
+  version: 1.0.1
+servers:
+- url: '{protocol}://{server}{basePath}'
+  description: Open API
+  variables:
+    protocol:
+      enum:
+      - https
+      default: https
+    server:
+      default: HOST-REGION.api.avayacloud.com
+    basePath:
+      default: /api/digital/webhook/v1
+- url: '{protocol}://{server}:{port}'
+  description: Internal API
+  variables:
+    protocol:
+      enum:
+      - http
+      - https
+      default: http
+    server:
+      default: msg-webhook
+    port:
+      enum:
+      - '80'
+      - '443'
+      default: '80'
+tags:
+- name: Subscriptions
+  description: Manage subscriptions for digital events.
+security:
+- {}
+- BearerAuth: []
+  AppKey: []
+paths:
+  /accounts/{accountId}/subscriptions:
+    post:
+      tags:
+      - Subscriptions
+      summary: Create Subscription
+      description: Creates a webhook subscription for digital events. A subscription supports filtering of events by specifying
+        an event type.
+      operationId: createDigitalWebhookSubscription
+      parameters:
+      - $ref: '#/components/parameters/accountId'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Subscription'
+            examples:
+              default:
+                $ref: '#/components/examples/CreateSubscriptionRequest'
+        required: true
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Subscription'
+              examples:
+                default:
+                  $ref: '#/components/examples/Subscription'
+        '400':
+          $ref: '#/components/responses/BadRequestCallbackUrl'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      callbacks:
+        event:
+          '{$request.body#/callbackUrl}':
+            post:
+              requestBody:
+                content:
+                  application/json:
+                    schema:
+                      oneOf:
+                      - $ref: '#/components/schemas/EngagementCreatedEvent'
+                      - $ref: '#/components/schemas/ParticipantEvent'
+                      - $ref: '#/components/schemas/MessageEvent'
+                      - $ref: '#/components/schemas/TypingEvent'
+                      - $ref: '#/components/schemas/EngagementErrorEvent'
+                      discriminator:
+                        propertyName: eventType
+                    examples:
+                      Engagement-Created-Event:
+                        $ref: '#/components/examples/EngagementCreatedEvent'
+                      Participant-Added-Event:
+                        $ref: '#/components/examples/ParticipantAddedEvent'
+                      Participant-Disconnected-Event:
+                        $ref: '#/components/examples/ParticipantDisconnectEvent'
+                      Message-Event-Chat-Plain-Text-Simple:
+                        $ref: '#/components/examples/MessageEventChatPlainTextSimple'
+                      Message-Event-Custom-Chat:
+                        $ref: '#/components/examples/MessageEventCustomChat'
+                      Message-Event-Email:
+                        $ref: '#/components/examples/MessageEventEmail'
+                      Message-Event-Messaging-Agent-To-Customer-File:
+                        $ref: '#/components/examples/MessageEventMessagingAgentToCustomerFile'
+                      Message-Event-Messaging-Agent-To-Customer-Image:
+                        $ref: '#/components/examples/MessageEventMessagingAgentToCustomerImage'
+                      Message-Event-Messaging-Agent-To-Customer-Postback-Link-LocationRequest:
+                        $ref: '#/components/examples/MessageEventMessagingAgentToCustomerPostbackLinkLocationRequest'
+                      Message-Event-Messaging-Agent-To-Customer-Reply:
+                        $ref: '#/components/examples/MessageEventMessagingAgentToCustomerReply'
+                      Message-Event-Messaging-Agent-To-Customer-Carousel:
+                        $ref: '#/components/examples/MessageEventMessagingAgentToCustomerCarousel'
+                      Message-Event-Messaging-Agent-To-Customer-Location:
+                        $ref: '#/components/examples/MessageEventMessagingAgentToCustomerLocation'
+                      Message-Event-Messaging-Customer-To-Agent-Location:
+                        $ref: '#/components/examples/MessageEventMessagingCustomerToAgentLocation'
+                      Message-Event-Messaging-Customer-To-Agent-Reply:
+                        $ref: '#/components/examples/MessageEventMessagingCustomerToAgentReply'
+                      Message-Event-Messaging-Customer-To-Agent-Postback:
+                        $ref: '#/components/examples/MessageEventMessagingCustomerToAgentPostback'
+                      Message-Event-Messaging-Customer-To-Agent-File:
+                        $ref: '#/components/examples/MessageEventMessagingCustomerToAgentFile'
+                      Message-Event-Messaging-Customer-To-Agent-Image:
+                        $ref: '#/components/examples/MessageEventMessagingCustomerToAgentImage'
+                      Engagement-Error-Event:
+                        $ref: '#/components/examples/EngagementErrorEvent'
+                      Typing-Event:
+                        $ref: '#/components/examples/TypingEvent'
+                description: Callback request
+              responses:
+                '200':
+                  description: Your server returns this code if it accepts the callback
+      deprecated: false
+    get:
+      tags:
+      - Subscriptions
+      summary: List Subscriptions
+      description: Lists the existing webhook subscriptions.
+      operationId: listDigitalWebhookSubscriptions
+      parameters:
+      - $ref: '#/components/parameters/accountId'
+      - $ref: '#/components/parameters/channelProviderId'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Subscriptions'
+              examples:
+                default:
+                  $ref: '#/components/examples/ListSubscriptions'
+        '400':
+          $ref: '#/components/responses/BadRequestAccountId'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      deprecated: false
+  /accounts/{accountId}/subscriptions/{subscriptionId}:
+    get:
+      tags:
+      - Subscriptions
+      summary: Get Subscription
+      description: Gets a Subscription by subscriptionId.
+      operationId: getDigitalWebhookSubscription
+      parameters:
+      - $ref: '#/components/parameters/accountId'
+      - $ref: '#/components/parameters/subscriptionId'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Subscription'
+              examples:
+                default:
+                  $ref: '#/components/examples/Subscription'
+        '400':
+          $ref: '#/components/responses/BadRequestAccountId'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      deprecated: false
+    delete:
+      tags:
+      - Subscriptions
+      summary: Delete Subscription
+      description: Delete a Subscription by subscriptionId.
+      operationId: deleteDigitalWebhookSubscription
+      parameters:
+      - $ref: '#/components/parameters/accountId'
+      - $ref: '#/components/parameters/subscriptionId'
+      responses:
+        '204':
+          description: No Content
+        '400':
+          $ref: '#/components/responses/BadRequestAccountId'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      deprecated: false
+    put:
+      tags:
+      - Subscriptions
+      summary: Update Subscription
+      description: Replaces an existing webhook subscription. The client application can modify the callbackUrl and/or the
+        event types for which it receives notifications within the context of this subscription.
+      operationId: updateDigitalWebhookSubscription
+      parameters:
+      - $ref: '#/components/parameters/accountId'
+      - $ref: '#/components/parameters/subscriptionId'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Subscription'
+            examples:
+              default:
+                $ref: '#/components/examples/UpdateSubscriptionRequest'
+        required: true
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Subscription'
+              examples:
+                default:
+                  $ref: '#/components/examples/UpdateSubscriptionResponse'
+        '400':
+          $ref: '#/components/responses/BadRequestCallbackUrl'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+components:
+  parameters:
+    accountId:
+      name: accountId
+      description: The unique 6 character internal id that represents the customer account.
+      required: true
+      in: path
+      schema:
+        type: string
+        minLength: 6
+        maxLength: 6
+        pattern: ^[a-zA-Z]{6}$
+        example: ABCDEF
+    subscriptionId:
+      name: subscriptionId
+      description: The unique 36 character internal id (uuid) that represents the webhook.
+      required: true
+      in: path
+      schema:
+        type: string
+        minLength: 36
+        maxLength: 36
+        pattern: ^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}$
+        example: 2581e39b-fe84-4e38-87f4-63a1d037f39a
+    channelProviderId:
+      name: channelProviderId
+      description: The unique id that represents the channel provider
+      required: false
+      in: query
+      schema:
+        type: string
+        minLength: 3
+        maxLength: 256
+        example: ChatProvider01
+  responses:
+    BadRequestCallbackUrl:
+      description: Bad Request
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorConstraintViolationCallbackUrl'
+    BadRequestAccountId:
+      description: Bad Request
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorConstraintViolationAccountId'
+    Unauthorized:
+      description: Unauthorized.
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorUnauthorized'
+    Forbidden:
+      description: Forbidden.
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorForbidden'
+    NotFound:
+      description: Not Found.
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorNotFound'
+    InternalServerError:
+      description: Internal Server Error
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorInternalServerError'
+  schemas:
+    ParticipantType:
+      description: The type of participant
+      type: string
+      enum:
+      - CUSTOMER
+      - AGENT
+      - SUPERVISOR
+      - SYSTEM
+      - BOT
+    SubscriptionEventType:
+      description: "The type of digital event to subscribe for. The event types available are:\n * `MESSAGES` - A message\
+        \ sent either by customer or a contact center resource (agent, supervisor, system or bot)\n * `CUSTOMER_MESSAGES`\
+        \ - A message sent by customer\n * `CC_MESSAGES` - A message sent by a contact center resource (agent, supervisor,\
+        \ system or bot)\n * `PARTICIPANT_ADDED` - A participant added to an engagement\n * `PARTICIPANT_DISCONNECTED` - A\
+        \ participant disconnected an engagement\n * `ENGAGEMENT_CREATED` - A new engagement was created\n * `ENGAGEMENT_ERROR`\
+        \ - An error occurred in an engagement\n * `TYPING` - An indication that a Contact Center participant is typing. This\
+        \ event is only supported for Custom Messaging\n * `ALL` - An event belonging to any of the above types occurred.\
+        \ When you subscribe to `ALL`, you are effectively subscribing to all current event types, as well as any that might\
+        \ be introduced in the future. Therefore, it's crucial to ensure that your callback handler doesn't fail or return\
+        \ an error when receiving any new event type that you are not prepared to handle\n"
+      type: string
+      enum:
+      - MESSAGES
+      - CUSTOMER_MESSAGES
+      - CC_MESSAGES
+      - PARTICIPANT_ADDED
+      - PARTICIPANT_DISCONNECTED
+      - ENGAGEMENT_CREATED
+      - ENGAGEMENT_ERROR
+      - TYPING
+      - ALL
+    EventType:
+      description: The type of digital event
+      type: string
+      enum:
+      - MESSAGES
+      - PARTICIPANT_ADDED
+      - PARTICIPANT_DISCONNECTED
+      - ENGAGEMENT_CREATED
+      - ENGAGEMENT_ERROR
+      - TYPING
+    Subscription:
+      type: object
+      description: Digital webhook subscription
+      required:
+      - channelProviderId
+      - callbackUrl
+      - eventTypes
+      properties:
+        subscriptionId:
+          type: string
+          readOnly: true
+          description: The unique 36 character id (uuid) that represents the subscription.
+          minLength: 36
+          maxLength: 36
+          pattern: ^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}$
+          example: 2581e39b-fe84-4e38-87f4-63a1d037f39a
+        channelProviderId:
+          type: string
+          description: The unique id that represents the channel provider
+          minLength: 3
+          maxLength: 256
+          example: ChatProvider01
+        callbackUrl:
+          type: string
+          maxLength: 2048
+          description: The public (https) url to send the callback payload.
+          example: https://www.example.com/send/callback/here
+        eventTypes:
+          type: array
+          description: 'The list of event types subscribed for:'
+          minItems: 1
+          maxItems: 6
+          items:
+            $ref: '#/components/schemas/SubscriptionEventType'
+    Subscriptions:
+      description: A list of Subscriptions.
+      type: array
+      items:
+        $ref: '#/components/schemas/Subscription'
+    EventData:
+      type: object
+      description: Common event data
+      required:
+      - eventType
+      - correlationId
+      - eventDate
+      discriminator:
+        propertyName: eventType
+        mapping:
+          ENGAGEMENT_CREATED: '#/components/schemas/EngagementCreatedEvent'
+          PARTICIPANT_ADDED: '#/components/schemas/ParticipantEvent'
+          PARTICIPANT_DISCONNECTED: '#/components/schemas/ParticipantEvent'
+          ENGAGEMENT_ERROR: '#/components/schemas/EngagementErrorEvent'
+          MESSAGES: '#/components/schemas/MessageEvent'
+          TYPING: '#/components/schemas/TypingEvent'
+      properties:
+        eventType:
+          $ref: '#/components/schemas/EventType'
+        correlationId:
+          type: string
+          description: The correlation id is used to uniquely identify the client request. This is an optional field but when
+            specified can be used to correlate the callback event with the original API request.
+        eventDate:
+          type: string
+          format: date-time
+          description: The datetime when the event was generated (in ISO 8601 format including timezone, 'yyyy-MM-dd'T'HH:mm:ss[.SSS]Z')
+    EngagementCreatedEvent:
+      description: Engagement created event
+      allOf:
+      - $ref: '#/components/schemas/EventData'
+      - $ref: '#/components/schemas/EngagementCreated'
+    EngagementCreated:
+      description: Response payload indicating that engagement has been created
+      type: object
+      required:
+      - engagementId
+      - dialogId
+      - accountId
+      - channelProviderId
+      - initiatorParticipantId
+      properties:
+        engagementId:
+          type: string
+          description: The unique 36 character internal id that represents the engagement.
+        dialogId:
+          type: string
+          description: The unique 36 character internal id that represents the dialog.
+        accountId:
+          type: string
+          description: The unique 6 character internal id that represents the customer account
+        conversation:
+          type: string
+          description: The conversation (or intent) of the Engagement
+        channelProviderId:
+          type: string
+          description: The unique id that represents the channel provider
+        businessAccountName:
+          type: string
+          description: The name of the business account configured on the channel provider
+        initiatorParticipantId:
+          type: string
+          description: The unique id of the participant that initiated the dialog
+        sessionId:
+          type: string
+          description: The unique 36 character id (uuid) that represents the users session.
+        customerIdentifiers:
+          $ref: '#/components/schemas/CustomerIdentifiers'
+        engagementParameters:
+          type: object
+          description: Optional key/value parameters that capture the context of the engagement. Information passed in context
+            parameters can be used to make business decisions on how the engagement is treated.
+          additionalProperties:
+            type: string
+        providerDialogId:
+          type: string
+          description: The provider side identifier for a Contact Center dialog.
+        sourceAddress:
+          type: string
+          description: The source address is intended to represent the address from which the CCaaS engagement was created.
+            It might represent a mailbox, a Twitter account, a Facebook account, a chat integration will be the same as the
+            (To) address
+          example: https://www.facebook.com/Ixcc-112670754648669
+        sourceType:
+          type: string
+          description: The source of the engagement. For example the platform as a keyword (Facebook, Twitter, Instagram)
+          example: Facebook
+    CustomerIdentifiers:
+      type: object
+      description: Unique identifiers for identifying the customer during an Engagement such as phoneNumbers or emailAddresses.
+      minProperties: 1
+      maxProperties: 10
+      additionalProperties:
+        type: array
+        description: 'Identifiers related to the Customer. The maximum length of an identifier key is 50 characters and must
+          be a valid "name" of a pre-configured identifier in Customer Journey.
+
+          '
+        maxItems: 5
+        items:
+          type: string
+          minLength: 1
+          maxLength: 256
+    ParticipantEvent:
+      description: Notification for participant added or removed from the dialog of the engagement
+      allOf:
+      - $ref: '#/components/schemas/EventData'
+      - $ref: '#/components/schemas/ParticipantEventData'
+    MessageEvent:
+      description: Message event
+      allOf:
+      - $ref: '#/components/schemas/EventData'
+      - $ref: '#/components/schemas/Message'
+    TypingEvent:
+      description: Typing event
+      allOf:
+      - $ref: '#/components/schemas/EventData'
+      - $ref: '#/components/schemas/TypingEventData'
+    TypingEventData:
+      description: Typing event
+      type: object
+      required:
+      - accountId
+      - dialogId
+      - engagementId
+      - channelId
+      - channelProviderId
+      - senderParticipantId
+      - senderParticipantType
+      - senderParticipantDisplayName
+      properties:
+        dialogId:
+          type: string
+          description: The unique 36 character internal id that represents the dialog.
+        engagementId:
+          type: string
+          description: The unique 36 character internal id that represents the engagement.
+        accountId:
+          type: string
+          description: The unique 6 character internal id that represents the customer account
+        providerDialogId:
+          type: string
+          description: The provider side identifier for a Contact Center dialog.
+        channelProviderId:
+          type: string
+          description: The unique id that represents the channel provider
+        senderParticipantId:
+          type: string
+          description: The unique id that represents the sender of the message
+        senderParticipantType:
+          $ref: '#/components/schemas/ParticipantType'
+        senderParticipantDisplayName:
+          type: string
+          description: The optional display name of the user that sent the message. If not provided, display name from the
+            session will be used.
+        channelId:
+          type: string
+          description: The unique id representing the Contact Center Channel. Only valid Contact Center Channel Id's are accepted.
+            See Contact Center Channel list in Developers guide for further details.
+        businessAccountName:
+          type: string
+          description: The name of the business account configured on the channel provider
+        sourceType:
+          type: string
+          description: The source of the engagement. For example the platform as a keyword (Facebook, Twitter, Instagram)
+          example: Facebook
+        sourceAddress:
+          type: string
+          description: The source address is intended to represent the address from which the CCaaS engagement was created.
+            It might represent a mailbox, a Twitter account, a Facebook account, a chat integration will be the same as the
+            (To) address
+          example: https://www.facebook.com/Ixcc-112670754648669
+        externalRecipientParticipants:
+          type: array
+          items:
+            $ref: '#/components/schemas/ExternalRecipientParticipant'
+          description: List of external recipient participants
+    Message:
+      type: object
+      description: A conversation message
+      required:
+      - accountId
+      - channelProviderId
+      - channelId
+      - senderParticipantId
+      - senderParticipantName
+      - senderParticipantType
+      - body
+      - status
+      properties:
+        messageId:
+          type: string
+          description: The unique 36 character internal id for this specific message.
+        accountId:
+          type: string
+          description: The unique 6 character internal id that represents the customer account
+        dialogId:
+          type: string
+          description: The unique 36 character internal id that represents the dialog.
+        engagementId:
+          type: string
+          description: The unique 36 character internal id that represents the engagement.
+        status:
+          $ref: '#/components/schemas/MessageStatus'
+        sessionId:
+          type: string
+          description: The unique 36 character internal id that represents the users session.
+        businessAccountName:
+          type: string
+          description: The name of the business account configured on the channel provider
+        channelProviderId:
+          type: string
+          description: The unique id that represents the channel provider
+        channelId:
+          type: string
+          description: The unique id representing the Contact Center Channel. Only valid Contact Center Channel Id's are accepted.
+            See Contact Center Channel list in Developers guide for further details.
+        senderParticipantId:
+          type: string
+          description: The unique id that represents the sender of the message
+        senderParticipantName:
+          type: string
+          description: The optional display name of the user that sent the message. If not provided, display name from the
+            session will be used.
+        senderParticipantType:
+          $ref: '#/components/schemas/ParticipantType'
+        body:
+          $ref: '#/components/schemas/BodyElement'
+        fallbackText:
+          type: string
+          description: Fallback message text that clients can show if they are not capable of rendering the body
+        headers:
+          $ref: '#/components/schemas/MessageHeaders'
+        attachments:
+          type: array
+          items:
+            $ref: '#/components/schemas/Attachment'
+        recipientParticipants:
+          type: array
+          items:
+            $ref: '#/components/schemas/Participant'
+          description: List of recipient participants
+        customData:
+          type: object
+          description: Any data complementing the actual message body that is valuable for recipient clients. For example
+            any additional reference links, key words, hash tag references, additional content information etc.
+          additionalProperties:
+            type: string
+        messageIndex:
+          type: integer
+          description: The index of the message within the context of the dialog
+        parentMessageId:
+          type: string
+          description: The unique 36 character internal id for the message that is the parent of this message
+        providerDialogId:
+          type: string
+          description: The provider side identifier for a Contact Center dialog.
+        providerSenderId:
+          type: string
+          description: The provider side identifier for the user who sent the message.
+        providerMessageId:
+          type: string
+          description: The provider side identifier for the message.
+        providerParentMessageId:
+          type: string
+          description: The provider side identifier for the message that is the parent of this message
+        engagementParameters:
+          type: object
+          description: Context information of the engagement. This information might be used to make business decisions on
+            how the engagement is treated. For example, the client application might want to send hints about customer's interest
+            based no customer's searches or FAQ browsing
+          additionalProperties:
+            type: string
+        receivedAt:
+          type: string
+          format: date-time
+          description: The datetime when the message was received by the Contact Center (in ISO 8601 format including timezone,
+            'yyyy-MM-dd'T'HH:mm:ss[.SSS]Z')
+        lastUpdatedAt:
+          type: string
+          format: date-time
+          description: The datetime when the message was last updated (in ISO 8601 format including timezone, 'yyyy-MM-dd'T'HH:mm:ss[.SSS]Z')
+    Participant:
+      type: object
+      description: This event indicates that system will no longer exchange messages for this connection
+      required:
+      - participantId
+      - participantType
+      - connectionId
+      - channelProviderId
+      properties:
+        participantId:
+          type: string
+          description: The unique id that represents the participant.
+        participantType:
+          $ref: '#/components/schemas/ParticipantType'
+        displayName:
+          type: string
+          description: Display name of the participant
+        connectionId:
+          type: string
+          description: The unique 36 character internal id (uuid) that represents the Connection.
+        providerParticipantId:
+          type: string
+          description: The provider side identifier for the participant
+        channelProviderId:
+          type: string
+          description: The unique id that represents the channel provider
+    ExternalRecipientParticipant:
+      type: object
+      description: External recipient participant
+      required:
+      - participantId
+      properties:
+        participantId:
+          type: string
+          description: The unique id that represents the participant.
+        providerParticipantId:
+          type: string
+          description: The provider side identifier for the participant
+    Attachment:
+      type: object
+      description: Meta information about the media
+      required:
+      - attachmentId
+      - name
+      - size
+      - contentType
+      - url
+      properties:
+        attachmentId:
+          type: string
+          description: The unique 36 character internal id for the attachment
+        name:
+          type: string
+          description: The name of the attachment
+        size:
+          type: integer
+          format: int64
+          description: The size of the attachment in bytes
+        contentType:
+          type: string
+          description: The content type of the attachment
+        contentId:
+          type: string
+          maxLength: 256
+          description: The content id of the attachment
+        url:
+          type: string
+          description: The URL link to retrieve the attachment
+        captionText:
+          type: string
+          description: The text describing the caption of the attachment
+        thumbnailUrl:
+          type: string
+          description: The URL link to retrieve the thumbnail of the attachment
+        additionalProperties:
+          type: object
+          description: Additional properties of the attachment
+          additionalProperties:
+            type: string
+    MessageHeaders:
+      type: object
+      description: Header of the message
+      properties:
+        sourceAddress:
+          type: string
+          description: The source address is intended to represent the address from which the CCaaS engagement was created.
+            It might represent a mailbox, a Twitter account, a Facebook account, a chat integration will be the same as the
+            (To) address
+          example: https://www.facebook.com/Ixcc-112670754648669
+        sourceType:
+          type: string
+          description: The source of the engagement. For example the platform as a keyword (Facebook, Twitter, Instagram)
+          example: Facebook
+        priority:
+          type: string
+          description: The priority of the message set by the provider
+        sensitivity:
+          type: string
+          description: The sensitivity of the message set by the provider
+        encoding:
+          type: string
+          description: The encoding used for the body of the message
+        subject:
+          type: string
+          description: The subject of the message set by the provider
+        from:
+          type: string
+          description: The sender of the message set by the provider
+        to:
+          type: array
+          description: The To (recipients) of the message set by the provider
+          items:
+            type: string
+        cc:
+          type: array
+          description: The Cc (recipients) of the message set by the provider. This field is mainly used for email messages
+          items:
+            type: string
+        bcc:
+          type: array
+          description: The Bcc (recipients) of the message set by the provider. This field is mainly used for email messages
+          items:
+            type: string
+        replyTo:
+          type: string
+          description: The address to use when replying.
+        clientDeviceTag:
+          type: string
+          description: The tag used to identify the client device that was used to send the message.
+        messageSourceServerTag:
+          type: string
+          description: The tag used by a service to identify that this message was sent by itself.
+        providerTimestamp:
+          type: string
+          format: date-time
+          description: The date time when the message was captured by the provider (in ISO 8601 format including timezone,
+            'yyyy-MM-dd'T'HH:mm:ss[.SSS]Z')
+        additionalHeaders:
+          type: object
+          description: The additional header fields of the message. For example if the payload is of a specific version that
+            the clients rendering the payload need to be aware of that information can be sent here
+          additionalProperties:
+            type: string
+    BodyElement:
+      type: object
+      description: Element of the message body
+      required:
+      - elementType
+      properties:
+        elementType:
+          type: string
+          description: The type of the body element such as text, image, attachment, carousel, location, or form
+        elementText:
+          $ref: '#/components/schemas/ElementText'
+        payload:
+          type: string
+          description: Data required to help render the message on end clients
+        richMediaPayload:
+          $ref: '#/components/schemas/RichMediaPayload'
+    RichMediaPayload:
+      type: object
+      description: Rich media payload data
+      properties:
+        selectedAction:
+          $ref: '#/components/schemas/Action'
+        actions:
+          type: array
+          description: An array of actions associated with the message
+          readOnly: true
+          minItems: 1
+          maxItems: 5
+          items:
+            $ref: '#/components/schemas/Action'
+        items:
+          type: array
+          description: An array of items associated with the message
+          readOnly: true
+          minItems: 1
+          maxItems: 10
+          items:
+            $ref: '#/components/schemas/Item'
+        coordinates:
+          $ref: '#/components/schemas/Coordinates'
+        location:
+          $ref: '#/components/schemas/Location'
+    Action:
+      type: object
+      description: An action button that the user can click to trigger an action
+      required:
+      - type
+      properties:
+        type:
+          type: string
+          description: The type of action. Supported types of action types are link, reply, postback, and locationRequest.
+          minLength: 1
+          maxLength: 50
+          example: postback
+        text:
+          type: string
+          description: The text on an action button
+          maxLength: 50
+          example: Book Appointment
+        payload:
+          type: string
+          description: The payload of 'postback' or 'reply' action button
+          maxLength: 512
+          example: BOOK_APPOINTMENT
+        uri:
+          type: string
+          description: The URI that will be used by the clients when 'link' action button is clicked
+          format: uri
+          example: https://example.com/items/info
+        iconUrl:
+          type: string
+          description: The URL of the image of the icon on a 'reply' action button
+          format: uri
+          example: https://example.com/images/icon.png
+    Coordinates:
+      type: object
+      description: The coordinates of a location
+      required:
+      - lat
+      - long
+      properties:
+        lat:
+          type: number
+          description: The latitude of a location
+          format: double
+          minimum: -90
+          maximum: 90
+          example: -18.516634
+        long:
+          type: number
+          description: The longitude of a location
+          format: double
+          minimum: -180
+          maximum: 180
+          example: 73.928104
+    Location:
+      type: object
+      description: The information about a location
+      properties:
+        address:
+          type: string
+          description: The address of the location
+          maxLength: 512
+          example: Nth Floor, UVW Park, XYZ Street, Some Country, PIN CODE - 123456
+        name:
+          type: string
+          description: The name of the location
+          maxLength: 50
+          example: ABC Enterprises
+    Item:
+      type: object
+      description: An item of a carousel or a list
+      required:
+      - title
+      - actions
+      properties:
+        title:
+          type: string
+          description: The title of the item in carousel or list
+          minLength: 1
+          maxLength: 50
+          example: Tacos
+        mediaUrl:
+          type: string
+          description: The URL of the image to be shown inside the item in carousel or list
+          format: uri
+          example: https://example.com/images/image.png
+        description:
+          type: string
+          description: Description of the item in carousel or list
+          maxLength: 256
+          example: Car with hybrid features
+        actions:
+          type: array
+          description: An array of actions associated with the item in carousel or list
+          minItems: 1
+          maxItems: 5
+          items:
+            $ref: '#/components/schemas/Action'
+    ElementText:
+      type: object
+      description: The text of the message body
+      required:
+      - text
+      properties:
+        text:
+          type: string
+          description: Text of the body
+        textFormat:
+          $ref: '#/components/schemas/TextFormat'
+    TextFormat:
+      description: The text format of the message in the body
+      example: PLAINTEXT
+      type: string
+      enum:
+      - PLAINTEXT
+      - HTML
+      - MARKDOWN
+    MessageStatus:
+      description: The delivery status of the message
+      type: string
+      enum:
+      - NONE
+      - SENT
+      - DELIVERED
+      - READ
+      - FAILED
+      - DELETED
+    EngagementErrorEvent:
+      description: Event when an engagement fails
+      allOf:
+      - $ref: '#/components/schemas/EventData'
+      - type: object
+        additionalProperties: true
+        required:
+        - type
+        - title
+        - channelProviderId
+        - correlationId
+        properties:
+          type:
+            type: string
+            description: The type of error.
+            example: ENGAGEMENT_CREATION_FAILED
+          title:
+            type: string
+            description: The title (summary) of the error.
+            example: Error occurred while creating an engagement
+          detail:
+            type: string
+            description: The detailed description of the error.
+            example: Unable to create an engagement
+          engagementId:
+            type: string
+            description: The unique 36 character internal id that represents the engagement.
+            example: d3c8400d-c44f-4451-8316-435ch8c6e3f2
+          dialogId:
+            type: string
+            description: The unique 36 character internal id (uuid) that represents the Dialog.
+            example: d3c8400d-d34f-4451-8316-4333334fac34
+          sessionId:
+            type: string
+            description: The unique 36 character id (uuid) that represents the users session.
+            example: e348400d-d344-4451-8316-435ch8c6e3f2
+          providerDialogId:
+            type: string
+            description: Identifier for the conversation maintained by provider
+            example: e248400d-d344-4451-8316-435ch8c6e3f1
+          channelProviderId:
+            type: string
+            description: The unique id that represents the channel provider
+            example: ChatProvider01
+          channelId:
+            type: string
+            description: The unique id representing the Contact Center Channel. Only valid Contact Center Channel Id's are
+              accepted. See Contact Center Channel list in Developers guide for further details.
+            example: Chat
+          accountId:
+            type: string
+            description: The unique 6 character internal id that represents the customer account
+            example: ABCDEF
+    ParticipantEventData:
+      description: Notification for participant added or removed from the dialog of the engagement
+      type: object
+      required:
+      - accountId
+      - channelProviderId
+      - engagementId
+      - dialogId
+      - connectionId
+      properties:
+        engagementId:
+          type: string
+          description: The unique 36 character internal id (uuid) that represents the engagement.
+        dialogId:
+          type: string
+          description: The unique 36 character internal id (uuid) that represents the dialog.
+        accountId:
+          type: string
+          description: The unique 6 character internal id that represents the customer account
+        channelId:
+          type: string
+          description: The unique id representing the Contact Center Channel. Only valid Contact Center Channel Id's are accepted.
+            See Contact Center Channel list in Developers guide for further details.
+        channelProviderId:
+          type: string
+          description: The unique id that represents the channel provider
+        sessionId:
+          type: string
+          description: The unique 36 character internal id (uuid) that represents the users session.
+        connectionId:
+          type: string
+          description: The unique 36 character internal id (uuid) that represents the connection.
+        participantId:
+          type: string
+          description: The unique 36 character internal id (uuid) that represents the participant.
+        displayName:
+          type: string
+          description: The display name of the participant
+        participantType:
+          $ref: '#/components/schemas/ParticipantType'
+        providerDialogId:
+          type: string
+          description: The provider side identifier for a Contact Center dialog.
+        providerParticipantId:
+          type: string
+          description: The provider side identifier for a Contact Center participant.
+    Problem:
+      type: object
+      description: '<b>Problem Detail</b> as a way to carry machine-readable details of errors in a HTTP response to avoid
+        the need to define new error response formats for HTTP APIs <a href="https://tools.ietf.org/html/rfc7807">RFC 7807</a>
+
+        '
+      properties:
+        type:
+          type: string
+          format: uri
+          description: 'An absolute URI that identifies the problem type. When dereferenced, it SHOULD provide human-readable
+            documentation for the problem type (e.g., using HTML).
+
+            '
+          default: about:blank
+          example: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#constraint-violation
+        title:
+          type: string
+          description: 'A short, summary of the problem type. Written in english and readable for engineers (usually not suited
+            for non technical stakeholders and not localized).
+
+            '
+          example: Service Unavailable
+          nullable: true
+        status:
+          type: integer
+          format: int32
+          description: 'The HTTP status code generated by the origin server for this occurrence of the problem.
+
+            '
+          minimum: 100
+          maximum: 600
+          exclusiveMaximum: true
+          example: 503
+          nullable: true
+        detail:
+          type: string
+          description: 'A human readable explanation specific to this occurrence of the problem.
+
+            '
+          example: Connection to database timed out
+          nullable: true
+        instance:
+          type: string
+          format: uri
+          description: 'An absolute URI that identifies the specific occurrence of the problem. It may or may not yield further
+            information if dereferenced.
+
+            '
+          nullable: true
+        violations:
+          type: array
+          description: 'A list of violations that occurred as a result of invalid data provided as part of a request.
+
+            '
+          nullable: true
+          items:
+            type: object
+            properties:
+              field:
+                type: string
+                description: 'The name of the field in the request that caused the violation. This can be the name of a path
+                  parameter, query parameter, or a field within the request body.
+
+                  '
+                example: accountId
+              message:
+                type: string
+                description: 'A human readable explanation specific to this occurrence of the violation.
+
+                  '
+                example: must match "^[a-zA-Z]{6}$"
+              code:
+                type: integer
+                format: int32
+                description: 'The violation code generated by the server for this occurrence of the violation. Use this code
+                  when implementing any error handling logic instead of the message, as the message can change.
+
+                  '
+                example: 20006
+          example:
+          - field: emailAddress
+            message: must not be null
+            code: 20002
+          - field: accountId
+            message: must match "^[a-zA-Z]{6}$"
+            code: 20006
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      description: This API uses Bearer Token Authorization Flow
+      bearerFormat: JWT
+    AppKey:
+      type: apiKey
+      in: header
+      name: appkey
+      description: This API needs an appKey as header
+  examples:
+    TypingEvent:
+      value:
+        eventType: TYPING
+        correlationId: zc38400d-c44f-4451-8316-e75c4efbt779
+        eventDate: '2018-11-13T20:25:39.734Z'
+        dialogId: fc741b00-710b-11eb-9439-0242ac130002
+        engagementId: 8d7cf5b8-70ad-11eb-9439-0242ac130002
+        accountId: ABCDEF
+        providerDialogId: 616imlgwg266hjs670nl
+        channelProviderId: 09a9cba2-f8bb-4b7f-8405-48f82290f30e
+        senderParticipantId: 277cacfe-710c-11eb-9439-0242ac130002
+        senderParticipantType: AGENT
+        senderParticipantDisplayName: Jane Doe
+        channelId: Messaging
+        businessAccountName: e94e278d-72e7-48cc-80fc-dba9f8dd1c36
+        sourceType: custom-messaging:my-provider
+        sourceAddress: https://my-provider.com/page-id
+        externalRecipientParticipants:
+        - participantId: johndoe@example.com
+          providerParticipantId: ad27a746b4c621a292c43f81
+    CreateSubscriptionRequest:
+      value:
+        channelProviderId: ChatProvider01
+        callbackUrl: https://www.example.com/send/callback/here
+        eventTypes:
+        - MESSAGES
+    Subscription:
+      value:
+        subscriptionId: 2581e39b-fe84-4e38-87f4-63a1d037f39a
+        channelProviderId: ChatProvider01
+        callbackUrl: https://www.example.com/send/callback/here
+        eventTypes:
+        - MESSAGES
+    ListSubscriptions:
+      value:
+      - subscriptionId: 2581e39b-fe84-4e38-87f4-63a1d037f39a
+        channelProviderId: ChatProvider01
+        callbackUrl: https://www.example.com/send/callback/here
+        eventTypes:
+        - MESSAGES
+      - subscriptionId: e9871f9a-1111-41e4-ac9b-a817016577a0
+        channelProviderId: ChatProvider01
+        callbackUrl: https://www.example.com/send/other/callback/here
+        eventTypes:
+        - ALL
+    UpdateSubscriptionRequest:
+      value:
+        subscriptionId: 2581e39b-fe84-4e38-87f4-63a1d037f39a
+        channelProviderId: ChatProvider01
+        callbackUrl: https://www.example.com/send/callback/here/instead
+        eventTypes:
+        - ALL
+    UpdateSubscriptionResponse:
+      value:
+        subscriptionId: 2581e39b-fe84-4e38-87f4-63a1d037f39a
+        channelProviderId: ChatProvider01
+        callbackUrl: https://www.example.com/send/callback/here/instead
+        eventTypes:
+        - ALL
+    MessageEventChatPlainTextSimple:
+      value:
+        eventType: MESSAGES
+        correlationId: zc38400d-c44f-4451-8316-e75c4efbt779
+        eventDate: '2018-11-13T20:25:39.734Z'
+        messageId: f314569c-710b-11eb-9439-0242ac130002
+        accountId: ABCDEF
+        dialogId: fc741b00-710b-11eb-9439-0242ac130002
+        engagementId: 8d7cf5b8-70ad-11eb-9439-0242ac130002
+        status: SENT
+        sessionId: 10494b78-710c-11eb-9439-0242ac130002
+        businessAccountName: e94e278d-72e7-48cc-80fc-dba9f8dd1c36
+        channelProviderId: ChatConnector01
+        channelId: Chat
+        senderParticipantId: 277cacfe-710c-11eb-9439-0242ac130002
+        senderParticipantName: Jane Doe
+        senderParticipantType: AGENT
+        body:
+          elementType: text
+          elementText:
+            text: What is the make and model?
+            textFormat: PLAINTEXT
+        customData:
+          sentiment: Neutral
+        messageIndex: 4
+        recipientParticipants:
+        - participantId: johndoe@example.com
+          connectionId: 1349bcb1-fbf4-457c-af26-376da7bedc3c
+          displayName: John Doe
+          participantType: CUSTOMER
+          providerParticipantId: johndoe@example.com
+          channelProviderId: ChatConnector01
+        providerDialogId: 616imlgwg266hjs670nl
+        providerSenderId: janedoe@example.com
+        receivedAt: '2018-11-13T20:25:39.534Z'
+        lastUpdatedAt: '2018-11-13T20:25:39.734Z'
+    MessageEventCustomChat:
+      value:
+        eventType: MESSAGES
+        correlationId: zc38400d-c44f-4451-8316-e75c4efbt779
+        eventDate: '2018-11-13T20:25:39.734Z'
+        messageId: f314569c-710b-11eb-9439-0242ac130002
+        accountId: ABCDEF
+        dialogId: fc741b00-710b-11eb-9439-0242ac130002
+        engagementId: 8d7cf5b8-70ad-11eb-9439-0242ac130002
+        status: NONE
+        sessionId: 10494b78-710c-11eb-9439-0242ac130002
+        businessAccountName: e94e278d-72e7-48cc-80fc-dba9f8dd1c36
+        channelProviderId: ChatConnector01
+        channelId: Chat
+        senderParticipantId: 277cacfe-710c-11eb-9439-0242ac130002
+        senderParticipantName: Jane Doe
+        senderParticipantType: AGENT
+        body:
+          elementType: text
+          elementText:
+            text: Select a variant
+            textFormat: PLAINTEXT
+          payload: '{"requestElementType":"scroll", "values":["xp-a (Petrol Automatic)", "xp-m (Petrol Manual)"]}'
+        fallbackText: What is the variant - xp-a (Petrol Automatic) or xp-m (Petrol Manual) ?
+        headers:
+          priority: normal
+          sensitivity: normal
+          encoding: utf-8
+          subject: sell car
+          clientDeviceTag: android_app
+          messageSourceServerTag: ChatConnector01-node02
+          providerTimestamp: '2018-11-13T20:25:39.534Z'
+          additionalHeaders:
+            appVersion: v2.1
+        customData:
+          key-words: '["evaluation","variant"]'
+        messageIndex: 6
+        recipientParticipants:
+        - participantId: johndoe@example.com
+          connectionId: 1349bcb1-fbf4-457c-af26-376da7bedc3c
+          displayName: John Doe
+          participantType: CUSTOMER
+          providerParticipantId: johndoe@example.com
+          channelProviderId: ChatConnector01
+        parentMessageId: 6b5e9a72-710c-11eb-9439-0242ac130002
+        providerDialogId: 616imlgwg266hjs670nl
+        providerSenderId: johndoe@example.com
+        providerParentMessageId: 611c9a6a4a250100d4bd2c54
+        receivedAt: '2018-11-13T20:25:39.534Z'
+        lastUpdatedAt: '2018-11-13T20:25:39.734Z'
+    MessageEventEmail:
+      value:
+        eventType: MESSAGES
+        correlationId: zc38400d-c44f-4451-8316-e75c4efbt779
+        eventDate: '2018-11-13T20:25:39.734Z'
+        messageId: f314569c-710b-11eb-9439-0242ac130002
+        accountId: ABCDEF
+        dialogId: fc741b00-710b-11eb-9439-0242ac130002
+        engagementId: 8d7cf5b8-70ad-11eb-9439-0242ac130002
+        status: NONE
+        sessionId: 10494b78-710c-11eb-9439-0242ac130002
+        businessAccountName: acme@example.com
+        channelProviderId: EmailConnector01
+        channelId: Email
+        senderParticipantId: 277cacfe-710c-11eb-9439-0242ac130002
+        senderParticipantName: Company System Name
+        senderParticipantType: SYSTEM
+        body:
+          elementType: text
+          elementText:
+            text: <html><body><div>Thanks for reaching out to us. Our executive will contact you within 24 hours.</div><div><img
+              src="cid:company-logo-cid"/></div></body></html>
+            textFormat: HTML
+        headers:
+          to:
+          - john@example.com
+          from: support@example.com
+          cc:
+          - supportmanagement@example.com
+          subject: Procedure to sell a call
+          additionalHeaders:
+            Content-Language: en
+            Auto-submitted: auto-replied
+        attachmentIds:
+        - attachmentId: 0ffa058c-77c7-4dbc-9fce-b0ee9e5ccd67
+          name: company-logo.png
+          contentType: image/png
+          url: /v1/media/b03976ea-7e8b-11ea-bc55-0242ac130003?ttl=1672839427321&signature=8ac27e8f48f997d1a889b4b6111c3ad9fb92974a7efa4913dca92ffa43ac709f
+          size: 2383
+          contentId: company-logo-cid
+          captionText: Company Logo
+          additionalProperties:
+            tags: '["logo-small"]'
+        messageIndex: 2
+        receivedAt: '2018-11-13T20:25:39.534Z'
+        lastUpdatedAt: '2018-11-13T20:25:39.734Z'
+        recipientParticipants:
+        - participantId: johndoe@example.com
+          connectionId: 1349bcb1-fbf4-457c-af26-376da7bedc3c
+          displayName: John Doe
+          participantType: CUSTOMER
+          providerParticipantId: johndoe@example.com
+          channelProviderId: EmailConnector01
+    MessageEventMessagingAgentToCustomerFile:
+      value:
+        eventType: MESSAGES
+        correlationId: zc38400d-c44f-4451-8316-e75c4efbt779
+        eventDate: '2018-11-13T20:25:39.734Z'
+        messageId: f314569c-710b-11eb-9439-0242ac130002
+        accountId: ABCDEF
+        dialogId: fc741b00-710b-11eb-9439-0242ac130002
+        engagementId: 8d7cf5b8-70ad-11eb-9439-0242ac130002
+        status: DELIVERED
+        businessAccountName: e94e278d-72e7-48cc-80fc-dba9f8dd1c36
+        channelProviderId: 591c2529-c3a3-4062-a213-b239c18f543b
+        channelId: Messaging
+        providerDialogId: 616imlgwg266hjs670nl
+        senderParticipantId: 277cacfe-710c-11eb-9439-0242ac130002
+        senderParticipantName: Jane Doe
+        senderParticipantType: AGENT
+        body:
+          elementType: file
+          elementText:
+            text: This file contains car's brochure
+            textFormat: PLAINTEXT
+        headers:
+          sourceAddress: 9dc1b407-44fb-4575-a0e0-c9826172ef5c
+          sourceType: custom:provider
+        attachments:
+        - attachmentId: 0ffa058c-77c7-4dbc-9fce-b0ee9e5ccd67
+          name: my-file.txt
+          contentType: text/plain
+          url: /v1/media/b03976ea-7e8b-11ea-bc55-0242ac130003?ttl=1672839427321&signature=8ac27e8f48f997d1a889b4b6111c3ad9fb92974a7efa4913dca92ffa43ac709f
+          size: 2383
+        messageIndex: 6
+        recipientParticipants:
+        - participantId: 6c66cfbfa5b8c841297103d4
+          connectionId: 1349bcb1-fbf4-457c-af26-376da7bedc3c
+          displayName: John Doe
+          participantType: CUSTOMER
+          providerParticipantId: ad27a746b4c621a292c43f81
+          channelProviderId: 591c2529-c3a3-4062-a213-b239c18f543b
+        receivedAt: '2018-11-13T20:25:39.536Z'
+        lastUpdatedAt: '2018-11-13T20:25:39.734Z'
+    MessageEventMessagingAgentToCustomerImage:
+      value:
+        eventType: MESSAGES
+        correlationId: zc38400d-c44f-4451-8316-e75c4efbt779
+        eventDate: '2018-11-13T20:25:39.734Z'
+        messageId: f314569c-710b-11eb-9439-0242ac130002
+        accountId: ABCDEF
+        dialogId: fc741b00-710b-11eb-9439-0242ac130002
+        engagementId: 8d7cf5b8-70ad-11eb-9439-0242ac130002
+        status: DELIVERED
+        businessAccountName: e94e278d-72e7-48cc-80fc-dba9f8dd1c36
+        channelProviderId: 591c2529-c3a3-4062-a213-b239c18f543b
+        channelId: Messaging
+        providerDialogId: 616imlgwg266hjs670nl
+        senderParticipantId: 277cacfe-710c-11eb-9439-0242ac130002
+        senderParticipantName: Jane Doe
+        senderParticipantType: AGENT
+        body:
+          elementType: image
+          elementText:
+            text: Here is a picture
+            textFormat: PLAINTEXT
+        headers:
+          sourceAddress: 9dc1b407-44fb-4575-a0e0-c9826172ef5c
+          sourceType: custom:provider
+        attachments:
+        - attachmentId: 0ffa058c-77c7-4dbc-9fce-b0ee9e5ccd67
+          name: my-picture.png
+          contentType: image/png
+          url: /v1/media/b03976ea-7e8b-11ea-bc55-0242ac130003?ttl=1672839427321&signature=8ac27e8f48f997d1a889b4b6111c3ad9fb92974a7efa4913dca92ffa43ac709f
+          size: 2383
+        messageIndex: 8
+        recipientParticipants:
+        - participantId: 6c66cfbfa5b8c841297103d4
+          connectionId: 1349bcb1-fbf4-457c-af26-376da7bedc3c
+          displayName: John Doe
+          participantType: CUSTOMER
+          providerParticipantId: ad27a746b4c621a292c43f81
+          channelProviderId: 591c2529-c3a3-4062-a213-b239c18f543b
+        receivedAt: '2018-11-13T20:25:39.536Z'
+        lastUpdatedAt: '2018-11-13T20:25:39.734Z'
+    MessageEventMessagingAgentToCustomerPostbackLinkLocationRequest:
+      value:
+        eventType: MESSAGES
+        correlationId: zc38400d-c44f-4451-8316-e75c4efbt779
+        eventDate: '2018-11-13T20:25:39.734Z'
+        messageId: f314569c-710b-11eb-9439-0242ac130002
+        accountId: ABCDEF
+        dialogId: fc741b00-710b-11eb-9439-0242ac130002
+        engagementId: 8d7cf5b8-70ad-11eb-9439-0242ac130002
+        status: DELIVERED
+        businessAccountName: e94e278d-72e7-48cc-80fc-dba9f8dd1c36
+        channelProviderId: 591c2529-c3a3-4062-a213-b239c18f543b
+        channelId: Messaging
+        providerDialogId: 616imlgwg266hjs670nl
+        senderParticipantId: 277cacfe-710c-11eb-9439-0242ac130002
+        senderParticipantName: Jane Doe
+        senderParticipantType: AGENT
+        body:
+          elementType: text
+          elementText:
+            text: Choose an option
+            textFormat: PLAINTEXT
+            richMediaPayload:
+              actions:
+              - type: postback
+                text: Book Appointment
+                payload: BOOK_APPOINTMENT
+              - type: link
+                text: Get more information
+                uri: https://example.com/documents/info
+              - type: locationRequest
+                text: Send Your Location
+        headers:
+          sourceAddress: 9dc1b407-44fb-4575-a0e0-c9826172ef5c
+          sourceType: custom:provider
+        messageIndex: 6
+        recipientParticipants:
+        - participantId: 6c66cfbfa5b8c841297103d4
+          connectionId: 1349bcb1-fbf4-457c-af26-376da7bedc3c
+          displayName: John Doe
+          participantType: CUSTOMER
+          providerParticipantId: ad27a746b4c621a292c43f81
+          channelProviderId: 591c2529-c3a3-4062-a213-b239c18f543b
+        receivedAt: '2018-11-13T20:25:39.536Z'
+        lastUpdatedAt: '2018-11-13T20:25:39.734Z'
+    MessageEventMessagingAgentToCustomerReply:
+      value:
+        eventType: MESSAGES
+        correlationId: zc38400d-c44f-4451-8316-e75c4efbt779
+        eventDate: '2018-11-13T20:25:39.734Z'
+        messageId: f314569c-710b-11eb-9439-0242ac130002
+        accountId: ABCDEF
+        dialogId: fc741b00-710b-11eb-9439-0242ac130002
+        engagementId: 8d7cf5b8-70ad-11eb-9439-0242ac130002
+        status: DELIVERED
+        businessAccountName: e94e278d-72e7-48cc-80fc-dba9f8dd1c36
+        channelProviderId: 591c2529-c3a3-4062-a213-b239c18f543b
+        channelId: Messaging
+        providerDialogId: 616imlgwg266hjs670nl
+        senderParticipantId: 277cacfe-710c-11eb-9439-0242ac130002
+        senderParticipantName: Jane Doe
+        senderParticipantType: AGENT
+        body:
+          elementType: text
+          elementText:
+            text: Choose an option
+            textFormat: PLAINTEXT
+          richMediaPayload:
+            actions:
+            - type: reply
+              text: Upset
+              payload: UPSET
+              iconUrl: https://example.com/icons/upset.png
+            - type: reply
+              text: Good
+              payload: GOOD
+              iconUrl: https://example.com/icons/good.png
+            - type: reply
+              text: Perfect
+              payload: PERFECT
+              iconUrl: https://example.com/icons/perfect.png
+        headers:
+          sourceAddress: 9dc1b407-44fb-4575-a0e0-c9826172ef5c
+          sourceType: custom:provider
+        messageIndex: 6
+        recipientParticipants:
+        - participantId: 6c66cfbfa5b8c841297103d4
+          connectionId: 1349bcb1-fbf4-457c-af26-376da7bedc3c
+          displayName: John Doe
+          participantType: CUSTOMER
+          providerParticipantId: ad27a746b4c621a292c43f81
+          channelProviderId: 591c2529-c3a3-4062-a213-b239c18f543b
+        receivedAt: '2018-11-13T20:25:39.536Z'
+        lastUpdatedAt: '2018-11-13T20:25:39.734Z'
+    MessageEventMessagingAgentToCustomerCarousel:
+      value:
+        eventType: MESSAGES
+        correlationId: zc38400d-c44f-4451-8316-e75c4efbt779
+        eventDate: '2018-11-13T20:25:39.734Z'
+        messageId: f314569c-710b-11eb-9439-0242ac130002
+        accountId: ABCDEF
+        dialogId: fc741b00-710b-11eb-9439-0242ac130002
+        engagementId: 8d7cf5b8-70ad-11eb-9439-0242ac130002
+        status: DELIVERED
+        businessAccountName: e94e278d-72e7-48cc-80fc-dba9f8dd1c36
+        channelProviderId: 591c2529-c3a3-4062-a213-b239c18f543b
+        channelId: Messaging
+        providerDialogId: 616imlgwg266hjs670nl
+        senderParticipantId: 277cacfe-710c-11eb-9439-0242ac130002
+        senderParticipantName: Jane Doe
+        senderParticipantType: AGENT
+        body:
+          elementType: text
+          elementText:
+            text: Choose an option
+            textFormat: PLAINTEXT
+          richMediaPayload:
+            items:
+            - mediaUrl: https://example.com/cars/images/carmodel1.png
+              description: This is hybrid car
+              title: CarModel1
+              actions:
+              - payload: CAR_MODEL_1
+                text: Select
+                type: postback
+              - text: More info
+                type: link
+                uri: https://example.com/cars/info-carmodel1
+            - mediaUrl: https://example.com/cars/images/carmodel2.png
+              description: This is hybrid car
+              title: CarModel2
+              actions:
+              - payload: CAR_MODEL_2
+                text: Select
+                type: postback
+              - text: More info
+                type: link
+                uri: https://example.com/cars/info-carmodel2
+        headers:
+          sourceAddress: 9dc1b407-44fb-4575-a0e0-c9826172ef5c
+          sourceType: custom:provider
+        messageIndex: 6
+        recipientParticipants:
+        - participantId: 6c66cfbfa5b8c841297103d4
+          connectionId: 1349bcb1-fbf4-457c-af26-376da7bedc3c
+          displayName: John Doe
+          participantType: CUSTOMER
+          providerParticipantId: ad27a746b4c621a292c43f81
+          channelProviderId: 591c2529-c3a3-4062-a213-b239c18f543b
+        receivedAt: '2018-11-13T20:25:39.536Z'
+        lastUpdatedAt: '2018-11-13T20:25:39.734Z'
+    MessageEventMessagingAgentToCustomerLocation:
+      value:
+        eventType: MESSAGES
+        correlationId: zc38400d-c44f-4451-8316-e75c4efbt779
+        eventDate: '2018-11-13T20:25:39.734Z'
+        messageId: f314569c-710b-11eb-9439-0242ac130002
+        accountId: ABCDEF
+        dialogId: fc741b00-710b-11eb-9439-0242ac130002
+        engagementId: 8d7cf5b8-70ad-11eb-9439-0242ac130002
+        status: DELIVERED
+        businessAccountName: e94e278d-72e7-48cc-80fc-dba9f8dd1c36
+        channelProviderId: 591c2529-c3a3-4062-a213-b239c18f543b
+        channelId: Messaging
+        providerDialogId: 616imlgwg266hjs670nl
+        senderParticipantId: 277cacfe-710c-11eb-9439-0242ac130002
+        senderParticipantName: Jane Doe
+        senderParticipantType: AGENT
+        body:
+          elementType: location
+          elementText:
+            text: You can visit this showroom near to you
+            textFormat: PLAINTEXT
+          richMediaPayload:
+            coordinates:
+              lat: -18.516634
+              long: 73.928104
+            location:
+              address: Nth Floor, UVW Park, XYZ Street, Some Country, PIN CODE - 123456
+              name: Showroom Address
+        headers:
+          sourceAddress: 9dc1b407-44fb-4575-a0e0-c9826172ef5c
+          sourceType: custom:provider
+        messageIndex: 6
+        recipientParticipants:
+        - participantId: 6c66cfbfa5b8c841297103d4
+          connectionId: 1349bcb1-fbf4-457c-af26-376da7bedc3c
+          displayName: John Doe
+          participantType: CUSTOMER
+          providerParticipantId: ad27a746b4c621a292c43f81
+          channelProviderId: 591c2529-c3a3-4062-a213-b239c18f543b
+        receivedAt: '2018-11-13T20:25:39.536Z'
+        lastUpdatedAt: '2018-11-13T20:25:39.734Z'
+    MessageEventMessagingCustomerToAgentLocation:
+      value:
+        eventType: MESSAGES
+        correlationId: zc38400d-c44f-4451-8316-e75c4efbt779
+        eventDate: '2018-11-13T20:25:39.734Z'
+        messageId: f314569c-710b-11eb-9439-0242ac130002
+        accountId: ABCDEF
+        dialogId: fc741b00-710b-11eb-9439-0242ac130002
+        engagementId: 8d7cf5b8-70ad-11eb-9439-0242ac130002
+        status: DELIVERED
+        businessAccountName: e94e278d-72e7-48cc-80fc-dba9f8dd1c36
+        channelProviderId: 591c2529-c3a3-4062-a213-b239c18f543b
+        channelId: Messaging
+        providerDialogId: 616imlgwg266hjs670nl
+        providerSenderId: 6c66cfbfa5b8c841297103d4
+        providerMessageId: 64c8a96f6461998368455ec1
+        senderParticipantId: 6c66cfbfa5b8c841297103d4
+        senderParticipantName: John Doe
+        senderParticipantType: CUSTOMER
+        body:
+          elementType: location
+          elementText:
+            text: ''
+            textFormat: PLAINTEXT
+          richMediaPayload:
+            coordinates:
+              lat: -18.516634
+              long: 73.928104
+            location:
+              address: Nth Floor, UVW Park, XYZ Street, Some Country, PIN CODE - 123456
+              name: Office Address
+        headers:
+          sourceAddress: 9dc1b407-44fb-4575-a0e0-c9826172ef5c
+          sourceType: custom:provider
+        messageIndex: 6
+        recipientParticipants:
+        - participantId: 6c66cfbfa5b8c841297103d4
+          connectionId: 1349bcb1-fbf4-457c-af26-376da7bedc3c
+          displayName: John Doe
+          participantType: CUSTOMER
+          providerParticipantId: ad27a746b4c621a292c43f81
+          channelProviderId: 591c2529-c3a3-4062-a213-b239c18f543b
+        receivedAt: '2018-11-13T20:25:39.536Z'
+        lastUpdatedAt: '2018-11-13T20:25:39.734Z'
+    MessageEventMessagingCustomerToAgentReply:
+      value:
+        eventType: MESSAGES
+        correlationId: zc38400d-c44f-4451-8316-e75c4efbt779
+        eventDate: '2018-11-13T20:25:39.734Z'
+        messageId: f314569c-710b-11eb-9439-0242ac130002
+        accountId: ABCDEF
+        dialogId: fc741b00-710b-11eb-9439-0242ac130002
+        engagementId: 8d7cf5b8-70ad-11eb-9439-0242ac130002
+        status: DELIVERED
+        businessAccountName: e94e278d-72e7-48cc-80fc-dba9f8dd1c36
+        channelProviderId: 591c2529-c3a3-4062-a213-b239c18f543b
+        channelId: Messaging
+        providerDialogId: 616imlgwg266hjs670nl
+        providerSenderId: 6c66cfbfa5b8c841297103d4
+        providerMessageId: 64c8a96f6461998368455ec1
+        senderParticipantId: 6c66cfbfa5b8c841297103d4
+        senderParticipantName: John Doe
+        senderParticipantType: CUSTOMER
+        body:
+          elementType: reply
+          elementText:
+            text: ''
+            textFormat: PLAINTEXT
+          richMediaPayload:
+            selectedAction:
+              type: reply
+              text: Good
+              payload: GOOD
+              iconUrl: https://example.com/icons/good.png
+        headers:
+          sourceAddress: 9dc1b407-44fb-4575-a0e0-c9826172ef5c
+          sourceType: custom:provider
+        messageIndex: 6
+        recipientParticipants:
+        - participantId: 6c66cfbfa5b8c841297103d4
+          connectionId: 1349bcb1-fbf4-457c-af26-376da7bedc3c
+          displayName: John Doe
+          participantType: CUSTOMER
+          providerParticipantId: ad27a746b4c621a292c43f81
+          channelProviderId: 591c2529-c3a3-4062-a213-b239c18f543b
+        receivedAt: '2018-11-13T20:25:39.536Z'
+        lastUpdatedAt: '2018-11-13T20:25:39.734Z'
+    MessageEventMessagingCustomerToAgentPostback:
+      value:
+        eventType: MESSAGES
+        correlationId: zc38400d-c44f-4451-8316-e75c4efbt779
+        eventDate: '2018-11-13T20:25:39.734Z'
+        messageId: f314569c-710b-11eb-9439-0242ac130002
+        accountId: ABCDEF
+        dialogId: fc741b00-710b-11eb-9439-0242ac130002
+        engagementId: 8d7cf5b8-70ad-11eb-9439-0242ac130002
+        status: DELIVERED
+        businessAccountName: e94e278d-72e7-48cc-80fc-dba9f8dd1c36
+        channelProviderId: 591c2529-c3a3-4062-a213-b239c18f543b
+        channelId: Messaging
+        providerDialogId: 616imlgwg266hjs670nl
+        providerSenderId: 6c66cfbfa5b8c841297103d4
+        providerMessageId: 64c8a96f6461998368455ec1
+        senderParticipantId: 6c66cfbfa5b8c841297103d4
+        senderParticipantName: John Doe
+        senderParticipantType: CUSTOMER
+        body:
+          elementType: postback
+          elementText:
+            text: ''
+            textFormat: PLAINTEXT
+          richMediaPayload:
+            selectedAction:
+              type: postback
+              text: Book Appointment
+              payload: BOOK_APPOINTMENT
+        headers:
+          sourceAddress: 9dc1b407-44fb-4575-a0e0-c9826172ef5c
+          sourceType: custom:provider
+        messageIndex: 6
+        recipientParticipants:
+        - participantId: 6c66cfbfa5b8c841297103d4
+          connectionId: 1349bcb1-fbf4-457c-af26-376da7bedc3c
+          displayName: John Doe
+          participantType: CUSTOMER
+          providerParticipantId: ad27a746b4c621a292c43f81
+          channelProviderId: 591c2529-c3a3-4062-a213-b239c18f543b
+        receivedAt: '2018-11-13T20:25:39.536Z'
+        lastUpdatedAt: '2018-11-13T20:25:39.734Z'
+    MessageEventMessagingCustomerToAgentFile:
+      value:
+        eventType: MESSAGES
+        correlationId: zc38400d-c44f-4451-8316-e75c4efbt779
+        eventDate: '2018-11-13T20:25:39.734Z'
+        messageId: f314569c-710b-11eb-9439-0242ac130002
+        accountId: ABCDEF
+        dialogId: fc741b00-710b-11eb-9439-0242ac130002
+        engagementId: 8d7cf5b8-70ad-11eb-9439-0242ac130002
+        status: DELIVERED
+        businessAccountName: e94e278d-72e7-48cc-80fc-dba9f8dd1c36
+        channelProviderId: 591c2529-c3a3-4062-a213-b239c18f543b
+        channelId: Messaging
+        providerDialogId: 616imlgwg266hjs670nl
+        providerSenderId: 6c66cfbfa5b8c841297103d4
+        providerMessageId: 64c8a96f6461998368455ec1
+        senderParticipantId: 6c66cfbfa5b8c841297103d4
+        senderParticipantName: John Doe
+        senderParticipantType: CUSTOMER
+        body:
+          elementType: file
+          elementText:
+            text: This file contains the details
+            textFormat: PLAINTEXT
+        headers:
+          sourceAddress: 9dc1b407-44fb-4575-a0e0-c9826172ef5c
+          sourceType: custom:provider
+        attachments:
+        - attachmentId: 0ffa058c-77c7-4dbc-9fce-b0ee9e5ccd67
+          name: my-file.txt
+          contentType: text/plain
+          url: /v1/media/b03976ea-7e8b-11ea-bc55-0242ac130003?ttl=1672839427321&signature=8ac27e8f48f997d1a889b4b6111c3ad9fb92974a7efa4913dca92ffa43ac709f
+          size: 2383
+        messageIndex: 6
+        recipientParticipants:
+        - participantId: 6c66cfbfa5b8c841297103d4
+          connectionId: 1349bcb1-fbf4-457c-af26-376da7bedc3c
+          displayName: John Doe
+          participantType: CUSTOMER
+          providerParticipantId: ad27a746b4c621a292c43f81
+          channelProviderId: 591c2529-c3a3-4062-a213-b239c18f543b
+        receivedAt: '2018-11-13T20:25:39.536Z'
+        lastUpdatedAt: '2018-11-13T20:25:39.734Z'
+    MessageEventMessagingCustomerToAgentImage:
+      value:
+        eventType: MESSAGES
+        correlationId: zc38400d-c44f-4451-8316-e75c4efbt779
+        eventDate: '2018-11-13T20:25:39.734Z'
+        messageId: f314569c-710b-11eb-9439-0242ac130002
+        accountId: ABCDEF
+        dialogId: fc741b00-710b-11eb-9439-0242ac130002
+        engagementId: 8d7cf5b8-70ad-11eb-9439-0242ac130002
+        status: DELIVERED
+        businessAccountName: e94e278d-72e7-48cc-80fc-dba9f8dd1c36
+        channelProviderId: 591c2529-c3a3-4062-a213-b239c18f543b
+        channelId: Messaging
+        providerDialogId: 616imlgwg266hjs670nl
+        providerSenderId: 6c66cfbfa5b8c841297103d4
+        providerMessageId: 64c8a96f6461998368455ec1
+        senderParticipantId: 6c66cfbfa5b8c841297103d4
+        senderParticipantName: John Doe
+        senderParticipantType: CUSTOMER
+        body:
+          elementType: image
+          elementText:
+            text: Here is the image
+            textFormat: PLAINTEXT
+        headers:
+          sourceAddress: 9dc1b407-44fb-4575-a0e0-c9826172ef5c
+          sourceType: custom:provider
+        attachments:
+        - attachmentId: 0ffa058c-77c7-4dbc-9fce-b0ee9e5ccd67
+          name: my-car-photo.png
+          contentType: image/png
+          url: /v1/media/b03976ea-7e8b-11ea-bc55-0242ac130003?ttl=1672839427321&signature=8ac27e8f48f997d1a889b4b6111c3ad9fb92974a7efa4913dca92ffa43ac709f
+          size: 2383
+        messageIndex: 6
+        recipientParticipants:
+        - participantId: 6c66cfbfa5b8c841297103d4
+          connectionId: 1349bcb1-fbf4-457c-af26-376da7bedc3c
+          displayName: John Doe
+          participantType: CUSTOMER
+          providerParticipantId: ad27a746b4c621a292c43f81
+          channelProviderId: 591c2529-c3a3-4062-a213-b239c18f543b
+        receivedAt: '2018-11-13T20:25:39.536Z'
+    EngagementCreatedEvent:
+      value:
+        eventType: ENGAGEMENT_CREATED
+        correlationId: zc38400d-c44f-4451-8316-e75c4efbt779
+        eventDate: '2018-11-13T20:25:39.734Z'
+        engagementId: 8d7cf5b8-70ad-11eb-9439-0242ac130002
+        dialogId: fc741b00-710b-11eb-9439-0242ac130002
+        accountId: ABCDEF
+        conversation: sell car
+        channelProviderId: ChatConnector01
+        businessAccountName: e94e278d-72e7-48cc-80fc-dba9f8dd1c36
+        initiatorParticipantId: johndoe@example.com
+        sessionId: 10494b78-710c-11eb-9439-0242ac130002
+        customerIdentifiers:
+          emailAddresses:
+          - john@example.com
+          phoneNumbers:
+          - +91 20 4101 8003
+        engagementParameters:
+          model: 512GTB
+          interestedModel: 488GTB
+        providerDialogId: 616imlgwg266hjs670nl
+        sourceType: Facebook
+        sourceAddress: https://www.facebook.com/Ixcc-112670754648669
+    EngagementErrorEvent:
+      value:
+        eventType: ENGAGEMENT_ERROR
+        type: ENGAGEMENT_CREATION_FAILED
+        title: Error occurred while creating an engagement
+        detail: Unable to create an engagement
+        engagementId: 8d7cf5b8-70ad-11eb-9439-0242ac130002
+        dialogId: fc741b00-710b-11eb-9439-0242ac130002
+        sessionId: 10494b78-710c-11eb-9439-0242ac130002
+        providerDialogId: 616imlgwg266hjs670nl
+        channelProviderId: ChatConnector01
+        accountId: ABCDEF
+        channelId: Chat
+        correlationId: zc38400d-c44f-4451-8316-e75c4efbt779
+        eventDate: '2018-11-13T20:25:39.734Z'
+    ParticipantAddedEvent:
+      value:
+        eventType: PARTICIPANT_ADDED
+        correlationId: zc38400d-c44f-4451-8316-e75c4efbt779
+        eventDate: '2018-11-13T20:25:39.734Z'
+        engagementId: 8d7cf5b8-70ad-11eb-9439-0242ac130002
+        dialogId: fc741b00-710b-11eb-9439-0242ac130002
+        accountId: ABCDEF
+        channelId: Chat
+        channelProviderId: ChatConnector01
+        sessionId: 10494b78-710c-11eb-9439-0242ac130002
+        connectionId: f3c8400d-c44f-4451-8316-e75c4efb8zz9
+        participantId: e3c8400d-c44f-4451-8316-e75c4efb8cc7
+        displayName: Andy Morgan
+        participantType: AGENT
+        providerDialogId: 616imlgwg266hjs670nl
+        providerParticipantId: hb8j2zv1jbyvpgic
+    ParticipantDisconnectEvent:
+      value:
+        eventType: PARTICIPANT_DISCONNECTED
+        correlationId: zc38400d-c44f-4451-8316-e75c4efbt779
+        eventDate: '2018-11-13T20:25:39.734Z'
+        engagementId: 8d7cf5b8-70ad-11eb-9439-0242ac130002
+        dialogId: fc741b00-710b-11eb-9439-0242ac130002
+        accountId: ABCDEF
+        channelId: Chat
+        channelProviderId: ChatConnector01
+        sessionId: 10494b78-710c-11eb-9439-0242ac130002
+        connectionId: f3c8400d-c44f-4451-8316-e75c4efb8zz9
+        participantId: e3c8400d-c44f-4451-8316-e75c4efb8cc7
+        displayName: Andy Morgan
+        participantType: AGENT
+        providerDialogId: 616imlgwg266hjs670nl
+        providerParticipantId: hb8j2zv1jbyvpgic
+    ErrorConstraintViolationCallbackUrl:
+      description: Constraint Violation
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#constraint-violation
+        title: Constraint Violation
+        status: 400
+        detail: A problem that indicates a syntactically correct, yet semantically illegal request. The Server can not process
+          this request until the client resolves the semantic errors described in the violations section.
+        violations:
+        - field: callbackUrl
+          message: must not be null
+    ErrorConstraintViolationAccountId:
+      description: Constraint Violation
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#constraint-violation
+        title: Constraint Violation
+        status: 400
+        detail: A problem that indicates a syntactically correct, yet semantically illegal request. The Server can not process
+          this request until the client resolves the semantic errors described in the violations section.
+        violations:
+        - field: accountId
+          message: must match "^[a-zA-Z]{6}$"
+    ErrorUnauthorized:
+      description: Unauthorized
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#unauthorized
+        title: Unauthorized
+        status: 401
+        detail: This operation requires authentication. See https://developers.avayacloud.com/onecloud-ccaas/docs/how-to-authenticate-with-ccaas-apis
+    ErrorForbidden:
+      description: Forbidden
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#forbidden
+        title: Forbidden
+        status: 403
+        detail: According to the access control policy the current user and/or accountId does not have permission to access
+          this resource.
+    ErrorNotFound:
+      description: Not Found
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#not-found
+        title: Not Found
+        status: 404
+        detail: Either there is no API method associated with the URL path of the request, or the request refers to one or
+          more resources that were not found.
+    ErrorInternalServerError:
+      description: Internal Server Error
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#internal-error
+        title: Internal Server Error
+        status: 500
+        detail: An internal server error was encountered.

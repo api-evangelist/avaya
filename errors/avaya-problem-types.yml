@@ -1,0 +1,174 @@
+generated: '2026-09-14'
+method: derived
+source: derived from the 40 harvested Avaya OpenAPI documents in openapi/ (367 operations); titles and remediation
+  enriched from https://developers.avayacloud.com/avaya-experience-platform/docs/error-handling
+format: rfc9457
+envelope:
+  fields:
+  - type
+  - title
+  - status
+  - detail
+  note: Avaya returns an RFC 7807/9457-shaped problem object. 58 of the harvested 4xx/5xx responses declare application/problem+json
+    explicitly; the remainder declare application/json carrying the same four-field envelope. The docs page states
+    the shape but does not commit to the problem+json media type across the board.
+  docs: https://developers.avayacloud.com/avaya-experience-platform/docs/error-handling
+problem_json_responses:
+  '400': 44
+  '401': 2
+  '403': 3
+  '404': 2
+  '409': 3
+  '415': 1
+  '422': 1
+  '500': 2
+problems:
+- status: 400
+  title: Bad Request
+  description: BadRequest
+  media_types:
+  - application/json
+  - application/problem+json
+  occurrences: 331
+  remediation: Validate the request body and path/query parameters against the operation schema before retrying.
+  source_operations:
+  - openapi/avaya-axp-admin-account-openapi.yml#listAccounts
+  - openapi/avaya-axp-admin-account-openapi.yml#updateAccount
+  - openapi/avaya-axp-admin-account-openapi.yml#listAccountStatuses
+  - openapi/avaya-axp-admin-account-openapi.yml#createOrganizationNode
+- status: 401
+  title: Unauthorized
+  description: Unauthorized.
+  media_types:
+  - application/json
+  - application/problem+json
+  occurrences: 365
+  remediation: Refresh the bearer token from the Keycloak realm token endpoint and confirm the appkey header is
+    present.
+  source_operations:
+  - openapi/avaya-axp-admin-account-openapi.yml#listAccounts
+  - openapi/avaya-axp-admin-account-openapi.yml#getAccount
+  - openapi/avaya-axp-admin-account-openapi.yml#updateAccount
+  - openapi/avaya-axp-admin-account-openapi.yml#listAccountStatuses
+- status: 403
+  title: Forbidden
+  description: Forbidden.
+  media_types:
+  - application/json
+  - application/problem+json
+  occurrences: 314
+  remediation: The token is valid but the client lacks entitlement for this account or resource partition — check
+    the account/tenant binding.
+  source_operations:
+  - openapi/avaya-axp-admin-account-openapi.yml#listAccounts
+  - openapi/avaya-axp-admin-account-openapi.yml#getAccount
+  - openapi/avaya-axp-admin-account-openapi.yml#updateAccount
+  - openapi/avaya-axp-admin-account-openapi.yml#listAccountStatuses
+- status: 404
+  title: Not Found
+  description: Not Found.
+  media_types:
+  - application/json
+  - application/problem+json
+  occurrences: 288
+  remediation: Confirm the accountId and resource identifier; a deleted or never-created resource returns 404.
+  source_operations:
+  - openapi/avaya-axp-admin-account-openapi.yml#listAccounts
+  - openapi/avaya-axp-admin-account-openapi.yml#getAccount
+  - openapi/avaya-axp-admin-account-openapi.yml#updateAccount
+  - openapi/avaya-axp-admin-account-openapi.yml#listAccountStatuses
+- status: 405
+  title: Method Not Allowed
+  description: Method Not Allowed
+  media_types: []
+  occurrences: 58
+  remediation: Use a method the path supports.
+  source_operations:
+  - openapi/avaya-axp-admin-voice-openapi.yml#deleteAvayaAuraDeviceService
+  - openapi/avaya-axp-admin-voice-openapi.yml#deleteCommunicationManagerById
+  - openapi/avaya-axp-admin-voice-openapi.yml#createVoicePlan
+  - openapi/avaya-axp-admin-voice-openapi.yml#updateVoicePlan
+- status: 409
+  title: Conflict
+  description: Conflict.
+  media_types:
+  - application/problem+json
+  occurrences: 58
+  remediation: The resource already exists or is in a conflicting state; read it first and reconcile.
+  source_operations:
+  - openapi/avaya-axp-admin-account-openapi.yml#updateAccount
+  - openapi/avaya-axp-admin-account-openapi.yml#createOrganizationNode
+  - openapi/avaya-axp-admin-account-openapi.yml#updateOrganizationNode
+  - openapi/avaya-axp-admin-group-openapi.yml#createGroup
+- status: 410
+  title: Gone
+  description: Gone — the workflow session was found but has already ended. No new transcript messages can be added.
+  media_types:
+  - application/json
+  occurrences: 1
+  remediation: The resource has been permanently removed; do not retry.
+  source_operations:
+  - openapi/avaya-infinity-transcripts-openapi.yml#transcripts.sendBatch
+- status: 415
+  title: Unsupported Media Type
+  description: Unsupported Media Type.
+  media_types:
+  - application/problem+json
+  occurrences: 1
+  remediation: Send application/json unless the operation documents another media type.
+  source_operations:
+  - openapi/avaya-axp-auth-openapi.yml#postGenerateToken
+- status: 422
+  title: Unprocessable Entity
+  description: 'Unprocessable Entity. Cases include:
+
+    - **Constraint violation**: request body fails field validation
+
+    - **Profile user limit**: profile has more than 500 assigned users and cannot be updated
+
+    '
+  media_types:
+  - application/json
+  - application/problem+json
+  occurrences: 19
+  remediation: The request parsed but failed a semantic rule; read detail for the failing field.
+  source_operations:
+  - openapi/avaya-axp-customer-journey-openapi.yml#createAgentNote
+  - openapi/avaya-infinity-profile-management-openapi.yml#createProfile
+  - openapi/avaya-infinity-profile-management-openapi.yml#updateProfile
+  - openapi/avaya-infinity-queue-management-openapi.yml#createQueue
+- status: 429
+  title: Too Many Requests
+  description: Too Many Requests
+  media_types:
+  - application/json
+  occurrences: 44
+  remediation: Back off. The docs describe a per-tenant quota and a spike limit; Retry-After is documented but marked
+    "Coming Soon".
+  source_operations:
+  - openapi/avaya-axp-transcript-retrieval-openapi.yml#listMessages
+  - openapi/avaya-infinity-outbound-openapi.yml#setValue
+  - openapi/avaya-infinity-outbound-openapi.yml#getData
+  - openapi/avaya-infinity-outbound-openapi.yml#getDataWithAgent
+- status: 500
+  title: Internal Server Error
+  description: Internal Server Error.
+  media_types:
+  - application/json
+  - application/problem+json
+  occurrences: 323
+  remediation: Retry with backoff; if it persists open a case at https://support.avaya.com.
+  source_operations:
+  - openapi/avaya-axp-admin-account-openapi.yml#listAccounts
+  - openapi/avaya-axp-admin-account-openapi.yml#getAccount
+  - openapi/avaya-axp-admin-account-openapi.yml#updateAccount
+  - openapi/avaya-axp-admin-account-openapi.yml#listAccountStatuses
+- status: 503
+  title: Service Unavailable
+  description: Service temporarily unavailable. Retry after a short delay.
+  media_types:
+  - application/json
+  occurrences: 1
+  remediation: Transient — retry with backoff.
+  source_operations:
+  - openapi/avaya-infinity-queue-metrics-openapi.yml#queryQueueMetrics

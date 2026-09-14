@@ -1,0 +1,81 @@
+generated: '2026-09-14'
+method: derived
+source: >-
+  derived from openapi/avaya-infinity-notifications-openapi.yml,
+  openapi/avaya-axp-notification-openapi.yml, openapi/avaya-axp-digital-notification-openapi.yml and
+  openapi/avaya-infinity-notification-service-openapi.yml; docs at
+  https://developers.avayacloud.com/avaya-experience-platform/docs/notification-subscriptions
+spec_type: Webhooks
+asyncapi_published: false
+asyncapi_note: >-
+  Avaya publishes no AsyncAPI document. The event surface is real and substantial — four subscription
+  APIs across two platforms, delivering over webhook and WebSocket — but it is described only through
+  the REST subscription-management contract and prose. Nothing here is fabricated: the channels,
+  event families and transports below are read out of the harvested OpenAPI enums and descriptions.
+delivery:
+  transports: [WEBHOOK, WEBSOCKET]
+  detail: >-
+    AXP's Notification API lets a subscription choose transport type WEBHOOK or WEBSOCKET. Avaya
+    Infinity's Notifications API delivers to a registered HTTP endpoint using POST or PUT (Transport.method).
+  subscription_lifetime: >-
+    Subscriptions are TIME-LIMITED and expire. Each API exposes a :renew action
+    (POST /subscriptions/{subscriptionId}:renew) that must be called before expiry or delivery stops.
+    An agent that subscribes and walks away silently loses the stream — this is the most important
+    operational fact about Avaya's event surface.
+  status_values: [ACTIVE, INACTIVE, PENDING]
+surfaces:
+  - name: Avaya Infinity Notifications API
+    spec: openapi/avaya-infinity-notifications-openapi.yml
+    base: https://core.{customerId}.ec.avayacloud.com/api/events/v1
+    operations: 12
+    manage:
+      - createSubscription (POST /subscriptions)
+      - listSubscriptions (GET /subscriptions)
+      - getSubscription (GET /subscriptions/{subscriptionId})
+      - updateSubscription (PATCH /subscriptions/{subscriptionId})
+      - deleteSubscription (DELETE /subscriptions/{subscriptionId})
+      - renewSubscription (POST /subscriptions/{subscriptionId}:renew)
+    event_families: [AGENT, INTERACTION, QUEUE, ALL]
+    events_described:
+      - {family: AGENT, events: [login, logout, ready state change, not-ready state change]}
+      - {family: INTERACTION, events: [created, completed, transferred]}
+      - {family: QUEUE, events: [queue events, per the family enum; individual event names not enumerated in the contract]}
+    note: >-
+      The six /accounts/{accountId}/subscriptions forms of these same operations are marked
+      deprecated: true in the contract — see lifecycle/avaya-lifecycle.yml.
+  - name: Avaya Experience Platform Notification API
+    spec: openapi/avaya-axp-notification-openapi.yml
+    operations: 5
+    manage:
+      - POST /accounts/{accountId}/subscriptions
+      - GET/PATCH/DELETE /accounts/{accountId}/subscriptions/{subscriptionId}
+      - POST /accounts/{accountId}/subscriptions/{subscriptionId}:renew
+    event_families: [Analytics, Agent & Engagement]
+    docs: https://developers.avayacloud.com/avaya-experience-platform/docs/notification-agent-and-engagement
+  - name: Avaya Experience Platform Digital Notification API
+    spec: openapi/avaya-axp-digital-notification-openapi.yml
+    operations: 5
+    manage:
+      - createDigitalWebhookSubscription (POST /accounts/{accountId}/subscriptions)
+      - deleteDigitalWebhookSubscription (DELETE /accounts/{accountId}/subscriptions/{subscriptionId})
+    event_types:
+      - MESSAGES
+      - CUSTOMER_MESSAGES
+      - CC_MESSAGES
+      - PARTICIPANT_ADDED
+      - PARTICIPANT_DISCONNECTED
+      - ENGAGEMENT_CREATED
+      - ENGAGEMENT_ERROR
+      - TYPING
+      - ALL
+    callbacks_declared: true
+    note: This is the one spec in the set that declares OpenAPI callbacks, so the delivered payload shape is machine-readable.
+    docs: https://developers.avayacloud.com/avaya-experience-platform/docs/digital-notification
+  - name: Avaya Infinity Notification Service
+    spec: openapi/avaya-infinity-notification-service-openapi.yml
+    operations: 6
+gaps:
+  - No AsyncAPI document — an event consumer cannot generate a client from a contract.
+  - Event payload schemas are only machine-readable on the Digital Notification surface (via callbacks); the other three describe payloads in prose.
+  - No documented signature/HMAC verification for delivered webhooks in the harvested contract.
+  - No documented delivery retry policy or dead-letter behaviour.

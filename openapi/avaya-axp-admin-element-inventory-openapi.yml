@@ -1,0 +1,824 @@
+openapi: 3.0.2
+x-explorer-enabled: false
+x-samples-languages:
+- curl
+- node
+- java
+- javascript
+- python
+- go
+info:
+  title: Admin - Element Inventory
+  description: "The Element Inventory Service API is use to manage information about Elements.\n\nElement Inventory Services\
+    \ will support multiple ways to provision Elements\n  1. Programmatic Interface (Rest APIs)\n  2. User Interface\n"
+  contact:
+    name: Avaya API Team
+    url: https://developers.avayacloud.com/onecloud-ccaas
+    email: apiteam@avaya.com
+  license:
+    name: Avaya Software Development Kit (SDK) Software License Terms
+    url: http://support.avaya.com/css/P8/documents/101038288
+  version: 1.0.1
+security:
+- {}
+- BearerAuth: []
+  AppKey: []
+servers:
+- url: '{protocol}://{server}{basePath}'
+  description: Open API
+  variables:
+    protocol:
+      enum:
+      - https
+      default: https
+    server:
+      default: HOST-REGION.api.avayacloud.com
+    basePath:
+      default: /api/admin/inventory/v1
+tags:
+- name: Audit Records
+  description: 'Search or export audit records for auditable objects.
+
+    '
+- name: Element Management
+  description: 'An Element is a server instance which provides feature capability. Some examples of elements are Avaya Cloud
+    Office, Chat Connector, Microsoft Teams and so on.
+
+    '
+paths:
+  /accounts/{accountId}/elements:
+    get:
+      tags:
+      - Element Management
+      summary: List Elements
+      description: '**This API requires the Account Administrator role.**
+
+
+        Lists all of the elements for an account.
+
+        '
+      operationId: listElements
+      parameters:
+      - $ref: '#/components/parameters/accountId'
+      - $ref: '#/components/parameters/pageNumber'
+      - name: pageSize
+        in: query
+        description: 'The max number of records to retrieve per page. Default value is 10.
+
+          '
+        required: false
+        schema:
+          type: integer
+          format: int32
+          example: 5
+          default: 10
+          minimum: 5
+          maximum: 50
+      - name: filter
+        in: query
+        required: false
+        description: "Specifies details of a row filter.\n\n The possible fields that can be filtered on are:\n  * name\n\
+          \  * hostname\n  * elementType\n  * elementSubType\n\nThe allowed format:\n  - Begins with the column name to be\
+          \ filtered, followed by a colon, then:\n    - Either an exact string to match, or\n    - A string expression including\
+          \ the * wildcard character\n      - :{PREFIX}* will be used to find out word start with.\n      - :*{POSTFIX} will\
+          \ be used to find out word end with\n      - : will be used to match exact word\n  - Begin with column name to be\
+          \ filtered, followed by a = operator. (this will be used to match exact string)\n"
+        schema:
+          type: string
+          maxLength: 255
+        examples:
+          exact:
+            description: Example of filtering based on an exact string.
+            value: name:Avaya Cloud Office
+          prefix:
+            description: Example of filtering based on a prefix string.
+            value: name:Avaya Cloud*
+          postfix:
+            description: Example of filtering based on a postfix string.
+            value: name:*Cloud Office
+      - name: orderBy
+        in: query
+        required: false
+        description: "Field name on which ordering needs to be performed. The default order is ascending.\n\nThe possible\
+          \ fields that can be ordered on are:\n  * name\n  * hostname\n  * elementType\n  * elementSubType\n\nField Names\
+          \ are case-senstive (should be written as it is in description).\n\nTo specify descending order, a suffix \" desc\"\
+          \ should be added. For example, \"name\" for ascending or \"name desc\" for descending\".\n"
+        schema:
+          type: string
+          default: name
+          maxLength: 255
+        examples:
+          ascending:
+            value: name
+          descending:
+            value: name desc
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ElementPage'
+              examples:
+                Element:
+                  $ref: '#/components/examples/ElementPage'
+        '400':
+          $ref: '#/components/responses/ErrorConstraintViolation'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /accounts/{accountId}/audit-records:search:
+    post:
+      tags:
+      - Audit Records
+      summary: Search Audit Records
+      description: '**This API requires the Account Administrator role.**
+
+
+        Searches the audit records based on the supplied filter.
+
+
+        The value of **searchKeyword** can be used to perform a text search across all fields within an audit record (excluding
+        date).
+
+        '
+      operationId: searchAuditRecords
+      parameters:
+      - $ref: '#/components/parameters/accountId'
+      - $ref: '#/components/parameters/pageNumber'
+      - name: pageSize
+        in: query
+        description: 'The max number of records to retrieve per page. Default value is 5, max value is 50.
+
+          '
+        required: false
+        schema:
+          type: integer
+          format: int32
+          example: 5
+          default: 5
+          minimum: 5
+          maximum: 50
+      - name: orderBy
+        in: query
+        description: 'Field name on which sorting needs to be performed. The possible fields
+
+          you ordered on are **date (date of audit record)** and **author**.
+
+          Field Names are case-senstive (should be written as it is in description). The default sorting order is descending.
+          To specify ascending order, a suffix " asc" should be added. For example, "date asc" for ascending or "date desc"
+          for descending".
+
+          '
+        required: false
+        schema:
+          type: string
+          minLength: 4
+          maxLength: 23
+          example: date desc
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuditSearchFilter'
+            examples:
+              Search-Audit-Records:
+                $ref: '#/components/examples/SearchAuditRecordsRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuditRecords'
+              examples:
+                Search-Audit-Records:
+                  $ref: '#/components/examples/SearchAuditRecordsResponse'
+        '400':
+          $ref: '#/components/responses/ErrorConstraintViolation'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /accounts/{accountId}/audit-records:export:
+    post:
+      tags:
+      - Audit Records
+      summary: Export Audit Records
+      description: '**This API requires the Account Administrator role.**
+
+
+        Exports the audit records within the date-time range in CSV format.
+
+
+        A maximum of 1000 records can be exported for a given date-time range per request.
+
+
+        If the number of records within a date-time range exceeds the maximum then this API will
+
+        return a _HTTP 400 Bad Request_. This response will contain:
+
+        * A human readable message explaining the issue.
+
+        * A unique error code that a client can use to identify the issue.
+
+        '
+      operationId: exportAuditRecords
+      parameters:
+      - $ref: '#/components/parameters/accountId'
+      - name: orderBy
+        in: query
+        description: 'Field name on which sorting needs to be performed. The possible fields
+
+          you ordered on are **date (date of audit record)** and **author**.
+
+          Field Names are case-senstive (should be written as it is in description). The default sorting order is descending.
+          To specify ascending order, a suffix " asc" should be added. For example, "date asc" for ascending or "date desc"
+          for descending".
+
+          '
+        required: false
+        schema:
+          type: string
+          minLength: 4
+          maxLength: 23
+          example: date desc
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuditSearchFilter'
+            examples:
+              Export-Audit-Records:
+                $ref: '#/components/examples/SearchAuditRecordsRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            text/csv:
+              schema:
+                type: string
+                format: binary
+              example: 'Account Id,Date,Event,Author,IP Address,Type,Audit Data
+
+                ABCDEF,2021-11-14T09:24:05.234Z,CREATED,jsmith@example.com,165.225.72.60,ELEMENT,"{""name"":""Avaya Cloud
+                Office"",""didNumbers"":[""+16062128688"",""+12702289911""],""elementType"":""ACO"",""environment"":""Production"",""sipServerHostName"":""sip://platform.ringcentral.com/restapi/v1""}"
+
+                '
+        '400':
+          description: BadRequest
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                Too-many-records:
+                  $ref: '#/components/examples/ErrorTooManyRecords'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      description: This API uses Bearer Token Authorization Flow
+      bearerFormat: JWT
+    AppKey:
+      type: apiKey
+      in: header
+      name: appkey
+      description: This API needs an appKey as header
+  responses:
+    ErrorConstraintViolation:
+      description: Constraint Violation
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorConstraintViolation'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorUnauthorized'
+    Forbidden:
+      description: Forbidden
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorForbidden'
+    NotFound:
+      description: Not Found
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorNotFound'
+    InternalServerError:
+      description: All other application errors
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorInternalServerError'
+  schemas:
+    Element:
+      type: object
+      description: 'An Element is a server instance
+
+        '
+      properties:
+        elementId:
+          type: string
+          example: fa703a3a-3dfb-4606-ae79-fd0fe0be3e64
+          description: The unique 36 character internal id (uuid) that represents the element.
+          minLength: 36
+          maxLength: 36
+          pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
+        description:
+          type: string
+          example: Avaya Cloud Office Description
+          maxLength: 1024
+          pattern: (^$|^[a-zA-Z0-9\p{L}\(\)\-\_\.\ \n]+$)
+        elementData:
+          type: object
+          properties: {}
+          example:
+            name: Avaya Cloud Office
+            hostname: Production
+        elementType:
+          type: string
+          example: ACO
+          minLength: 1
+          maxLength: 255
+          pattern: ^[a-zA-Z0-9\-\_\.\ ]+$
+        elementSubType:
+          type: string
+          maxLength: 255
+          pattern: ^[a-zA-Z0-9\-\_\.\ ]+$
+        status:
+          type: string
+          description: "This field indicates the current status of an Element.\n\nAn explanation of the values is listed below:\n\
+            \  * SUCCESS - An Element was created/updated successfully.\n  * FAILED - operation on Element was failed.\n \
+            \ * IN_PROGRESS - operation performed on an Element is in progress.\n"
+          enum:
+          - SUCCESS
+          - FAILED
+          - IN_PROGRESS
+        statusCode:
+          type: string
+          readOnly: true
+          example: '14066'
+        statusMessage:
+          type: string
+          readOnly: true
+          example: cannot create element due to database failure
+      required:
+      - elementData
+      - elementType
+    ElementPage:
+      description: 'Paginated Element Data
+
+        '
+      type: object
+      properties:
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+        elements:
+          type: array
+          items:
+            $ref: '#/components/schemas/Element'
+        links:
+          allOf:
+          - $ref: '#/components/schemas/Links'
+          example:
+            prev: /api/admin/inventory/v1/elements?pageNumber=1&pageSize=10
+            next: /api/admin/inventory/v1/elements?pageNumber=3&pageSize=10
+    AuditSearchFilter:
+      type: object
+      description: 'The filter to be applied when searching for audit records.
+
+        '
+      properties:
+        startDate:
+          type: string
+          format: date-time
+          description: 'The starting datetime to use when searching for audit records (in ISO 8601 format including timezone,
+            ''yyyy-MM-dd''T''HH:mm:ss[.SSS]Z'').
+
+            '
+          example: '2021-11-13T20:25:39.534Z'
+        endDate:
+          type: string
+          format: date-time
+          description: 'The ending datetime to use when searching for audit records (in ISO 8601 format including timezone,
+            ''yyyy-MM-dd''T''HH:mm:ss[.SSS]Z'').
+
+            '
+          example: '2021-11-15T16:07:12.723Z'
+        author:
+          type: string
+          description: 'The ID of the author who changed the auditable object. This can be a user within the system or an
+            automated app.
+
+            '
+          maxLength: 255
+          pattern: ^[a-zA-Z0-9@._-]+$
+          example: jsmith@example.com
+        event:
+          type: string
+          description: "This field indicates the type of event that occurred on the auditable object.\n\nAn explanation of\
+            \ the values is listed below:\n  * CREATED - A new auditable object was created.\n  * UPDATED - An existing auditable\
+            \ object was updated.\n  * DELETED - An existing auditable object was deleted.\n"
+          enum:
+          - CREATED
+          - UPDATED
+          - DELETED
+        type:
+          description: "The type of auditable object.\n\nAccepted values:\n  * ELEMENT\n"
+          type: string
+          enum:
+          - ELEMENT
+          example: ELEMENT
+        ipAddress:
+          description: 'The originating IP Address of the author who changed the auditable object.
+
+            '
+          type: string
+          maxLength: 15
+          example: 165.225.72.60
+        searchKeyword:
+          description: 'Keyword to search for across all the audit records.
+
+            '
+          type: string
+          maxLength: 255
+      required:
+      - startDate
+      - endDate
+      - type
+    AuditRecords:
+      description: 'A collection of audit records.
+
+        '
+      type: object
+      properties:
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+        auditRecords:
+          type: array
+          items:
+            $ref: '#/components/schemas/AuditRecord'
+        links:
+          allOf:
+          - $ref: '#/components/schemas/Links'
+          example:
+            prev: /api/admin/inventory/v1/accounts/ASDJGE/audit-records:search?pageNumber=1&pageSize=10
+            next: /api/admin/inventory/v1/accounts/ASDJGE/audit-records:search?pageNumber=2&pageSize=10
+    AuditRecord:
+      type: object
+      description: 'An audit record.
+
+        '
+      properties:
+        date:
+          type: string
+          description: 'The date and time of when the audit record was created.
+
+            '
+          example: '2021-06-24T19:03:01.463+00:00'
+        event:
+          type: string
+          description: "This field indicates the type of event that occurred on the auditable object.\n\nAn explanation of\
+            \ the values is listed below:\n  * CREATED - A new auditable object was created.\n  * UPDATED - An existing auditable\
+            \ object was updated.\n  * DELETED - An existing auditable object was deleted.\n"
+          enum:
+          - CREATED
+          - UPDATED
+          - DELETED
+        author:
+          type: string
+          example: jsmith@example.com
+          description: 'The ID of the author who changed the auditable object. This can be a user within the system or an
+            automated app.
+
+            '
+        type:
+          description: 'The type of auditable object.
+
+
+            Accepted values:
+
+            * ELEMENT
+
+            '
+          type: string
+          enum:
+          - ELEMENT
+          example: ELEMENT
+        ipAddress:
+          description: 'The originating IP Address of the author who changed the auditable object.
+
+            '
+          type: string
+          example: 165.225.72.60
+        auditData:
+          $ref: '#/components/schemas/JsonNode'
+    JsonNode:
+      type: object
+      title: JsonNode
+      description: 'Contains the state of the auditable object at the time the audit record was created.
+
+        '
+    Pagination:
+      type: object
+      properties:
+        pageNumber:
+          type: integer
+          description: The current page number.
+        pageSize:
+          type: integer
+          description: The max number of records that can be retrieved on this page.
+        total:
+          type: integer
+          description: The total number of records.
+    Links:
+      type: object
+      properties:
+        prev:
+          type: string
+          default: ''
+          description: URL of the previous page. Blank if currently on the first page.
+        next:
+          type: string
+          default: ''
+          description: URL of the next page. Blank if currently on the last page.
+    Problem:
+      type: object
+      description: '<b>Problem Detail</b> as a way to carry machine-readable details of errors in a HTTP response to avoid
+        the need to define new error response formats for HTTP APIs <a href="https://tools.ietf.org/html/rfc7807">RFC 7807</a>
+
+        '
+      properties:
+        type:
+          type: string
+          format: uri
+          description: 'An absolute URI that identifies the problem type. When dereferenced, it SHOULD provide human-readable
+            documentation for the problem type (e.g., using HTML).
+
+            '
+          default: about:blank
+          example: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#constraint-violation
+        title:
+          type: string
+          description: 'A short, summary of the problem type. Written in english and readable for engineers (usually not suited
+            for non technical stakeholders and not localized).
+
+            '
+          example: Service Unavailable
+          nullable: true
+        status:
+          type: integer
+          format: int32
+          description: 'The HTTP status code generated by the origin server for this occurrence of the problem.
+
+            '
+          minimum: 100
+          maximum: 600
+          exclusiveMaximum: true
+          example: 503
+          nullable: true
+        detail:
+          type: string
+          description: 'A human readable explanation specific to this occurrence of the problem.
+
+            '
+          example: Connection to database timed out
+          nullable: true
+        instance:
+          type: string
+          format: uri
+          description: 'An absolute URI that identifies the specific occurrence of the problem. It may or may not yield further
+            information if dereferenced.
+
+            '
+          nullable: true
+        violations:
+          type: array
+          description: 'A list of violations that occurred as a result of invalid data provided as part of a request.
+
+            '
+          nullable: true
+          items:
+            type: object
+            properties:
+              field:
+                type: string
+                description: 'The name of the field in the request that caused the violation. This can be the name of a path
+                  parameter, query parameter, or a field within the request body.
+
+                  '
+                example: accountId
+              message:
+                type: string
+                description: 'A human readable explanation specific to this occurrence of the violation.
+
+                  '
+                example: must match "^[a-zA-Z]{6}$"
+              code:
+                type: integer
+                format: int32
+                description: 'The violation code generated by the server for this occurrence of the violation. Use this code
+                  when implementing any error handling logic instead of the message, as the message can change.
+
+                  '
+                example: 20006
+          example:
+          - field: emailAddress
+            message: must not be null
+            code: 20002
+          - field: accountId
+            message: must match "^[a-zA-Z]{6}$"
+            code: 20006
+  parameters:
+    accountId:
+      name: accountId
+      description: The unique 6 character internal id that represents the customer account.
+      required: true
+      in: path
+      schema:
+        type: string
+        minLength: 6
+        maxLength: 6
+        pattern: ^[a-zA-Z]{6}$
+        example: ABCDEF
+    pageNumber:
+      name: pageNumber
+      in: query
+      description: The page number of the records to retrieve. Default value is 1.
+      schema:
+        type: integer
+        format: int32
+        default: 1
+        minimum: 1
+        example: 2
+  examples:
+    ErrorTooManyRecords:
+      description: Constraint Violation
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#constraint-violation
+        title: Constraint Violation
+        status: 400
+        detail: A problem that indicates a syntactically correct, yet semantically illegal request. The Server can not process
+          this request until the client resolves the semantic errors described in the violations section.
+        violations:
+        - field: interval
+          message: Too many records within the requested time interval.
+          code: 20007
+    ErrorConstraintViolation:
+      description: Constraint Violation
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#constraint-violation
+        title: Constraint Violation
+        status: 400
+        detail: A problem that indicates a syntactically correct, yet semantically illegal request. The Server can not process
+          this request until the client resolves the semantic errors described in the violations section.
+        violations:
+        - field: accountId
+          message: must match "^[a-zA-Z]{6}$"
+          code: 20006
+    ErrorUnauthorized:
+      description: Unauthorized
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#unauthorized
+        title: Unauthorized
+        status: 401
+        detail: This operation requires authentication. See https://developers.avayacloud.com/onecloud-ccaas/docs/how-to-authenticate-with-ccaas-apis
+    ErrorForbidden:
+      description: Forbidden
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#forbidden
+        title: Forbidden
+        status: 403
+        detail: According to the access control policy the current user and/or accountId does not have permission to access
+          this resource.
+    ErrorNotFound:
+      description: Not Found
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#resource-not-found
+        title: Resource Not Found
+        status: 404
+        detail: Either there is no API method associated with the URL path of the request, or the request refers to one or
+          more resources that were not found.
+    ErrorInternalServerError:
+      description: Server Error
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#server-error
+        title: Server Error
+        status: 500
+        detail: An internal server error was encountered.
+    FilterCriteriaRequest:
+      value:
+        status: FAILED
+        event: ADDED
+        username: jsmith@example.com
+        auditObjectType: Element
+    SearchTableRequest:
+      value:
+        status: FAILED
+        event: ADDED
+        username: jsmith@example.com
+        auditObjectType: Element
+        searchKeyword: Chris Dunbar
+    SearchAuditRecordsRequest:
+      value:
+        startDate: '2021-11-13T20:25:39.534Z'
+        endDate: '2021-11-15T16:07:12.723Z'
+        event: CREATED
+        author: jsmith@example.com
+        type: ELEMENT
+        ipAddress: 165.225.72.60
+        searchKeyword: Out-of-Office
+    SearchAuditRecordsResponse:
+      value:
+        pagination:
+          pageNumber: 1
+          pageSize: 5
+          total: 1
+        auditRecords:
+        - date: '2021-11-14T09:24:05.234Z'
+          event: CREATED
+          author: jsmith@example.com
+          ipAddress: 165.225.72.60
+          type: ELEMENT
+          auditData:
+            name: Avaya Cloud Office
+            didNumbers:
+            - '+16062128688'
+            - '+12702289911'
+            elementType: ACO
+            environment: Production
+            description: An Avaya Cloud Office Element
+            sipServerHostName: sip://platform.ringcentral.com/restapi/v1
+        links:
+          next: /api/admin/inventory/v1/accounts/ASDJGE/audit-records:search?pageNumber=2&pageSize=5
+          prev: /api/admin/inventory/v1/accounts/ASDJGE/audit-records:search?pageNumber=1&pageSize=5
+    ElementPage:
+      description: Paginated Element Data
+      value:
+        pagination:
+          pageNumber: 2
+          pageSize: 10
+          total: 45
+        elements:
+        - elementId: ce8042a2-12f8-406f-5fd3-86c1c16d3a53
+          description: Avaya Cloud Office Description
+          elementType: ACO
+          elementData:
+            description: Avaya Cloud Office Description
+            name: Avaya Cloud Office
+            environment: Production
+            didNumbers:
+            - '+16062128688'
+            - '+12702289911'
+          status: SUCCESS
+        - elementId: 883542c6-94bc-4d23-ace8-915bc91dfbb8
+          description: Chat Connector Description
+          elementType: DigitalProvider
+          elementSubType: ChatConnector
+          elementData:
+            name: ChatProvider
+            hostname: chat.lab
+            callbackurl: chat.connector.provider
+          status: SUCCESS
+        links:
+          prev: /api/admin/inventory/v1/elements?pageNumber=1&pageSize=10
+          next: /api/admin/inventory/v1/elements?pageNumber=3&pageSize=10

@@ -1,0 +1,24 @@
+generated: '2026-09-14'
+method: searched
+probe: true
+url: https://www.avaya.com/en/trust-center/
+sections:
+  - {name: Security, url: 'https://www.avaya.com/en/trust-center/security/'}
+  - {name: Privacy, url: 'https://www.avaya.com/en/trust-center/privacy/'}
+  - {name: Compliance, url: 'https://www.avaya.com/en/trust-center/compliance/'}
+  - {name: Artificial Intelligence, url: 'https://www.avaya.com/en/trust-center/artificial-intelligence/'}
+  - {name: Security by Design, url: 'https://www.avaya.com/en/trust-center/security/portfolio-security/'}
+  - {name: Cloud Security, url: 'https://www.avaya.com/en/trust-center/security/cloud-security/'}
+certifications:
+  - FedRAMP
+claimed:
+  - HIPAA
+note: >-
+  A full public Trust Center with four top-level sections. FedRAMP authorization is named for Avaya
+  Government Cloud; HIPAA is claimed for the healthcare-provider portfolio. Avaya does not publish a
+  SOC 2 or ISO 27001 report or a self-serve document-request portal of the Vanta/Drata kind — the named
+  certification list is thinner than the size of the company would suggest.
+evidence:
+  - {source: 'https://www.avaya.com/en/trust-center/', status: 200, keywords: [trust center, security, privacy, compliance, fedramp]}
+  - {source: 'https://www.avaya.com/en/trust-center/compliance/', status: 200}
+  - {source: 'https://www.avaya.com/en/trust-center/security/', status: 200}

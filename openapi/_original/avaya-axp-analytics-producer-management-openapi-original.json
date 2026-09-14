@@ -1,0 +1,979 @@
+{
+ "openapi": "3.0.2",
+ "x-explorer-enabled": false,
+ "x-samples-languages": [
+  "curl",
+  "node",
+  "java",
+  "javascript",
+  "python",
+  "go"
+ ],
+ "info": {
+  "title": "Analytics Producer Management",
+  "description": "This is the Analytics Producer Management API. This REST interface provides APIs to:\n- read the list of Measure Producers\n- read details regarding each registered Measure Producer such as dimension and measure sets\n- read translations from the dictionary of a registered Measure Producer for one or more locales\n",
+  "contact": {
+   "name": "Avaya API Team",
+   "url": "https://developers.avayacloud.com/onecloud-ccaas",
+   "email": "apiteam@avaya.com"
+  },
+  "license": {
+   "name": "Avaya Software Development Kit (SDK) Software License Terms",
+   "url": "http://support.avaya.com/css/P8/documents/101038288"
+  },
+  "version": "1.0.1"
+ },
+ "tags": [
+  {
+   "name": "Dictionaries",
+   "description": "Dictionaries contain translations for measures for a specific locale and measure producer."
+  },
+  {
+   "name": "Locales",
+   "description": "The Locales supported for a each measure producer."
+  },
+  {
+   "name": "Measure Producers",
+   "description": "Operations connected to measure producer management."
+  }
+ ],
+ "servers": [
+  {
+   "url": "{protocol}://{server}/{basePath}",
+   "description": "Open API",
+   "variables": {
+    "protocol": {
+     "enum": [
+      "https"
+     ],
+     "default": "https"
+    },
+    "server": {
+     "default": "HOST-REGION.api.avayacloud.com"
+    },
+    "basePath": {
+     "default": "api/analytics/producer-management"
+    }
+   }
+  },
+  {
+   "url": "{protocol}://{server}:{port}",
+   "description": "Internal API",
+   "variables": {
+    "protocol": {
+     "enum": [
+      "http",
+      "https"
+     ],
+     "default": "http"
+    },
+    "server": {
+     "default": "analytics-data-subscriber"
+    },
+    "port": {
+     "enum": [
+      "80",
+      "443"
+     ],
+     "default": "80"
+    }
+   }
+  }
+ ],
+ "security": [
+  {},
+  {
+   "BearerAuth": []
+  }
+ ],
+ "paths": {
+  "/v1/accounts/{accountId}/measure-producers": {
+   "parameters": [
+    {
+     "$ref": "#/components/parameters/accountId"
+    }
+   ],
+   "get": {
+    "tags": [
+     "Measure Producers"
+    ],
+    "summary": "List Measure Producers",
+    "description": "Retrieve the list of all the registered measure producers for the given parameters. Each measureProducer object contains high level information such as the `source` and `version`. Detailed information such as the measures sets are omitted to limit the size of the response. To get detailed information regarding a measureProducer, refer to `GET /v1/accounts/{accountId}/measure-producers/{measureProducerId}`",
+    "operationId": "getAnalyticsMeasureProducers",
+    "parameters": [
+     {
+      "$ref": "#/components/parameters/processorType"
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "OK",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "array",
+         "items": {
+          "$ref": "#/components/schemas/MeasureProducer"
+         }
+        },
+        "examples": {
+         "List Measure Producers": {
+          "$ref": "#/components/examples/ListMeasureProducers"
+         }
+        }
+       }
+      }
+     },
+     "400": {
+      "$ref": "#/components/responses/BadRequest"
+     },
+     "401": {
+      "$ref": "#/components/responses/Unauthorized"
+     },
+     "403": {
+      "$ref": "#/components/responses/Forbidden"
+     },
+     "404": {
+      "$ref": "#/components/responses/NotFound"
+     },
+     "500": {
+      "$ref": "#/components/responses/InternalServer"
+     }
+    },
+    "deprecated": false
+   }
+  },
+  "/v1/accounts/{accountId}/measure-producers/{measureProducerId}": {
+   "parameters": [
+    {
+     "$ref": "#/components/parameters/accountId"
+    },
+    {
+     "$ref": "#/components/parameters/measureProducerId"
+    }
+   ],
+   "get": {
+    "tags": [
+     "Measure Producers"
+    ],
+    "summary": "Get Measure Producer",
+    "description": "Return a fully populated measure producer object matching the given parameters.",
+    "operationId": "getAnalyticsMeasureProducerDetails",
+    "responses": {
+     "200": {
+      "description": "OK",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/MeasureProducer"
+        },
+        "examples": {
+         "Agent Producer": {
+          "$ref": "#/components/examples/AgentProducer"
+         },
+         "Agent by Channel": {
+          "$ref": "#/components/examples/AgentByChannel"
+         },
+         "DialogDetail Measure": {
+          "$ref": "#/components/examples/DialogDetailMeasure"
+         },
+         "Queue by Channel": {
+          "$ref": "#/components/examples/QueueByChannel"
+         },
+         "Queue Measure Producer": {
+          "$ref": "#/components/examples/QueueMeasureProducer"
+         }
+        }
+       }
+      }
+     },
+     "400": {
+      "$ref": "#/components/responses/BadRequest"
+     },
+     "401": {
+      "$ref": "#/components/responses/Unauthorized"
+     },
+     "403": {
+      "$ref": "#/components/responses/Forbidden"
+     },
+     "404": {
+      "$ref": "#/components/responses/NotFound"
+     },
+     "500": {
+      "$ref": "#/components/responses/InternalServer"
+     }
+    }
+   }
+  },
+  "/v1/accounts/{accountId}/measure-producers/{measureProducerId}/dictionaries/{locale}": {
+   "parameters": [
+    {
+     "$ref": "#/components/parameters/accountId"
+    },
+    {
+     "$ref": "#/components/parameters/measureProducerId"
+    },
+    {
+     "$ref": "#/components/parameters/locale"
+    }
+   ],
+   "get": {
+    "tags": [
+     "Dictionaries"
+    ],
+    "summary": "Get Dictionaries",
+    "description": "Return the dictionary associated with a measure producer for the given locale.",
+    "operationId": "getAnalyticsDictionary",
+    "responses": {
+     "200": {
+      "description": "OK",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Dictionary"
+        },
+        "example": {
+         "locale": "ko",
+         "description": "Avaya Experience Platform\u2122 metrics",
+         "measures": [
+          {
+           "name": "agentId",
+           "displayName": "\uc0c1\ub2f4\uc6d0 ID",
+           "description": "\ud574\ub2f9 \uc0c1\ub2f4\uc6d0 ID"
+          },
+          {
+           "name": "agentState",
+           "displayName": "\uc0c1\ub2f4\uc6d0 \uc0c1\ud0dc",
+           "description": "\ud604\uc7ac \uc0c1\ub2f4\uc6d0 \uc0c1\ud0dc"
+          }
+         ]
+        }
+       }
+      }
+     },
+     "400": {
+      "$ref": "#/components/responses/BadRequest"
+     },
+     "401": {
+      "$ref": "#/components/responses/Unauthorized"
+     },
+     "403": {
+      "$ref": "#/components/responses/Forbidden"
+     },
+     "404": {
+      "$ref": "#/components/responses/NotFound"
+     },
+     "500": {
+      "$ref": "#/components/responses/InternalServer"
+     }
+    }
+   }
+  },
+  "/v1/accounts/{accountId}/measure-producers/{measureProducerId}/locales": {
+   "parameters": [
+    {
+     "$ref": "#/components/parameters/accountId"
+    },
+    {
+     "$ref": "#/components/parameters/measureProducerId"
+    }
+   ],
+   "get": {
+    "tags": [
+     "Locales"
+    ],
+    "summary": "List Locales",
+    "description": "Return list of locales associated with a measure producer.",
+    "operationId": "listAnalyticsLocales",
+    "responses": {
+     "200": {
+      "description": "OK",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "array",
+         "items": {
+          "type": "string"
+         }
+        },
+        "example": [
+         "pt",
+         "en",
+         "fr",
+         "ko"
+        ]
+       }
+      }
+     },
+     "400": {
+      "$ref": "#/components/responses/BadRequest"
+     },
+     "401": {
+      "$ref": "#/components/responses/Unauthorized"
+     },
+     "403": {
+      "$ref": "#/components/responses/Forbidden"
+     },
+     "404": {
+      "$ref": "#/components/responses/NotFound"
+     },
+     "500": {
+      "$ref": "#/components/responses/InternalServer"
+     }
+    }
+   }
+  }
+ },
+ "components": {
+  "parameters": {
+   "accountId": {
+    "in": "path",
+    "name": "accountId",
+    "description": "The unique 6 character internal id that represents the customer account.",
+    "required": true,
+    "schema": {
+     "type": "string",
+     "minLength": 6,
+     "maxLength": 6,
+     "pattern": "^[a-zA-Z]{6}$",
+     "example": "ABCDEF"
+    }
+   },
+   "measureProducerId": {
+    "in": "path",
+    "name": "measureProducerId",
+    "description": "MeasureProducer unique Id.",
+    "required": true,
+    "schema": {
+     "type": "string",
+     "minLength": 1,
+     "maxLength": 36,
+     "example": "Queue_itd_1.0.0"
+    }
+   },
+   "locale": {
+    "in": "path",
+    "name": "locale",
+    "description": "Locale associated with a dictionary for a Measure Producer.",
+    "required": true,
+    "schema": {
+     "type": "string",
+     "minLength": 2,
+     "maxLength": 6,
+     "pattern": "^[A-Za-z]{2,4}$|[A-Za-z]{2,4}([_-][A-Za-z]{4})?([_-]([A-Za-z]{2}))",
+     "example": "en-US"
+    }
+   },
+   "processorType": {
+    "in": "query",
+    "name": "processorType",
+    "description": "Possible values include: ITD, JRNL, ADM, CDR and more.",
+    "required": false,
+    "schema": {
+     "type": "string",
+     "minLength": 1,
+     "maxLength": 36,
+     "example": "ITD"
+    }
+   }
+  },
+  "schemas": {
+   "Translation": {
+    "type": "object",
+    "description": "The Translation for dimensions and measures from english to a specific locale. The translation is composed of a measure and its corresponding measureProducer translated from english to another language.",
+    "required": [
+     "name"
+    ],
+    "properties": {
+     "name": {
+      "type": "string",
+      "description": "The name of the measure",
+      "example": "agentId"
+     },
+     "displayName": {
+      "type": "string",
+      "description": "The name of the measure to be displayed on the user interface.",
+      "example": "Agent Id"
+     },
+     "description": {
+      "type": "string",
+      "description": "A short description of the measure.",
+      "example": "The unique identifier for the agent"
+     }
+    }
+   },
+   "Dictionary": {
+    "type": "object",
+    "description": "A dictionary is composed of a locale field and a translations array. It represents a collection of translations for dimensions and measures in the locale.",
+    "required": [
+     "locale",
+     "description",
+     "measures"
+    ],
+    "properties": {
+     "locale": {
+      "type": "string",
+      "description": "Language and region that the dictionary pertains to.",
+      "example": "en-US"
+     },
+     "description": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256,
+      "description": "A short description of the dictionary",
+      "example": "Avaya Experience Platform\u2122 metrics"
+     },
+     "measures": {
+      "type": "array",
+      "minItems": 1,
+      "description": "An array containing all the translations for the dictionary.",
+      "items": {
+       "$ref": "#/components/schemas/Translation"
+      }
+     }
+    }
+   },
+   "MeasureSet": {
+    "type": "object",
+    "description": "Specific Attribute providing information about a measure set.",
+    "required": [
+     "keys",
+     "measures"
+    ],
+    "properties": {
+     "keys": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 25,
+      "description": "The unique keys associated with the measure set.",
+      "items": {
+       "type": "string"
+      },
+      "example": [
+       "agentId",
+       "channelId"
+      ]
+     },
+     "measures": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 25,
+      "description": "Array of attributes providing information about measures e.g. answered, offered.",
+      "items": {
+       "$ref": "#/components/schemas/Measure"
+      }
+     }
+    }
+   },
+   "Measure": {
+    "type": "object",
+    "description": "Property which can be calculated by events in the system. e.g. AgentId, AgentState, Calls Waiting, Total Call Duration.",
+    "required": [
+     "name",
+     "type"
+    ],
+    "properties": {
+     "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256,
+      "description": "Name of the measure",
+      "example": "agentId"
+     },
+     "type": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 36,
+      "description": "The type of the measure value.",
+      "enum": [
+       "STRING",
+       "NUMBER",
+       "DURATION",
+       "DATE",
+       "TIME_IN_STATE"
+      ]
+     },
+     "displayName": {
+      "type": "string",
+      "description": "TODO",
+      "example": "Agent Id"
+     },
+     "active": {
+      "type": "boolean",
+      "description": "Indicates if the measure is actively being calculated by Analytics.",
+      "example": true
+     }
+    }
+   },
+   "MeasureProducer": {
+    "type": "object",
+    "description": "Detailed information about a measure producer registered in Analytics. Includes measure sets and measure data.",
+    "required": [
+     "measureProducerName",
+     "processorType",
+     "version",
+     "measureSets"
+    ],
+    "properties": {
+     "measureProducerId": {
+      "type": "string",
+      "readOnly": true,
+      "minLength": 1,
+      "maxLength": 36,
+      "description": "The id that represents the measure producer.",
+      "example": "AgentByChannel_itd_1.0.0"
+     },
+     "measureProducerName": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256,
+      "description": "The name of the measure producer.",
+      "example": "AgentByChannel"
+     },
+     "processorType": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 36,
+      "description": "Type of processor associated with this Measure Producer. Possible values include: ITD (Interval To Date), JRNL (Journal), ADM (Admin), CDR (Contact Details Report)",
+      "example": "ITD",
+      "enum": [
+       "ITD",
+       "JRNL",
+       "ADM",
+       "CDR"
+      ]
+     },
+     "description": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256,
+      "description": "A short description of the measure producer.",
+      "example": "Avaya Experience Platform\u2122 metrics"
+     },
+     "version": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 36,
+      "description": "The version number of the measure producer.",
+      "example": "1.0.0"
+     },
+     "measureSets": {
+      "$ref": "#/components/schemas/MeasureSets"
+     }
+    }
+   },
+   "MeasureSets": {
+    "type": "array",
+    "description": "Array of attributes providing information about data e.g. Agent, Routing Service.",
+    "minItems": 1,
+    "maxItems": 25,
+    "items": {
+     "$ref": "#/components/schemas/MeasureSet"
+    }
+   },
+   "Problem": {
+    "type": "object",
+    "description": "<b>Problem Detail</b> as a way to carry machine-readable details of errors in a HTTP response to avoid the need to define new error response formats for HTTP APIs <a href=\"https://tools.ietf.org/html/rfc7807\">RFC 7807</a>\n",
+    "properties": {
+     "type": {
+      "type": "string",
+      "format": "uri",
+      "description": "An absolute URI that identifies the problem type. When dereferenced, it SHOULD provide human-readable documentation for the problem type (e.g., using HTML).\n",
+      "default": "about:blank",
+      "example": "https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#constraint-violation"
+     },
+     "title": {
+      "type": "string",
+      "description": "A short, summary of the problem type. Written in english and readable for engineers (usually not suited for non technical stakeholders and not localized).\n",
+      "example": "Service Unavailable",
+      "nullable": true
+     },
+     "status": {
+      "type": "integer",
+      "format": "int32",
+      "description": "The HTTP status code generated by the origin server for this occurrence of the problem.\n",
+      "minimum": 100,
+      "maximum": 600,
+      "exclusiveMaximum": true,
+      "example": 503,
+      "nullable": true
+     },
+     "detail": {
+      "type": "string",
+      "description": "A human readable explanation specific to this occurrence of the problem.\n",
+      "example": "Connection to database timed out",
+      "nullable": true
+     },
+     "instance": {
+      "type": "string",
+      "format": "uri",
+      "description": "An absolute URI that identifies the specific occurrence of the problem. It may or may not yield further information if dereferenced.\n",
+      "nullable": true
+     },
+     "violations": {
+      "type": "array",
+      "description": "A list of violations that occurred as a result of invalid data provided as part of a request.\n",
+      "nullable": true,
+      "items": {
+       "type": "object",
+       "properties": {
+        "field": {
+         "type": "string",
+         "description": "The name of the field in the request that caused the violation. This can be the name of a path parameter, query parameter, or a field within the request body.\n",
+         "example": "accountId"
+        },
+        "message": {
+         "type": "string",
+         "description": "A human readable explanation specific to this occurrence of the violation.\n",
+         "example": "must match \"^[a-zA-Z]{6}$\""
+        },
+        "code": {
+         "type": "integer",
+         "format": "int32",
+         "description": "The violation code generated by the server for this occurrence of the violation. Use this code when implementing any error handling logic instead of the message, as the message can change.\n",
+         "example": 20006
+        }
+       }
+      },
+      "example": [
+       {
+        "field": "emailAddress",
+        "message": "must not be null",
+        "code": 20002
+       },
+       {
+        "field": "accountId",
+        "message": "must match \"^[a-zA-Z]{6}$\"",
+        "code": 20006
+       }
+      ]
+     }
+    }
+   }
+  },
+  "responses": {
+   "BadRequest": {
+    "description": "BadRequest",
+    "content": {
+     "application/problem+json": {
+      "schema": {
+       "$ref": "#/components/schemas/Problem"
+      },
+      "examples": {
+       "default": {
+        "$ref": "#/components/examples/ErrorConstraintViolation"
+       }
+      }
+     }
+    }
+   },
+   "Unauthorized": {
+    "description": "Unauthorized",
+    "content": {
+     "application/problem+json": {
+      "schema": {
+       "$ref": "#/components/schemas/Problem"
+      },
+      "examples": {
+       "default": {
+        "$ref": "#/components/examples/ErrorUnauthorized"
+       }
+      }
+     }
+    }
+   },
+   "InternalServer": {
+    "description": "Internal Server Error",
+    "content": {
+     "application/problem+json": {
+      "schema": {
+       "$ref": "#/components/schemas/Problem"
+      },
+      "examples": {
+       "default": {
+        "$ref": "#/components/examples/ErrorInternalServerError"
+       }
+      }
+     }
+    }
+   },
+   "Forbidden": {
+    "description": "Forbidden",
+    "content": {
+     "application/problem+json": {
+      "schema": {
+       "$ref": "#/components/schemas/Problem"
+      },
+      "examples": {
+       "default": {
+        "$ref": "#/components/examples/ErrorForbidden"
+       }
+      }
+     }
+    }
+   },
+   "NotFound": {
+    "description": "Not Found",
+    "content": {
+     "application/problem+json": {
+      "schema": {
+       "$ref": "#/components/schemas/Problem"
+      },
+      "examples": {
+       "default": {
+        "$ref": "#/components/examples/ErrorNotFound"
+       }
+      }
+     }
+    }
+   }
+  },
+  "examples": {
+   "AgentProducer": {
+    "value": {
+     "measureProducerId": "Agent_itd_1.0.0",
+     "measureProducerName": "Agent",
+     "processorType": "ITD",
+     "description": "Avaya Experience Platform\u2122 metrics",
+     "version": "1.0.0",
+     "measureSets": [
+      {
+       "keys": [
+        "agentId"
+       ],
+       "measures": [
+        {
+         "name": "abandonedFromAlerting",
+         "type": "NUMBER",
+         "displayName": "Abandoned From Alerting",
+         "active": true
+        },
+        {
+         "name": "activeDuration",
+         "type": "DURATION",
+         "displayName": "Active Duration",
+         "active": true
+        },
+        {
+         "name": "timeActive",
+         "type": "TIME_IN_STATE",
+         "displayName": "Time Active",
+         "active": true
+        }
+       ]
+      }
+     ]
+    }
+   },
+   "AgentByChannel": {
+    "value": {
+     "measureProducerId": "AgentByChannel_itd_1.0.0",
+     "measureProducerName": "AgentByChannel",
+     "processorType": "ITD",
+     "description": "Avaya Experience Platform\u2122 metrics",
+     "version": "1.0.0",
+     "measureSets": [
+      {
+       "keys": [
+        "agentId",
+        "channelId"
+       ],
+       "measures": [
+        {
+         "name": "abandonedFromAlerting",
+         "type": "NUMBER",
+         "displayName": "Abandoned From Alerting",
+         "active": true
+        },
+        {
+         "name": "activeDuration",
+         "type": "DURATION",
+         "displayName": "Active Duration",
+         "active": true
+        }
+       ]
+      }
+     ]
+    }
+   },
+   "DialogDetailMeasure": {
+    "value": {
+     "measureProducerId": "DialogDetail_cdr_1.0.0",
+     "measureProducerName": "DialogDetail",
+     "processorType": "CDR",
+     "description": "Avaya Experience Platform\u2122 metrics",
+     "version": "1.0.0",
+     "measureSets": [
+      {
+       "keys": [
+        "agentId",
+        "channelId"
+       ],
+       "measures": [
+        {
+         "name": "abandonedIndicator",
+         "type": "STRING",
+         "displayName": "Abandoned Indicator",
+         "active": true
+        },
+        {
+         "name": "acwEndTimestamp",
+         "type": "DATE",
+         "displayName": "Acw End Timestamp",
+         "active": true
+        }
+       ]
+      }
+     ]
+    }
+   },
+   "QueueByChannel": {
+    "value": {
+     "measureProducerId": "QueueByChannel_itd_1.0.0",
+     "measureProducerName": "QueueByChannel",
+     "processorType": "ITD",
+     "description": "Avaya Experience Platform\u2122 metrics",
+     "version": "1.0.0",
+     "measureSets": [
+      {
+       "keys": [
+        "channelId",
+        "queueId"
+       ],
+       "measures": [
+        {
+         "name": "abandonedFromAlerting",
+         "type": "NUMBER",
+         "displayName": "Abandoned From Alerting",
+         "active": true
+        },
+        {
+         "name": "abandonedFromQueue",
+         "type": "NUMBER",
+         "displayName": "Abandoned From Queue",
+         "active": true
+        }
+       ]
+      }
+     ]
+    }
+   },
+   "QueueMeasureProducer": {
+    "value": {
+     "measureProducerId": "Queue_itd_1.0.0",
+     "measureProducerName": "Queue",
+     "processorType": "ITD",
+     "description": "Avaya Experience Platform\u2122 metrics",
+     "version": "1.0.0",
+     "measureSets": [
+      {
+       "keys": [
+        "queueId"
+       ],
+       "measures": [
+        {
+         "name": "abandonedFromAlerting",
+         "type": "NUMBER",
+         "displayName": "Abandoned From Alerting",
+         "active": true
+        },
+        {
+         "name": "abandonedFromQueue",
+         "type": "NUMBER",
+         "displayName": "Abandoned From Queue",
+         "active": true
+        }
+       ]
+      }
+     ]
+    }
+   },
+   "ListMeasureProducers": {
+    "value": [
+     {
+      "measureProducerId": "AgentByChannel_itd_1.0.0",
+      "measureProducerName": "AgentByChannel",
+      "processorType": "ITD",
+      "description": "Avaya Experience Platform\u2122 metrics",
+      "version": "1.0.0",
+      "measureSets": [
+       {
+        "keys": [
+         "agentId",
+         "channelId"
+        ],
+        "measures": [
+         {
+          "name": "agentId",
+          "type": "STRING",
+          "displayName": "Agent Id",
+          "active": true
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   },
+   "ErrorConstraintViolation": {
+    "description": "Constraint Violation",
+    "value": {
+     "type": "https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#constraint-violation",
+     "title": "Constraint Violation",
+     "status": 400,
+     "detail": "A problem that indicates a syntactically correct, yet semantically illegal request. The Server can not process this request until the client resolves the semantic errors described in the violations section.",
+     "violations": [
+      {
+       "field": "accountId",
+       "message": "must not be null"
+      }
+     ]
+    }
+   },
+   "ErrorUnauthorized": {
+    "description": "Unauthorized",
+    "value": {
+     "type": "https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#unauthorized",
+     "title": "Unauthorized",
+     "status": 401,
+     "detail": "This operation requires authentication. See https://developers.avayacloud.com/onecloud-ccaas/docs/how-to-authenticate-with-ccaas-apis"
+    }
+   },
+   "ErrorForbidden": {
+    "description": "Forbidden",
+    "value": {
+     "type": "https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#forbidden",
+     "title": "Forbidden",
+     "status": 403,
+     "detail": "According to the access control policy the current user and/or accountId does not have permission to access this resource."
+    }
+   },
+   "ErrorNotFound": {
+    "description": "Not Found",
+    "value": {
+     "type": "https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#resource-not-found",
+     "title": "Resource Not Found",
+     "status": 404,
+     "detail": "Resource not found."
+    }
+   },
+   "ErrorInternalServerError": {
+    "description": "Server Error",
+    "value": {
+     "type": "https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#server-error",
+     "title": "Server Error",
+     "status": 500,
+     "detail": "An internal server error was encountered."
+    }
+   }
+  },
+  "securitySchemes": {
+   "BearerAuth": {
+    "type": "http",
+    "scheme": "bearer",
+    "description": "This API uses Bearer Token Authorization Flow",
+    "bearerFormat": "JWT"
+   }
+  }
+ }
+}

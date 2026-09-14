@@ -1,0 +1,46 @@
+generated: '2026-09-14'
+method: searched
+source: https://developers.avayacloud.com/avaya-experience-platform/docs/http-headers
+limit_count: 0
+note: >-
+  Avaya documents the SHAPE of its rate limiting but publishes no numbers, and the response headers
+  that would carry the numbers are explicitly marked "Coming Soon" as of the February 2026
+  documentation revision. The error-handling page names two exhaustion causes — "spike limit
+  exhausted" and "tenant quota exhausted" — without stating either value, and 44 of the 367 harvested
+  operations declare a 429 response while exactly one declares Retry-After among its response headers.
+  So limit_count is an honest zero: a client cannot learn its budget from the docs, and cannot read it
+  off a live response either.
+status_on_exhaustion: 429
+exhaustion_causes:
+  - spike limit exhausted
+  - tenant quota exhausted
+headers:
+  - name: RateLimit-Limit
+    direction: response
+    status: documented-not-implemented
+    description: The rate limit ceiling for that given endpoint.
+  - name: RateLimit-Remaining
+    direction: response
+    status: documented-not-implemented
+    description: The number of requests left for the window.
+  - name: RateLimit-Reset
+    direction: response
+    status: documented-not-implemented
+    description: The remaining window before the rate limit resets, in seconds.
+  - name: RateLimit-Policy
+    direction: response
+    status: documented-not-implemented
+    description: 'Quota policy, e.g. "100;w=60" meaning 100 requests per 60 seconds.'
+  - name: Retry-After
+    direction: response
+    status: documented-not-implemented
+    description: Seconds after which the rate limit resets. Returned on 429.
+    declared_in_contract: openapi/avaya-axp-digital-custom-messaging-openapi.yml
+limits: []
+evidence:
+  - url: https://developers.avayacloud.com/avaya-experience-platform/docs/http-headers
+    status: 200
+    finding: RateLimit-* family and Retry-After documented, marked "Coming Soon"
+  - url: https://developers.avayacloud.com/avaya-experience-platform/docs/error-handling
+    status: 200
+    finding: 429 documented with spike-limit and tenant-quota causes; no numbers

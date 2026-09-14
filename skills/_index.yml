@@ -1,0 +1,28 @@
+generated: '2026-09-14'
+method: generated
+source: >-
+  generated from the 40 harvested Avaya OpenAPI documents in openapi/ (367 operations) plus
+  conventions/avaya-conventions.yml, errors/avaya-problem-types.yml and asyncapi/avaya-webhooks.yml.
+  Every operationId referenced was verified present in the named spec. No provider-published Agent
+  Skill or AGENTS.md was found on either developer hub.
+skills:
+  - file: avaya-infinity-authenticate-and-read-queue-metrics.md
+    name: Authenticate with Avaya Infinity and read live queue metrics
+    api: openapi/avaya-infinity-queue-metrics-openapi.yml
+    operations: [generateAccessToken, queryQueueMetrics, listQueues, describeQueue]
+  - file: avaya-infinity-subscribe-to-events.md
+    name: Subscribe to Avaya Infinity events and keep the subscription alive
+    api: openapi/avaya-infinity-notifications-openapi.yml
+    operations: [createSubscription, listSubscriptions, getSubscription, renewSubscription, updateSubscription, deleteSubscription]
+  - file: avaya-axp-bulk-provision-users.md
+    name: Bulk-provision Avaya Experience Platform users as an async job
+    api: openapi/avaya-axp-admin-user-openapi.yml
+    operations: [downloadBulkTemplate, bulkAddUsers, bulkUpdateUsers, listJobs, getJob, listUsersByJob, exportFailedUsers, downloadExportedUsers, stopJob, searchUsers]
+  - file: avaya-axp-run-a-digital-engagement.md
+    name: Run a custom digital chat engagement on Avaya Experience Platform
+    api: openapi/avaya-axp-digital-custom-chat-openapi.yml
+    operations: [createDigitalSession, getDigitalSession, createDigitalEngagement, joinDigitalEngagement, sendDigitalMessage, listDigitalMessages, appendIdentifiersInDigitalSession, disconnectDigitalEngagement, createDigitalWebhookSubscription]
+  - file: avaya-axp-customer-journey-lookup.md
+    name: Look up a customer journey and annotate an engagement on AXP
+    api: openapi/avaya-axp-customer-journey-openapi.yml
+    operations: [createIdentifier, getIdentifiers, getIdentifier, getJourneys, getEngagements, getEngagement, appendIdentifiers, createAgentNote, getAgentNotes, listMessages]

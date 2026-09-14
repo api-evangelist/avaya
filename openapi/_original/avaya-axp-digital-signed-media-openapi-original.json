@@ -1,0 +1,450 @@
+{
+ "openapi": "3.0.2",
+ "x-explorer-enabled": false,
+ "x-samples-languages": [
+  "curl",
+  "node",
+  "java",
+  "javascript",
+  "python",
+  "go"
+ ],
+ "info": {
+  "title": "Digital - Signed Media",
+  "description": "Media store is used for storing media exchanged during chat or messaging. Different types of media like audio files, video files, images, documents, and spreadsheets can be exchanged. Signed URI APIs help clients to upload and download media without the need of account based access tokens.",
+  "contact": {
+   "name": "Avaya API Team",
+   "url": "https://developers.avayacloud.com/onecloud-ccaas",
+   "email": "apiteam@avaya.com"
+  },
+  "license": {
+   "name": "Avaya Software Development Kit (SDK) Software License Terms",
+   "url": "http://support.avaya.com/css/P8/documents/101038288"
+  },
+  "version": "1.0.1"
+ },
+ "servers": [
+  {
+   "url": "{protocol}://{server}{basePath}",
+   "description": "Open API",
+   "variables": {
+    "protocol": {
+     "enum": [
+      "https"
+     ],
+     "default": "https"
+    },
+    "server": {
+     "default": "HOST-REGION.api.avayacloud.com"
+    },
+    "basePath": {
+     "default": "/api/media-store/v1"
+    }
+   }
+  },
+  {
+   "url": "{protocol}://{server}:{port}",
+   "description": "Internal API",
+   "variables": {
+    "protocol": {
+     "enum": [
+      "http",
+      "https"
+     ],
+     "default": "http"
+    },
+    "server": {
+     "default": "umr"
+    },
+    "port": {
+     "enum": [
+      "80",
+      "443"
+     ],
+     "default": "80"
+    }
+   }
+  }
+ ],
+ "tags": [
+  {
+   "name": "Media",
+   "description": "This tag is used to upload or download media using signed URI."
+  }
+ ],
+ "paths": {
+  "/media/{mediaId}": {
+   "post": {
+    "tags": [
+     "Media"
+    ],
+    "summary": "Upload Media",
+    "description": "Upload media file using the signed URI.",
+    "operationId": "uploadSignedMedia",
+    "parameters": [
+     {
+      "$ref": "#/components/parameters/mediaId"
+     },
+     {
+      "$ref": "#/components/parameters/ttl"
+     },
+     {
+      "$ref": "#/components/parameters/signature"
+     }
+    ],
+    "requestBody": {
+     "content": {
+      "multipart/form-data": {
+       "schema": {
+        "$ref": "#/components/schemas/MediaFile"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "202": {
+      "description": "Accepted",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/UploadMediaResponse"
+        },
+        "examples": {
+         "Upload media response": {
+          "$ref": "#/components/examples/UploadMediaResponse"
+         }
+        }
+       }
+      }
+     },
+     "400": {
+      "$ref": "#/components/responses/BadRequest"
+     },
+     "404": {
+      "$ref": "#/components/responses/NotFound"
+     },
+     "500": {
+      "$ref": "#/components/responses/InternalServerError"
+     }
+    },
+    "deprecated": false
+   },
+   "get": {
+    "tags": [
+     "Media"
+    ],
+    "summary": "Get Media",
+    "description": "Get media file using the signed URI.",
+    "operationId": "getSignedMedia",
+    "parameters": [
+     {
+      "$ref": "#/components/parameters/mediaId"
+     },
+     {
+      "$ref": "#/components/parameters/ttl"
+     },
+     {
+      "$ref": "#/components/parameters/signature"
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "OK",
+      "content": {
+       "application/octet-stream": {
+        "schema": {
+         "$ref": "#/components/schemas/Media"
+        },
+        "examples": {
+         "Media File": {
+          "$ref": "#/components/examples/MediaFile"
+         }
+        }
+       }
+      }
+     },
+     "204": {
+      "description": "No Content"
+     },
+     "400": {
+      "$ref": "#/components/responses/BadRequest"
+     },
+     "404": {
+      "$ref": "#/components/responses/NotFound"
+     },
+     "500": {
+      "$ref": "#/components/responses/InternalServerError"
+     }
+    },
+    "deprecated": false
+   }
+  }
+ },
+ "components": {
+  "parameters": {
+   "mediaId": {
+    "in": "path",
+    "name": "mediaId",
+    "description": "The unique 36 character internal id that represents the media",
+    "required": true,
+    "schema": {
+     "type": "string",
+     "minLength": 36,
+     "maxLength": 36,
+     "pattern": "^[0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{12}$",
+     "example": "6e232c4b-b0fe-4901-8b81-288ec7de9e4c"
+    }
+   },
+   "ttl": {
+    "in": "query",
+    "name": "ttl",
+    "description": "The time to live for the signature",
+    "required": true,
+    "schema": {
+     "type": "integer",
+     "format": "int64",
+     "minimum": 0,
+     "example": 1672511400000
+    }
+   },
+   "signature": {
+    "in": "query",
+    "name": "signature",
+    "description": "The signature key",
+    "required": true,
+    "schema": {
+     "type": "string",
+     "maxLength": 128,
+     "minLength": 124,
+     "example": "CB3BE6D4898600CE3923D808D781028835891012014E902A90C1780DDD54F8E5EC626832E104E4F20167DA2F029B4672D708915E9CDC12F20AC24319FAC6"
+    }
+   }
+  },
+  "responses": {
+   "BadRequest": {
+    "description": "Bad Request",
+    "content": {
+     "application/problem+json": {
+      "schema": {
+       "$ref": "#/components/schemas/Problem"
+      },
+      "examples": {
+       "default": {
+        "$ref": "#/components/examples/ErrorConstraintViolation"
+       },
+       "invalid-media-id": {
+        "$ref": "#/components/examples/ErrorConstraintViolationForMediaId"
+       }
+      }
+     }
+    }
+   },
+   "NotFound": {
+    "description": "Not Found",
+    "content": {
+     "application/problem+json": {
+      "schema": {
+       "$ref": "#/components/schemas/Problem"
+      },
+      "examples": {
+       "default": {
+        "$ref": "#/components/examples/ErrorNotFound"
+       }
+      }
+     }
+    }
+   },
+   "InternalServerError": {
+    "description": "Internal Server Error",
+    "content": {
+     "application/problem+json": {
+      "schema": {
+       "$ref": "#/components/schemas/Problem"
+      },
+      "examples": {
+       "default": {
+        "$ref": "#/components/examples/ErrorInternalServerError"
+       }
+      }
+     }
+    }
+   }
+  },
+  "schemas": {
+   "Problem": {
+    "type": "object",
+    "description": "<b>Problem Detail</b> as a way to carry machine-readable details of errors in a HTTP response to avoid the need to define new error response formats for HTTP APIs <a href=\"https://tools.ietf.org/html/rfc7807\">RFC 7807</a>\n",
+    "properties": {
+     "type": {
+      "type": "string",
+      "format": "uri",
+      "description": "An absolute URI that identifies the problem type. When dereferenced, it SHOULD provide human-readable documentation for the problem type (e.g., using HTML).\n",
+      "default": "about:blank",
+      "example": "https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#constraint-violation"
+     },
+     "title": {
+      "type": "string",
+      "description": "A short, summary of the problem type. Written in english and readable for engineers (usually not suited for non technical stakeholders and not localized).\n",
+      "example": "Service Unavailable",
+      "nullable": true
+     },
+     "status": {
+      "type": "integer",
+      "format": "int32",
+      "description": "The HTTP status code generated by the origin server for this occurrence of the problem.\n",
+      "minimum": 100,
+      "maximum": 600,
+      "exclusiveMaximum": true,
+      "example": 503,
+      "nullable": true
+     },
+     "detail": {
+      "type": "string",
+      "description": "A human readable explanation specific to this occurrence of the problem.\n",
+      "example": "Connection to database timed out",
+      "nullable": true
+     },
+     "instance": {
+      "type": "string",
+      "format": "uri",
+      "description": "An absolute URI that identifies the specific occurrence of the problem. It may or may not yield further information if dereferenced.\n",
+      "nullable": true
+     },
+     "violations": {
+      "type": "array",
+      "description": "A list of violations that occurred as a result of invalid data provided as part of a request.\n",
+      "nullable": true,
+      "items": {
+       "type": "object",
+       "properties": {
+        "field": {
+         "type": "string",
+         "description": "The name of the field in the request that caused the violation. This can be the name of a path parameter, query parameter, or a field within the request body.\n",
+         "example": "accountId"
+        },
+        "message": {
+         "type": "string",
+         "description": "A human readable explanation specific to this occurrence of the violation.\n",
+         "example": "must match \"^[a-zA-Z]{6}$\""
+        },
+        "code": {
+         "type": "integer",
+         "format": "int32",
+         "description": "The violation code generated by the server for this occurrence of the violation. Use this code when implementing any error handling logic instead of the message, as the message can change.\n",
+         "example": 20006
+        }
+       }
+      },
+      "example": [
+       {
+        "field": "emailAddress",
+        "message": "must not be null",
+        "code": 20002
+       },
+       {
+        "field": "accountId",
+        "message": "must match \"^[a-zA-Z]{6}$\"",
+        "code": 20006
+       }
+      ]
+     }
+    }
+   },
+   "Media": {
+    "title": "Media",
+    "type": "string",
+    "format": "binary",
+    "description": "octet-stream of media file"
+   },
+   "UploadMediaResponse": {
+    "title": "UploadMediaResponse",
+    "type": "object",
+    "description": "Information returned after the creation of media inclusive of basic information and associated metadata",
+    "properties": {
+     "mediaId": {
+      "type": "string",
+      "description": "The unique 36 character internal id that represents the media",
+      "example": "b03976ea-7e8b-11ea-bc55-0242ac130003"
+     },
+     "mediaName": {
+      "type": "string",
+      "example": "myFile.png"
+     }
+    }
+   },
+   "MediaFile": {
+    "type": "object",
+    "required": [
+     "mediaFile"
+    ],
+    "properties": {
+     "mediaFile": {
+      "type": "string",
+      "format": "binary",
+      "description": "Media attachment for a message"
+     }
+    }
+   }
+  },
+  "examples": {
+   "UploadMediaResponse": {
+    "value": {
+     "mediaId": "6e232c4b-b0fe-4901-8b81-288ec7de9e4c",
+     "mediaName": "myFile.png"
+    }
+   },
+   "MediaFile": {
+    "value": "media file binary content"
+   },
+   "ErrorConstraintViolation": {
+    "description": "Constraint Violation",
+    "value": {
+     "type": "https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#constraint-violation",
+     "title": "Constraint Violation",
+     "status": 400,
+     "detail": "A problem that indicates a syntactically correct, yet semantically illegal request. The Server can not process this request until the client resolves the semantic errors described in the violations section.",
+     "violations": [
+      {
+       "field": "mediaId",
+       "message": "must not be null"
+      }
+     ]
+    }
+   },
+   "ErrorConstraintViolationForMediaId": {
+    "description": "Constraint Violation",
+    "value": {
+     "type": "https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#constraint-violation",
+     "title": "Constraint Violation",
+     "status": 400,
+     "detail": "A problem that indicates a syntactically correct, yet semantically illegal request. The Server can not process this request until the client resolves the semantic errors described in the violations section.",
+     "violations": [
+      {
+       "field": "mediaId",
+       "message": "is not valid"
+      }
+     ]
+    }
+   },
+   "ErrorNotFound": {
+    "description": "Not Found",
+    "value": {
+     "type": "https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#internal-error",
+     "title": "Internal Server Error",
+     "status": 404,
+     "detail": "No data found for given Id"
+    }
+   },
+   "ErrorInternalServerError": {
+    "description": "Internal Server Error",
+    "value": {
+     "type": "https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#internal-error",
+     "title": "Internal Server Error",
+     "status": 500,
+     "detail": "An internal server error was encountered."
+    }
+   }
+  }
+ }
+}

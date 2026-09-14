@@ -1,0 +1,34 @@
+generated: '2026-09-14'
+method: searched
+status: announced-not-shipped
+source: https://www.avaya.com/en/solutions/mcp/
+deployment:
+  mode: none
+  endpoint: null
+  install: null
+  package: null
+  auth: unknown
+  verified: searched
+server: null
+tools: []
+detail: >-
+  Avaya markets Model Context Protocol heavily — a dedicated solutions page, an insights explainer, a
+  July 2025 press release, and an llms.txt that lists MCP as a differentiator claiming Avaya Infinity
+  "integrates MCP natively into its core orchestration engine, operating as both an MCP server and an
+  MCP client" — but nothing callable has shipped to the public. There is no endpoint URL, no npx or
+  pip install command, and no MCP package under the @avaya npm scope or in any registry searched. The
+  developer hubs at developers.avayacloud.com carry no MCP reference section, no tools/list surface and
+  no MCP configuration example; the Infinity Extensibility Framework page mentions MCP three times in
+  prose without publishing an endpoint. mode: none is recorded deliberately — this is the gap between
+  an announced agent surface and a reachable one, and no endpoint is guessed here.
+searched:
+  - {url: 'https://www.avaya.com/en/solutions/mcp/', status: 200, finding: 'marketing page; MCP described as being built, no endpoint or install'}
+  - {url: 'https://www.avaya.com/en/newsroom/2025/pr-us-250722/', status: 200, finding: 'July 2025 announcement; availability targeted Q4 2025, Databricks named as governance partner'}
+  - {url: 'https://developers.avayacloud.com/avaya-infinity/docs/ief', status: 200, finding: 'Extensibility Framework mentions MCP in prose; no endpoint, no tool list'}
+  - {url: 'https://www.avaya.com/llms.txt', status: 200, finding: 'lists MCP support as a differentiator; links only to marketing pages'}
+  - {registry: npm, query: '@avaya scope', finding: 'no MCP package among the 14 first-party packages'}
+  - {registry: pypi, query: avaya, finding: 'no package'}
+candidate_tools_note: >-
+  A candidate tool list was deliberately NOT derived from the 367 harvested OpenAPI operations. Avaya
+  has 40 real specs and a crosswalk would be easy to generate, but there is no server to bind it to,
+  and a derived tool list here would read as an agent surface Avaya does not operate.

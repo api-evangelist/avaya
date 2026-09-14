@@ -1,0 +1,904 @@
+openapi: 3.0.2
+x-explorer-enabled: false
+x-samples-languages:
+- curl
+- node
+- java
+- javascript
+- python
+- go
+info:
+  title: Messaging API
+  description: Send end user messages to the contact center.
+  contact:
+    name: Avaya API Team
+    url: https://developers.avayacloud.com/onecloud-ccaas
+    email: apiteam@avaya.com
+  license:
+    name: Avaya Software Development Kit (SDK) Software License Terms
+    url: http://support.avaya.com/css/P8/documents/101038288
+  version: 1.0.0
+servers:
+- url: '{protocol}://{server}{basePath}'
+  description: Open API
+  variables:
+    protocol:
+      enum:
+      - https
+      default: https
+    server:
+      default: avaya-infinity-hostname
+    basePath:
+      default: /api/digital/messaging
+tags:
+- name: Messaging
+  description: 'Send end user messages to the contact center.
+
+    '
+security:
+- BearerAuth: []
+paths:
+  /v1/messages:
+    post:
+      tags:
+      - Messaging
+      summary: Send Message
+      description: 'Send end user messages asynchronously to the contact center.  Based on the ''channel'' and ''headers''
+        fields, Avaya Infinity will determine if the message sent  needs to be part of a new or existing conversation session.
+        If a new  conversation session is created, the interaction will be routed according to the routing policies configured
+        for the ''headers.destination''  in the Admin Console.
+
+        '
+      operationId: sendDigitalAsyncMessage
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AsyncMessage'
+            examples:
+              Send Text Message (Minimal Details):
+                $ref: '#/components/examples/SendTextMessageMinimal'
+              Send Text Message (All Details):
+                $ref: '#/components/examples/SendTextMessageAllDetails'
+              Send Custom Message Plain Text:
+                $ref: '#/components/examples/SendCustomMessageText'
+              Send Custom Message Reply:
+                $ref: '#/components/examples/SendCustomMessageReply'
+              Send Custom Message Image:
+                $ref: '#/components/examples/SendCustomMessageImage'
+              Send Custom Message File:
+                $ref: '#/components/examples/SendCustomMessageFile'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AsyncMessage'
+              examples:
+                Send Text Message Response (Minimal Details):
+                  $ref: '#/components/examples/SendTextMessageResponseMinimal'
+                Send Text Message Response (All Details):
+                  $ref: '#/components/examples/SendTextMessageResponseAllDetails'
+                Send Custom Message Plain Text Response:
+                  $ref: '#/components/examples/SendCustomMessageTextResponse'
+                Send Custom Message Reply Response:
+                  $ref: '#/components/examples/SendCustomMessageReplyResponse'
+                Send Custom Message Image Response:
+                  $ref: '#/components/examples/SendCustomMessageImageResponse'
+                Send Custom Message File Response:
+                  $ref: '#/components/examples/SendCustomMessageFileResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      deprecated: false
+  /v1/conversation-sessions/{conversationSessionId}:end:
+    post:
+      tags:
+      - Messaging
+      summary: End Conversation Session
+      description: 'End an ongoing conversation session. This will end the interaction within Avaya Infinity in whatever state
+        it is in.
+
+        '
+      operationId: endConversationSession
+      parameters:
+      - $ref: '#/components/parameters/conversationSessionId'
+      responses:
+        '204':
+          description: No Content
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /v1/attachments/signed-upload-uri:
+    post:
+      tags:
+      - Messaging
+      summary: Generate Signed Upload URI
+      description: 'Returns a signed upload URI for the client to upload a file.
+
+        '
+      operationId: generateSignedUploadUriv1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GenerateSignedUploadUri'
+            examples:
+              Generate Signed Upload URI:
+                $ref: '#/components/examples/GenerateSignedUploadUri'
+      responses:
+        '200':
+          description: Signed upload URI generated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenerateSignedUploadUriResponse'
+              examples:
+                Generate Signed Upload URI:
+                  $ref: '#/components/examples/GenerateSignedUploadUriResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /v1/attachments/signed-download-uri:
+    post:
+      tags:
+      - Messaging
+      summary: Generate Signed Download URI
+      description: 'Returns a signed download URI for the client to download a file from the storage.
+
+        '
+      operationId: generateSignedDownloadUriv1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GenerateSignedDownloadUri'
+            examples:
+              Generate Signed Download URI:
+                $ref: '#/components/examples/GenerateSignedDownloadUri'
+      responses:
+        '200':
+          description: Download URI generated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenerateSignedDownloadUriResponse'
+              examples:
+                Generate Signed Download URI:
+                  $ref: '#/components/examples/GenerateSignedDownloadUriResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+components:
+  parameters:
+    conversationSessionId:
+      name: conversationSessionId
+      description: 'The internal id that represents the conversation session. This id is present in the response of the ''Send
+        Message'' API.
+
+        '
+      required: true
+      in: path
+      schema:
+        type: string
+        minLength: 1
+        maxLength: 50
+        example: 005e0708206c0d3db4807g6bj7
+  responses:
+    BadRequest:
+      description: Bad Request
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorConstraintViolation'
+    Unauthorized:
+      description: Unauthorized.
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorUnauthorized'
+    Forbidden:
+      description: Forbidden.
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorForbidden'
+    InternalServerError:
+      description: Internal Server Error
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorInternalServerError'
+  schemas:
+    AsyncMessage:
+      type: object
+      description: A conversation message
+      required:
+      - connectorId
+      - channel
+      - body
+      - headers
+      properties:
+        messageId:
+          readOnly: true
+          type: string
+          maxLength: 50
+          description: The id generated for this specific message
+        accountId:
+          readOnly: true
+          type: string
+          maxLength: 50
+          description: The id that represents the account
+        conversationSessionId:
+          readOnly: true
+          type: string
+          maxLength: 50
+          description: The id of the conversation session created or used internally
+        connectorId:
+          type: string
+          maxLength: 50
+          description: The id that represents the connector
+        channel:
+          type: string
+          description: The channel of the message. Currently only 'text' and 'messaging' are supported
+          example: text
+          maxLength: 100
+          enum:
+          - text
+          - messaging
+        body:
+          $ref: '#/components/schemas/BodyElement'
+        headers:
+          $ref: '#/components/schemas/MessageHeaders'
+        attachmentIds:
+          type: array
+          description: List of identifiers for the attachments in the message.
+          maxItems: 5
+          items:
+            type: string
+            maxLength: 50
+        contextParameters:
+          type: object
+          maxProperties: 10
+          description: Optional key/value context information. This information might be used to make business decisions on
+            how the conversation session is treated. For example, the client application might want to send hints about customer's
+            interest based on the customer's searches or FAQ browsing
+          additionalProperties:
+            type: string
+            maxLength: 256
+        contextMessages:
+          nullable: true
+          type: array
+          description: 'A list of messages that the third-party messaging application might  have shown to the customer at
+            the start of the conversation.  For example, a greeting/welcome message, a message giving options to customer
+            for starting the conversation, or a reminder to customer to send a message.
+
+            '
+          items:
+            $ref: '#/components/schemas/ContextMessage'
+          maxItems: 10
+        providerMetaData:
+          $ref: '#/components/schemas/ProviderMetaData'
+        sender:
+          $ref: '#/components/schemas/Sender'
+        correlationId:
+          type: string
+          maxLength: 256
+          description: 'The correlation id can be used to uniquely identify the client request.
+
+            '
+    Sender:
+      type: object
+      description: The sender information for the message
+      properties:
+        displayName:
+          type: string
+          maxLength: 70
+          description: The display name of the sender
+    BodyElement:
+      allOf:
+      - $ref: '#/components/schemas/BasicBodyElement'
+      - $ref: '#/components/schemas/RichMediaBodyElement'
+    MessageHeaders:
+      allOf:
+      - $ref: '#/components/schemas/BasicMessageHeaders'
+      - $ref: '#/components/schemas/CustomMessagingHeaders'
+    ProviderMetaData:
+      type: object
+      nullable: true
+      description: The metadata from the provider
+      properties:
+        messageId:
+          type: string
+          description: The provider side identifier for the message.
+          maxLength: 256
+          example: 611c9a6a4a250100d4bd2c54
+        messageTimestamp:
+          type: string
+          description: The date time when the message was captured by the provider (in ISO 8601 format including timezone,
+            'yyyy-MM-dd'T'HH:mm:ss[.SSS]Z')
+          example: '2025-08-15T12:00:00.000Z'
+    BasicMessageHeaders:
+      type: object
+      description: The header of the message
+      required:
+      - from
+      - destination
+      properties:
+        from:
+          type: string
+          maxLength: 256
+          nullable: false
+          description: 'The sender of the message set by the provider. For ''text'' channel, pass the sender number here.
+            For ''messaging'' channel, pass any identifier that is maintained by  the provider that can uniquely identify
+            the sender.  Any identifier that does not match a phone number or email address  formats may not be displayed
+            to agents.
+
+            '
+        destination:
+          type: string
+          maxLength: 256
+          nullable: false
+          description: 'The destination configured in Avaya Infinity Admin Console. For ''text'' channel, this is the destination
+            number configured in the Admin Console. For ''messaging'' channel, this is the integration id visible in the Admin
+            Console. Routing settings configured for this destination will be used to  route the interaction if a new conversation
+            session is created by this message.  The destination, in the Admin Console, must be  associated to the connector
+            whose connectorId is provided  in the request.
+
+            '
+        to:
+          type: array
+          description: The To (recipients) of the message set by the provider
+          maxItems: 50
+          items:
+            type: string
+            maxLength: 256
+    CustomMessagingHeaders:
+      type: object
+      description: Header fields for a custom messaging message
+      properties:
+        channelAddress:
+          type: string
+          maxLength: 1024
+          description: 'The address of the channel.  This could be the page id or URL of the application using which  the
+            end customer is sending the message
+
+            '
+        channelName:
+          type: string
+          maxLength: 50
+          description: 'The name of the channel.  This could be the name of the application or messaging platform  using which
+            the end customer is sending the message
+
+            '
+    BasicBodyElement:
+      type: object
+      description: The body element containing the message text
+      properties:
+        text:
+          type: string
+          maxLength: 4096
+          description: The text content of the message. The max length is 1024 for text channel and 4096 for messaging channel
+    RichMediaBodyElement:
+      type: object
+      description: The body element containing the rich media content
+      properties:
+        type:
+          type: string
+          description: 'The type of the rich media content. This is the type of the rich media content that is being sent
+            in the message. The valid values are ''text'', ''reply'', and ''file''. The ''text'' type is default. If the type
+            is ''reply'', the selectedAction property must be provided. If the type is ''file'', the storage id of the image
+            or  file must be provided in the ''attachmentIds'' property at the message root level.
+
+            '
+          enum:
+          - text
+          - reply
+          - file
+        selectedAction:
+          $ref: '#/components/schemas/SelectedAction'
+    SelectedAction:
+      type: object
+      description: 'The action button selected by the customer amongst the action buttons  sent in the message. The message
+        ''type'' must be ''reply'' for this field to be processed.
+
+        '
+      properties:
+        payload:
+          type: string
+          maxLength: 512
+          description: 'The payload value of the selected action button. The value must match one of the ''payload'' field
+            values of the action buttons  sent in the message to the customer. This value will trigger the workflow to execute
+            the appropriate path for a ''say'' block. The value will also appear as a message sent by the customer to the
+            agent.
+
+            '
+          example: BOOK_APPOINTMENT_SERVICE_NAME
+    ContextMessage:
+      type: object
+      description: A message that the third-party messaging application might have shown to the customer at the start of the
+        conversation.
+      required:
+      - text
+      - timestamp
+      properties:
+        text:
+          type: string
+          description: The text of the message
+          maxLength: 4096
+          example: Welcome to the insurance helpdesk. How can I help you today?
+        timestamp:
+          type: string
+          format: date-time
+          description: The datetime when the message was shown to the customer (in ISO 8601 format including timezone, 'yyyy-MM-dd'T'HH:mm:ss[.SSS]Z')
+          example: '2025-10-01T12:00:00Z'
+    Problem:
+      type: object
+      description: '<b>Problem Detail</b> as a way to carry machine-readable details of errors in a HTTP response to avoid
+        the need to define new error response formats for HTTP APIs <a href="https://tools.ietf.org/html/rfc7807">RFC 7807</a>
+
+        '
+      properties:
+        type:
+          type: string
+          format: uri
+          description: 'An absolute URI that identifies the problem type. When dereferenced, it SHOULD provide human-readable
+            documentation for the problem type (e.g., using HTML).
+
+            '
+          default: about:blank
+          example: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#constraint-violation
+        title:
+          type: string
+          description: 'A short, summary of the problem type. Written in english and readable for engineers (usually not suited
+            for non technical stakeholders and not localized).
+
+            '
+          example: Service Unavailable
+          nullable: true
+        status:
+          type: integer
+          format: int32
+          description: 'The HTTP status code generated by the origin server for this occurrence of the problem.
+
+            '
+          minimum: 100
+          maximum: 600
+          exclusiveMaximum: true
+          example: 503
+          nullable: true
+        detail:
+          type: string
+          description: 'A human readable explanation specific to this occurrence of the problem.
+
+            '
+          example: Connection to database timed out
+          nullable: true
+        instance:
+          type: string
+          format: uri
+          description: 'An absolute URI that identifies the specific occurrence of the problem. It may or may not yield further
+            information if dereferenced.
+
+            '
+          nullable: true
+        violations:
+          type: array
+          description: 'A list of violations that occurred as a result of invalid data provided as part of a request.
+
+            '
+          nullable: true
+          items:
+            type: object
+            properties:
+              field:
+                type: string
+                description: 'The name of the field in the request that caused the violation. This can be the name of a path
+                  parameter, query parameter, or a field within the request body.
+
+                  '
+                example: channel
+              message:
+                type: string
+                description: 'A human readable explanation specific to this occurrence of the violation.
+
+                  '
+                example: invalid channel
+              code:
+                type: integer
+                format: int32
+                description: 'The violation code generated by the server for this occurrence of the violation. Use this code
+                  when implementing any error handling logic instead of the message, as the message can change.
+
+                  '
+                example: 20006
+          example:
+          - field: channel
+            message: invalid channel
+    GenerateSignedUploadUri:
+      type: object
+      description: The request body for generating a signed upload URI
+      required:
+      - integrationId
+      - filename
+      - mimetype
+      - size
+      properties:
+        integrationId:
+          type: string
+          description: The id of the custom messaging integration
+          maxLength: 50
+          example: 07448983-7440-440d-91b1-522da9e3a9be
+        filename:
+          type: string
+          description: The name of the file
+          maxLength: 256
+          example: invoice_2025_11.pdf
+        mimetype:
+          type: string
+          description: The MIME type of the file
+          maxLength: 128
+          example: application/pdf
+        size:
+          type: integer
+          description: The size of the file in bytes
+          example: 1024
+    GenerateSignedDownloadUri:
+      type: object
+      description: The request body for generating a signed download URI
+      required:
+      - attachmentId
+      - integrationId
+      properties:
+        integrationId:
+          type: string
+          description: The id of the custom messaging integration
+          maxLength: 50
+          example: 07448983-7440-440d-91b1-522da9e3a9be
+        attachmentId:
+          type: string
+          description: The id of the attachment
+          maxLength: 50
+          example: 096d011105f7f98b0ac48aee4b
+    GenerateSignedUploadUriResponse:
+      type: object
+      description: The response body for generating a signed upload URI
+      properties:
+        uploadSignedUri:
+          type: string
+          description: The signed upload URI
+    GenerateSignedDownloadUriResponse:
+      type: object
+      description: The response body for generating a signed download URI
+      properties:
+        downloadSignedUri:
+          type: string
+          description: The signed download URI
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      description: This API uses Bearer Token Authorization Flow
+      bearerFormat: JWT
+  examples:
+    SendTextMessageMinimal:
+      value:
+        connectorId: 591c2529-c3a3-4062-a213-b239c18f543b
+        channel: text
+        headers:
+          from: '+19234567890'
+          to:
+          - '+19876543210'
+          destination: '+19876543210'
+        body:
+          text: Hi. I need some help on my insurance
+    SendTextMessageAllDetails:
+      value:
+        connectorId: 591c2529-c3a3-4062-a213-b239c18f543b
+        channel: text
+        headers:
+          from: '+19234567890'
+          to:
+          - '+19876543210'
+          destination: '+19876543210'
+        body:
+          text: Hi. I need some help on my insurance
+        contextParameters:
+          customer-interest: insurance
+        providerMetaData:
+          messageId: 611c9a6a4a250100d4bd2c54
+          messageTimestamp: '2025-08-15T12:00:00.000Z'
+        correlationId: 1234567890abcdef
+    SendTextMessageResponseMinimal:
+      value:
+        messageId: 004e0708206c0d3db4807g6bj7
+        accountId: 001a0106666e7777bb999c991d
+        conversationSessionId: 005e0708206c0d3db4807g6bj7
+        connectorId: 591c2529-c3a3-4062-a213-b239c18f543b
+        channel: text
+        headers:
+          from: '+19234567890'
+          to:
+          - '+19876543210'
+          destination: '+19876543210'
+        body:
+          text: Hi. I need some help on my insurance
+    SendTextMessageResponseAllDetails:
+      value:
+        messageId: 004e0708206c0d3db4807g6bj7
+        accountId: 001a0106666e7777bb999c991d
+        conversationSessionId: 005e0708206c0d3db4807g6bj7
+        connectorId: 591c2529-c3a3-4062-a213-b239c18f543b
+        channel: text
+        headers:
+          from: '+19234567890'
+          to:
+          - '+19876543210'
+          destination: '+19876543210'
+        body:
+          text: Hi. I need some help on my insurance
+        contextParameters:
+          customer-interest: insurance
+        providerMetaData:
+          messageId: 611c9a6a4a250100d4bd2c54
+          messageTimestamp: '2025-08-15T12:00:00.000Z'
+        correlationId: 1234567890abcdef
+    SendCustomMessageText:
+      value:
+        connectorId: 591c2529-c3a3-4062-a213-b239c18f543b
+        channel: messaging
+        headers:
+          from: johndoe123
+          destination: 07448983-7440-440d-91b1-522da9e3a9be
+          channelAddress: https://the-platform.example.com/my-page-id
+          channelName: the-platform
+        sender:
+          displayName: John Doe
+        body:
+          text: Hi. I need some help on my insurance
+        contextParameters:
+          customer-interest: insurance
+        contextMessages:
+        - text: Welcome to the insurance helpdesk. How can I help you today?
+          timestamp: '2025-10-01T12:00:00Z'
+        providerMetaData:
+          messageId: 611c9a6a4a250100d4bd2c54
+          messageTimestamp: '2025-08-15T12:00:00Z'
+    SendCustomMessageReply:
+      value:
+        connectorId: 591c2529-c3a3-4062-a213-b239c18f543b
+        channel: messaging
+        headers:
+          from: johndoe123
+          destination: 07448983-7440-440d-91b1-522da9e3a9be
+          channelAddress: https://the-platform.example.com/my-page-id
+          channelName: the-platform
+        sender:
+          displayName: John Doe
+        body:
+          type: reply
+          selectedAction:
+            payload: BOOK_APPOINTMENT_SERVICE_NAME
+        contextParameters:
+          customer-interest: insurance
+        providerMetaData:
+          messageId: 611c9a6a4a250100d4bd2c54
+          messageTimestamp: '2025-08-15T12:00:00Z'
+    SendCustomMessageImage:
+      value:
+        connectorId: 591c2529-c3a3-4062-a213-b239c18f543b
+        channel: messaging
+        headers:
+          from: johndoe123@gmail.com
+          destination: 07448983-7440-440d-91b1-522da9e3a9be
+          channelAddress: https://the-platform.example.com/my-page-id
+          channelName: the-platform
+        sender:
+          displayName: John Doe
+        body:
+          text: Here is the screenshot of the insurance details
+          type: file
+        attachmentIds:
+        - d4b2c3a1-8f5e-4c6b-9f0e-2a1b3c4d5e6f
+        contextParameters:
+          customer-interest: insurance
+        providerMetaData:
+          messageId: 611c9a6a4a250100d4bd2c54
+          messageTimestamp: '2025-08-15T12:00:00Z'
+    SendCustomMessageFile:
+      value:
+        connectorId: 591c2529-c3a3-4062-a213-b239c18f543b
+        channel: messaging
+        headers:
+          from: johndoe123
+          destination: 07448983-7440-440d-91b1-522da9e3a9be
+          channelAddress: https://the-platform.example.com/my-page-id
+          channelName: the-platform
+        sender:
+          displayName: John Doe
+        body:
+          text: Here is the insurance details
+          type: file
+        attachmentIds:
+        - d4b2c3a1-8f5e-4c6b-9f0e-2a1b3c4d5e6f
+        contextParameters:
+          customer-interest: insurance
+        providerMetaData:
+          messageId: 611c9a6a4a250100d4bd2c54
+          messageTimestamp: '2025-08-15T12:00:00Z'
+    SendCustomMessageTextResponse:
+      value:
+        messageId: 004e0708206c0d3db4807g6bj7
+        accountId: 001d010540de0d3db4302f5fa8
+        conversationSessionId: 005e0708206c0d3db4807g6bj7
+        connectorId: 591c2529-c3a3-4062-a213-b239c18f543b
+        channel: messaging
+        headers:
+          from: johndoe123
+          destination: 07448983-7440-440d-91b1-522da9e3a9be
+          channelAddress: https://the-platform.example.com/my-page-id
+          channelName: the-platform
+        sender:
+          displayName: John Doe
+        body:
+          text: Hi. I need some help on my insurance
+        contextParameters:
+          customer-interest: insurance
+        providerMetaData:
+          messageId: 611c9a6a4a250100d4bd2c54
+          messageTimestamp: '2025-08-15T12:00:00Z'
+        correlationId: 1234567890abcdef
+    SendCustomMessageReplyResponse:
+      value:
+        messageId: 004e0708206c0d3db4807g6bj7
+        accountId: 001d010540de0d3db4302f5fa8
+        conversationSessionId: 005e0708206c0d3db4807g6bj7
+        connectorId: 591c2529-c3a3-4062-a213-b239c18f543b
+        channel: messaging
+        headers:
+          from: johndoe123
+          destination: 07448983-7440-440d-91b1-522da9e3a9be
+          channelAddress: https://the-platform.example.com/my-page-id
+          channelName: the-platform
+        sender:
+          displayName: John Doe
+        body:
+          type: reply
+          selectedAction:
+            payload: BOOK_APPOINTMENT_SERVICE_NAME
+        contextParameters:
+          customer-interest: insurance
+        providerMetaData:
+          messageId: 611c9a6a4a250100d4bd2c54
+          messageTimestamp: '2025-08-15T12:00:00Z'
+        correlationId: 1234567890abcdef
+    SendCustomMessageImageResponse:
+      value:
+        messageId: 004e0708206c0d3db4807g6bj7
+        accountId: 001d010540de0d3db4302f5fa8
+        conversationSessionId: 005e0708206c0d3db4807g6bj7
+        connectorId: 591c2529-c3a3-4062-a213-b239c18f543b
+        channel: messaging
+        headers:
+          from: johndoe123
+          destination: 07448983-7440-440d-91b1-522da9e3a9be
+          channelAddress: https://the-platform.example.com/my-page-id
+          channelName: the-platform
+        sender:
+          displayName: John Doe
+        body:
+          text: Here is the screenshot of the insurance details
+          type: file
+        attachmentIds:
+        - d4b2c3a1-8f5e-4c6b-9f0e-2a1b3c4d5e6f
+        contextParameters:
+          customer-interest: insurance
+        providerMetaData:
+          messageId: 611c9a6a4a250100d4bd2c54
+          messageTimestamp: '2025-08-15T12:00:00Z'
+        correlationId: 1234567890abcdef
+    SendCustomMessageFileResponse:
+      value:
+        messageId: 004e0708206c0d3db4807g6bj7
+        accountId: 001d010540de0d3db4302f5fa8
+        conversationSessionId: 005e0708206c0d3db4807g6bj7
+        connectorId: 591c2529-c3a3-4062-a213-b239c18f543b
+        channel: messaging
+        headers:
+          from: johndoe123
+          destination: 07448983-7440-440d-91b1-522da9e3a9be
+          channelAddress: https://the-platform.example.com/my-page-id
+          channelName: the-platform
+        sender:
+          displayName: John Doe
+        body:
+          text: Here is the insurance details
+          type: file
+        attachmentIds:
+        - d4b2c3a1-8f5e-4c6b-9f0e-2a1b3c4d5e6f
+        contextParameters:
+          customer-interest: insurance
+        providerMetaData:
+          messageId: 611c9a6a4a250100d4bd2c54
+          messageTimestamp: '2025-08-15T12:00:00Z'
+        correlationId: 1234567890abcdef
+    ErrorConstraintViolation:
+      description: Constraint Violation
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#constraint-violation
+        title: Constraint Violation
+        status: 400
+        detail: A problem that indicates a syntactically correct, yet semantically illegal request. The Server can not process
+          this request until the client resolves the semantic errors described in the violations section.
+        violations:
+        - field: channel
+          message: invalid channel
+    ErrorUnauthorized:
+      description: Unauthorized
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#unauthorized
+        title: Unauthorized
+        status: 401
+        detail: This operation requires authentication. See https://developers.avayacloud.com/onecloud-ccaas/docs/how-to-authenticate-with-ccaas-apis
+    ErrorForbidden:
+      description: Forbidden
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#forbidden
+        title: Forbidden
+        status: 403
+        detail: According to the access control policy the current user and/or accountId does not have permission to access
+          this resource.
+    ErrorInternalServerError:
+      description: Internal Server Error
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#internal-error
+        title: Internal Server Error
+        status: 500
+        detail: An internal server error was encountered.
+    GenerateSignedUploadUri:
+      value:
+        integrationId: 07448983-7440-440d-91b1-522da9e3a9be
+        filename: invoice_2025_11.pdf
+        mimetype: application/pdf
+        size: 1024
+    GenerateSignedDownloadUri:
+      value:
+        integrationId: 07448983-7440-440d-91b1-522da9e3a9be
+        attachmentId: 096d011105f7f98b0ac48aee4b
+    GenerateSignedUploadUriResponse:
+      value:
+        uploadSignedUri: /api/digital/messaging/v1/storage/upload-sessions/5e50907f-7744-4f03-94b1-10f5b9be3d5e?hmac=2677f19d96512d21064114022aa4316a1446577ef4457670e65e0f9045b7fb4f&expiresAt=1762337157246
+    GenerateSignedDownloadUriResponse:
+      value:
+        downloadSignedUri: /api/digital/messaging/v1/storage/download-sessions/096d011105f7f98b0ac48aee4b?hmac=2677f19d96512d21064114022aa4316a1446577ef4457670e65e0f9045b7fb4f&expiresAt=1762337157246

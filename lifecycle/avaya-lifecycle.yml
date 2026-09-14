@@ -1,0 +1,47 @@
+generated: '2026-09-14'
+method: searched
+source: https://developers.avayacloud.com/avaya-experience-platform/docs/api-deprecation-notices
+versioning:
+  scheme: uri-path
+  note: >-
+    Both platforms version in the URI path. Avaya Experience Platform paths carry an explicit /v1 or /v2
+    segment (analytics historical data ships v1 and v2 side by side as separate OpenAPI documents).
+    Avaya Infinity roots its services at /api/<service>/v1 under the per-tenant host. The ReadMe hub
+    additionally carries its own documentation version — the stable AXP documentation branch is 1.0.63.
+  current:
+    avaya-infinity: v1
+    avaya-experience-platform: v1 (analytics also publishes v2)
+  docs: https://developers.avayacloud.com/avaya-experience-platform/docs/how-to-integrate-with-axp-apis
+deprecation:
+  policy_url: https://developers.avayacloud.com/avaya-experience-platform/docs/api-deprecation-notices
+  sunset_header: false
+  note: >-
+    Avaya publishes a dated deprecation-notices page rather than a written policy stating a notice
+    period. The page carries one product notice (the AXP Messaging SDK for Android, iOS and Web,
+    withdrawn after 31 March 2024, replaced by a new Messaging SDK) and names support.avaya.com as the
+    channel. Neither the page nor any harvested response declares RFC 8594 Sunset or Deprecation headers.
+  notices:
+    - subject: Avaya Experience Platform Messaging SDK (Android, iOS, Web)
+      end_of_availability: '2024-03-31'
+      replacement: successor Messaging SDK
+      source: https://developers.avayacloud.com/avaya-experience-platform/docs/api-deprecation-notices
+deprecated_operations:
+  - openapi/avaya-infinity-notifications-openapi.yml#createSubscriptionLegacy
+  - openapi/avaya-infinity-notifications-openapi.yml#listSubscriptionsLegacy
+  - openapi/avaya-infinity-notifications-openapi.yml#getSubscriptionLegacy
+  - openapi/avaya-infinity-notifications-openapi.yml#deleteSubscriptionLegacy
+  - openapi/avaya-infinity-notifications-openapi.yml#updateSubscriptionLegacy
+  - openapi/avaya-infinity-notifications-openapi.yml#renewSubscriptionLegacy
+  - openapi/avaya-axp-digital-custom-messaging-openapi.yml#uploadDigitalAsyncAttachments
+deprecated_operations_note: >-
+  Seven operations carry deprecated: true in the harvested specs. Six are the un-accounted
+  /subscriptions paths on the Infinity Notifications API, superseded by the
+  /accounts/{accountId}/subscriptions forms; the seventh is the AXP digital attachment upload.
+  None of them appears on the deprecation-notices page — the contract is ahead of the prose.
+status_page: https://status.avayacloud.com/
+sla:
+  url: null
+  note: No public SLA or uptime target is published; service levels are contracted per enterprise agreement.
+support:
+  url: https://support.avaya.com/support/en/public
+  security_advisories: https://support.avaya.com/security

@@ -1,0 +1,25 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for Draft - Save
+  version: 1.0.0
+extends: openapi/avaya-axp-draft-save-openapi.yml
+actions:
+- target: $.info
+  update:
+    x-apievangelist-provider: avaya
+    x-apievangelist-product: Avaya Experience Platform
+    x-apievangelist-source: https://developers.avayacloud.com/ — ReadMe api-registry, harvested 2026-09-14
+    x-apievangelist-operations: 4
+    x-apievangelist-idempotency: none — no Idempotency-Key header anywhere in the Avaya contract
+    x-apievangelist-error-format: rfc7807-shaped application/json
+    x-apievangelist-rate-limit-headers: documented as "Coming Soon", not implemented
+    x-apievangelist-conventions: conventions/avaya-conventions.yml
+    x-apievangelist-errors: errors/avaya-problem-types.yml
+    x-apievangelist-lifecycle: lifecycle/avaya-lifecycle.yml
+- target: $
+  update:
+    x-apievangelist-harvest:
+      generated: '2026-09-14'
+      method: searched
+      note: Saved verbatim from the Avaya ReadMe api-registry; this overlay records API Evangelist annotations without mutating
+        the original document.

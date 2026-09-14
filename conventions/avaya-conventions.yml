@@ -1,0 +1,137 @@
+generated: '2026-09-14'
+method: searched
+source: >-
+  https://developers.avayacloud.com/avaya-experience-platform/docs/http-headers,
+  https://developers.avayacloud.com/avaya-experience-platform/docs/error-handling,
+  https://developers.avayacloud.com/avaya-infinity/docs/how-to-authenticate-with-avaya-infinitytm-apis,
+  plus derivation from the 40 harvested OpenAPI documents in openapi/ (367 operations)
+authentication:
+  style: oauth2-client-credentials + apiKey
+  detail: >-
+    Two credentials travel together on the Avaya Experience Platform surface: a bearer JWT in
+    Authorization and a tenant application key in the `appkey` header (21 of the 24 AXP specs declare
+    the AppKey apiKey scheme alongside BearerAuth). Avaya Infinity issues its bearer from a per-tenant
+    Keycloak realm at
+    https://core.{customerId}.ec.avayacloud.com/auth/realms/avaya/protocol/openid-connect/token
+    using grant_type=client_credentials with a portal-issued client id and secret. Access tokens live
+    900 seconds; refresh tokens 9000 seconds.
+  scopes_observed: [workflows:execute]
+  artifacts: [authentication/avaya-authentication.yml, scopes/avaya-scopes.yml]
+  docs: https://developers.avayacloud.com/avaya-infinity/docs/how-to-authenticate-with-avaya-infinitytm-apis
+idempotency:
+  coverage: none
+  supported: false
+  header: null
+  scope: []
+  detail: >-
+    No idempotency mechanism exists. Not one of the 367 harvested operations declares an
+    Idempotency-Key header, an idempotency token parameter, or a client-supplied request identifier,
+    and neither the HTTP-headers page nor the error-handling page mentions replay protection. Retrying
+    a failed POST — creating a subscription, sending a message, submitting a bulk user job — is
+    unguarded, and the bulk endpoints (:bulkDelete, :bulkUpdate, bulkAddUsers) are exactly where a
+    duplicate carries the most damage. This is the single largest agent-readiness gap in the Avaya
+    contract.
+  evidence: 'grep of all harvested specs for /idempot/i across parameters and headers: 0 matches'
+reversibility:
+  grade: documented
+  detail: >-
+    Avaya publishes reversal paths only for asynchronous jobs, and states no window for any of them.
+    An in-flight administrative job can be stopped or aborted; nothing else can be taken back. There is
+    no undelete, no restore, and no soft-delete retention period stated anywhere in the docs or the
+    contract, so an agent that calls a delete operation should treat it as permanent.
+  reversal_operations:
+    - operation: stopJob
+      spec: openapi/avaya-axp-admin-user-openapi.yml
+      path: POST /accounts/{accountId}/jobs/{jobId}:stop
+      reverses: an in-flight bulk user job
+      window: not stated
+    - operation: abortJob
+      spec: openapi/avaya-axp-admin-voice-openapi.yml
+      path: POST /accounts/{accountId}/communication-managers/{communicationManagerId}/jobs/{jobId}:abort
+      reverses: an in-flight Communication Manager sync job
+      window: not stated
+    - operation: disconnectDigitalEngagement
+      spec: openapi/avaya-axp-digital-custom-chat-openapi.yml
+      path: POST /accounts/{accountId}/engagements/{engagementId}:disconnect
+      reverses: ends a live engagement — terminates rather than undoes; a disconnected engagement cannot be reopened
+      window: not stated
+    - operation: endConversationSession
+      spec: openapi/avaya-infinity-messaging-openapi.yml
+      path: POST /v1/conversation-sessions/{conversationSessionId}:end
+      reverses: ends a live conversation session — terminal, not reversible
+      window: not stated
+  irreversible_surface:
+    count: 33
+    note: >-
+      33 DELETE operations across users, profiles, queues, categories, groups, timetables, extensions,
+      routing rules, voice plans, skills, drafts, agent notes and subscriptions — plus three
+      :bulkDelete batch forms — with no documented restore path or retention window.
+  no_window_stated: true
+pagination:
+  style: page-number
+  parameters: [pageNumber, pageSize]
+  also_seen: [limit]
+  detail: >-
+    Collection reads take pageNumber and pageSize; a few analytics and transcript surfaces take limit
+    instead. There is no cursor/continuation-token form anywhere in the harvested contract, and no
+    Link header is declared, so a client paging a large tenant relies on total counts in the body.
+field_expansion:
+  supported: false
+  detail: No expand / fields / include parameter is declared in any harvested operation.
+metadata:
+  supported: partial
+  detail: >-
+    Customer Journey carries free-form identifiers appended to an engagement (appendIdentifiers) and
+    agent notes; there is no generic per-object metadata map of the Stripe kind.
+request_tracing:
+  headers: [x-request-id, av-log-id]
+  detail: >-
+    Two response headers appear in the harvested contract — x-request-id and av-log-id — each declared
+    on a single operation rather than platform-wide. Quote av-log-id when opening a support case.
+  coverage: partial
+versioning:
+  style: uri-path
+  detail: See lifecycle/avaya-lifecycle.yml. AXP carries /v1 and /v2 path segments; Infinity roots services at /api/<service>/v1.
+error_envelope:
+  format: rfc9457
+  fields: [type, title, status, detail]
+  media_types: [application/problem+json, application/json]
+  detail: >-
+    58 of the harvested 4xx/5xx responses declare application/problem+json explicitly; the rest declare
+    application/json carrying the same four-field problem object. Avaya documents no numeric error
+    codes — HTTP status is the only classifier.
+  artifact: errors/avaya-problem-types.yml
+  docs: https://developers.avayacloud.com/avaya-experience-platform/docs/error-handling
+rate_limit_signaling:
+  status: partial
+  headers: [RateLimit-Limit, RateLimit-Remaining, RateLimit-Reset, RateLimit-Policy, Retry-After]
+  detail: >-
+    Avaya documents the IETF draft RateLimit-* header family and Retry-After on 429, with a policy form
+    such as "100;w=60" — but the HTTP-headers page marks the whole family "Coming Soon" and tells
+    clients to prepare for future availability. 44 operations declare a 429 response; exactly one
+    declares Retry-After in its response headers. An agent today gets a 429 with no machine-readable
+    budget.
+  artifact: rate-limits/avaya-rate-limits.yml
+  docs: https://developers.avayacloud.com/avaya-experience-platform/docs/http-headers
+dry_run_mode:
+  supported: false
+  detail: No preview, validate-only or dry-run parameter is declared in any harvested operation.
+bulk_operations:
+  supported: true
+  detail: >-
+    AXP exposes an explicit asynchronous job model — bulkAddUsers, bulkUpdateUsers, bulkExportUsers,
+    bulkDeleteUsers, bulkCreateQueues/Categories and their :bulkDelete siblings — returning 202 with a
+    job id, then polled for status and stoppable with stopJob. 54 operations return 202 across the
+    contract. 207 Multi-Status is used on four bulk responses.
+tenancy:
+  detail: >-
+    Nearly every path is rooted at /accounts/{accountId}. The account id must be acquired out of band
+    (https://developers.avayacloud.com/avaya-experience-platform/docs/how-to-acquire-axp-account-id),
+    and the Infinity host itself is per-tenant (core.{customerId}.ec.avayacloud.com), so there is no
+    single base URL an agent can hard-code.
+cross_links:
+  errors: errors/avaya-problem-types.yml
+  lifecycle: lifecycle/avaya-lifecycle.yml
+  authentication: authentication/avaya-authentication.yml
+  rate_limits: rate-limits/avaya-rate-limits.yml
+  webhooks: asyncapi/avaya-webhooks.yml

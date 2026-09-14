@@ -1,0 +1,2695 @@
+generated: '2026-09-14'
+method: derived
+source: derived from components.schemas $ref graph and *Id reference fields across the 40 harvested OpenAPI documents
+  in openapi/
+summary:
+  schemas: 535
+  relationships: 665
+  root_entities:
+  - Account
+  - User
+  - Agent
+  - Queue
+  - Engagement
+  - Subscription
+  - Profile
+  - Interaction
+  - WorkflowSession
+  tenancy: Nearly every path is rooted at /accounts/{accountId} — the Avaya account (tenant) is the top of the object
+    graph on both platforms.
+entities:
+- entity: UpdateUserRequest
+  fields: 78
+  description: 'Request body for updating an existing user.
+
+
+    All fields are optional, however at least one must be included.
+
+
+    **Merge Behavior:**
+
+    Fields use different update strategies. Most scala'
+  sources:
+  - openapi/avaya-infinity-user-management-openapi.yml
+- entity: CreateUserRequest
+  fields: 66
+  description: Request body for creating a new user
+  sources:
+  - openapi/avaya-infinity-user-management-openapi.yml
+- entity: Profile
+  fields: 56
+  description: Unique ID of User Profile like Basic, Core, Power, Trial, etc.
+  sources:
+  - openapi/avaya-axp-admin-account-openapi.yml
+  - openapi/avaya-axp-admin-user-openapi.yml
+  - openapi/avaya-infinity-profile-management-openapi.yml
+- entity: UserListItem
+  fields: 53
+  description: ''
+  sources:
+  - openapi/avaya-infinity-user-management-openapi.yml
+- entity: UserDetail
+  fields: 53
+  description: Detailed user object returned by the single-user GET endpoint. Extends the list item with optional
+    enriched data controlled by query parameters.
+  sources:
+  - openapi/avaya-infinity-user-management-openapi.yml
+- entity: QueueResponse
+  fields: 52
+  description: Full queue object returned by create, get, and update operations.
+  sources:
+  - openapi/avaya-infinity-queue-management-openapi.yml
+- entity: QueueBase
+  fields: 50
+  description: Base schema for queue configuration.
+  sources:
+  - openapi/avaya-infinity-queue-management-openapi.yml
+- entity: CreateProfileRequest
+  fields: 37
+  description: Request body for creating a new profile with license-type-based defaults
+  sources:
+  - openapi/avaya-infinity-profile-management-openapi.yml
+- entity: UpdateProfileRequest
+  fields: 37
+  description: Request body for updating an existing profile. All fields are optional - only provided fields will
+    be updated.
+  sources:
+  - openapi/avaya-infinity-profile-management-openapi.yml
+- entity: AsyncMessage
+  fields: 29
+  description: A conversation message
+  sources:
+  - openapi/avaya-axp-digital-custom-messaging-openapi.yml
+  - openapi/avaya-infinity-messaging-openapi.yml
+- entity: Message
+  fields: 27
+  description: A conversation message
+  sources:
+  - openapi/avaya-axp-digital-custom-chat-openapi.yml
+  - openapi/avaya-axp-digital-notification-openapi.yml
+  - openapi/avaya-axp-transcript-retrieval-openapi.yml
+- entity: ProfileListItem
+  fields: 21
+  description: Profile item in list response
+  sources:
+  - openapi/avaya-infinity-profile-management-openapi.yml
+- entity: Account
+  fields: 18
+  description: 'An Account represents the following
+
+    * A customer that subscribes to an Avaya service.
+
+    * An Avaya customer can manage the Account. These customers use a share of resources and featu'
+  sources:
+  - openapi/avaya-axp-admin-account-openapi.yml
+- entity: Transfer
+  fields: 17
+  description: The Transfer details part of an engagement.
+  sources:
+  - openapi/avaya-axp-customer-journey-openapi.yml
+- entity: GroupUser
+  fields: 17
+  description: Data about an individual user in a group.
+  sources:
+  - openapi/avaya-infinity-groups-management-openapi.yml
+- entity: User
+  fields: 16
+  description: A User can be an Agent, Supervisor or an Administrator.
+  sources:
+  - openapi/avaya-axp-admin-user-openapi.yml
+- entity: SendAsyncMessage
+  fields: 16
+  description: ''
+  sources:
+  - openapi/avaya-axp-digital-custom-messaging-openapi.yml
+- entity: AccountFeatureStatus
+  fields: 15
+  description: Status of all features
+  sources:
+  - openapi/avaya-axp-admin-account-openapi.yml
+- entity: MessageHeaders
+  fields: 15
+  description: The header of the message
+  sources:
+  - openapi/avaya-axp-digital-custom-chat-openapi.yml
+  - openapi/avaya-axp-digital-custom-messaging-openapi.yml
+  - openapi/avaya-axp-digital-notification-openapi.yml
+- entity: MessageDraft
+  fields: 15
+  description: Message Draft
+  sources:
+  - openapi/avaya-axp-draft-retrieval-openapi.yml
+  - openapi/avaya-axp-draft-save-openapi.yml
+- entity: AccountFeatures
+  fields: 14
+  description: Features associated to the account
+  sources:
+  - openapi/avaya-axp-admin-account-openapi.yml
+- entity: CommunicationManagerResponse
+  fields: 14
+  description: Represents the model used to get details of a single Communication Manager.
+  sources:
+  - openapi/avaya-axp-admin-voice-openapi.yml
+- entity: ParticipantResponse
+  fields: 14
+  description: Any External, Agent or Treatment participant as returned by a query for a customer journey
+  sources:
+  - openapi/avaya-axp-customer-journey-openapi.yml
+- entity: CommunicationManager
+  fields: 13
+  description: Represents the model used to create or update a Communication Manager element.
+  sources:
+  - openapi/avaya-axp-admin-voice-openapi.yml
+- entity: EngagementCreated
+  fields: 13
+  description: Response payload indicating that engagement has been created
+  sources:
+  - openapi/avaya-axp-digital-custom-chat-openapi.yml
+  - openapi/avaya-axp-digital-notification-openapi.yml
+- entity: TypingEventData
+  fields: 13
+  description: Typing event
+  sources:
+  - openapi/avaya-axp-digital-notification-openapi.yml
+- entity: GroupData
+  fields: 13
+  description: Returned data about a group.
+  sources:
+  - openapi/avaya-infinity-groups-management-openapi.yml
+- entity: UserFeatureStatus
+  fields: 12
+  description: Status of all features
+  sources:
+  - openapi/avaya-axp-admin-user-openapi.yml
+- entity: SipTrunk
+  fields: 12
+  description: SIP Trunks Element Model
+  sources:
+  - openapi/avaya-axp-admin-voice-openapi.yml
+- entity: ParticipantEventData
+  fields: 12
+  description: Notification for participant added or removed from the dialog of the engagement
+  sources:
+  - openapi/avaya-axp-digital-notification-openapi.yml
+- entity: MetricsResponse
+  fields: 12
+  description: Real-time metrics snapshot for the requested queue and channel.
+  sources:
+  - openapi/avaya-infinity-queue-metrics-openapi.yml
+- entity: Address
+  fields: 11
+  description: A real address and phone number for an Account.
+  sources:
+  - openapi/avaya-axp-admin-account-openapi.yml
+  - openapi/avaya-axp-admin-user-openapi.yml
+- entity: CloudSwitchVoiceUserFeature
+  fields: 11
+  description: This model is used to populate voice feature data on UI while editing user
+  sources:
+  - openapi/avaya-axp-admin-user-openapi.yml
+- entity: HybridCloudGatewayResponse
+  fields: 11
+  description: Represents the model used to get details of a single Avaya Hybrid Cloud Gateway.
+  sources:
+  - openapi/avaya-axp-admin-voice-openapi.yml
+- entity: SystemManagerResponse
+  fields: 11
+  description: Represents the model used to get details of a single System Manager.
+  sources:
+  - openapi/avaya-axp-admin-voice-openapi.yml
+- entity: ACOElement
+  fields: 11
+  description: 'Avaya Cloud Office Element Details
+
+    '
+  sources:
+  - openapi/avaya-axp-admin-voice-openapi.yml
+- entity: Session
+  fields: 11
+  description: Client session of a customer
+  sources:
+  - openapi/avaya-axp-digital-custom-chat-openapi.yml
+- entity: SendMessage
+  fields: 11
+  description: ''
+  sources:
+  - openapi/avaya-axp-digital-custom-chat-openapi.yml
+- entity: CrmConfiguration
+  fields: 11
+  description: Full CRM configuration object.
+  sources:
+  - openapi/avaya-infinity-profile-management-openapi.yml
+- entity: Queue
+  fields: 10
+  description: A Queue is used to identify a pool of contact center agents for which Customer engagements can be
+    matched and routed.
+  sources:
+  - openapi/avaya-axp-admin-match-openapi.yml
+  - openapi/avaya-axp-customer-journey-openapi.yml
+- entity: UserFeatures
+  fields: 10
+  description: Features enabled in user
+  sources:
+  - openapi/avaya-axp-admin-user-openapi.yml
+- entity: ProfileFeatures
+  fields: 10
+  description: Features present in profile
+  sources:
+  - openapi/avaya-axp-admin-user-openapi.yml
+- entity: PasswordPolicy
+  fields: 10
+  description: This model represent the password policy rules
+  sources:
+  - openapi/avaya-axp-admin-user-openapi.yml
+- entity: VoicePlan
+  fields: 10
+  description: Represents ranges of entities for configured Communication Manager.
+  sources:
+  - openapi/avaya-axp-admin-voice-openapi.yml
+- entity: HybridCloudGateway
+  fields: 10
+  description: Avaya Hybrid Cloud Gateway acts as a gateway to Avaya Aura clients and applications utilizing WebRTC
+    signaling and media.
+  sources:
+  - openapi/avaya-axp-admin-voice-openapi.yml
+- entity: SystemManager
+  fields: 10
+  description: System Manager is a central management system that delivers a set of shared management services and
+    provides a common console for the Avaya Aura applications and systems.
+  sources:
+  - openapi/avaya-axp-admin-voice-openapi.yml
+- entity: MSTeamsElement
+  fields: 10
+  description: MS Teams Element Model
+  sources:
+  - openapi/avaya-axp-admin-voice-openapi.yml
+- entity: MSTeamsSIPTrunkResponse
+  fields: 10
+  description: Microsoft Teams SIP Trunk Element Model
+  sources:
+  - openapi/avaya-axp-admin-voice-openapi.yml
+- entity: ACOSIPTrunkResponse
+  fields: 10
+  description: Avaya Cloud Office(ACO) SIP Trunk Element Response Model
+  sources:
+  - openapi/avaya-axp-admin-voice-openapi.yml
+- entity: PhoneNumber
+  fields: 10
+  description: PhoneNumber of an Account.
+  sources:
+  - openapi/avaya-axp-admin-voice-openapi.yml
+- entity: BulkUpdateOutboundRoutingRule
+  fields: 10
+  description: Outbound Routing Rule Model.
+  sources:
+  - openapi/avaya-axp-admin-voice-openapi.yml
+- entity: UpdateOutboundRoutingRule
+  fields: 10
+  description: Outbound Routing Rule Model.
+  sources:
+  - openapi/avaya-axp-admin-voice-openapi.yml
+- entity: OutboundRoutingRule
+  fields: 10
+  description: Outbound Routing Rule Model.
+  sources:
+  - openapi/avaya-axp-admin-voice-openapi.yml
+- entity: TranscriptMessage
+  fields: 10
+  description: 'A transcript message returned by the GET endpoint. Contains a sanitized subset of channel message
+    fields — internal and sensitive fields are excluded.
+
+
+    Note that the `message` fiel'
+  sources:
+  - openapi/avaya-infinity-transcription-interactions-openapi.yml
+  - openapi/avaya-infinity-transcripts-openapi.yml
+- entity: Problem
+  fields: 9
+  description: <b>Problem Detail</b> as a way to carry machine-readable details of errors in a HTTP response to
+    avoid the need to define new error response formats for HTTP APIs <a href="https://
+  sources:
+  - openapi/avaya-axp-admin-account-openapi.yml
+  - openapi/avaya-axp-admin-element-inventory-openapi.yml
+  - openapi/avaya-axp-admin-group-openapi.yml
+- entity: UpdateHybridCloudGatewayRequest
+  fields: 9
+  description: Request object to update an Avaya Hybrid Cloud Gateway. Once a Hybrid Cloud Gateway element is created
+    in NGM, it's systemId field isn't allowed to be updated. Hence the systemId f
+  sources:
+  - openapi/avaya-axp-admin-voice-openapi.yml
+- entity: UpdateSystemManager
+  fields: 9
+  description: System Manager schema for update
+  sources:
+  - openapi/avaya-axp-admin-voice-openapi.yml
+- entity: ReasonCodeResponse
+  fields: 9
+  description: 'Represents the model used to get details of a single Reason Code.
+
+    '
+  sources:
+  - openapi/avaya-axp-admin-voice-openapi.yml
+- entity: Dialog
+  fields: 9
+  description: The media specific element inside the engagement
+  sources:
+  - openapi/avaya-axp-digital-custom-chat-openapi.yml
+- entity: Attachment
+  fields: 9
+  description: Meta information about the media
+  sources:
+  - openapi/avaya-axp-digital-custom-chat-openapi.yml
+  - openapi/avaya-axp-digital-custom-messaging-openapi.yml
+  - openapi/avaya-axp-digital-notification-openapi.yml
+- entity: Attributes
+  fields: 9
+  description: Attributes of the user or profile.
+  sources:
+  - openapi/avaya-infinity-profile-management-openapi.yml
+  - openapi/avaya-infinity-user-management-openapi.yml
+- entity: Element
+  fields: 8
+  description: 'An Element is a server instance
+
+    '
+  sources:
+  - openapi/avaya-axp-admin-element-inventory-openapi.yml
+- entity: CMVoiceUserFeature
+  fields: 8
+  description: This model is used to populate CM voice feature data in user
+  sources:
+  - openapi/avaya-axp-admin-user-openapi.yml
+- entity: UserImportJobStatus
+  fields: 8
+  description: User import job status response to know number of user imported with status.
+  sources:
+  - openapi/avaya-axp-admin-user-openapi.yml
+- entity: ReasonCode
+  fields: 8
+  description: Reason codes are a set of codes that agents can select from agent desktop clients to further describe
+    their current activity or state. Reason Codes consist of a unique codeName, co
+  sources:
+  - openapi/avaya-axp-admin-voice-openapi.yml
+- entity: AgentNoteResponse
+  fields: 8
+  description: Response for Get Agent Note.
+  sources:
+  - openapi/avaya-axp-customer-journey-openapi.yml
+- entity: Part
+  fields: 8
+  description: Meta information about the media.
+  sources:
+  - openapi/avaya-axp-transcript-retrieval-openapi.yml
+- entity: ProfileAttributes
+  fields: 8
+  description: Profile-specific attributes and settings
+  sources:
+  - openapi/avaya-infinity-profile-management-openapi.yml
+- entity: ProfileUser
+  fields: 8
+  description: User assigned to a profile with override status information
+  sources:
+  - openapi/avaya-infinity-profile-management-openapi.yml
+- entity: AuditSearchFilter
+  fields: 7
+  description: 'The filter to be applied when searching for audit records.
+
+    '
+  sources:
+  - openapi/avaya-axp-admin-account-openapi.yml
+  - openapi/avaya-axp-admin-element-inventory-openapi.yml
+  - openapi/avaya-axp-admin-group-openapi.yml
+- entity: AuditRecord
+  fields: 7
+  description: 'An audit record. Captures who, what, and when an auditable object changed within the system.
+
+    '
+  sources:
+  - openapi/avaya-axp-admin-account-openapi.yml
+  - openapi/avaya-axp-admin-element-inventory-openapi.yml
+  - openapi/avaya-axp-admin-group-openapi.yml
+- entity: Interval
+  fields: 7
+  description: ''
+  sources:
+  - openapi/avaya-axp-admin-timetable-openapi.yml
+- entity: ChatChannelUserFeature
+  fields: 7
+  description: Details of Chat Channel feature assigned to the user.
+  sources:
+  - openapi/avaya-axp-admin-user-openapi.yml
+- entity: EmailChannelUserFeature
+  fields: 7
+  description: Details of Email Channel feature assigned to the user.
+  sources:
+  - openapi/avaya-axp-admin-user-openapi.yml
+- entity: MessagingChannelUserFeature
+  fields: 7
+  description: Details of Messaging Channel feature assigned to the user.
+  sources:
+  - openapi/avaya-axp-admin-user-openapi.yml
+- entity: AvayaAuraDeviceService
+  fields: 7
+  description: Avaya Aura Device Service Element
+  sources:
+  - openapi/avaya-axp-admin-voice-openapi.yml
+- entity: Job
+  fields: 7
+  description: Details of a single job
+  sources:
+  - openapi/avaya-axp-admin-voice-openapi.yml
+- entity: SyncEntityData
+  fields: 7
+  description: Details of sync entity data
+  sources:
+  - openapi/avaya-axp-admin-voice-openapi.yml
+- entity: LocationProfile
+  fields: 7
+  description: Location Profile
+  sources:
+  - openapi/avaya-axp-admin-voice-openapi.yml
+- entity: UserQueues
+  fields: 7
+  description: Queues configuration for a user or profile.
+  sources:
+  - openapi/avaya-infinity-groups-management-openapi.yml
+  - openapi/avaya-infinity-profile-management-openapi.yml
+  - openapi/avaya-infinity-user-management-openapi.yml
+- entity: ChatChannelProfileFeature
+  fields: 6
+  description: Details of Chat Channel profile feature
+  sources:
+  - openapi/avaya-axp-admin-user-openapi.yml
+- entity: MessagingChannelProfileFeature
+  fields: 6
+  description: Details of Chat Channel profile feature
+  sources:
+  - openapi/avaya-axp-admin-user-openapi.yml
+- entity: EmailChannelProfileFeature
+  fields: 6
+  description: Details of Chat Channel profile feature
+  sources:
+  - openapi/avaya-axp-admin-user-openapi.yml
+- entity: CloudSwitchVoiceProfileFeature
+  fields: 6
+  description: This model represent user profile data in user feature message
+  sources:
+  - openapi/avaya-axp-admin-user-openapi.yml
+- entity: JobImportDetails
+  fields: 6
+  description: User import jobs detail
+  sources:
+  - openapi/avaya-axp-admin-user-openapi.yml
+- entity: UpdateReasonCode
+  fields: 6
+  description: Represents the request body of an API to update a Reason Code.
+  sources:
+  - openapi/avaya-axp-admin-voice-openapi.yml
+- entity: AgentLocation
+  fields: 6
+  description: Agent Location
+  sources:
+  - openapi/avaya-axp-admin-voice-openapi.yml
+- entity: HybridSkillResponse
+  fields: 6
+  description: Represents the model used to get details of a single Skill.
+  sources:
+  - openapi/avaya-axp-admin-voice-openapi.yml
+- entity: MeasureProducer
+  fields: 6
+  description: Detailed information about a measure producer registered in Analytics. Includes measure sets and
+    measure data.
+  sources:
+  - openapi/avaya-axp-analytics-producer-management-openapi.yml
+- entity: Participant
+  fields: 6
+  description: Any External, Agent or Treatment participant
+  sources:
+  - openapi/avaya-axp-customer-journey-openapi.yml
+  - openapi/avaya-axp-digital-custom-chat-openapi.yml
+  - openapi/avaya-axp-digital-custom-messaging-openapi.yml
+- entity: CreateSession
+  fields: 6
+  description: ''
+  sources:
+  - openapi/avaya-axp-digital-custom-chat-openapi.yml
+- entity: Connection
+  fields: 6
+  description: The association between a dialog and a participant
+  sources:
+  - openapi/avaya-axp-digital-custom-chat-openapi.yml
+- entity: CreateEngagement
+  fields: 6
+  description: Request payload to create an engagement
+  sources:
+  - openapi/avaya-axp-digital-custom-chat-openapi.yml
+- entity: GenerateJWTToken
+  fields: 6
+  description: ''
+  sources:
+  - openapi/avaya-axp-digital-sdk-auth-openapi.yml
+- entity: Transcript
+  fields: 6
+  description: 'Represents a transcript of a dialog that captures messages exchanged between different participants.
+
+    The maximum supported size for the request body is 600 KB.
+
+    '
+  sources:
+  - openapi/avaya-axp-transcript-save-openapi.yml
+- entity: CreateGroupRequest
+  fields: 6
+  description: Request payload for creating a new group.
+  sources:
+  - openapi/avaya-infinity-groups-management-openapi.yml
+- entity: ExternalUCProviderConnection
+  fields: 6
+  description: An external UC provider connection with full details.
+  sources:
+  - openapi/avaya-infinity-profile-management-openapi.yml
+- entity: Error
+  fields: 6
+  description: ''
+  sources:
+  - openapi/avaya-infinity-workflow-openapi.yml
+- entity: VoiceFeature
+  fields: 5
+  description: Voice feature object
+  sources:
+  - openapi/avaya-axp-admin-account-openapi.yml
+- entity: Group
+  fields: 5
+  description: This model holds the group related data
+  sources:
+  - openapi/avaya-axp-admin-group-openapi.yml
+- entity: Timetable
+  fields: 5
+  description: ''
+  sources:
+  - openapi/avaya-axp-admin-timetable-openapi.yml
+- entity: UserDetails
+  fields: 5
+  description: User details of each imported user
+  sources:
+  - openapi/avaya-axp-admin-user-openapi.yml
+- entity: HybridSkill
+  fields: 5
+  description: Hybrid Skill for specific account and communication manager server.
+  sources:
+  - openapi/avaya-axp-admin-voice-openapi.yml
+- entity: ResourceOwnerPasswordRequest
+  fields: 5
+  description: request payload
+  sources:
+  - openapi/avaya-axp-auth-openapi.yml
+- entity: Engagement
+  fields: 5
+  description: A Customer Engagement with the Contact Center
+  sources:
+  - openapi/avaya-axp-customer-journey-openapi.yml
+  - openapi/avaya-axp-digital-custom-chat-openapi.yml
+- entity: IdentifierType
+  fields: 5
+  description: Captures the criteria with which we identify a customer
+  sources:
+  - openapi/avaya-axp-customer-journey-openapi.yml
+- entity: DisconnectProviderDialog
+  fields: 5
+  description: ''
+  sources:
+  - openapi/avaya-axp-digital-custom-messaging-openapi.yml
+- entity: RichMediaPayload
+  fields: 5
+  description: Rich media payload data
+  sources:
+  - openapi/avaya-axp-digital-custom-messaging-openapi.yml
+  - openapi/avaya-axp-digital-notification-openapi.yml
+- entity: Action
+  fields: 5
+  description: An action button that the user can click to trigger an action
+  sources:
+  - openapi/avaya-axp-digital-custom-messaging-openapi.yml
+  - openapi/avaya-axp-digital-notification-openapi.yml
+- entity: Transport
+  fields: 5
+  description: Transport settings for the subscription.
+  sources:
+  - openapi/avaya-axp-notification-openapi.yml
+  - openapi/avaya-infinity-notification-service-openapi.yml
+  - openapi/avaya-infinity-notifications-openapi.yml
+- entity: TransportResponse
+  fields: 5
+  description: Transport settings for the subscription.
+  sources:
+  - openapi/avaya-axp-notification-openapi.yml
+  - openapi/avaya-infinity-notification-service-openapi.yml
+  - openapi/avaya-infinity-notifications-openapi.yml
+- entity: TranscriptResponse
+  fields: 5
+  description: ''
+  sources:
+  - openapi/avaya-axp-transcript-save-openapi.yml
+- entity: SavedMessagesResponse
+  fields: 5
+  description: 'Represents result of save message operation
+
+    '
+  sources:
+  - openapi/avaya-axp-transcript-save-openapi.yml
+- entity: ProfileSpaces
+  fields: 5
+  description: Interaction space configuration for the profile
+  sources:
+  - openapi/avaya-infinity-profile-management-openapi.yml
+- entity: Spaces
+  fields: 5
+  description: Space configuration for a user or profile.
+  sources:
+  - openapi/avaya-infinity-profile-management-openapi.yml
+  - openapi/avaya-infinity-user-management-openapi.yml
+- entity: QueueResponseConcise
+  fields: 5
+  description: Concise queue summary returned when `view=concise`.
+  sources:
+  - openapi/avaya-infinity-queue-management-openapi.yml
+- entity: BatchMessage
+  fields: 5
+  description: A single transcript message to be sent in a POST batch request.
+  sources:
+  - openapi/avaya-infinity-transcripts-openapi.yml
+- entity: MessageProcessError
+  fields: 5
+  description: Error detail for a message that failed to process in the batch.
+  sources:
+  - openapi/avaya-infinity-transcripts-openapi.yml
+- entity: PostTranscriptBatchResponse
+  fields: 5
+  description: Response summarising the result of a transcript batch submission.
+  sources:
+  - openapi/avaya-infinity-transcripts-openapi.yml
+- entity: ValidationErrorItem
+  fields: 5
+  description: A single validation error returned in a 422 response.
+  sources:
+  - openapi/avaya-infinity-transcripts-openapi.yml
+relationships:
+- from: Profile
+  to: Profile
+  kind: belongs_to
+  via: profileId
+  source: openapi/avaya-axp-admin-account-openapi.yml
+- from: Account
+  to: Domain
+  kind: has_many
+  via: domains
+  source: openapi/avaya-axp-admin-account-openapi.yml
+- from: Account
+  to: Address
+  kind: has_many
+  via: addresses
+  source: openapi/avaya-axp-admin-account-openapi.yml
+- from: Account
+  to: AccountProperty
+  kind: has_many
+  via: accountProperties
+  source: openapi/avaya-axp-admin-account-openapi.yml
+- from: Account
+  to: OrganizationNodeType
+  kind: has_many
+  via: organizationNodeTypes
+  source: openapi/avaya-axp-admin-account-openapi.yml
+- from: Account
+  to: Profile
+  kind: has_many
+  via: profiles
+  source: openapi/avaya-axp-admin-account-openapi.yml
+- from: Account
+  to: AccountFeatures
+  kind: has_one
+  via: features
+  source: openapi/avaya-axp-admin-account-openapi.yml
+- from: Account
+  to: Account
+  kind: belongs_to
+  via: accountId
+  source: openapi/avaya-axp-admin-account-openapi.yml
+- from: AccountFeatures
+  to: VoiceFeature
+  kind: has_one
+  via: voice
+  source: openapi/avaya-axp-admin-account-openapi.yml
+- from: AccountFeatures
+  to: DigitalChannelFeature
+  kind: has_one
+  via: chat
+  source: openapi/avaya-axp-admin-account-openapi.yml
+- from: AccountFeatures
+  to: MessagingFeature
+  kind: has_one
+  via: messaging
+  source: openapi/avaya-axp-admin-account-openapi.yml
+- from: AccountFeatures
+  to: DigitalChannelFeature
+  kind: has_one
+  via: email
+  source: openapi/avaya-axp-admin-account-openapi.yml
+- from: AccountFeatures
+  to: UcsFeature
+  kind: has_one
+  via: ucs
+  source: openapi/avaya-axp-admin-account-openapi.yml
+- from: AccountFeatures
+  to: RecorderFeature
+  kind: has_one
+  via: recorder
+  source: openapi/avaya-axp-admin-account-openapi.yml
+- from: AccountFeatures
+  to: ACIFeature
+  kind: has_one
+  via: aci
+  source: openapi/avaya-axp-admin-account-openapi.yml
+- from: AccountFeatures
+  to: BVRFeature
+  kind: has_one
+  via: bvr
+  source: openapi/avaya-axp-admin-account-openapi.yml
+- from: AccountFeatures
+  to: MatchingFeature
+  kind: has_one
+  via: matching
+  source: openapi/avaya-axp-admin-account-openapi.yml
+- from: AccountFeatures
+  to: OutboundFeature
+  kind: has_one
+  via: outbound
+  source: openapi/avaya-axp-admin-account-openapi.yml
+- from: AccountFeatures
+  to: CMVoiceFeature
+  kind: has_one
+  via: cmvoice
+  source: openapi/avaya-axp-admin-account-openapi.yml
+- from: AccountFeatures
+  to: AutomatedOutreachFeature
+  kind: has_one
+  via: automatedoutreach
+  source: openapi/avaya-axp-admin-account-openapi.yml
+- from: AccountFeatures
+  to: AdvancedCMVoiceFeature
+  kind: has_one
+  via: advancedcmvoice
+  source: openapi/avaya-axp-admin-account-openapi.yml
+- from: AccountFeatures
+  to: RealtimeVoiceTranscriptionFeature
+  kind: has_one
+  via: realtimevoicetranscription
+  source: openapi/avaya-axp-admin-account-openapi.yml
+- from: AccountPage
+  to: Pagination
+  kind: has_one
+  via: pagination
+  source: openapi/avaya-axp-admin-account-openapi.yml
+- from: AccountPage
+  to: Account
+  kind: has_many
+  via: accounts
+  source: openapi/avaya-axp-admin-account-openapi.yml
+- from: OrganizationNodePage
+  to: Pagination
+  kind: has_one
+  via: pagination
+  source: openapi/avaya-axp-admin-account-openapi.yml
+- from: OrganizationNodePage
+  to: OrganizationNode
+  kind: has_many
+  via: organizationNodes
+  source: openapi/avaya-axp-admin-account-openapi.yml
+- from: AccountStatusResponse
+  to: Account
+  kind: belongs_to
+  via: accountId
+  source: openapi/avaya-axp-admin-account-openapi.yml
+- from: AccountStatusResponse
+  to: AccountFeatureStatus
+  kind: has_one
+  via: features
+  source: openapi/avaya-axp-admin-account-openapi.yml
+- from: AccountFeatureStatus
+  to: FeatureAction
+  kind: has_one
+  via: chat
+  source: openapi/avaya-axp-admin-account-openapi.yml
+- from: AccountFeatureStatus
+  to: FeatureAction
+  kind: has_one
+  via: messaging
+  source: openapi/avaya-axp-admin-account-openapi.yml
+- from: AccountFeatureStatus
+  to: FeatureAction
+  kind: has_one
+  via: email
+  source: openapi/avaya-axp-admin-account-openapi.yml
+- from: AccountFeatureStatus
+  to: FeatureAction
+  kind: has_one
+  via: voice
+  source: openapi/avaya-axp-admin-account-openapi.yml
+- from: AccountFeatureStatus
+  to: FeatureAction
+  kind: has_one
+  via: desktop
+  source: openapi/avaya-axp-admin-account-openapi.yml
+- from: AccountFeatureStatus
+  to: FeatureAction
+  kind: has_one
+  via: aci
+  source: openapi/avaya-axp-admin-account-openapi.yml
+- from: AccountFeatureStatus
+  to: FeatureAction
+  kind: has_one
+  via: bvr
+  source: openapi/avaya-axp-admin-account-openapi.yml
+- from: AccountFeatureStatus
+  to: FeatureAction
+  kind: has_one
+  via: ucs
+  source: openapi/avaya-axp-admin-account-openapi.yml
+- from: AccountFeatureStatus
+  to: FeatureAction
+  kind: has_one
+  via: matching
+  source: openapi/avaya-axp-admin-account-openapi.yml
+- from: AccountFeatureStatus
+  to: FeatureAction
+  kind: has_one
+  via: recorder
+  source: openapi/avaya-axp-admin-account-openapi.yml
+- from: AccountFeatureStatus
+  to: FeatureAction
+  kind: has_one
+  via: outbound
+  source: openapi/avaya-axp-admin-account-openapi.yml
+- from: AccountFeatureStatus
+  to: FeatureAction
+  kind: has_one
+  via: cmvoice
+  source: openapi/avaya-axp-admin-account-openapi.yml
+- from: AccountFeatureStatus
+  to: FeatureAction
+  kind: has_one
+  via: advancedcmvoice
+  source: openapi/avaya-axp-admin-account-openapi.yml
+- from: AccountFeatureStatus
+  to: FeatureAction
+  kind: has_one
+  via: automatedoutreach
+  source: openapi/avaya-axp-admin-account-openapi.yml
+- from: AccountFeatureStatus
+  to: FeatureAction
+  kind: has_one
+  via: realtimevoicetranscription
+  source: openapi/avaya-axp-admin-account-openapi.yml
+- from: AuditRecord
+  to: JsonNode
+  kind: has_one
+  via: auditData
+  source: openapi/avaya-axp-admin-account-openapi.yml
+- from: AuditRecords
+  to: Pagination
+  kind: has_one
+  via: pagination
+  source: openapi/avaya-axp-admin-account-openapi.yml
+- from: AuditRecords
+  to: AuditRecord
+  kind: has_many
+  via: auditRecords
+  source: openapi/avaya-axp-admin-account-openapi.yml
+- from: ElementPage
+  to: Pagination
+  kind: has_one
+  via: pagination
+  source: openapi/avaya-axp-admin-element-inventory-openapi.yml
+- from: ElementPage
+  to: Element
+  kind: has_many
+  via: elements
+  source: openapi/avaya-axp-admin-element-inventory-openapi.yml
+- from: Group
+  to: Group
+  kind: belongs_to
+  via: groupId
+  source: openapi/avaya-axp-admin-group-openapi.yml
+- from: Group
+  to: GroupResource
+  kind: has_many
+  via: resources
+  source: openapi/avaya-axp-admin-group-openapi.yml
+- from: GroupPage
+  to: Pagination
+  kind: has_one
+  via: pagination
+  source: openapi/avaya-axp-admin-group-openapi.yml
+- from: GroupPage
+  to: Group
+  kind: has_many
+  via: groups
+  source: openapi/avaya-axp-admin-group-openapi.yml
+- from: GroupPage
+  to: Links
+  kind: has_many
+  via: links
+  source: openapi/avaya-axp-admin-group-openapi.yml
+- from: Attribute
+  to: AttributeValue
+  kind: has_one
+  via: value
+  source: openapi/avaya-axp-admin-match-openapi.yml
+- from: Attribute
+  to: AttributeName
+  kind: has_one
+  via: name
+  source: openapi/avaya-axp-admin-match-openapi.yml
+- from: Category
+  to: CategoryId
+  kind: has_one
+  via: categoryId
+  source: openapi/avaya-axp-admin-match-openapi.yml
+- from: Category
+  to: CategoryName
+  kind: has_one
+  via: name
+  source: openapi/avaya-axp-admin-match-openapi.yml
+- from: Category
+  to: Attribute
+  kind: has_many
+  via: attributes
+  source: openapi/avaya-axp-admin-match-openapi.yml
+- from: CategoryCreate
+  to: CategoryName
+  kind: has_one
+  via: name
+  source: openapi/avaya-axp-admin-match-openapi.yml
+- from: CategoryCreate
+  to: Attribute
+  kind: has_many
+  via: attributes
+  source: openapi/avaya-axp-admin-match-openapi.yml
+- from: CategoryUpdate
+  to: Attribute
+  kind: has_many
+  via: attributes
+  source: openapi/avaya-axp-admin-match-openapi.yml
+- from: CategoryPage
+  to: Pagination
+  kind: has_one
+  via: pagination
+  source: openapi/avaya-axp-admin-match-openapi.yml
+- from: CategoryPage
+  to: Category
+  kind: has_many
+  via: categories
+  source: openapi/avaya-axp-admin-match-openapi.yml
+- from: CategoryPage
+  to: Links
+  kind: has_one
+  via: links
+  source: openapi/avaya-axp-admin-match-openapi.yml
+- from: Queue
+  to: QueueId
+  kind: has_one
+  via: queueId
+  source: openapi/avaya-axp-admin-match-openapi.yml
+- from: Queue
+  to: QueueName
+  kind: has_one
+  via: name
+  source: openapi/avaya-axp-admin-match-openapi.yml
+- from: Queue
+  to: QueueDescription
+  kind: has_one
+  via: description
+  source: openapi/avaya-axp-admin-match-openapi.yml
+- from: Queue
+  to: TimetableId
+  kind: has_one
+  via: timetableId
+  source: openapi/avaya-axp-admin-match-openapi.yml
+- from: QueueUpdate
+  to: QueueName
+  kind: has_one
+  via: name
+  source: openapi/avaya-axp-admin-match-openapi.yml
+- from: QueueUpdate
+  to: QueueDescription
+  kind: has_one
+  via: description
+  source: openapi/avaya-axp-admin-match-openapi.yml
+- from: QueueUpdate
+  to: TimetableId
+  kind: has_one
+  via: timetableId
+  source: openapi/avaya-axp-admin-match-openapi.yml
+- from: QueuePage
+  to: Pagination
+  kind: has_one
+  via: pagination
+  source: openapi/avaya-axp-admin-match-openapi.yml
+- from: QueuePage
+  to: Queue
+  kind: has_many
+  via: queues
+  source: openapi/avaya-axp-admin-match-openapi.yml
+- from: QueuePage
+  to: Links
+  kind: has_one
+  via: links
+  source: openapi/avaya-axp-admin-match-openapi.yml
+- from: Timetable
+  to: Timetable
+  kind: belongs_to
+  via: timetableId
+  source: openapi/avaya-axp-admin-timetable-openapi.yml
+- from: TimetablesPage
+  to: Pagination
+  kind: has_one
+  via: pagination
+  source: openapi/avaya-axp-admin-timetable-openapi.yml
+- from: TimetablesPage
+  to: Timetable
+  kind: has_many
+  via: timetables
+  source: openapi/avaya-axp-admin-timetable-openapi.yml
+- from: TimetablesPage
+  to: Links
+  kind: has_one
+  via: links
+  source: openapi/avaya-axp-admin-timetable-openapi.yml
+- from: Interval
+  to: IntervalType
+  kind: has_one
+  via: type
+  source: openapi/avaya-axp-admin-timetable-openapi.yml
+- from: IntervalsPage
+  to: Pagination
+  kind: has_one
+  via: pagination
+  source: openapi/avaya-axp-admin-timetable-openapi.yml
+- from: IntervalsPage
+  to: Interval
+  kind: has_many
+  via: intervals
+  source: openapi/avaya-axp-admin-timetable-openapi.yml
+- from: IntervalsPage
+  to: Links
+  kind: has_one
+  via: links
+  source: openapi/avaya-axp-admin-timetable-openapi.yml
+- from: HolidaysPage
+  to: Pagination
+  kind: has_one
+  via: pagination
+  source: openapi/avaya-axp-admin-timetable-openapi.yml
+- from: HolidaysPage
+  to: Holiday
+  kind: has_many
+  via: holidays
+  source: openapi/avaya-axp-admin-timetable-openapi.yml
+- from: HolidaysPage
+  to: Links
+  kind: has_one
+  via: links
+  source: openapi/avaya-axp-admin-timetable-openapi.yml
+- from: AuditRecords
+  to: Links
+  kind: has_one
+  via: links
+  source: openapi/avaya-axp-admin-timetable-openapi.yml
+- from: UserFeatures
+  to: MatchingUserFeature
+  kind: has_one
+  via: matching
+  source: openapi/avaya-axp-admin-user-openapi.yml
+- from: UserFeatures
+  to: ChatChannelUserFeature
+  kind: has_one
+  via: chat
+  source: openapi/avaya-axp-admin-user-openapi.yml
+- from: UserFeatures
+  to: MessagingChannelUserFeature
+  kind: has_one
+  via: messaging
+  source: openapi/avaya-axp-admin-user-openapi.yml
+- from: UserFeatures
+  to: EmailChannelUserFeature
+  kind: has_one
+  via: email
+  source: openapi/avaya-axp-admin-user-openapi.yml
+- from: UserFeatures
+  to: CloudSwitchVoiceUserFeature
+  kind: has_one
+  via: voice
+  source: openapi/avaya-axp-admin-user-openapi.yml
+- from: UserFeatures
+  to: CMVoiceUserFeature
+  kind: has_one
+  via: cmvoice
+  source: openapi/avaya-axp-admin-user-openapi.yml
+- from: UserFeatures
+  to: UserACIFeature
+  kind: has_one
+  via: aci
+  source: openapi/avaya-axp-admin-user-openapi.yml
+- from: UserFeatures
+  to: UserOutboundFeature
+  kind: has_one
+  via: outbound
+  source: openapi/avaya-axp-admin-user-openapi.yml
+- from: UserFeatures
+  to: UserRecorderFeature
+  kind: has_one
+  via: recorder
+  source: openapi/avaya-axp-admin-user-openapi.yml
+- from: UserFeatures
+  to: AdvancedCMVoiceUserFeature
+  kind: has_one
+  via: advancedcmvoice
+  source: openapi/avaya-axp-admin-user-openapi.yml
+- from: User
+  to: User
+  kind: belongs_to
+  via: userId
+  source: openapi/avaya-axp-admin-user-openapi.yml
+- from: User
+  to: Profile
+  kind: belongs_to
+  via: profileId
+  source: openapi/avaya-axp-admin-user-openapi.yml
+- from: User
+  to: Role
+  kind: has_many
+  via: roles
+  source: openapi/avaya-axp-admin-user-openapi.yml
+- from: User
+  to: Address
+  kind: has_many
+  via: addresses
+  source: openapi/avaya-axp-admin-user-openapi.yml
+- from: User
+  to: AccountAddress
+  kind: has_many
+  via: accountAddresses
+  source: openapi/avaya-axp-admin-user-openapi.yml
+- from: User
+  to: UserFeatures
+  kind: has_one
+  via: features
+  source: openapi/avaya-axp-admin-user-openapi.yml
+- from: UserPage
+  to: Pagination
+  kind: has_one
+  via: pagination
+  source: openapi/avaya-axp-admin-user-openapi.yml
+- from: UserPage
+  to: User
+  kind: has_many
+  via: users
+  source: openapi/avaya-axp-admin-user-openapi.yml
+- from: Profile
+  to: Role
+  kind: has_many
+  via: roles
+  source: openapi/avaya-axp-admin-user-openapi.yml
+- from: Profile
+  to: ResourcePartitionDefaultResource
+  kind: has_many
+  via: resourcePartitionDefaultResources
+  source: openapi/avaya-axp-admin-user-openapi.yml
+- from: Profile
+  to: ProfileFeatures
+  kind: has_one
+  via: features
+  source: openapi/avaya-axp-admin-user-openapi.yml
+- from: ProfileFeatures
+  to: MatchingProfileFeature
+  kind: has_one
+  via: matching
+  source: openapi/avaya-axp-admin-user-openapi.yml
+- from: ProfileFeatures
+  to: ChatChannelProfileFeature
+  kind: has_one
+  via: chat
+  source: openapi/avaya-axp-admin-user-openapi.yml
+- from: ProfileFeatures
+  to: MessagingChannelProfileFeature
+  kind: has_one
+  via: messaging
+  source: openapi/avaya-axp-admin-user-openapi.yml
+- from: ProfileFeatures
+  to: EmailChannelProfileFeature
+  kind: has_one
+  via: email
+  source: openapi/avaya-axp-admin-user-openapi.yml
+- from: ProfileFeatures
+  to: CloudSwitchVoiceProfileFeature
+  kind: has_one
+  via: voice
+  source: openapi/avaya-axp-admin-user-openapi.yml
+- from: ProfileFeatures
+  to: CMVoiceProfileFeature
+  kind: has_one
+  via: cmvoice
+  source: openapi/avaya-axp-admin-user-openapi.yml
+- from: ProfileFeatures
+  to: ACIProfileData
+  kind: has_one
+  via: aci
+  source: openapi/avaya-axp-admin-user-openapi.yml
+- from: ProfileFeatures
+  to: OutboundProfileData
+  kind: has_one
+  via: outbound
+  source: openapi/avaya-axp-admin-user-openapi.yml
+- from: ProfileFeatures
+  to: RecorderProfileData
+  kind: has_one
+  via: recorder
+  source: openapi/avaya-axp-admin-user-openapi.yml
+- from: ProfileFeatures
+  to: AdvancedCMVoiceProfileFeature
+  kind: has_one
+  via: advancedcmvoice
+  source: openapi/avaya-axp-admin-user-openapi.yml
+- from: ProfilePage
+  to: Pagination
+  kind: has_one
+  via: pagination
+  source: openapi/avaya-axp-admin-user-openapi.yml
+- from: ProfilePage
+  to: Profile
+  kind: has_many
+  via: profiles
+  source: openapi/avaya-axp-admin-user-openapi.yml
+- from: ResourcePartitionsPage
+  to: Pagination
+  kind: has_one
+  via: pagination
+  source: openapi/avaya-axp-admin-user-openapi.yml
+- from: ResourcePartitionsPage
+  to: ResourcePartition
+  kind: has_many
+  via: resourcePartitions
+  source: openapi/avaya-axp-admin-user-openapi.yml
+- from: UserResourcePartitionsPage
+  to: Pagination
+  kind: has_one
+  via: pagination
+  source: openapi/avaya-axp-admin-user-openapi.yml
+- from: UserResourcePartitionsPage
+  to: UserResourcePartition
+  kind: has_many
+  via: resourcePartitions
+  source: openapi/avaya-axp-admin-user-openapi.yml
+- from: UserResourcePartition
+  to: UserResourcePartitionResource
+  kind: has_many
+  via: resources
+  source: openapi/avaya-axp-admin-user-openapi.yml
+- from: ResourcePartition
+  to: ResourcePartitionResource
+  kind: has_many
+  via: resources
+  source: openapi/avaya-axp-admin-user-openapi.yml
+- from: ProfileStatusResponse
+  to: Profile
+  kind: belongs_to
+  via: profileId
+  source: openapi/avaya-axp-admin-user-openapi.yml
+- from: ProfileStatusResponse
+  to: UserFeatureStatus
+  kind: has_one
+  via: features
+  source: openapi/avaya-axp-admin-user-openapi.yml
+- from: UserStatusResponse
+  to: User
+  kind: belongs_to
+  via: userId
+  source: openapi/avaya-axp-admin-user-openapi.yml
+- from: UserStatusResponse
+  to: FeatureAction
+  kind: has_one
+  via: role
+  source: openapi/avaya-axp-admin-user-openapi.yml
+- from: UserStatusResponse
+  to: FeatureAction
+  kind: has_one
+  via: resourcePartitions
+  source: openapi/avaya-axp-admin-user-openapi.yml
+- from: UserStatusResponse
+  to: UserFeatureStatus
+  kind: has_one
+  via: features
+  source: openapi/avaya-axp-admin-user-openapi.yml
+- from: UserFeatureStatus
+  to: FeatureAction
+  kind: has_one
+  via: matching
+  source: openapi/avaya-axp-admin-user-openapi.yml
+- from: UserFeatureStatus
+  to: FeatureAction
+  kind: has_one
+  via: chat
+  source: openapi/avaya-axp-admin-user-openapi.yml
+- from: UserFeatureStatus
+  to: FeatureAction
+  kind: has_one
+  via: messaging
+  source: openapi/avaya-axp-admin-user-openapi.yml
+- from: UserFeatureStatus
+  to: FeatureAction
+  kind: has_one
+  via: email
+  source: openapi/avaya-axp-admin-user-openapi.yml
+- from: UserFeatureStatus
+  to: FeatureAction
+  kind: has_one
+  via: voice
+  source: openapi/avaya-axp-admin-user-openapi.yml
+- from: UserFeatureStatus
+  to: FeatureAction
+  kind: has_one
+  via: cmvoice
+  source: openapi/avaya-axp-admin-user-openapi.yml
+- from: UserFeatureStatus
+  to: FeatureAction
+  kind: has_one
+  via: desktop
+  source: openapi/avaya-axp-admin-user-openapi.yml
+- from: UserFeatureStatus
+  to: FeatureAction
+  kind: has_one
+  via: aci
+  source: openapi/avaya-axp-admin-user-openapi.yml
+- from: UserFeatureStatus
+  to: FeatureAction
+  kind: has_one
+  via: outbound
+  source: openapi/avaya-axp-admin-user-openapi.yml
+- from: UserFeatureStatus
+  to: FeatureAction
+  kind: has_one
+  via: recorder
+  source: openapi/avaya-axp-admin-user-openapi.yml
+- from: UserFeatureStatus
+  to: FeatureAction
+  kind: has_one
+  via: cmdesktop
+  source: openapi/avaya-axp-admin-user-openapi.yml
+- from: UserFeatureStatus
+  to: FeatureAction
+  kind: has_one
+  via: advancedcmvoice
+  source: openapi/avaya-axp-admin-user-openapi.yml
+- from: MatchingUserFeature
+  to: AssignedQueue
+  kind: has_many
+  via: queues
+  source: openapi/avaya-axp-admin-user-openapi.yml
+- from: MatchingProfileFeature
+  to: AssignedQueue
+  kind: has_many
+  via: queues
+  source: openapi/avaya-axp-admin-user-openapi.yml
+- from: AssignedQueue
+  to: Queue
+  kind: belongs_to
+  via: queueId
+  source: openapi/avaya-axp-admin-user-openapi.yml
+- from: ChatChannelUserFeature
+  to: Provider
+  kind: has_many
+  via: providers
+  source: openapi/avaya-axp-admin-user-openapi.yml
+- from: EmailChannelUserFeature
+  to: Provider
+  kind: has_many
+  via: providers
+  source: openapi/avaya-axp-admin-user-openapi.yml
+- from: MessagingChannelUserFeature
+  to: Provider
+  kind: has_many
+  via: providers
+  source: openapi/avaya-axp-admin-user-openapi.yml
+- from: CloudSwitchVoiceUserFeature
+  to: Provider
+  kind: has_many
+  via: providers
+  source: openapi/avaya-axp-admin-user-openapi.yml
+- from: CMVoiceUserFeature
+  to: CommunicationProfileAddress
+  kind: has_many
+  via: communicationProfileAddresses
+  source: openapi/avaya-axp-admin-user-openapi.yml
+- from: CMVoiceUserFeature
+  to: Provider
+  kind: has_many
+  via: providers
+  source: openapi/avaya-axp-admin-user-openapi.yml
+- from: SearchFilterCriteria
+  to: Criteria
+  kind: has_many
+  via: filter
+  source: openapi/avaya-axp-admin-user-openapi.yml
+- from: AuditRecord
+  to: JsonNode
+  kind: has_one
+  via: previousData
+  source: openapi/avaya-axp-admin-user-openapi.yml
+- from: UserDetails
+  to: User
+  kind: belongs_to
+  via: userId
+  source: openapi/avaya-axp-admin-user-openapi.yml
+- from: UserDetails
+  to: status
+  kind: has_one
+  via: status
+  source: openapi/avaya-axp-admin-user-openapi.yml
+- from: UserDetails
+  to: operation
+  kind: has_one
+  via: operation
+  source: openapi/avaya-axp-admin-user-openapi.yml
+- from: UserImportJobStatus
+  to: operation
+  kind: has_one
+  via: operation
+  source: openapi/avaya-axp-admin-user-openapi.yml
+- from: UserImportJobStatus
+  to: status
+  kind: has_one
+  via: status
+  source: openapi/avaya-axp-admin-user-openapi.yml
+- from: UserImportJobStatus
+  to: UserImportDetails
+  kind: has_many
+  via: details
+  source: openapi/avaya-axp-admin-user-openapi.yml
+- from: UserImportDetails
+  to: statusAndOperations
+  kind: has_one
+  via: status
+  source: openapi/avaya-axp-admin-user-openapi.yml
+- from: UserDetailsPage
+  to: Pagination
+  kind: has_one
+  via: pagination
+  source: openapi/avaya-axp-admin-user-openapi.yml
+- from: UserDetailsPage
+  to: UserDetails
+  kind: has_many
+  via: users
+  source: openapi/avaya-axp-admin-user-openapi.yml
+- from: JobImportDetailsPage
+  to: Pagination
+  kind: has_one
+  via: pagination
+  source: openapi/avaya-axp-admin-user-openapi.yml
+- from: JobImportDetailsPage
+  to: JobImportDetails
+  kind: has_many
+  via: jobs
+  source: openapi/avaya-axp-admin-user-openapi.yml
+- from: JobImportDetails
+  to: status
+  kind: has_one
+  via: status
+  source: openapi/avaya-axp-admin-user-openapi.yml
+- from: JobImportDetails
+  to: operation
+  kind: has_one
+  via: operation
+  source: openapi/avaya-axp-admin-user-openapi.yml
+- from: PasswordPolicy
+  to: Account
+  kind: belongs_to
+  via: accountId
+  source: openapi/avaya-axp-admin-user-openapi.yml
+- from: AvayaAuraDeviceServices
+  to: AvayaAuraDeviceService
+  kind: has_many
+  via: resources
+  source: openapi/avaya-axp-admin-voice-openapi.yml
+- from: CommunicationManagerPage
+  to: Pagination
+  kind: has_one
+  via: pagination
+  source: openapi/avaya-axp-admin-voice-openapi.yml
+- from: CommunicationManagerPage
+  to: CommunicationManagerResponse
+  kind: has_many
+  via: resources
+  source: openapi/avaya-axp-admin-voice-openapi.yml
+- from: VoicePlanPage
+  to: Pagination
+  kind: has_one
+  via: pagination
+  source: openapi/avaya-axp-admin-voice-openapi.yml
+- from: VoicePlanPage
+  to: VoicePlan
+  kind: has_many
+  via: resources
+  source: openapi/avaya-axp-admin-voice-openapi.yml
+- from: HybridCloudGateways
+  to: HybridCloudGatewayResponse
+  kind: has_many
+  via: resources
+  source: openapi/avaya-axp-admin-voice-openapi.yml
+- from: SystemManagers
+  to: SystemManagerResponse
+  kind: has_many
+  via: resources
+  source: openapi/avaya-axp-admin-voice-openapi.yml
+- from: ReasonCode
+  to: ReasonCodeSystemAttributes
+  kind: has_many
+  via: systemDefinedAttributes
+  source: openapi/avaya-axp-admin-voice-openapi.yml
+- from: UpdateReasonCode
+  to: ReasonCodeSystemAttributes
+  kind: has_many
+  via: systemDefinedAttributes
+  source: openapi/avaya-axp-admin-voice-openapi.yml
+- from: ReasonCodeResponse
+  to: ReasonCodeSystemAttributes
+  kind: has_many
+  via: systemDefinedAttributes
+  source: openapi/avaya-axp-admin-voice-openapi.yml
+- from: ReasonCodePage
+  to: Pagination
+  kind: has_one
+  via: pagination
+  source: openapi/avaya-axp-admin-voice-openapi.yml
+- from: ReasonCodePage
+  to: ReasonCodeResponse
+  kind: has_many
+  via: resources
+  source: openapi/avaya-axp-admin-voice-openapi.yml
+- from: SipTrunkPage
+  to: Pagination
+  kind: has_one
+  via: pagination
+  source: openapi/avaya-axp-admin-voice-openapi.yml
+- from: SipTrunkPage
+  to: SipTrunk
+  kind: has_many
+  via: sipTrunks
+  source: openapi/avaya-axp-admin-voice-openapi.yml
+- from: PhoneNumberPage
+  to: Pagination
+  kind: has_one
+  via: pagination
+  source: openapi/avaya-axp-admin-voice-openapi.yml
+- from: PhoneNumberPage
+  to: PhoneNumber
+  kind: has_many
+  via: phoneNumbers
+  source: openapi/avaya-axp-admin-voice-openapi.yml
+- from: PhoneNumber
+  to: Account
+  kind: belongs_to
+  via: accountId
+  source: openapi/avaya-axp-admin-voice-openapi.yml
+- from: PhoneNumberValidateResponse
+  to: ValidatePhoneNumber
+  kind: has_many
+  via: valid
+  source: openapi/avaya-axp-admin-voice-openapi.yml
+- from: PhoneNumberValidateResponse
+  to: ValidatePhoneNumber
+  kind: has_many
+  via: invalid
+  source: openapi/avaya-axp-admin-voice-openapi.yml
+- from: OutboundRoutingRulePage
+  to: Pagination
+  kind: has_one
+  via: pagination
+  source: openapi/avaya-axp-admin-voice-openapi.yml
+- from: OutboundRoutingRulePage
+  to: OutboundRoutingRule
+  kind: has_many
+  via: outboundRoutingRules
+  source: openapi/avaya-axp-admin-voice-openapi.yml
+- from: AvailablePhoneNumberPage
+  to: Pagination
+  kind: has_one
+  via: pagination
+  source: openapi/avaya-axp-admin-voice-openapi.yml
+- from: AvailablePhoneNumberPage
+  to: AvailablePhoneNumber
+  kind: has_many
+  via: phoneNumbers
+  source: openapi/avaya-axp-admin-voice-openapi.yml
+- from: AuraSyncRequest
+  to: AuraEntity
+  kind: has_many
+  via: entities
+  source: openapi/avaya-axp-admin-voice-openapi.yml
+- from: ExtensionNumberPage
+  to: Pagination
+  kind: has_one
+  via: pagination
+  source: openapi/avaya-axp-admin-voice-openapi.yml
+- from: ExtensionNumberPage
+  to: Extension
+  kind: has_many
+  via: extensions
+  source: openapi/avaya-axp-admin-voice-openapi.yml
+- from: ExtensionPage
+  to: Pagination
+  kind: has_one
+  via: pagination
+  source: openapi/avaya-axp-admin-voice-openapi.yml
+- from: ExtensionPage
+  to: ExtensionResponse
+  kind: has_many
+  via: resources
+  source: openapi/avaya-axp-admin-voice-openapi.yml
+- from: JobDetails
+  to: JobEntityDetails
+  kind: has_many
+  via: jobEntityDetails
+  source: openapi/avaya-axp-admin-voice-openapi.yml
+- from: JobEntityDetails
+  to: SyncEntityDetails
+  kind: has_many
+  via: entitySyncDetails
+  source: openapi/avaya-axp-admin-voice-openapi.yml
+- from: SyncEntityDetailsPage
+  to: Pagination
+  kind: has_one
+  via: pagination
+  source: openapi/avaya-axp-admin-voice-openapi.yml
+- from: SyncEntityDetailsPage
+  to: SyncEntityData
+  kind: has_many
+  via: syncEntityDetails
+  source: openapi/avaya-axp-admin-voice-openapi.yml
+- from: SyncEntityData
+  to: EntityData
+  kind: has_one
+  via: entityData
+  source: openapi/avaya-axp-admin-voice-openapi.yml
+- from: EntityData
+  to: AgentSyncData
+  kind: has_one
+  via: agent
+  source: openapi/avaya-axp-admin-voice-openapi.yml
+- from: EntityData
+  to: ExtensionSyncData
+  kind: has_one
+  via: extension
+  source: openapi/avaya-axp-admin-voice-openapi.yml
+- from: EntityData
+  to: ReasonCodeSyncData
+  kind: has_one
+  via: reasonCode
+  source: openapi/avaya-axp-admin-voice-openapi.yml
+- from: EntityData
+  to: SystemParameterFeaturesSyncData
+  kind: has_one
+  via: systemParameterFeatures
+  source: openapi/avaya-axp-admin-voice-openapi.yml
+- from: JobPage
+  to: Pagination
+  kind: has_one
+  via: pagination
+  source: openapi/avaya-axp-admin-voice-openapi.yml
+- from: JobPage
+  to: Job
+  kind: has_many
+  via: jobs
+  source: openapi/avaya-axp-admin-voice-openapi.yml
+- from: LocationProfiles
+  to: Pagination
+  kind: has_one
+  via: pagination
+  source: openapi/avaya-axp-admin-voice-openapi.yml
+- from: LocationProfiles
+  to: LocationProfile
+  kind: has_many
+  via: profiles
+  source: openapi/avaya-axp-admin-voice-openapi.yml
+- from: AgentLocation
+  to: AgentLocationUser
+  kind: has_many
+  via: users
+  source: openapi/avaya-axp-admin-voice-openapi.yml
+- from: AgentLocation
+  to: AgentLocationOutboundRoutingRule
+  kind: has_many
+  via: outboundRoutingRules
+  source: openapi/avaya-axp-admin-voice-openapi.yml
+- from: AgentLocationUser
+  to: User
+  kind: belongs_to
+  via: userId
+  source: openapi/avaya-axp-admin-voice-openapi.yml
+- from: AgentLocations
+  to: Pagination
+  kind: has_one
+  via: pagination
+  source: openapi/avaya-axp-admin-voice-openapi.yml
+- from: AgentLocations
+  to: AgentLocation
+  kind: has_many
+  via: locations
+  source: openapi/avaya-axp-admin-voice-openapi.yml
+- from: ListAgentLocations
+  to: Pagination
+  kind: has_one
+  via: pagination
+  source: openapi/avaya-axp-admin-voice-openapi.yml
+- from: ListAgentLocations
+  to: ListAgentLocation
+  kind: has_many
+  via: locations
+  source: openapi/avaya-axp-admin-voice-openapi.yml
+- from: HybridSkillPage
+  to: Pagination
+  kind: has_one
+  via: pagination
+  source: openapi/avaya-axp-admin-voice-openapi.yml
+- from: HybridSkillPage
+  to: HybridSkillResponseWithoutAgentAssistProfileId
+  kind: has_many
+  via: skills
+  source: openapi/avaya-axp-admin-voice-openapi.yml
+- from: ReportPage
+  to: ColumnHeader
+  kind: has_many
+  via: columnHeaders
+  source: openapi/avaya-axp-analytics-historical-data-v1-openapi.yml
+- from: ReportPage
+  to: CursorPagination
+  kind: has_one
+  via: pagination
+  source: openapi/avaya-axp-analytics-historical-data-v1-openapi.yml
+- from: ReportPage
+  to: Links
+  kind: has_one
+  via: links
+  source: openapi/avaya-axp-analytics-historical-data-v1-openapi.yml
+- from: DimensionPage
+  to: ColumnHeader
+  kind: has_many
+  via: columnHeaders
+  source: openapi/avaya-axp-analytics-historical-data-v1-openapi.yml
+- from: DimensionPage
+  to: CursorPagination
+  kind: has_one
+  via: pagination
+  source: openapi/avaya-axp-analytics-historical-data-v1-openapi.yml
+- from: DimensionPage
+  to: Links
+  kind: has_one
+  via: links
+  source: openapi/avaya-axp-analytics-historical-data-v1-openapi.yml
+- from: Dictionary
+  to: Translation
+  kind: has_many
+  via: measures
+  source: openapi/avaya-axp-analytics-producer-management-openapi.yml
+- from: MeasureSet
+  to: Measure
+  kind: has_many
+  via: measures
+  source: openapi/avaya-axp-analytics-producer-management-openapi.yml
+- from: MeasureProducer
+  to: MeasureSets
+  kind: has_one
+  via: measureSets
+  source: openapi/avaya-axp-analytics-producer-management-openapi.yml
+- from: ListEngagementsResponse
+  to: EngagementResponse
+  kind: has_many
+  via: engagements
+  source: openapi/avaya-axp-customer-journey-openapi.yml
+- from: ListEngagementsResponse
+  to: Pagination
+  kind: has_one
+  via: pagination
+  source: openapi/avaya-axp-customer-journey-openapi.yml
+- from: ListAgentResponse
+  to: Agent
+  kind: belongs_to
+  via: agentId
+  source: openapi/avaya-axp-customer-journey-openapi.yml
+- from: Queue
+  to: Queue
+  kind: belongs_to
+  via: queueId
+  source: openapi/avaya-axp-customer-journey-openapi.yml
+- from: Queue
+  to: Agent
+  kind: belongs_to
+  via: agentId
+  source: openapi/avaya-axp-customer-journey-openapi.yml
+- from: Transfer
+  to: Queue
+  kind: belongs_to
+  via: queueId
+  source: openapi/avaya-axp-customer-journey-openapi.yml
+- from: UnlinkJourney
+  to: Identifiers
+  kind: has_one
+  via: identifiers
+  source: openapi/avaya-axp-customer-journey-openapi.yml
+- from: AgentNotesListResponse
+  to: AgentNoteResponse
+  kind: has_many
+  via: agentNotes
+  source: openapi/avaya-axp-customer-journey-openapi.yml
+- from: AgentNoteResponse
+  to: Engagement
+  kind: belongs_to
+  via: engagementId
+  source: openapi/avaya-axp-customer-journey-openapi.yml
+- from: AgentNoteResponse
+  to: AgentDetails
+  kind: has_one
+  via: createdBy
+  source: openapi/avaya-axp-customer-journey-openapi.yml
+- from: AgentNoteResponse
+  to: AgentDetails
+  kind: has_one
+  via: updatedBy
+  source: openapi/avaya-axp-customer-journey-openapi.yml
+- from: Session
+  to: Session
+  kind: belongs_to
+  via: sessionId
+  source: openapi/avaya-axp-digital-custom-chat-openapi.yml
+- from: Session
+  to: Account
+  kind: belongs_to
+  via: accountId
+  source: openapi/avaya-axp-digital-custom-chat-openapi.yml
+- from: Session
+  to: CustomerIdentifiers
+  kind: has_one
+  via: customerIdentifiers
+  source: openapi/avaya-axp-digital-custom-chat-openapi.yml
+- from: Session
+  to: SessionStatus
+  kind: has_one
+  via: sessionStatus
+  source: openapi/avaya-axp-digital-custom-chat-openapi.yml
+- from: CreateSession
+  to: CustomerIdentifiers
+  kind: has_one
+  via: customerIdentifiers
+  source: openapi/avaya-axp-digital-custom-chat-openapi.yml
+- from: CreateSession
+  to: SessionParameters
+  kind: has_one
+  via: sessionParameters
+  source: openapi/avaya-axp-digital-custom-chat-openapi.yml
+- from: Engagement
+  to: Engagement
+  kind: belongs_to
+  via: engagementId
+  source: openapi/avaya-axp-digital-custom-chat-openapi.yml
+- from: Engagement
+  to: Account
+  kind: belongs_to
+  via: accountId
+  source: openapi/avaya-axp-digital-custom-chat-openapi.yml
+- from: Engagement
+  to: Dialog
+  kind: has_many
+  via: dialogs
+  source: openapi/avaya-axp-digital-custom-chat-openapi.yml
+- from: Dialog
+  to: DialogStatus
+  kind: has_one
+  via: dialogStatus
+  source: openapi/avaya-axp-digital-custom-chat-openapi.yml
+- from: Dialog
+  to: Connection
+  kind: has_many
+  via: connections
+  source: openapi/avaya-axp-digital-custom-chat-openapi.yml
+- from: Connection
+  to: ParticipantType
+  kind: has_one
+  via: participantType
+  source: openapi/avaya-axp-digital-custom-chat-openapi.yml
+- from: Connection
+  to: ConnectionState
+  kind: has_one
+  via: connectionState
+  source: openapi/avaya-axp-digital-custom-chat-openapi.yml
+- from: CreateEngagement
+  to: Session
+  kind: belongs_to
+  via: sessionId
+  source: openapi/avaya-axp-digital-custom-chat-openapi.yml
+- from: JoinEngagement
+  to: Session
+  kind: belongs_to
+  via: sessionId
+  source: openapi/avaya-axp-digital-custom-chat-openapi.yml
+- from: DisconnectEngagement
+  to: Session
+  kind: belongs_to
+  via: sessionId
+  source: openapi/avaya-axp-digital-custom-chat-openapi.yml
+- from: Messages
+  to: Pagination
+  kind: has_one
+  via: pagination
+  source: openapi/avaya-axp-digital-custom-chat-openapi.yml
+- from: Messages
+  to: Message
+  kind: has_many
+  via: messages
+  source: openapi/avaya-axp-digital-custom-chat-openapi.yml
+- from: Messages
+  to: Links
+  kind: has_one
+  via: links
+  source: openapi/avaya-axp-digital-custom-chat-openapi.yml
+- from: Message
+  to: Account
+  kind: belongs_to
+  via: accountId
+  source: openapi/avaya-axp-digital-custom-chat-openapi.yml
+- from: Message
+  to: Engagement
+  kind: belongs_to
+  via: engagementId
+  source: openapi/avaya-axp-digital-custom-chat-openapi.yml
+- from: Message
+  to: MessageStatus
+  kind: has_one
+  via: status
+  source: openapi/avaya-axp-digital-custom-chat-openapi.yml
+- from: Message
+  to: Session
+  kind: belongs_to
+  via: sessionId
+  source: openapi/avaya-axp-digital-custom-chat-openapi.yml
+- from: Message
+  to: ParticipantType
+  kind: has_one
+  via: senderParticipantType
+  source: openapi/avaya-axp-digital-custom-chat-openapi.yml
+- from: Message
+  to: BodyElement
+  kind: has_one
+  via: body
+  source: openapi/avaya-axp-digital-custom-chat-openapi.yml
+- from: Message
+  to: MessageHeaders
+  kind: has_one
+  via: headers
+  source: openapi/avaya-axp-digital-custom-chat-openapi.yml
+- from: Message
+  to: Attachment
+  kind: has_many
+  via: attachments
+  source: openapi/avaya-axp-digital-custom-chat-openapi.yml
+- from: Message
+  to: Participant
+  kind: has_many
+  via: recipientParticipants
+  source: openapi/avaya-axp-digital-custom-chat-openapi.yml
+- from: Participant
+  to: ParticipantType
+  kind: has_one
+  via: participantType
+  source: openapi/avaya-axp-digital-custom-chat-openapi.yml
+- from: SendMessage
+  to: Session
+  kind: belongs_to
+  via: sessionId
+  source: openapi/avaya-axp-digital-custom-chat-openapi.yml
+- from: SendMessage
+  to: BodyElement
+  kind: has_one
+  via: body
+  source: openapi/avaya-axp-digital-custom-chat-openapi.yml
+- from: SendMessage
+  to: MessageHeaders
+  kind: has_one
+  via: headers
+  source: openapi/avaya-axp-digital-custom-chat-openapi.yml
+- from: BodyElement
+  to: ElementText
+  kind: has_one
+  via: elementText
+  source: openapi/avaya-axp-digital-custom-chat-openapi.yml
+- from: ElementText
+  to: TextFormat
+  kind: has_one
+  via: textFormat
+  source: openapi/avaya-axp-digital-custom-chat-openapi.yml
+- from: SendAsyncMessage
+  to: CustomerIdentifiers
+  kind: has_one
+  via: customerIdentifiers
+  source: openapi/avaya-axp-digital-custom-messaging-openapi.yml
+- from: SendAsyncMessage
+  to: BodyElement
+  kind: has_one
+  via: body
+  source: openapi/avaya-axp-digital-custom-messaging-openapi.yml
+- from: SendAsyncMessage
+  to: MessageHeaders
+  kind: has_one
+  via: headers
+  source: openapi/avaya-axp-digital-custom-messaging-openapi.yml
+- from: SendAsyncMessage
+  to: AttachmentContentIdMap
+  kind: has_many
+  via: attachments
+  source: openapi/avaya-axp-digital-custom-messaging-openapi.yml
+- from: AsyncMessage
+  to: Account
+  kind: belongs_to
+  via: accountId
+  source: openapi/avaya-axp-digital-custom-messaging-openapi.yml
+- from: AsyncMessage
+  to: Engagement
+  kind: belongs_to
+  via: engagementId
+  source: openapi/avaya-axp-digital-custom-messaging-openapi.yml
+- from: AsyncMessage
+  to: MessageStatus
+  kind: has_one
+  via: status
+  source: openapi/avaya-axp-digital-custom-messaging-openapi.yml
+- from: AsyncMessage
+  to: Session
+  kind: belongs_to
+  via: sessionId
+  source: openapi/avaya-axp-digital-custom-messaging-openapi.yml
+- from: AsyncMessage
+  to: CustomerIdentifiers
+  kind: has_one
+  via: customerIdentifiers
+  source: openapi/avaya-axp-digital-custom-messaging-openapi.yml
+- from: AsyncMessage
+  to: ParticipantType
+  kind: has_one
+  via: senderParticipantType
+  source: openapi/avaya-axp-digital-custom-messaging-openapi.yml
+- from: AsyncMessage
+  to: BodyElement
+  kind: has_one
+  via: body
+  source: openapi/avaya-axp-digital-custom-messaging-openapi.yml
+- from: AsyncMessage
+  to: MessageHeaders
+  kind: has_one
+  via: headers
+  source: openapi/avaya-axp-digital-custom-messaging-openapi.yml
+- from: AsyncMessage
+  to: Attachment
+  kind: has_many
+  via: attachments
+  source: openapi/avaya-axp-digital-custom-messaging-openapi.yml
+- from: AsyncMessage
+  to: Participant
+  kind: has_many
+  via: recipientParticipants
+  source: openapi/avaya-axp-digital-custom-messaging-openapi.yml
+- from: BodyElement
+  to: RichMediaPayload
+  kind: has_one
+  via: richMediaPayload
+  source: openapi/avaya-axp-digital-custom-messaging-openapi.yml
+- from: RichMediaPayload
+  to: Action
+  kind: has_one
+  via: selectedAction
+  source: openapi/avaya-axp-digital-custom-messaging-openapi.yml
+- from: RichMediaPayload
+  to: Action
+  kind: has_many
+  via: actions
+  source: openapi/avaya-axp-digital-custom-messaging-openapi.yml
+- from: RichMediaPayload
+  to: Item
+  kind: has_many
+  via: items
+  source: openapi/avaya-axp-digital-custom-messaging-openapi.yml
+- from: RichMediaPayload
+  to: Coordinates
+  kind: has_one
+  via: coordinates
+  source: openapi/avaya-axp-digital-custom-messaging-openapi.yml
+- from: RichMediaPayload
+  to: Location
+  kind: has_one
+  via: location
+  source: openapi/avaya-axp-digital-custom-messaging-openapi.yml
+- from: Item
+  to: Action
+  kind: has_many
+  via: actions
+  source: openapi/avaya-axp-digital-custom-messaging-openapi.yml
+- from: Subscription
+  to: Subscription
+  kind: belongs_to
+  via: subscriptionId
+  source: openapi/avaya-axp-digital-notification-openapi.yml
+- from: Subscription
+  to: SubscriptionEventType
+  kind: has_many
+  via: eventTypes
+  source: openapi/avaya-axp-digital-notification-openapi.yml
+- from: EventData
+  to: EventType
+  kind: has_one
+  via: eventType
+  source: openapi/avaya-axp-digital-notification-openapi.yml
+- from: EngagementCreated
+  to: Engagement
+  kind: belongs_to
+  via: engagementId
+  source: openapi/avaya-axp-digital-notification-openapi.yml
+- from: EngagementCreated
+  to: Account
+  kind: belongs_to
+  via: accountId
+  source: openapi/avaya-axp-digital-notification-openapi.yml
+- from: EngagementCreated
+  to: Session
+  kind: belongs_to
+  via: sessionId
+  source: openapi/avaya-axp-digital-notification-openapi.yml
+- from: EngagementCreated
+  to: CustomerIdentifiers
+  kind: has_one
+  via: customerIdentifiers
+  source: openapi/avaya-axp-digital-notification-openapi.yml
+- from: TypingEventData
+  to: Engagement
+  kind: belongs_to
+  via: engagementId
+  source: openapi/avaya-axp-digital-notification-openapi.yml
+- from: TypingEventData
+  to: Account
+  kind: belongs_to
+  via: accountId
+  source: openapi/avaya-axp-digital-notification-openapi.yml
+- from: TypingEventData
+  to: ParticipantType
+  kind: has_one
+  via: senderParticipantType
+  source: openapi/avaya-axp-digital-notification-openapi.yml
+- from: TypingEventData
+  to: ExternalRecipientParticipant
+  kind: has_many
+  via: externalRecipientParticipants
+  source: openapi/avaya-axp-digital-notification-openapi.yml
+- from: ParticipantEventData
+  to: Engagement
+  kind: belongs_to
+  via: engagementId
+  source: openapi/avaya-axp-digital-notification-openapi.yml
+- from: ParticipantEventData
+  to: Account
+  kind: belongs_to
+  via: accountId
+  source: openapi/avaya-axp-digital-notification-openapi.yml
+- from: ParticipantEventData
+  to: Session
+  kind: belongs_to
+  via: sessionId
+  source: openapi/avaya-axp-digital-notification-openapi.yml
+- from: ParticipantEventData
+  to: ParticipantType
+  kind: has_one
+  via: participantType
+  source: openapi/avaya-axp-digital-notification-openapi.yml
+- from: GenerateJWTToken
+  to: CustomerIdentifiers
+  kind: has_one
+  via: customerIdentifiers
+  source: openapi/avaya-axp-digital-sdk-auth-openapi.yml
+- from: MessageDraft
+  to: Engagement
+  kind: belongs_to
+  via: engagementId
+  source: openapi/avaya-axp-draft-retrieval-openapi.yml
+- from: MessageDraft
+  to: BodyElement
+  kind: has_one
+  via: body
+  source: openapi/avaya-axp-draft-retrieval-openapi.yml
+- from: MessageDraft
+  to: MessageHeaders
+  kind: has_one
+  via: headers
+  source: openapi/avaya-axp-draft-retrieval-openapi.yml
+- from: MessageDraft
+  to: Attachment
+  kind: has_many
+  via: attachments
+  source: openapi/avaya-axp-draft-retrieval-openapi.yml
+- from: MessageDraft
+  to: MessageType
+  kind: has_one
+  via: messageType
+  source: openapi/avaya-axp-draft-retrieval-openapi.yml
+- from: MessageDraftPage
+  to: Pagination
+  kind: has_one
+  via: pagination
+  source: openapi/avaya-axp-draft-retrieval-openapi.yml
+- from: MessageDraftPage
+  to: MessageDraft
+  kind: has_many
+  via: messages
+  source: openapi/avaya-axp-draft-retrieval-openapi.yml
+- from: MessageDraftPage
+  to: Links
+  kind: has_one
+  via: links
+  source: openapi/avaya-axp-draft-retrieval-openapi.yml
+- from: CreateSubscription
+  to: Family
+  kind: has_one
+  via: family
+  source: openapi/avaya-axp-notification-openapi.yml
+- from: CreateSubscription
+  to: Transport
+  kind: has_one
+  via: transport
+  source: openapi/avaya-axp-notification-openapi.yml
+- from: SubscriptionResponse
+  to: Family
+  kind: has_one
+  via: family
+  source: openapi/avaya-axp-notification-openapi.yml
+- from: SubscriptionResponse
+  to: TransportResponse
+  kind: has_one
+  via: transport
+  source: openapi/avaya-axp-notification-openapi.yml
+- from: RenewSubscription
+  to: RenewTransport
+  kind: has_one
+  via: transport
+  source: openapi/avaya-axp-notification-openapi.yml
+- from: SubscriptionPage
+  to: Pagination
+  kind: has_one
+  via: pagination
+  source: openapi/avaya-axp-notification-openapi.yml
+- from: SubscriptionPage
+  to: Subscription
+  kind: has_many
+  via: subscriptions
+  source: openapi/avaya-axp-notification-openapi.yml
+- from: SubscriptionPage
+  to: Links
+  kind: has_one
+  via: links
+  source: openapi/avaya-axp-notification-openapi.yml
+- from: SynchronousMetricsResponse
+  to: Account
+  kind: belongs_to
+  via: accountId
+  source: openapi/avaya-axp-routing-queue-metrics-openapi.yml
+- from: SynchronousMetricsResponse
+  to: MatchQueue
+  kind: has_one
+  via: matchQueue
+  source: openapi/avaya-axp-routing-queue-metrics-openapi.yml
+- from: SynchronousMetricsResponse
+  to: Metrics
+  kind: has_many
+  via: metrics
+  source: openapi/avaya-axp-routing-queue-metrics-openapi.yml
+- from: MatchQueue
+  to: Queue
+  kind: belongs_to
+  via: queueId
+  source: openapi/avaya-axp-routing-queue-metrics-openapi.yml
+- from: Messages
+  to: MessageLinks
+  kind: has_one
+  via: links
+  source: openapi/avaya-axp-transcript-retrieval-openapi.yml
+- from: Message
+  to: MessageType
+  kind: has_one
+  via: messageType
+  source: openapi/avaya-axp-transcript-retrieval-openapi.yml
+- from: Message
+  to: MessageDirection
+  kind: has_one
+  via: messageDirection
+  source: openapi/avaya-axp-transcript-retrieval-openapi.yml
+- from: Message
+  to: MessageHeaders
+  kind: has_one
+  via: header
+  source: openapi/avaya-axp-transcript-retrieval-openapi.yml
+- from: Message
+  to: Part
+  kind: has_many
+  via: parts
+  source: openapi/avaya-axp-transcript-retrieval-openapi.yml
+- from: Message
+  to: DialogDirection
+  kind: has_one
+  via: dialogDirection
+  source: openapi/avaya-axp-transcript-retrieval-openapi.yml
+- from: Message
+  to: NluMetadata
+  kind: has_one
+  via: nluMetadata
+  source: openapi/avaya-axp-transcript-retrieval-openapi.yml
+- from: NluMetadata
+  to: Intent
+  kind: has_many
+  via: intents
+  source: openapi/avaya-axp-transcript-retrieval-openapi.yml
+- from: NluMetadata
+  to: Entity
+  kind: has_many
+  via: entities
+  source: openapi/avaya-axp-transcript-retrieval-openapi.yml
+- from: NluMetadata
+  to: Sentiment
+  kind: has_one
+  via: sentiment
+  source: openapi/avaya-axp-transcript-retrieval-openapi.yml
+- from: Sentiment
+  to: SentimentLabel
+  kind: has_one
+  via: label
+  source: openapi/avaya-axp-transcript-retrieval-openapi.yml
+- from: TranscriptResponse
+  to: TranscriptSaveStatus
+  kind: has_one
+  via: status
+  source: openapi/avaya-axp-transcript-save-openapi.yml
+- from: TranscriptResponse
+  to: Account
+  kind: belongs_to
+  via: accountId
+  source: openapi/avaya-axp-transcript-save-openapi.yml
+- from: TranscriptResponse
+  to: Engagement
+  kind: belongs_to
+  via: engagementId
+  source: openapi/avaya-axp-transcript-save-openapi.yml
+- from: TranscriptResponse
+  to: SavedMessagesResponse
+  kind: has_many
+  via: savedMessages
+  source: openapi/avaya-axp-transcript-save-openapi.yml
+- from: SavedMessagesResponse
+  to: ParticipantType
+  kind: has_one
+  via: senderParticipantType
+  source: openapi/avaya-axp-transcript-save-openapi.yml
+- from: Transcript
+  to: Message
+  kind: has_many
+  via: messages
+  source: openapi/avaya-axp-transcript-save-openapi.yml
+- from: Transcript
+  to: DialogDirection
+  kind: has_one
+  via: dialogDirection
+  source: openapi/avaya-axp-transcript-save-openapi.yml
+- from: DatasetPage
+  to: ColumnHeader
+  kind: has_many
+  via: columnHeaders
+  source: openapi/avaya-infinity-analytics-historical-openapi.yml
+- from: DatasetPage
+  to: CursorPagination
+  kind: has_one
+  via: pagination
+  source: openapi/avaya-infinity-analytics-historical-openapi.yml
+- from: DatasetPage
+  to: Links
+  kind: has_one
+  via: links
+  source: openapi/avaya-infinity-analytics-historical-openapi.yml
+- from: Member
+  to: UserId
+  kind: has_one
+  via: userId
+  source: openapi/avaya-infinity-groups-management-openapi.yml
+- from: CreateGroupRequest
+  to: GroupName
+  kind: has_one
+  via: name
+  source: openapi/avaya-infinity-groups-management-openapi.yml
+- from: CreateGroupRequest
+  to: Member
+  kind: has_many
+  via: members
+  source: openapi/avaya-infinity-groups-management-openapi.yml
+- from: CreateGroupRequest
+  to: GroupType
+  kind: has_one
+  via: type
+  source: openapi/avaya-infinity-groups-management-openapi.yml
+- from: CreateGroupRequest
+  to: FolderId
+  kind: has_one
+  via: folderId
+  source: openapi/avaya-infinity-groups-management-openapi.yml
+- from: CreateGroupRequest
+  to: AccountId
+  kind: has_one
+  via: accountIdOverride
+  source: openapi/avaya-infinity-groups-management-openapi.yml
+- from: CreateGroupRequest
+  to: AccountId
+  kind: has_one
+  via: accountId
+  source: openapi/avaya-infinity-groups-management-openapi.yml
+- from: UpdateGroupRequest
+  to: GroupName
+  kind: has_one
+  via: name
+  source: openapi/avaya-infinity-groups-management-openapi.yml
+- from: UpdateGroupRequest
+  to: Member
+  kind: has_many
+  via: members
+  source: openapi/avaya-infinity-groups-management-openapi.yml
+- from: AddUsersToGroupRequest
+  to: Member
+  kind: has_many
+  via: users
+  source: openapi/avaya-infinity-groups-management-openapi.yml
+- from: AddUsersToGroupRequest
+  to: AccountId
+  kind: has_one
+  via: accountIdOverride
+  source: openapi/avaya-infinity-groups-management-openapi.yml
+- from: AddUsersToGroupRequest
+  to: AccountId
+  kind: has_one
+  via: accountId
+  source: openapi/avaya-infinity-groups-management-openapi.yml
+- from: GroupListPage
+  to: Pagination
+  kind: has_one
+  via: pagination
+  source: openapi/avaya-infinity-groups-management-openapi.yml
+- from: GroupListPage
+  to: GroupData
+  kind: has_many
+  via: groups
+  source: openapi/avaya-infinity-groups-management-openapi.yml
+- from: GroupListPage
+  to: Links
+  kind: has_one
+  via: links
+  source: openapi/avaya-infinity-groups-management-openapi.yml
+- from: GroupData
+  to: GroupId
+  kind: has_one
+  via: groupId
+  source: openapi/avaya-infinity-groups-management-openapi.yml
+- from: GroupData
+  to: GroupName
+  kind: has_one
+  via: name
+  source: openapi/avaya-infinity-groups-management-openapi.yml
+- from: GroupData
+  to: GroupType
+  kind: has_one
+  via: type
+  source: openapi/avaya-infinity-groups-management-openapi.yml
+- from: GroupData
+  to: AccountId
+  kind: has_one
+  via: accountId
+  source: openapi/avaya-infinity-groups-management-openapi.yml
+- from: GroupData
+  to: FolderId
+  kind: has_one
+  via: folderId
+  source: openapi/avaya-infinity-groups-management-openapi.yml
+- from: GroupData
+  to: GroupId
+  kind: has_one
+  via: parentGroupId
+  source: openapi/avaya-infinity-groups-management-openapi.yml
+- from: GroupData
+  to: CreatedAt
+  kind: has_one
+  via: createdAt
+  source: openapi/avaya-infinity-groups-management-openapi.yml
+- from: GroupData
+  to: CreatedBy
+  kind: has_one
+  via: createdBy
+  source: openapi/avaya-infinity-groups-management-openapi.yml
+- from: GroupData
+  to: UpdatedAt
+  kind: has_one
+  via: updatedAt
+  source: openapi/avaya-infinity-groups-management-openapi.yml
+- from: GroupData
+  to: UpdatedBy
+  kind: has_one
+  via: updatedBy
+  source: openapi/avaya-infinity-groups-management-openapi.yml
+- from: GroupData
+  to: ChatChannelId
+  kind: has_one
+  via: chatChannelId
+  source: openapi/avaya-infinity-groups-management-openapi.yml
+- from: GroupData
+  to: GroupUser
+  kind: has_many
+  via: users
+  source: openapi/avaya-infinity-groups-management-openapi.yml
+- from: GroupUser
+  to: UserId
+  kind: has_one
+  via: userId
+  source: openapi/avaya-infinity-groups-management-openapi.yml
+- from: GroupUser
+  to: GroupUserDetails
+  kind: has_one
+  via: details
+  source: openapi/avaya-infinity-groups-management-openapi.yml
+- from: GroupUser
+  to: FullName
+  kind: has_one
+  via: fullName
+  source: openapi/avaya-infinity-groups-management-openapi.yml
+- from: GroupUser
+  to: FirstName
+  kind: has_one
+  via: firstName
+  source: openapi/avaya-infinity-groups-management-openapi.yml
+- from: GroupUser
+  to: LastName
+  kind: has_one
+  via: lastName
+  source: openapi/avaya-infinity-groups-management-openapi.yml
+- from: GroupUser
+  to: NamePrefix
+  kind: has_one
+  via: namePrefix
+  source: openapi/avaya-infinity-groups-management-openapi.yml
+- from: GroupUser
+  to: NameSuffix
+  kind: has_one
+  via: nameSuffix
+  source: openapi/avaya-infinity-groups-management-openapi.yml
+- from: GroupUser
+  to: Extension
+  kind: has_one
+  via: extension
+  source: openapi/avaya-infinity-groups-management-openapi.yml
+- from: GroupUser
+  to: Email
+  kind: has_one
+  via: email
+  source: openapi/avaya-infinity-groups-management-openapi.yml
+- from: GroupUser
+  to: UserTitle
+  kind: has_one
+  via: title
+  source: openapi/avaya-infinity-groups-management-openapi.yml
+- from: GroupUser
+  to: UserStatusType
+  kind: has_one
+  via: statusType
+  source: openapi/avaya-infinity-groups-management-openapi.yml
+- from: GroupUser
+  to: UserStatus
+  kind: has_one
+  via: status
+  source: openapi/avaya-infinity-groups-management-openapi.yml
+- from: GroupUser
+  to: IsAID
+  kind: has_one
+  via: isAID
+  source: openapi/avaya-infinity-groups-management-openapi.yml
+- from: GroupUser
+  to: UserQueues
+  kind: has_one
+  via: queues
+  source: openapi/avaya-infinity-groups-management-openapi.yml
+- from: GroupUserDetails
+  to: GroupUserTeamView
+  kind: has_one
+  via: teamView
+  source: openapi/avaya-infinity-groups-management-openapi.yml
+- from: UserQueues
+  to: QueueId
+  kind: has_many
+  via: access
+  source: openapi/avaya-infinity-groups-management-openapi.yml
+- from: UserQueues
+  to: QueueId
+  kind: has_many
+  via: performance
+  source: openapi/avaya-infinity-groups-management-openapi.yml
+- from: UserQueues
+  to: QueueId
+  kind: has_many
+  via: autoLogin
+  source: openapi/avaya-infinity-groups-management-openapi.yml
+- from: UserQueues
+  to: QueueId
+  kind: has_many
+  via: proficiency
+  source: openapi/avaya-infinity-groups-management-openapi.yml
+- from: UserQueues
+  to: QueueId
+  kind: has_many
+  via: logins
+  source: openapi/avaya-infinity-groups-management-openapi.yml
+- from: Problem
+  to: Violation
+  kind: has_many
+  via: violations
+  source: openapi/avaya-infinity-groups-management-openapi.yml
+- from: AsyncMessage
+  to: ContextMessage
+  kind: has_many
+  via: contextMessages
+  source: openapi/avaya-infinity-messaging-openapi.yml
+- from: AsyncMessage
+  to: ProviderMetaData
+  kind: has_one
+  via: providerMetaData
+  source: openapi/avaya-infinity-messaging-openapi.yml

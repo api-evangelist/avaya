@@ -1,0 +1,189 @@
+openapi: 3.0.3
+x-explorer-enabled: false
+x-samples-languages:
+- curl
+- node
+- java
+- javascript
+- python
+- go
+info:
+  title: Access Token API
+  version: 1.0.0
+  description: "## Overview\n\nGenerate OAuth 2.0 access tokens to authenticate API requests to Avaya Infinity™. All Infinity\
+    \ APIs require a valid Bearer token in the Authorization header.\n\n## Base URL Structure\n\n```\nhttps://core.{customer-subdomain}.ec.avayacloud.com/auth/realms/avaya\n\
+    ```\n\n**Finding Your Subdomain:**  \nYour subdomain can be found in your Infinity admin or agent portal URL. For example,\
+    \ if your portal URL is:\n\n```\nhttps://core.avaya1234.ec.avayacloud.com/app/core-config-ui/\n```\n\nYour subdomain is:\
+    \ `avaya1234`\n\n## Authentication Flow\n\n**Token Endpoint:**\n```\nPOST https://core.{customer-subdomain}.ec.avayacloud.com/auth/realms/avaya/protocol/openid-connect/token\n\
+    ```\n\n**Headers:**\n```\nContent-Type: application/x-www-form-urlencoded\n```\n\n**Body (form-urlencoded):**\n```\ngrant_type=client_credentials\n\
+    client_id={your-client-id}\nclient_secret={your-client-secret}\n```\n\n**Response:**\n```json\n{\n  \"access_token\":\
+    \ \"eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9...\",\n  \"expires_in\": 900,\n  \"token_type\": \"Bearer\",\n  \"scope\": \"\
+    email profile\"\n}\n```\n\n**Token Lifetime:**\n- Tokens expire in 900 seconds (15 minutes)\n- The `access_token` is a\
+    \ JSON Web Token (JWT)\n- The JWT contains an `exp` claim with the exact expiry time (seconds since epoch)\n- Request\
+    \ a new token before expiration or when receiving 401 responses\n\n## Using the Access Token\n\nInclude the access token\
+    \ in the `Authorization` header of all API requests:\n\n```\nAuthorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9...\n\
+    ```\n\n**Example API Request:**\n```bash\ncurl -X GET \\\n  'https://core.avaya1234.ec.avayacloud.com/api/workflow/v1/sessions'\
+    \ \\\n  -H 'Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9...'\n```\n\n## Security Guidelines\n\n⚠️ **CRITICAL\
+    \ SECURITY REQUIREMENTS:**\n\n**1. Token Protection:**\n- **NEVER expose access tokens to end users or client applications**\n\
+    - Tokens must remain secure on your backend server only\n- Never include tokens in client-side code, logs, or error messages\n\
+    - Never commit tokens to version control\n\n**2. Credential Management:**\n- Store `client_id` and `client_secret` securely\
+    \ (environment variables, secrets manager)\n- Never expose credentials in client-side code or public repositories\n- Rotate\
+    \ credentials periodically\n\n**3. Token Lifecycle:**\n- Implement token refresh before expiration (don't wait for 401\
+    \ errors)\n- Handle token expiration gracefully in your application\n- Clear tokens from memory when no longer needed\n"
+  contact:
+    name: Avaya API Team
+    url: https://developers.avayacloud.com/onecloud-ccaas
+    email: apiteam@avaya.com
+  license:
+    name: Avaya Software Development Kit (SDK) Software License Terms
+    url: http://support.avaya.com/css/P8/documents/101038288
+servers:
+- url: https://core.{customer-subdomain}.ec.avayacloud.com/auth/realms/avaya
+  description: Avaya Infinity Authentication
+  variables:
+    customer-subdomain:
+      default: avaya1234
+      description: Your Infinity instance subdomain (e.g., avaya1234, acme-corp-prod)
+tags:
+- name: Access Token
+  description: Generate OAuth 2.0 access tokens for API authentication
+security:
+- {}
+paths:
+  /protocol/openid-connect/token:
+    post:
+      tags:
+      - Access Token
+      summary: Generate Access Token
+      description: "Generate an OAuth 2.0 access token using the client credentials grant type.\n\n**Grant Type:** Only `client_credentials`\
+        \ is supported. This is a server-to-server \nauthentication flow where your backend server exchanges credentials for\
+        \ an access token.\n\n**Token Format:** The access token is a JSON Web Token (JWT) containing claims about \npermissions\
+        \ and expiration time.\n\n**Token Expiration:** Tokens typically expire in 900 seconds (15 minutes). The exact \n\
+        expiration time can be found in:\n- The `expires_in` field (seconds until expiration)\n- The `exp` claim in the decoded\
+        \ JWT (Unix timestamp)\n"
+      operationId: generateAccessToken
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                grant_type:
+                  type: string
+                  enum:
+                  - client_credentials
+                  description: The OAuth 2.0 grant type. Only 'client_credentials' is supported.
+                client_id:
+                  type: string
+                  description: Your application's client identifier. Obtain from Infinity administration.
+                  example: messaging-api-123e4567-e89b-12d3-a456-426614174000
+                client_secret:
+                  type: string
+                  description: Your application's client secret. Keep this secure and never expose in client-side code.
+                  example: dFdiohFsZXCamxUmRS680KiQBqmnu6Y9
+              required:
+              - grant_type
+              - client_id
+              - client_secret
+            examples:
+              Generate Access Token:
+                $ref: '#/components/examples/GenerateAccessToken'
+      responses:
+        '200':
+          description: Successfully generated access token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccessTokenResponse'
+              examples:
+                Generate Access Token Response:
+                  $ref: '#/components/examples/GenerateAccessTokenResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+      deprecated: false
+components:
+  responses:
+    BadRequest:
+      description: Bad Request - Invalid request format or unsupported grant type
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            Unsupported Grant Type:
+              $ref: '#/components/examples/ErrorConstraintViolation'
+    Unauthorized:
+      description: Unauthorized - Invalid client credentials
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            Invalid Credentials:
+              $ref: '#/components/examples/ErrorUnauthorized'
+  schemas:
+    AccessTokenResponse:
+      type: object
+      description: Successful access token response
+      required:
+      - access_token
+      - expires_in
+      - token_type
+      properties:
+        access_token:
+          type: string
+          description: 'JWT access token to use in Authorization: Bearer {token} header'
+          example: eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9...
+        expires_in:
+          type: integer
+          description: Token validity duration in seconds (typically 900 seconds / 15 minutes)
+          example: 900
+        token_type:
+          type: string
+          description: Token type - always 'Bearer'
+          example: Bearer
+        scope:
+          type: string
+          description: OAuth scopes granted with this token
+          example: email profile
+    ErrorResponse:
+      type: object
+      description: Error response
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          description: Error code
+          example: invalid_client
+        error_description:
+          type: string
+          description: Human-readable error description
+          example: Invalid client or Invalid client credentials
+  examples:
+    GenerateAccessToken:
+      summary: Generate access token request
+      value:
+        grant_type: client_credentials
+        client_id: messaging-api-123e4567-e89b-12d3-a456-426614174000
+        client_secret: dFdiohFsZXCamxUmRS680KiQBqmnu6Y9
+    GenerateAccessTokenResponse:
+      summary: Successful token generation
+      value:
+        access_token: eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9...
+        expires_in: 900
+        token_type: Bearer
+        scope: email profile
+    ErrorConstraintViolation:
+      summary: Unsupported grant type
+      value:
+        error: unsupported_grant_type
+        error_description: Unsupported grant type. Only 'client_credentials' is supported.
+    ErrorUnauthorized:
+      summary: Invalid credentials
+      value:
+        error: invalid_client
+        error_description: Invalid client or Invalid client credentials

@@ -1,0 +1,783 @@
+{
+ "openapi": "3.0.3",
+ "info": {
+  "title": "Workflow Sessions API",
+  "version": "1.0.0",
+  "description": "**Workflow Sessions API**\n\nThis API provides endpoints for managing workflow sessions in the Avaya Infinity. \n\n**Key Features:**\n- Start new workflow sessions with configurable parameters\n- Retrieve workflow execution details and output variables\n\n**Authentication:**\n- Supports OAuth2 with client credentials and password flows\n- Bearer token authentication for secure API access\n\n**Security Guidelines for Customer Implementation:**\n\n\u26a0\ufe0f **CRITICAL SECURITY REQUIREMENTS:**\n\n**1. Token Management:**\n- **NEVER expose service JWT tokens to end users or client applications**\n- Service tokens must remain secure on your backend server only\n\n**2. Sensitive Data Protection:**\n- **Review all output variables before exposing to clients**\n- Workflow output variables may contain sensitive information\n- Implement data filtering/sanitization before returning data to clients\n\n**3. ID and Resource Protection:**\n- **Do not expose internal Avaya service IDs to end users**\n- This includes: workflow session IDs, engagement IDs, interaction IDs\n- Use your own mapping/proxy IDs in client-facing APIs\n- Implement proper access controls and session validation\n\n```\n\n**Base URL:** `https://{server}/api/workflow/v1`\n",
+  "contact": {
+   "name": "Avaya API Team",
+   "url": "https://developers.avayacloud.com/onecloud-ccaas",
+   "email": "apiteam@avaya.com"
+  },
+  "license": {
+   "name": "Avaya Software Development Kit (SDK) Software License Terms",
+   "url": "http://support.avaya.com/css/P8/documents/101038288"
+  }
+ },
+ "servers": [
+  {
+   "url": "{protocol}://{server}{basePath}",
+   "description": "Open API",
+   "variables": {
+    "protocol": {
+     "enum": [
+      "https"
+     ],
+     "default": "https"
+    },
+    "server": {
+     "default": "dev.local"
+    },
+    "basePath": {
+     "default": ""
+    }
+   }
+  },
+  {
+   "url": "{protocol}://{server}:{port}",
+   "description": "Workflow API",
+   "variables": {
+    "protocol": {
+     "enum": [
+      "http",
+      "https"
+     ],
+     "default": "https"
+    },
+    "server": {
+     "default": ""
+    },
+    "port": {
+     "enum": [
+      "80",
+      "443"
+     ],
+     "default": "80"
+    }
+   }
+  }
+ ],
+ "components": {
+  "securitySchemes": {
+   "OAuth2": {
+    "type": "oauth2",
+    "description": "OAuth2 authentication for Workflow Sessions API\n\n**Client Credentials:**\n- Client ID: portal-client-id\n- Client Secret: portal-client-secret\n\n**Configuration:**\n- Token URL: https://{{server}}/auth/realms/avaya/protocol/openid-connect/token\n- Grant Type: client_credentials or password\n- Scope: workflows:execute\n",
+    "flows": {
+     "clientCredentials": {
+      "tokenUrl": "https://{{server}}/auth/realms/avaya/protocol/openid-connect/token",
+      "scopes": {
+       "workflows:execute": "Read & Write access to workflow sessions"
+      },
+      "x-client-id": "portal-client-id",
+      "x-client-secret": "portal-client-secret"
+     },
+     "password": {
+      "tokenUrl": "https://{{server}}/auth/realms/avaya/protocol/openid-connect/token",
+      "scopes": {
+       "workflows:execute": "Read & Write access to workflow sessions"
+      },
+      "x-client-id": "portal-client-id",
+      "x-client-secret": "portal-client-secret"
+     }
+    }
+   }
+  },
+  "schemas": {
+   "ErrorResponse": {
+    "type": "object",
+    "properties": {
+     "error": {
+      "type": "string",
+      "description": "A brief description of the error",
+      "example": "workflowId is required"
+     },
+     "message": {
+      "type": "string",
+      "description": "Detailed error message",
+      "example": "Missing required parameter workflowId in request body"
+     }
+    },
+    "required": [
+     "error"
+    ]
+   },
+   "WorkflowSessionResponse": {
+    "type": "object",
+    "properties": {
+     "session": {
+      "type": "object",
+      "properties": {
+       "id": {
+        "type": "string",
+        "description": "Unique identifier for the workflow session",
+        "example": "wfs_abc123def456"
+       },
+       "engagementId": {
+        "type": "string",
+        "description": "Engagement identifier associated with the session",
+        "example": "eng_789xyz012"
+       },
+       "workflowId": {
+        "type": "string",
+        "description": "The workflow ID that was started",
+        "example": "wf_025d010627e3314fa905c5484c"
+       },
+       "workflowName": {
+        "type": "string",
+        "description": "Human-readable name of the workflow",
+        "example": "Customer Support Flow"
+       }
+      },
+      "required": [
+       "id"
+      ]
+     }
+    }
+   },
+   "WorkflowSessionStatus": {
+    "type": "object",
+    "properties": {
+     "workflowSessionId": {
+      "type": "string",
+      "description": "The workflow session identifier",
+      "example": "wfs_abc123def456"
+     },
+     "isRunning": {
+      "type": "boolean",
+      "description": "Whether the workflow session is currently running",
+      "example": true
+     },
+     "status": {
+      "type": "string",
+      "enum": [
+       "RUNNING",
+       "COMPLETED"
+      ],
+      "description": "Current status of the workflow session",
+      "example": "RUNNING"
+     },
+     "currentModule": {
+      "type": "string",
+      "nullable": true,
+      "description": "ID of the current workflow module being executed (null if completed)",
+      "example": "mod_sayCollect_001"
+     },
+     "outputVariables": {
+      "type": "object",
+      "additionalProperties": true,
+      "description": "Variables set during workflow execution",
+      "example": {
+       "customerName": "John Doe",
+       "supportTicketId": "TKT-12345"
+      }
+     }
+    },
+    "required": [
+     "workflowSessionId",
+     "isRunning",
+     "status",
+     "currentModule",
+     "outputVariables"
+    ]
+   }
+  }
+ },
+ "security": [
+  {
+   "OAuth2": [
+    "workflows:execute"
+   ]
+  }
+ ],
+ "paths": {
+  "/api/workflow/v1/workflows/sessions": {
+   "post": {
+    "summary": "Start a new workflow session",
+    "description": "Initiates a new workflow session for a given workflow and version. This endpoint\ncreates a new execution context for the specified workflow and begins processing\nfrom the workflow's start module.\n\n**Important Notes:**\n- Authentication is optional for public workflows\n- For private workflows, authorization is required\n- Input variables can be provided to customize workflow execution\n- Session will begin executing immediately upon creation\n\n**DOS Protection & Rate Limiting:**\n- This endpoint implements DOS protection and rate limiting\n\n**Security Implementation Guidelines:**\n- Never expose the service JWT token to client applications\n- Validate and sanitize all input parameters before making API calls\n- Implement proper error handling to avoid exposing internal system details\n- Use your own session/request IDs instead of exposing Avaya session IDs to clients\n",
+    "operationId": "startWorkflowSession",
+    "tags": [
+     "Workflow Sessions"
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "type": "object",
+        "properties": {
+         "workflowId": {
+          "type": "string",
+          "description": "Unique identifier of the workflow to execute",
+          "example": "wf_025d010627e3314fa905c5484c"
+         },
+         "version": {
+          "type": "string",
+          "description": "Version of the workflow to execute (defaults to 'current')",
+          "example": "current",
+          "default": "current"
+         },
+         "inputs": {
+          "type": "object",
+          "additionalProperties": true,
+          "description": "Input variables to pass to the workflow",
+          "example": {
+           "customerName": "John Doe",
+           "priority": "high"
+          }
+         },
+         "data": {
+          "type": "object",
+          "additionalProperties": true,
+          "description": "Additional data context for the workflow",
+          "example": {
+           "source": "web",
+           "campaign": "summer2024"
+          }
+         }
+        },
+        "required": [
+         "workflowId"
+        ]
+       },
+       "examples": {
+        "basic": {
+         "summary": "Basic workflow start",
+         "value": {
+          "workflowId": "wf_025d010627e3314fa905c5484c",
+          "version": "current"
+         }
+        },
+        "with_inputs": {
+         "summary": "Workflow with input variables",
+         "value": {
+          "workflowId": "wf_025d010627e3314fa905c5484c",
+          "version": "current",
+          "inputs": {
+           "customerName": "John Doe",
+           "priority": "high"
+          },
+          "data": {
+           "source": "web",
+           "campaign": "summer2024"
+          }
+         }
+        }
+       }
+      }
+     }
+    },
+    "responses": {
+     "201": {
+      "description": "Workflow session created successfully",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/WorkflowSessionResponse"
+        },
+        "examples": {
+         "success": {
+          "summary": "Successful workflow session creation",
+          "value": {
+           "session": {
+            "id": "wfs_abc123def456",
+            "engagementId": "eng_789xyz012",
+            "workflowId": "wf_025d010627e3314fa905c5484c",
+            "workflowName": "Customer Support Flow"
+           }
+          }
+         }
+        }
+       }
+      }
+     },
+     "400": {
+      "description": "Bad Request - Invalid input parameters",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ErrorResponse"
+        },
+        "examples": {
+         "missing_workflow_id": {
+          "summary": "Missing workflow ID",
+          "value": {
+           "error": "workflowId is required",
+           "message": "Missing required parameter workflowId in request body"
+          }
+         },
+         "invalid_workflow_id": {
+          "summary": "Invalid workflow ID format",
+          "value": {
+           "error": "Invalid workflowId format",
+           "message": "workflowId must be a valid workflow identifier"
+          }
+         },
+         "missing_context": {
+          "summary": "Missing account context",
+          "value": {
+           "error": "Missing account context. Authorization may be required for this endpoint.",
+           "message": "Account context not found in request"
+          }
+         },
+         "workflow_execution_failed": {
+          "summary": "Workflow execution failed",
+          "value": {
+           "error": "Failed to trigger workflow",
+           "message": "Cannot destructure property 'account' of 'ctx' as it is undefined."
+          }
+         }
+        }
+       }
+      }
+     },
+     "401": {
+      "description": "Unauthorized - Invalid or missing authentication",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ErrorResponse"
+        },
+        "examples": {
+         "unauthorized": {
+          "summary": "Authentication required",
+          "value": {
+           "error": "Unauthorized",
+           "message": "Valid authentication credentials required"
+          }
+         }
+        }
+       }
+      }
+     },
+     "403": {
+      "description": "Forbidden - Insufficient permissions",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ErrorResponse"
+        },
+        "examples": {
+         "forbidden": {
+          "summary": "Insufficient permissions",
+          "value": {
+           "error": "Forbidden",
+           "message": "Insufficient permissions to execute this workflow"
+          }
+         }
+        }
+       }
+      }
+     },
+     "404": {
+      "description": "Not Found - Workflow or version not found",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ErrorResponse"
+        },
+        "examples": {
+         "workflow_not_found": {
+          "summary": "Workflow not found",
+          "value": {
+           "error": "Workflow not found",
+           "message": "No workflow found with the specified ID"
+          }
+         },
+         "version_not_found": {
+          "summary": "Workflow version not found",
+          "value": {
+           "error": "Workflow version not found",
+           "message": "No published version found for the specified workflow"
+          }
+         },
+         "start_item_missing": {
+          "summary": "Workflow has no start item",
+          "value": {
+           "error": "Workflow version does not have a start item",
+           "message": "The workflow version is missing a start module"
+          }
+         }
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Unprocessable Entity - Workflow validation errors",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ErrorResponse"
+        },
+        "examples": {
+         "unsupported_comm_type": {
+          "summary": "Unsupported communication type",
+          "value": {
+           "error": "Workflow version does not support messaging",
+           "message": "The specified communication type is not supported by this workflow version"
+          }
+         }
+        }
+       }
+      }
+     },
+     "500": {
+      "description": "Internal Server Error - Server processing error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ErrorResponse"
+        },
+        "examples": {
+         "internal_error": {
+          "summary": "Internal server error",
+          "value": {
+           "error": "Internal server error",
+           "message": "An unexpected error occurred while processing the request"
+          }
+         },
+         "session_creation_failed": {
+          "summary": "Session creation failed",
+          "value": {
+           "error": "Error creating workflow session",
+           "message": "Failed to create workflow session in database"
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/workflow/v1/workflows/sessions/{WorkflowSessionId}": {
+   "get": {
+    "summary": "Get workflow session status",
+    "description": "Retrieves the current status and details of a workflow session, including\nits execution state, current module, and output variables.\n\n**Status Values:**\n- **RUNNING**: Session is actively executing\n- **COMPLETED**: Session has finished execution\n\n**Note:** A session is considered completed when it has an endTime value.\n\n**Rate Limiting & DOS Protection:**\n- This endpoint is subject to the same rate limiting and DOS protection measures as the session creation API\n\n**Security Considerations:**\n- Output variables may contain sensitive workflow data - handle with appropriate care\n- Do not expose workflow session IDs directly to end users in client applications\n- Implement proper access controls to ensure users can only query their own sessions\n",
+    "operationId": "getWorkflowSessionStatus",
+    "tags": [
+     "Workflow Sessions"
+    ],
+    "parameters": [
+     {
+      "name": "WorkflowSessionId",
+      "in": "path",
+      "required": true,
+      "description": "Unique identifier of the workflow session",
+      "schema": {
+       "type": "string",
+       "example": "wfs_abc123def456"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Workflow session status retrieved successfully",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/WorkflowSessionStatus"
+        },
+        "examples": {
+         "running": {
+          "summary": "Running workflow session",
+          "value": {
+           "workflowSessionId": "wfs_abc123def456",
+           "isRunning": true,
+           "status": "RUNNING",
+           "currentModule": "mod_sayCollect_001",
+           "outputVariables": {
+            "customerName": "John Doe",
+            "currentStep": "gathering_info"
+           }
+          }
+         },
+         "completed": {
+          "summary": "Completed workflow session",
+          "value": {
+           "workflowSessionId": "wfs_abc123def456",
+           "isRunning": false,
+           "status": "COMPLETED",
+           "currentModule": null,
+           "outputVariables": {
+            "customerName": "John Doe",
+            "supportTicketId": "TKT-12345",
+            "resolution": "Issue resolved"
+           }
+          }
+         }
+        }
+       }
+      }
+     },
+     "400": {
+      "description": "Bad Request - Invalid session ID",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ErrorResponse"
+        },
+        "examples": {
+         "missing_session_id": {
+          "summary": "Missing session ID",
+          "value": {
+           "error": "workflowSessionId is required",
+           "message": "Session ID must be provided in the path"
+          }
+         },
+         "invalid_session_id": {
+          "summary": "Invalid session ID format",
+          "value": {
+           "error": "Invalid session ID format",
+           "message": "Session ID must be a valid workflow session identifier"
+          }
+         }
+        }
+       }
+      }
+     },
+     "401": {
+      "description": "Unauthorized - Invalid or missing authentication",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ErrorResponse"
+        },
+        "examples": {
+         "unauthorized": {
+          "summary": "Authentication required",
+          "value": {
+           "error": "Unauthorized",
+           "message": "Valid authentication credentials required"
+          }
+         }
+        }
+       }
+      }
+     },
+     "403": {
+      "description": "Forbidden - Insufficient permissions",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ErrorResponse"
+        },
+        "examples": {
+         "forbidden": {
+          "summary": "Insufficient permissions",
+          "value": {
+           "error": "Forbidden",
+           "message": "Insufficient permissions to access this workflow session"
+          }
+         }
+        }
+       }
+      }
+     },
+     "404": {
+      "description": "Not Found - Workflow session not found",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ErrorResponse"
+        },
+        "examples": {
+         "session_not_found": {
+          "summary": "Session not found",
+          "value": {
+           "error": "Workflow session not found",
+           "message": "No workflow session found with the specified ID"
+          }
+         }
+        }
+       }
+      }
+     },
+     "500": {
+      "description": "Internal Server Error - Server processing error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ErrorResponse"
+        },
+        "examples": {
+         "internal_error": {
+          "summary": "Internal server error",
+          "value": {
+           "error": "Failed to get workflow status",
+           "message": "An unexpected error occurred while retrieving session status"
+          }
+         },
+         "database_error": {
+          "summary": "Database connection error",
+          "value": {
+           "error": "Database error",
+           "message": "Unable to connect to session database"
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/workflow/v1/workflows/sessions/{wfSessionId}": {
+   "put": {
+    "summary": "Process workflow session progress",
+    "description": "Processes a workflow session and advance the session to the next step if the workflow \ndoes not automatically progress.\n\n**Use Cases:**\n- Send Session ID of a workflow session to advance it to the next step if the workflow\n  does not automatically progress.\n\n**Rate Limiting & DOS Protection:**\n- This endpoint is subject to rate limiting and DOS protection measures\n\n**Security Considerations:**\n- Validate Session ID before processing\n- Do not expose sensitive workflow session details to client applications\n- Implement proper access controls to ensure users can only process their own sessions\n",
+    "operationId": "processWorkflowSession",
+    "tags": [
+     "Workflow Sessions"
+    ],
+    "parameters": [
+     {
+      "name": "wfSessionId",
+      "in": "path",
+      "required": true,
+      "description": "Unique identifier of the workflow session to process",
+      "schema": {
+       "type": "string",
+       "example": "wfs_abc123def456"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Workflow session processed and advanced successfully",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "object",
+         "properties": {
+          "session": {
+           "$ref": "#/components/schemas/WorkflowSessionStatus"
+          }
+         }
+        },
+        "examples": {
+         "continued_processing": {
+          "summary": "Session continues processing",
+          "value": {
+           "session": {
+            "id": "wfs_abc123def456"
+           }
+          }
+         }
+        }
+       }
+      }
+     },
+     "400": {
+      "description": "Bad Request - Invalid input parameters",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ErrorResponse"
+        },
+        "examples": {
+         "invalid_session_id": {
+          "summary": "Invalid session ID",
+          "value": {
+           "error": "Invalid session ID format",
+           "message": "Session ID must be a valid workflow session identifier"
+          }
+         },
+         "invalid_input_data": {
+          "summary": "Invalid input data",
+          "value": {
+           "error": "Invalid input data",
+           "message": "Input data must be in the correct format for the current workflow module"
+          }
+         }
+        }
+       }
+      }
+     },
+     "401": {
+      "description": "Unauthorized - Invalid or missing authentication",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ErrorResponse"
+        },
+        "examples": {
+         "unauthorized": {
+          "summary": "Authentication required",
+          "value": {
+           "error": "Unauthorized",
+           "message": "Valid authentication credentials required"
+          }
+         }
+        }
+       }
+      }
+     },
+     "403": {
+      "description": "Forbidden - Insufficient permissions",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ErrorResponse"
+        },
+        "examples": {
+         "forbidden": {
+          "summary": "Insufficient permissions",
+          "value": {
+           "error": "Forbidden",
+           "message": "Insufficient permissions to process this workflow session"
+          }
+         }
+        }
+       }
+      }
+     },
+     "404": {
+      "description": "Not Found - Workflow session not found",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ErrorResponse"
+        },
+        "examples": {
+         "session_not_found": {
+          "summary": "Session not found",
+          "value": {
+           "error": "Workflow session not found",
+           "message": "No workflow session found with the specified ID"
+          }
+         }
+        }
+       }
+      }
+     },
+     "500": {
+      "description": "Internal Server Error - Server processing error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ErrorResponse"
+        },
+        "examples": {
+         "internal_error": {
+          "summary": "Internal server error",
+          "value": {
+           "error": "Failed to process workflow session",
+           "message": "An unexpected error occurred while processing the session"
+          }
+         },
+         "workflow_execution_error": {
+          "summary": "Workflow execution error",
+          "value": {
+           "error": "Workflow execution failed",
+           "message": "Unable to continue workflow execution due to internal error"
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   }
+  }
+ }
+}
