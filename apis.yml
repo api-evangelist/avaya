@@ -25,6 +25,19 @@ tags: &id001
 - CCaaS
 - Customer Experience
 - Telephony
+- Webhook
+- Enterprise Software
+- Unified Communications
+- Customer Service
+tags_raw:
+- Communications
+- Contact Center
+- Collaboration
+- Artificial Intelligence
+- UCaaS
+- CCaaS
+- Customer Experience
+- Telephony
 - Webhooks
 - Enterprise Software
 - Unified Communications
@@ -68,17 +81,16 @@ maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 apis:
-- name: Avaya Infinity Platform APIs
-  description: 'REST APIs for the Avaya Infinity cloud customer experience platform: user and group management, queue configuration
-    and real-time queue metrics, customer profiles, transcripts and interaction transcription, historical analytics, messaging,
-    outbound campaign management, workflow sessions and a webhook notifications surface. Bearer JWT from the tenant Keycloak
-    realm (client_credentials, 900s access token) plus a per-tenant host.'
-  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/avaya.png
+- aid: avaya:avaya-access-token-api
+  name: Avaya Access Token API
+  description: Includes token related operations.
   humanURL: https://developers.avayacloud.com/avaya-infinity/reference
   baseURL: https://core.{customerId}.ec.avayacloud.com
-  tags: *id001
-  tags_raw: *id002
+  tags:
+  - Access Token
   properties:
+  - type: OpenAPI
+    url: openapi/avaya-access-token-api-openapi.yml
   - type: Documentation
     url: https://developers.avayacloud.com/avaya-infinity/docs/introduction
   - type: APIReference
@@ -86,117 +98,3184 @@ apis:
   - type: GettingStarted
     url: https://developers.avayacloud.com/avaya-infinity/docs/quick-start
   - type: Authentication
-    url: https://developers.avayacloud.com/avaya-infinity/docs/how-to-authenticate-with-avaya-infinitytm-apis
+    url: >-
+      https://developers.avayacloud.com/avaya-infinity/docs/how-to-authenticate-with-avaya-infinitytm-apis
   - type: ChangeLog
     url: https://developers.avayacloud.com/avaya-infinity/changelog
   - type: Webhooks
     url: asyncapi/avaya-webhooks.yml
-  - type: OpenAPI
-    url: openapi/avaya-infinity-access-token-openapi.yml
-  - type: OpenAPI
-    url: openapi/avaya-infinity-analytics-historical-openapi.yml
-  - type: OpenAPI
-    url: openapi/avaya-infinity-groups-management-openapi.yml
-  - type: OpenAPI
-    url: openapi/avaya-infinity-messaging-openapi.yml
-  - type: OpenAPI
-    url: openapi/avaya-infinity-notification-service-openapi.yml
-  - type: OpenAPI
-    url: openapi/avaya-infinity-notifications-openapi.yml
-  - type: OpenAPI
-    url: openapi/avaya-infinity-outbound-openapi.yml
-  - type: OpenAPI
-    url: openapi/avaya-infinity-profile-management-openapi.yml
-  - type: OpenAPI
-    url: openapi/avaya-infinity-queue-management-openapi.yml
-  - type: OpenAPI
-    url: openapi/avaya-infinity-queue-metrics-openapi.yml
-  - type: OpenAPI
-    url: openapi/avaya-infinity-transcription-interactions-openapi.yml
-  - type: OpenAPI
-    url: openapi/avaya-infinity-transcripts-openapi.yml
-  - type: OpenAPI
-    url: openapi/avaya-infinity-user-management-openapi.yml
-  - type: OpenAPI
-    url: openapi/avaya-infinity-workflow-execution-openapi.yml
-  - type: OpenAPI
-    url: openapi/avaya-infinity-workflow-openapi.yml
-  - type: OpenAPI
-    url: openapi/avaya-infinity-workflow-sessions-openapi.yml
-- name: Avaya Experience Platform (AXP) APIs
-  description: 'REST APIs for Avaya Experience Platform, Avaya''s CCaaS platform: account, user, group, profile, resource
-    partition, match/queue/category and timetable administration; voice administration across Communication Manager, Avaya
-    Aura Device Services, Avaya Cloud Office, MS Teams and hybrid cloud gateways; customer journey and engagement history;
-    digital custom chat and async messaging; drafts; transcripts; historical and producer analytics; and webhook or WebSocket
-    notification subscriptions. Bearer JWT plus a tenant appkey header, served from seven regional hosts.'
-  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/avaya.png
-  humanURL: https://developers.avayacloud.com/avaya-experience-platform/reference
-  baseURL: https://na.api.avayacloud.com
-  tags: *id001
-  tags_raw: *id002
-  properties:
   - type: Documentation
-    url: https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started-introduction
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started-introduction
   - type: APIReference
     url: https://developers.avayacloud.com/avaya-experience-platform/reference
   - type: GettingStarted
     url: https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started
   - type: Authentication
-    url: https://developers.avayacloud.com/avaya-experience-platform/docs/how-to-authenticate-with-axp-apis
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/how-to-authenticate-with-axp-apis
   - type: ChangeLog
     url: https://developers.avayacloud.com/avaya-experience-platform/changelog
   - type: Postman
     url: https://www.postman.com/avaya-axp/avaya-experience-platform
+- aid: avaya:avaya-account-api
+  name: Avaya Account API
+  description: APIs to manage Accounts.
+  humanURL: https://developers.avayacloud.com/avaya-infinity/reference
+  baseURL: https://core.{customerId}.ec.avayacloud.com
+  tags:
+  - Account
+  properties:
+  - type: OpenAPI
+    url: openapi/avaya-account-api-openapi.yml
+  - type: Documentation
+    url: https://developers.avayacloud.com/avaya-infinity/docs/introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-infinity/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-infinity/docs/quick-start
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-infinity/docs/how-to-authenticate-with-avaya-infinitytm-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-infinity/changelog
   - type: Webhooks
     url: asyncapi/avaya-webhooks.yml
+  - type: Documentation
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started-introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-experience-platform/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/how-to-authenticate-with-axp-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-experience-platform/changelog
+  - type: Postman
+    url: https://www.postman.com/avaya-axp/avaya-experience-platform
+- aid: avaya:avaya-agent-location-api
+  name: Avaya Agent Location API
+  description: >-
+    Agent location Routing APIs for System Administrator. It will enable agents connecting from different
+    countries to be able to go through specific trunks or connection.
+  humanURL: https://developers.avayacloud.com/avaya-infinity/reference
+  baseURL: https://core.{customerId}.ec.avayacloud.com
+  tags:
+  - Agent Location
+  properties:
   - type: OpenAPI
-    url: openapi/avaya-axp-admin-account-openapi.yml
+    url: openapi/avaya-agent-location-api-openapi.yml
+  - type: Documentation
+    url: https://developers.avayacloud.com/avaya-infinity/docs/introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-infinity/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-infinity/docs/quick-start
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-infinity/docs/how-to-authenticate-with-avaya-infinitytm-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-infinity/changelog
+  - type: Webhooks
+    url: asyncapi/avaya-webhooks.yml
+  - type: Documentation
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started-introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-experience-platform/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/how-to-authenticate-with-axp-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-experience-platform/changelog
+  - type: Postman
+    url: https://www.postman.com/avaya-axp/avaya-experience-platform
+- aid: avaya:avaya-agent-notes-api
+  name: Avaya Agent Notes API
+  description: The Agent Notes API from Avaya — 4 operation(s) for agent notes.
+  humanURL: https://developers.avayacloud.com/avaya-infinity/reference
+  baseURL: https://core.{customerId}.ec.avayacloud.com
+  tags:
+  - Agent Notes
+  properties:
   - type: OpenAPI
-    url: openapi/avaya-axp-admin-element-inventory-openapi.yml
+    url: openapi/avaya-agent-notes-api-openapi.yml
+  - type: Documentation
+    url: https://developers.avayacloud.com/avaya-infinity/docs/introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-infinity/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-infinity/docs/quick-start
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-infinity/docs/how-to-authenticate-with-avaya-infinitytm-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-infinity/changelog
+  - type: Webhooks
+    url: asyncapi/avaya-webhooks.yml
+  - type: Documentation
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started-introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-experience-platform/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/how-to-authenticate-with-axp-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-experience-platform/changelog
+  - type: Postman
+    url: https://www.postman.com/avaya-axp/avaya-experience-platform
+- aid: avaya:avaya-agents-api
+  name: Avaya Agents API
+  description: Monitor and manage agent status and activity
+  humanURL: https://developers.avayacloud.com/avaya-infinity/reference
+  baseURL: https://core.{customerId}.ec.avayacloud.com
+  tags:
+  - Agents
+  properties:
   - type: OpenAPI
-    url: openapi/avaya-axp-admin-group-openapi.yml
+    url: openapi/avaya-agents-api-openapi.yml
+  - type: Documentation
+    url: https://developers.avayacloud.com/avaya-infinity/docs/introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-infinity/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-infinity/docs/quick-start
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-infinity/docs/how-to-authenticate-with-avaya-infinitytm-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-infinity/changelog
+  - type: Webhooks
+    url: asyncapi/avaya-webhooks.yml
+  - type: Documentation
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started-introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-experience-platform/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/how-to-authenticate-with-axp-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-experience-platform/changelog
+  - type: Postman
+    url: https://www.postman.com/avaya-axp/avaya-experience-platform
+- aid: avaya:avaya-asynchronous-messages-api
+  name: Avaya Asynchronous Messages API
+  description: >-
+    Messages related to non-session based communication with the contact center are considered to be asynchronous
+    messages. Based on the information passed, the contact center will either model this against existing
+    entities like conversation, engagement or dialog, or else new entities will be created.
+  humanURL: https://developers.avayacloud.com/avaya-infinity/reference
+  baseURL: https://core.{customerId}.ec.avayacloud.com
+  tags:
+  - Asynchronous Messages
+  properties:
   - type: OpenAPI
-    url: openapi/avaya-axp-admin-match-openapi.yml
+    url: openapi/avaya-asynchronous-messages-api-openapi.yml
+  - type: Documentation
+    url: https://developers.avayacloud.com/avaya-infinity/docs/introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-infinity/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-infinity/docs/quick-start
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-infinity/docs/how-to-authenticate-with-avaya-infinitytm-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-infinity/changelog
+  - type: Webhooks
+    url: asyncapi/avaya-webhooks.yml
+  - type: Documentation
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started-introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-experience-platform/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/how-to-authenticate-with-axp-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-experience-platform/changelog
+  - type: Postman
+    url: https://www.postman.com/avaya-axp/avaya-experience-platform
+- aid: avaya:avaya-audit-records-api
+  name: Avaya Audit Records API
+  description: Search or export audit records for auditable objects.
+  humanURL: https://developers.avayacloud.com/avaya-infinity/reference
+  baseURL: https://core.{customerId}.ec.avayacloud.com
+  tags:
+  - Audit Records
+  properties:
   - type: OpenAPI
-    url: openapi/avaya-axp-admin-timetable-openapi.yml
+    url: openapi/avaya-audit-records-api-openapi.yml
+  - type: Documentation
+    url: https://developers.avayacloud.com/avaya-infinity/docs/introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-infinity/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-infinity/docs/quick-start
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-infinity/docs/how-to-authenticate-with-avaya-infinitytm-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-infinity/changelog
+  - type: Webhooks
+    url: asyncapi/avaya-webhooks.yml
+  - type: Documentation
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started-introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-experience-platform/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/how-to-authenticate-with-axp-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-experience-platform/changelog
+  - type: Postman
+    url: https://www.postman.com/avaya-axp/avaya-experience-platform
+- aid: avaya:avaya-available-phone-numbers-api
+  name: Avaya Available Phone Numbers API
+  description: The available phone numbers that can be added to the contact center.
+  humanURL: https://developers.avayacloud.com/avaya-infinity/reference
+  baseURL: https://core.{customerId}.ec.avayacloud.com
+  tags:
+  - Available Phone Numbers
+  properties:
   - type: OpenAPI
-    url: openapi/avaya-axp-admin-user-openapi.yml
+    url: openapi/avaya-available-phone-numbers-api-openapi.yml
+  - type: Documentation
+    url: https://developers.avayacloud.com/avaya-infinity/docs/introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-infinity/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-infinity/docs/quick-start
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-infinity/docs/how-to-authenticate-with-avaya-infinitytm-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-infinity/changelog
+  - type: Webhooks
+    url: asyncapi/avaya-webhooks.yml
+  - type: Documentation
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started-introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-experience-platform/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/how-to-authenticate-with-axp-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-experience-platform/changelog
+  - type: Postman
+    url: https://www.postman.com/avaya-axp/avaya-experience-platform
+- aid: avaya:avaya-avaya-aura-device-services-api
+  name: Avaya Avaya Aura Device Services API
+  description: >-
+    Administration of Avaya Aura Device Service Elements. These API are expected to be called by an account
+    administrator. AADS is the abbreviated form for Avaya Aura Device Service and is commonly used in
+    the summary of the Apis. OIDC stands for OpenID Connect Discovery.
+  humanURL: https://developers.avayacloud.com/avaya-infinity/reference
+  baseURL: https://core.{customerId}.ec.avayacloud.com
+  tags:
+  - Avaya Aura Device Services
+  properties:
   - type: OpenAPI
-    url: openapi/avaya-axp-admin-voice-openapi.yml
+    url: openapi/avaya-avaya-aura-device-services-api-openapi.yml
+  - type: Documentation
+    url: https://developers.avayacloud.com/avaya-infinity/docs/introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-infinity/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-infinity/docs/quick-start
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-infinity/docs/how-to-authenticate-with-avaya-infinitytm-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-infinity/changelog
+  - type: Webhooks
+    url: asyncapi/avaya-webhooks.yml
+  - type: Documentation
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started-introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-experience-platform/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/how-to-authenticate-with-axp-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-experience-platform/changelog
+  - type: Postman
+    url: https://www.postman.com/avaya-axp/avaya-experience-platform
+- aid: avaya:avaya-avaya-cloud-office-management-api
+  name: Avaya Avaya Cloud Office management API
+  description: APIs to manage Avaya Cloud Office element in voice service
+  humanURL: https://developers.avayacloud.com/avaya-infinity/reference
+  baseURL: https://core.{customerId}.ec.avayacloud.com
+  tags:
+  - Avaya Cloud Office management
+  properties:
   - type: OpenAPI
-    url: openapi/avaya-axp-analytics-historical-data-v1-openapi.yml
+    url: openapi/avaya-avaya-cloud-office-management-api-openapi.yml
+  - type: Documentation
+    url: https://developers.avayacloud.com/avaya-infinity/docs/introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-infinity/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-infinity/docs/quick-start
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-infinity/docs/how-to-authenticate-with-avaya-infinitytm-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-infinity/changelog
+  - type: Webhooks
+    url: asyncapi/avaya-webhooks.yml
+  - type: Documentation
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started-introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-experience-platform/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/how-to-authenticate-with-axp-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-experience-platform/changelog
+  - type: Postman
+    url: https://www.postman.com/avaya-axp/avaya-experience-platform
+- aid: avaya:avaya-avaya-cloud-office-sip-trunks-api
+  name: Avaya Avaya Cloud Office SIP Trunks API
+  description: APIs to manage Avaya Cloud Office SIP Trunk element in voice service
+  humanURL: https://developers.avayacloud.com/avaya-infinity/reference
+  baseURL: https://core.{customerId}.ec.avayacloud.com
+  tags:
+  - Avaya Cloud Office SIP Trunks
+  properties:
   - type: OpenAPI
-    url: openapi/avaya-axp-analytics-historical-data-v2-openapi.yml
+    url: openapi/avaya-avaya-cloud-office-sip-trunks-api-openapi.yml
+  - type: Documentation
+    url: https://developers.avayacloud.com/avaya-infinity/docs/introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-infinity/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-infinity/docs/quick-start
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-infinity/docs/how-to-authenticate-with-avaya-infinitytm-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-infinity/changelog
+  - type: Webhooks
+    url: asyncapi/avaya-webhooks.yml
+  - type: Documentation
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started-introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-experience-platform/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/how-to-authenticate-with-axp-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-experience-platform/changelog
+  - type: Postman
+    url: https://www.postman.com/avaya-axp/avaya-experience-platform
+- aid: avaya:avaya-bulk-job-api
+  name: Avaya Bulk Job API
+  description: Bulk operations related to the Jobs responsible for creating users.
+  humanURL: https://developers.avayacloud.com/avaya-infinity/reference
+  baseURL: https://core.{customerId}.ec.avayacloud.com
+  tags:
+  - Bulk Job
+  properties:
   - type: OpenAPI
-    url: openapi/avaya-axp-analytics-producer-management-openapi.yml
+    url: openapi/avaya-bulk-job-api-openapi.yml
+  - type: Documentation
+    url: https://developers.avayacloud.com/avaya-infinity/docs/introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-infinity/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-infinity/docs/quick-start
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-infinity/docs/how-to-authenticate-with-avaya-infinitytm-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-infinity/changelog
+  - type: Webhooks
+    url: asyncapi/avaya-webhooks.yml
+  - type: Documentation
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started-introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-experience-platform/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/how-to-authenticate-with-axp-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-experience-platform/changelog
+  - type: Postman
+    url: https://www.postman.com/avaya-axp/avaya-experience-platform
+- aid: avaya:avaya-bulk-user-api
+  name: Avaya Bulk User API
+  description: Bulk operations related to Users, Add, Update, Delete, Export.
+  humanURL: https://developers.avayacloud.com/avaya-infinity/reference
+  baseURL: https://core.{customerId}.ec.avayacloud.com
+  tags:
+  - Bulk User
+  properties:
   - type: OpenAPI
-    url: openapi/avaya-axp-auth-openapi.yml
+    url: openapi/avaya-bulk-user-api-openapi.yml
+  - type: Documentation
+    url: https://developers.avayacloud.com/avaya-infinity/docs/introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-infinity/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-infinity/docs/quick-start
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-infinity/docs/how-to-authenticate-with-avaya-infinitytm-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-infinity/changelog
+  - type: Webhooks
+    url: asyncapi/avaya-webhooks.yml
+  - type: Documentation
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started-introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-experience-platform/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/how-to-authenticate-with-axp-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-experience-platform/changelog
+  - type: Postman
+    url: https://www.postman.com/avaya-axp/avaya-experience-platform
+- aid: avaya:avaya-calls-api
+  name: Avaya Calls API
+  description: Trigger and complete calls
+  humanURL: https://developers.avayacloud.com/avaya-infinity/reference
+  baseURL: https://core.{customerId}.ec.avayacloud.com
+  tags:
+  - Calls
+  properties:
   - type: OpenAPI
-    url: openapi/avaya-axp-customer-journey-openapi.yml
+    url: openapi/avaya-calls-api-openapi.yml
+  - type: Documentation
+    url: https://developers.avayacloud.com/avaya-infinity/docs/introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-infinity/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-infinity/docs/quick-start
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-infinity/docs/how-to-authenticate-with-avaya-infinitytm-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-infinity/changelog
+  - type: Webhooks
+    url: asyncapi/avaya-webhooks.yml
+  - type: Documentation
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started-introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-experience-platform/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/how-to-authenticate-with-axp-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-experience-platform/changelog
+  - type: Postman
+    url: https://www.postman.com/avaya-axp/avaya-experience-platform
+- aid: avaya:avaya-campaigns-api
+  name: Avaya Campaigns API
+  description: Manage outbound campaigns
+  humanURL: https://developers.avayacloud.com/avaya-infinity/reference
+  baseURL: https://core.{customerId}.ec.avayacloud.com
+  tags:
+  - Campaigns
+  properties:
   - type: OpenAPI
-    url: openapi/avaya-axp-digital-custom-chat-openapi.yml
+    url: openapi/avaya-campaigns-api-openapi.yml
+  - type: Documentation
+    url: https://developers.avayacloud.com/avaya-infinity/docs/introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-infinity/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-infinity/docs/quick-start
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-infinity/docs/how-to-authenticate-with-avaya-infinitytm-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-infinity/changelog
+  - type: Webhooks
+    url: asyncapi/avaya-webhooks.yml
+  - type: Documentation
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started-introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-experience-platform/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/how-to-authenticate-with-axp-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-experience-platform/changelog
+  - type: Postman
+    url: https://www.postman.com/avaya-axp/avaya-experience-platform
+- aid: avaya:avaya-category-api
+  name: Avaya Category API
+  description: >-
+    Routing is implemented by matching the attributes specified on an engagement, either through customer
+
+    choice or by business logic, against the attributes associated with the members of the pool of available
+    agents.
+  humanURL: https://developers.avayacloud.com/avaya-infinity/reference
+  baseURL: https://core.{customerId}.ec.avayacloud.com
+  tags:
+  - Category
+  properties:
   - type: OpenAPI
-    url: openapi/avaya-axp-digital-custom-messaging-openapi.yml
+    url: openapi/avaya-category-api-openapi.yml
+  - type: Documentation
+    url: https://developers.avayacloud.com/avaya-infinity/docs/introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-infinity/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-infinity/docs/quick-start
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-infinity/docs/how-to-authenticate-with-avaya-infinitytm-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-infinity/changelog
+  - type: Webhooks
+    url: asyncapi/avaya-webhooks.yml
+  - type: Documentation
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started-introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-experience-platform/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/how-to-authenticate-with-axp-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-experience-platform/changelog
+  - type: Postman
+    url: https://www.postman.com/avaya-axp/avaya-experience-platform
+- aid: avaya:avaya-comm-manager-job-details-api
+  name: Avaya Comm Manager Job Details API
+  description: >-
+    This API is used to get details of list of jobs or a single job for a specific Communication Manager.
+    These API are expected to be called by an account administrator.
+  humanURL: https://developers.avayacloud.com/avaya-infinity/reference
+  baseURL: https://core.{customerId}.ec.avayacloud.com
+  tags:
+  - Comm Manager Job Details
+  properties:
   - type: OpenAPI
-    url: openapi/avaya-axp-digital-notification-openapi.yml
+    url: openapi/avaya-comm-manager-job-details-api-openapi.yml
+  - type: Documentation
+    url: https://developers.avayacloud.com/avaya-infinity/docs/introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-infinity/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-infinity/docs/quick-start
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-infinity/docs/how-to-authenticate-with-avaya-infinitytm-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-infinity/changelog
+  - type: Webhooks
+    url: asyncapi/avaya-webhooks.yml
+  - type: Documentation
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started-introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-experience-platform/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/how-to-authenticate-with-axp-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-experience-platform/changelog
+  - type: Postman
+    url: https://www.postman.com/avaya-axp/avaya-experience-platform
+- aid: avaya:avaya-communication-manager-api
+  name: Avaya Communication Manager API
+  description: >-
+    Administration of Communication Manager configuration. These API are expected to be called by an account
+    administrator. CM is the abbreviated form for Communication Manager and is commonly used in the summary
+    of the Apis.
+  humanURL: https://developers.avayacloud.com/avaya-infinity/reference
+  baseURL: https://core.{customerId}.ec.avayacloud.com
+  tags:
+  - Communication Manager
+  properties:
   - type: OpenAPI
-    url: openapi/avaya-axp-digital-sdk-auth-openapi.yml
+    url: openapi/avaya-communication-manager-api-openapi.yml
+  - type: Documentation
+    url: https://developers.avayacloud.com/avaya-infinity/docs/introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-infinity/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-infinity/docs/quick-start
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-infinity/docs/how-to-authenticate-with-avaya-infinitytm-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-infinity/changelog
+  - type: Webhooks
+    url: asyncapi/avaya-webhooks.yml
+  - type: Documentation
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started-introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-experience-platform/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/how-to-authenticate-with-axp-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-experience-platform/changelog
+  - type: Postman
+    url: https://www.postman.com/avaya-axp/avaya-experience-platform
+- aid: avaya:avaya-country-api
+  name: Avaya Country API
+  description: The countries in which available phone numbers are available.
+  humanURL: https://developers.avayacloud.com/avaya-infinity/reference
+  baseURL: https://core.{customerId}.ec.avayacloud.com
+  tags:
+  - Country
+  properties:
   - type: OpenAPI
-    url: openapi/avaya-axp-digital-signed-media-openapi.yml
+    url: openapi/avaya-country-api-openapi.yml
+  - type: Documentation
+    url: https://developers.avayacloud.com/avaya-infinity/docs/introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-infinity/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-infinity/docs/quick-start
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-infinity/docs/how-to-authenticate-with-avaya-infinitytm-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-infinity/changelog
+  - type: Webhooks
+    url: asyncapi/avaya-webhooks.yml
+  - type: Documentation
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started-introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-experience-platform/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/how-to-authenticate-with-axp-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-experience-platform/changelog
+  - type: Postman
+    url: https://www.postman.com/avaya-axp/avaya-experience-platform
+- aid: avaya:avaya-data-sets-api
+  name: Avaya Data Sets API
+  description: Manage data sets within campaigns
+  humanURL: https://developers.avayacloud.com/avaya-infinity/reference
+  baseURL: https://core.{customerId}.ec.avayacloud.com
+  tags:
+  - Data Sets
+  properties:
   - type: OpenAPI
-    url: openapi/avaya-axp-digital-signed-media-uri-openapi.yml
+    url: openapi/avaya-data-sets-api-openapi.yml
+  - type: Documentation
+    url: https://developers.avayacloud.com/avaya-infinity/docs/introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-infinity/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-infinity/docs/quick-start
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-infinity/docs/how-to-authenticate-with-avaya-infinitytm-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-infinity/changelog
+  - type: Webhooks
+    url: asyncapi/avaya-webhooks.yml
+  - type: Documentation
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started-introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-experience-platform/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/how-to-authenticate-with-axp-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-experience-platform/changelog
+  - type: Postman
+    url: https://www.postman.com/avaya-axp/avaya-experience-platform
+- aid: avaya:avaya-dataset-api
+  name: Avaya Dataset API
+  description: The Dataset API from Avaya — 1 operation(s) for dataset.
+  humanURL: https://developers.avayacloud.com/avaya-infinity/reference
+  baseURL: https://core.{customerId}.ec.avayacloud.com
+  tags:
+  - Dataset
+  properties:
   - type: OpenAPI
-    url: openapi/avaya-axp-draft-retrieval-openapi.yml
+    url: openapi/avaya-dataset-api-openapi.yml
+  - type: Documentation
+    url: https://developers.avayacloud.com/avaya-infinity/docs/introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-infinity/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-infinity/docs/quick-start
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-infinity/docs/how-to-authenticate-with-avaya-infinitytm-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-infinity/changelog
+  - type: Webhooks
+    url: asyncapi/avaya-webhooks.yml
+  - type: Documentation
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started-introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-experience-platform/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/how-to-authenticate-with-axp-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-experience-platform/changelog
+  - type: Postman
+    url: https://www.postman.com/avaya-axp/avaya-experience-platform
+- aid: avaya:avaya-dictionaries-api
+  name: Avaya Dictionaries API
+  description: >-
+    Dictionaries contain translations for measures for a specific locale and measure producer.
+  humanURL: https://developers.avayacloud.com/avaya-infinity/reference
+  baseURL: https://core.{customerId}.ec.avayacloud.com
+  tags:
+  - Dictionaries
+  properties:
   - type: OpenAPI
-    url: openapi/avaya-axp-draft-save-openapi.yml
+    url: openapi/avaya-dictionaries-api-openapi.yml
+  - type: Documentation
+    url: https://developers.avayacloud.com/avaya-infinity/docs/introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-infinity/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-infinity/docs/quick-start
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-infinity/docs/how-to-authenticate-with-avaya-infinitytm-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-infinity/changelog
+  - type: Webhooks
+    url: asyncapi/avaya-webhooks.yml
+  - type: Documentation
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started-introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-experience-platform/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/how-to-authenticate-with-axp-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-experience-platform/changelog
+  - type: Postman
+    url: https://www.postman.com/avaya-axp/avaya-experience-platform
+- aid: avaya:avaya-dimensions-api
+  name: Avaya Dimensions API
+  description: >-
+    A Dimension is a collection of related contact center objects used to provide a view of measurement
+    data.
+  humanURL: https://developers.avayacloud.com/avaya-infinity/reference
+  baseURL: https://core.{customerId}.ec.avayacloud.com
+  tags:
+  - Dimensions
+  properties:
   - type: OpenAPI
-    url: openapi/avaya-axp-notification-openapi.yml
+    url: openapi/avaya-dimensions-api-openapi.yml
+  - type: Documentation
+    url: https://developers.avayacloud.com/avaya-infinity/docs/introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-infinity/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-infinity/docs/quick-start
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-infinity/docs/how-to-authenticate-with-avaya-infinitytm-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-infinity/changelog
+  - type: Webhooks
+    url: asyncapi/avaya-webhooks.yml
+  - type: Documentation
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started-introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-experience-platform/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/how-to-authenticate-with-axp-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-experience-platform/changelog
+  - type: Postman
+    url: https://www.postman.com/avaya-axp/avaya-experience-platform
+- aid: avaya:avaya-dnc-api
+  name: Avaya DNC API
+  description: Do Not Call list management
+  humanURL: https://developers.avayacloud.com/avaya-infinity/reference
+  baseURL: https://core.{customerId}.ec.avayacloud.com
+  tags:
+  - DNC
+  properties:
   - type: OpenAPI
-    url: openapi/avaya-axp-routing-queue-metrics-openapi.yml
+    url: openapi/avaya-dnc-api-openapi.yml
+  - type: Documentation
+    url: https://developers.avayacloud.com/avaya-infinity/docs/introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-infinity/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-infinity/docs/quick-start
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-infinity/docs/how-to-authenticate-with-avaya-infinitytm-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-infinity/changelog
+  - type: Webhooks
+    url: asyncapi/avaya-webhooks.yml
+  - type: Documentation
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started-introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-experience-platform/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/how-to-authenticate-with-axp-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-experience-platform/changelog
+  - type: Postman
+    url: https://www.postman.com/avaya-axp/avaya-experience-platform
+- aid: avaya:avaya-drafts-api
+  name: Avaya Drafts API
+  description: >-
+    Drafts prepared by an Agent  at an early stage before it is in final form in response to Email or
+    Messaging contact. At the moment, only one draft supported per engagement.
+  humanURL: https://developers.avayacloud.com/avaya-infinity/reference
+  baseURL: https://core.{customerId}.ec.avayacloud.com
+  tags:
+  - Drafts
+  properties:
   - type: OpenAPI
-    url: openapi/avaya-axp-transcript-retrieval-openapi.yml
+    url: openapi/avaya-drafts-api-openapi.yml
+  - type: Documentation
+    url: https://developers.avayacloud.com/avaya-infinity/docs/introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-infinity/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-infinity/docs/quick-start
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-infinity/docs/how-to-authenticate-with-avaya-infinitytm-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-infinity/changelog
+  - type: Webhooks
+    url: asyncapi/avaya-webhooks.yml
+  - type: Documentation
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started-introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-experience-platform/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/how-to-authenticate-with-axp-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-experience-platform/changelog
+  - type: Postman
+    url: https://www.postman.com/avaya-axp/avaya-experience-platform
+- aid: avaya:avaya-element-management-api
+  name: Avaya Element Management API
+  description: >-
+    An Element is a server instance which provides feature capability. Some examples of elements are Avaya
+    Cloud Office, Chat Connector, Microsoft Teams and so on.
+  humanURL: https://developers.avayacloud.com/avaya-infinity/reference
+  baseURL: https://core.{customerId}.ec.avayacloud.com
+  tags:
+  - Element Management
+  properties:
   - type: OpenAPI
-    url: openapi/avaya-axp-transcript-save-openapi.yml
+    url: openapi/avaya-element-management-api-openapi.yml
+  - type: Documentation
+    url: https://developers.avayacloud.com/avaya-infinity/docs/introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-infinity/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-infinity/docs/quick-start
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-infinity/docs/how-to-authenticate-with-avaya-infinitytm-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-infinity/changelog
+  - type: Webhooks
+    url: asyncapi/avaya-webhooks.yml
+  - type: Documentation
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started-introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-experience-platform/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/how-to-authenticate-with-axp-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-experience-platform/changelog
+  - type: Postman
+    url: https://www.postman.com/avaya-axp/avaya-experience-platform
+- aid: avaya:avaya-engagement-api
+  name: Avaya Engagement API
+  description: >-
+    Represents a resource of the Contact Center being allocated. Engagements can be assigned to one or
+    many Conversations, although this is not mandatory.
+  humanURL: https://developers.avayacloud.com/avaya-infinity/reference
+  baseURL: https://core.{customerId}.ec.avayacloud.com
+  tags:
+  - Engagement
+  properties:
+  - type: OpenAPI
+    url: openapi/avaya-engagement-api-openapi.yml
+  - type: Documentation
+    url: https://developers.avayacloud.com/avaya-infinity/docs/introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-infinity/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-infinity/docs/quick-start
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-infinity/docs/how-to-authenticate-with-avaya-infinitytm-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-infinity/changelog
+  - type: Webhooks
+    url: asyncapi/avaya-webhooks.yml
+  - type: Documentation
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started-introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-experience-platform/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/how-to-authenticate-with-axp-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-experience-platform/changelog
+  - type: Postman
+    url: https://www.postman.com/avaya-axp/avaya-experience-platform
+- aid: avaya:avaya-engagements-api
+  name: Avaya Engagements API
+  description: >-
+    Inbound engagements can be created from the customer side which are then handled by contact center
+    resources like agents, supervisors and bots. Session Id's can be passed on any explicit requests made
+    on engagements so that all the activities can be correlated back to the appropriate session.
+  humanURL: https://developers.avayacloud.com/avaya-infinity/reference
+  baseURL: https://core.{customerId}.ec.avayacloud.com
+  tags:
+  - Engagements
+  properties:
+  - type: OpenAPI
+    url: openapi/avaya-engagements-api-openapi.yml
+  - type: Documentation
+    url: https://developers.avayacloud.com/avaya-infinity/docs/introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-infinity/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-infinity/docs/quick-start
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-infinity/docs/how-to-authenticate-with-avaya-infinitytm-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-infinity/changelog
+  - type: Webhooks
+    url: asyncapi/avaya-webhooks.yml
+  - type: Documentation
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started-introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-experience-platform/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/how-to-authenticate-with-axp-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-experience-platform/changelog
+  - type: Postman
+    url: https://www.postman.com/avaya-axp/avaya-experience-platform
+- aid: avaya:avaya-extension-api
+  name: Avaya Extension API
+  description: >-
+    Management of non e164 Extension that are assigned to Account. These API are expected to be called
+    by an account administrator.
+  humanURL: https://developers.avayacloud.com/avaya-infinity/reference
+  baseURL: https://core.{customerId}.ec.avayacloud.com
+  tags:
+  - Extension
+  properties:
+  - type: OpenAPI
+    url: openapi/avaya-extension-api-openapi.yml
+  - type: Documentation
+    url: https://developers.avayacloud.com/avaya-infinity/docs/introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-infinity/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-infinity/docs/quick-start
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-infinity/docs/how-to-authenticate-with-avaya-infinitytm-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-infinity/changelog
+  - type: Webhooks
+    url: asyncapi/avaya-webhooks.yml
+  - type: Documentation
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started-introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-experience-platform/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/how-to-authenticate-with-axp-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-experience-platform/changelog
+  - type: Postman
+    url: https://www.postman.com/avaya-axp/avaya-experience-platform
+- aid: avaya:avaya-gateway-connection-manager-api
+  name: Avaya Gateway Connection Manager API
+  description: >-
+    Get Details of Gateway Connection Manager. These API are expected to be called by an account administrator.
+  humanURL: https://developers.avayacloud.com/avaya-infinity/reference
+  baseURL: https://core.{customerId}.ec.avayacloud.com
+  tags:
+  - Gateway Connection Manager
+  properties:
+  - type: OpenAPI
+    url: openapi/avaya-gateway-connection-manager-api-openapi.yml
+  - type: Documentation
+    url: https://developers.avayacloud.com/avaya-infinity/docs/introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-infinity/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-infinity/docs/quick-start
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-infinity/docs/how-to-authenticate-with-avaya-infinitytm-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-infinity/changelog
+  - type: Webhooks
+    url: asyncapi/avaya-webhooks.yml
+  - type: Documentation
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started-introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-experience-platform/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/how-to-authenticate-with-axp-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-experience-platform/changelog
+  - type: Postman
+    url: https://www.postman.com/avaya-axp/avaya-experience-platform
+- aid: avaya:avaya-group-management-api
+  name: Avaya Group Management API
+  description: >-
+    A Group is a logical collection of the resources like e.g. user. These groups can be assigned to a
+    user to grant access to the resources present in the group.
+  humanURL: https://developers.avayacloud.com/avaya-infinity/reference
+  baseURL: https://core.{customerId}.ec.avayacloud.com
+  tags:
+  - Group Management
+  properties:
+  - type: OpenAPI
+    url: openapi/avaya-group-management-api-openapi.yml
+  - type: Documentation
+    url: https://developers.avayacloud.com/avaya-infinity/docs/introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-infinity/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-infinity/docs/quick-start
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-infinity/docs/how-to-authenticate-with-avaya-infinitytm-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-infinity/changelog
+  - type: Webhooks
+    url: asyncapi/avaya-webhooks.yml
+  - type: Documentation
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started-introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-experience-platform/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/how-to-authenticate-with-axp-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-experience-platform/changelog
+  - type: Postman
+    url: https://www.postman.com/avaya-axp/avaya-experience-platform
+- aid: avaya:avaya-group-users-api
+  name: Avaya Group Users API
+  description: Group membership operations
+  humanURL: https://developers.avayacloud.com/avaya-infinity/reference
+  baseURL: https://core.{customerId}.ec.avayacloud.com
+  tags:
+  - Group Users
+  properties:
+  - type: OpenAPI
+    url: openapi/avaya-group-users-api-openapi.yml
+  - type: Documentation
+    url: https://developers.avayacloud.com/avaya-infinity/docs/introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-infinity/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-infinity/docs/quick-start
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-infinity/docs/how-to-authenticate-with-avaya-infinitytm-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-infinity/changelog
+  - type: Webhooks
+    url: asyncapi/avaya-webhooks.yml
+  - type: Documentation
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started-introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-experience-platform/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/how-to-authenticate-with-axp-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-experience-platform/changelog
+  - type: Postman
+    url: https://www.postman.com/avaya-axp/avaya-experience-platform
+- aid: avaya:avaya-groups-api
+  name: Avaya Groups API
+  description: Group management operations
+  humanURL: https://developers.avayacloud.com/avaya-infinity/reference
+  baseURL: https://core.{customerId}.ec.avayacloud.com
+  tags:
+  - Groups
+  properties:
+  - type: OpenAPI
+    url: openapi/avaya-groups-api-openapi.yml
+  - type: Documentation
+    url: https://developers.avayacloud.com/avaya-infinity/docs/introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-infinity/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-infinity/docs/quick-start
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-infinity/docs/how-to-authenticate-with-avaya-infinitytm-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-infinity/changelog
+  - type: Webhooks
+    url: asyncapi/avaya-webhooks.yml
+  - type: Documentation
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started-introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-experience-platform/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/how-to-authenticate-with-axp-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-experience-platform/changelog
+  - type: Postman
+    url: https://www.postman.com/avaya-axp/avaya-experience-platform
+- aid: avaya:avaya-holiday-api
+  name: Avaya Holiday API
+  description: >-
+    Holidays are non-working days where the contact center is not staffed by agents and therefore fall
+    outside of the operating business hours.
+  humanURL: https://developers.avayacloud.com/avaya-infinity/reference
+  baseURL: https://core.{customerId}.ec.avayacloud.com
+  tags:
+  - Holiday
+  properties:
+  - type: OpenAPI
+    url: openapi/avaya-holiday-api-openapi.yml
+  - type: Documentation
+    url: https://developers.avayacloud.com/avaya-infinity/docs/introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-infinity/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-infinity/docs/quick-start
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-infinity/docs/how-to-authenticate-with-avaya-infinitytm-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-infinity/changelog
+  - type: Webhooks
+    url: asyncapi/avaya-webhooks.yml
+  - type: Documentation
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started-introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-experience-platform/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/how-to-authenticate-with-axp-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-experience-platform/changelog
+  - type: Postman
+    url: https://www.postman.com/avaya-axp/avaya-experience-platform
+- aid: avaya:avaya-hybrid-cloud-gateway-api
+  name: Avaya Hybrid Cloud Gateway API
+  description: >-
+    Administration of Avaya Hybrid Cloud Gateway. These API are expected to be called by an account administrator.
+    HCG is the abbreviated form for Hybrid Cloud Gateway and is commonly used in the summary of the APIs.
+  humanURL: https://developers.avayacloud.com/avaya-infinity/reference
+  baseURL: https://core.{customerId}.ec.avayacloud.com
+  tags:
+  - Hybrid Cloud Gateway
+  properties:
+  - type: OpenAPI
+    url: openapi/avaya-hybrid-cloud-gateway-api-openapi.yml
+  - type: Documentation
+    url: https://developers.avayacloud.com/avaya-infinity/docs/introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-infinity/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-infinity/docs/quick-start
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-infinity/docs/how-to-authenticate-with-avaya-infinitytm-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-infinity/changelog
+  - type: Webhooks
+    url: asyncapi/avaya-webhooks.yml
+  - type: Documentation
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started-introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-experience-platform/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/how-to-authenticate-with-axp-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-experience-platform/changelog
+  - type: Postman
+    url: https://www.postman.com/avaya-axp/avaya-experience-platform
+- aid: avaya:avaya-hybrid-cloud-manager-api
+  name: Avaya Hybrid Cloud Manager API
+  description: >-
+    Administration of Hybrid Cloud Manager.This API is expected to be called by an account administrator.
+  humanURL: https://developers.avayacloud.com/avaya-infinity/reference
+  baseURL: https://core.{customerId}.ec.avayacloud.com
+  tags:
+  - Hybrid Cloud Manager
+  properties:
+  - type: OpenAPI
+    url: openapi/avaya-hybrid-cloud-manager-api-openapi.yml
+  - type: Documentation
+    url: https://developers.avayacloud.com/avaya-infinity/docs/introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-infinity/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-infinity/docs/quick-start
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-infinity/docs/how-to-authenticate-with-avaya-infinitytm-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-infinity/changelog
+  - type: Webhooks
+    url: asyncapi/avaya-webhooks.yml
+  - type: Documentation
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started-introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-experience-platform/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/how-to-authenticate-with-axp-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-experience-platform/changelog
+  - type: Postman
+    url: https://www.postman.com/avaya-axp/avaya-experience-platform
+- aid: avaya:avaya-hybrid-extension-api
+  name: Avaya Hybrid Extension API
+  description: >-
+    Management of hybrid extensions assigned to users. These API are expected to be called by an account
+    administrator.
+  humanURL: https://developers.avayacloud.com/avaya-infinity/reference
+  baseURL: https://core.{customerId}.ec.avayacloud.com
+  tags:
+  - Hybrid Extension
+  properties:
+  - type: OpenAPI
+    url: openapi/avaya-hybrid-extension-api-openapi.yml
+  - type: Documentation
+    url: https://developers.avayacloud.com/avaya-infinity/docs/introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-infinity/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-infinity/docs/quick-start
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-infinity/docs/how-to-authenticate-with-avaya-infinitytm-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-infinity/changelog
+  - type: Webhooks
+    url: asyncapi/avaya-webhooks.yml
+  - type: Documentation
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started-introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-experience-platform/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/how-to-authenticate-with-axp-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-experience-platform/changelog
+  - type: Postman
+    url: https://www.postman.com/avaya-axp/avaya-experience-platform
+- aid: avaya:avaya-hybrid-skill-api
+  name: Avaya Hybrid Skill API
+  description: >-
+    Administration of Hybrid Skills. These APIs are expected to be called by an account administrator.
+  humanURL: https://developers.avayacloud.com/avaya-infinity/reference
+  baseURL: https://core.{customerId}.ec.avayacloud.com
+  tags:
+  - Hybrid Skill
+  properties:
+  - type: OpenAPI
+    url: openapi/avaya-hybrid-skill-api-openapi.yml
+  - type: Documentation
+    url: https://developers.avayacloud.com/avaya-infinity/docs/introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-infinity/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-infinity/docs/quick-start
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-infinity/docs/how-to-authenticate-with-avaya-infinitytm-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-infinity/changelog
+  - type: Webhooks
+    url: asyncapi/avaya-webhooks.yml
+  - type: Documentation
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started-introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-experience-platform/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/how-to-authenticate-with-axp-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-experience-platform/changelog
+  - type: Postman
+    url: https://www.postman.com/avaya-axp/avaya-experience-platform
+- aid: avaya:avaya-identifiers-api
+  name: Avaya Identifiers API
+  description: >-
+    Represents the criteria with which a customer may be identified (Phone numbers, e-mail addresses,
+    social media handles).
+  humanURL: https://developers.avayacloud.com/avaya-infinity/reference
+  baseURL: https://core.{customerId}.ec.avayacloud.com
+  tags:
+  - Identifiers
+  properties:
+  - type: OpenAPI
+    url: openapi/avaya-identifiers-api-openapi.yml
+  - type: Documentation
+    url: https://developers.avayacloud.com/avaya-infinity/docs/introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-infinity/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-infinity/docs/quick-start
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-infinity/docs/how-to-authenticate-with-avaya-infinitytm-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-infinity/changelog
+  - type: Webhooks
+    url: asyncapi/avaya-webhooks.yml
+  - type: Documentation
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started-introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-experience-platform/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/how-to-authenticate-with-axp-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-experience-platform/changelog
+  - type: Postman
+    url: https://www.postman.com/avaya-axp/avaya-experience-platform
+- aid: avaya:avaya-indicators-api
+  name: Avaya Indicators API
+  description: >-
+    Indicators are used to indicate the status of the conversation or the activity.  For example, when
+    a customer is typing a message, the typing indicator is sent  to the contact center.
+  humanURL: https://developers.avayacloud.com/avaya-infinity/reference
+  baseURL: https://core.{customerId}.ec.avayacloud.com
+  tags:
+  - Indicators
+  properties:
+  - type: OpenAPI
+    url: openapi/avaya-indicators-api-openapi.yml
+  - type: Documentation
+    url: https://developers.avayacloud.com/avaya-infinity/docs/introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-infinity/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-infinity/docs/quick-start
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-infinity/docs/how-to-authenticate-with-avaya-infinitytm-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-infinity/changelog
+  - type: Webhooks
+    url: asyncapi/avaya-webhooks.yml
+  - type: Documentation
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started-introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-experience-platform/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/how-to-authenticate-with-axp-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-experience-platform/changelog
+  - type: Postman
+    url: https://www.postman.com/avaya-axp/avaya-experience-platform
+- aid: avaya:avaya-interactions-api
+  name: Avaya Interactions API
+  description: The Interactions API from Avaya — 1 operation(s) for interactions.
+  humanURL: https://developers.avayacloud.com/avaya-infinity/reference
+  baseURL: https://core.{customerId}.ec.avayacloud.com
+  tags:
+  - Interactions
+  properties:
+  - type: OpenAPI
+    url: openapi/avaya-interactions-api-openapi.yml
+  - type: Documentation
+    url: https://developers.avayacloud.com/avaya-infinity/docs/introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-infinity/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-infinity/docs/quick-start
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-infinity/docs/how-to-authenticate-with-avaya-infinitytm-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-infinity/changelog
+  - type: Webhooks
+    url: asyncapi/avaya-webhooks.yml
+  - type: Documentation
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started-introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-experience-platform/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/how-to-authenticate-with-axp-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-experience-platform/changelog
+  - type: Postman
+    url: https://www.postman.com/avaya-axp/avaya-experience-platform
+- aid: avaya:avaya-interval-api
+  name: Avaya Interval API
+  description: >-
+    Intervals are specific dates or working days of the week when the contact center is fully operational
+    and staffed by agents and therefore fall with the operating business hours.
+  humanURL: https://developers.avayacloud.com/avaya-infinity/reference
+  baseURL: https://core.{customerId}.ec.avayacloud.com
+  tags:
+  - Interval
+  properties:
+  - type: OpenAPI
+    url: openapi/avaya-interval-api-openapi.yml
+  - type: Documentation
+    url: https://developers.avayacloud.com/avaya-infinity/docs/introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-infinity/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-infinity/docs/quick-start
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-infinity/docs/how-to-authenticate-with-avaya-infinitytm-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-infinity/changelog
+  - type: Webhooks
+    url: asyncapi/avaya-webhooks.yml
+  - type: Documentation
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started-introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-experience-platform/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/how-to-authenticate-with-axp-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-experience-platform/changelog
+  - type: Postman
+    url: https://www.postman.com/avaya-axp/avaya-experience-platform
+- aid: avaya:avaya-journey-api
+  name: Avaya Journey API
+  description: >-
+    Represents the history of Conversations and Engagements that a Customer has had with the business.
+  humanURL: https://developers.avayacloud.com/avaya-infinity/reference
+  baseURL: https://core.{customerId}.ec.avayacloud.com
+  tags:
+  - Journey
+  properties:
+  - type: OpenAPI
+    url: openapi/avaya-journey-api-openapi.yml
+  - type: Documentation
+    url: https://developers.avayacloud.com/avaya-infinity/docs/introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-infinity/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-infinity/docs/quick-start
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-infinity/docs/how-to-authenticate-with-avaya-infinitytm-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-infinity/changelog
+  - type: Webhooks
+    url: asyncapi/avaya-webhooks.yml
+  - type: Documentation
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started-introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-experience-platform/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/how-to-authenticate-with-axp-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-experience-platform/changelog
+  - type: Postman
+    url: https://www.postman.com/avaya-axp/avaya-experience-platform
+- aid: avaya:avaya-jwt-token-api
+  name: Avaya JWT Token API
+  description: The API provides jwt token used by SDK
+  humanURL: https://developers.avayacloud.com/avaya-infinity/reference
+  baseURL: https://core.{customerId}.ec.avayacloud.com
+  tags:
+  - JWT Token
+  properties:
+  - type: OpenAPI
+    url: openapi/avaya-jwt-token-api-openapi.yml
+  - type: Documentation
+    url: https://developers.avayacloud.com/avaya-infinity/docs/introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-infinity/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-infinity/docs/quick-start
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-infinity/docs/how-to-authenticate-with-avaya-infinitytm-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-infinity/changelog
+  - type: Webhooks
+    url: asyncapi/avaya-webhooks.yml
+  - type: Documentation
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started-introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-experience-platform/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/how-to-authenticate-with-axp-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-experience-platform/changelog
+  - type: Postman
+    url: https://www.postman.com/avaya-axp/avaya-experience-platform
+- aid: avaya:avaya-locales-api
+  name: Avaya Locales API
+  description: The Locales supported for a each measure producer.
+  humanURL: https://developers.avayacloud.com/avaya-infinity/reference
+  baseURL: https://core.{customerId}.ec.avayacloud.com
+  tags:
+  - Locales
+  properties:
+  - type: OpenAPI
+    url: openapi/avaya-locales-api-openapi.yml
+  - type: Documentation
+    url: https://developers.avayacloud.com/avaya-infinity/docs/introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-infinity/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-infinity/docs/quick-start
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-infinity/docs/how-to-authenticate-with-avaya-infinitytm-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-infinity/changelog
+  - type: Webhooks
+    url: asyncapi/avaya-webhooks.yml
+  - type: Documentation
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started-introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-experience-platform/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/how-to-authenticate-with-axp-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-experience-platform/changelog
+  - type: Postman
+    url: https://www.postman.com/avaya-axp/avaya-experience-platform
+- aid: avaya:avaya-location-profile-api
+  name: Avaya Location Profile API
+  description: >-
+    This API is for managing location profiles. These API are expected to be called by an account administrator.
+  humanURL: https://developers.avayacloud.com/avaya-infinity/reference
+  baseURL: https://core.{customerId}.ec.avayacloud.com
+  tags:
+  - Location Profile
+  properties:
+  - type: OpenAPI
+    url: openapi/avaya-location-profile-api-openapi.yml
+  - type: Documentation
+    url: https://developers.avayacloud.com/avaya-infinity/docs/introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-infinity/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-infinity/docs/quick-start
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-infinity/docs/how-to-authenticate-with-avaya-infinitytm-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-infinity/changelog
+  - type: Webhooks
+    url: asyncapi/avaya-webhooks.yml
+  - type: Documentation
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started-introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-experience-platform/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/how-to-authenticate-with-axp-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-experience-platform/changelog
+  - type: Postman
+    url: https://www.postman.com/avaya-axp/avaya-experience-platform
+- aid: avaya:avaya-measure-producers-api
+  name: Avaya Measure Producers API
+  description: Operations connected to measure producer management.
+  humanURL: https://developers.avayacloud.com/avaya-infinity/reference
+  baseURL: https://core.{customerId}.ec.avayacloud.com
+  tags:
+  - Measure Producers
+  properties:
+  - type: OpenAPI
+    url: openapi/avaya-measure-producers-api-openapi.yml
+  - type: Documentation
+    url: https://developers.avayacloud.com/avaya-infinity/docs/introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-infinity/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-infinity/docs/quick-start
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-infinity/docs/how-to-authenticate-with-avaya-infinitytm-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-infinity/changelog
+  - type: Webhooks
+    url: asyncapi/avaya-webhooks.yml
+  - type: Documentation
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started-introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-experience-platform/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/how-to-authenticate-with-axp-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-experience-platform/changelog
+  - type: Postman
+    url: https://www.postman.com/avaya-axp/avaya-experience-platform
+- aid: avaya:avaya-media-api
+  name: Avaya Media API
+  description: This tag is used to upload or download media using signed URI.
+  humanURL: https://developers.avayacloud.com/avaya-infinity/reference
+  baseURL: https://core.{customerId}.ec.avayacloud.com
+  tags:
+  - Media
+  properties:
+  - type: OpenAPI
+    url: openapi/avaya-media-api-openapi.yml
+  - type: Documentation
+    url: https://developers.avayacloud.com/avaya-infinity/docs/introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-infinity/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-infinity/docs/quick-start
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-infinity/docs/how-to-authenticate-with-avaya-infinitytm-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-infinity/changelog
+  - type: Webhooks
+    url: asyncapi/avaya-webhooks.yml
+  - type: Documentation
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started-introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-experience-platform/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/how-to-authenticate-with-axp-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-experience-platform/changelog
+  - type: Postman
+    url: https://www.postman.com/avaya-axp/avaya-experience-platform
+- aid: avaya:avaya-messaging-api
+  name: Avaya Messaging API
+  description: Send end user messages to the contact center.
+  humanURL: https://developers.avayacloud.com/avaya-infinity/reference
+  baseURL: https://core.{customerId}.ec.avayacloud.com
+  tags:
+  - Messaging
+  properties:
+  - type: OpenAPI
+    url: openapi/avaya-messaging-api-openapi.yml
+  - type: Documentation
+    url: https://developers.avayacloud.com/avaya-infinity/docs/introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-infinity/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-infinity/docs/quick-start
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-infinity/docs/how-to-authenticate-with-avaya-infinitytm-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-infinity/changelog
+  - type: Webhooks
+    url: asyncapi/avaya-webhooks.yml
+  - type: Documentation
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started-introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-experience-platform/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/how-to-authenticate-with-axp-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-experience-platform/changelog
+  - type: Postman
+    url: https://www.postman.com/avaya-axp/avaya-experience-platform
+- aid: avaya:avaya-microsoft-teams-management-api
+  name: Avaya Microsoft Teams management API
+  description: APIs to manage Microsoft Teams element in voice service.
+  humanURL: https://developers.avayacloud.com/avaya-infinity/reference
+  baseURL: https://core.{customerId}.ec.avayacloud.com
+  tags:
+  - Microsoft Teams management
+  properties:
+  - type: OpenAPI
+    url: openapi/avaya-microsoft-teams-management-api-openapi.yml
+  - type: Documentation
+    url: https://developers.avayacloud.com/avaya-infinity/docs/introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-infinity/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-infinity/docs/quick-start
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-infinity/docs/how-to-authenticate-with-avaya-infinitytm-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-infinity/changelog
+  - type: Webhooks
+    url: asyncapi/avaya-webhooks.yml
+  - type: Documentation
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started-introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-experience-platform/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/how-to-authenticate-with-axp-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-experience-platform/changelog
+  - type: Postman
+    url: https://www.postman.com/avaya-axp/avaya-experience-platform
+- aid: avaya:avaya-microsoft-teams-sip-trunks-api
+  name: Avaya Microsoft Teams SIP Trunks API
+  description: APIs to manage Microsoft Teams SIP Trunk element in voice service.
+  humanURL: https://developers.avayacloud.com/avaya-infinity/reference
+  baseURL: https://core.{customerId}.ec.avayacloud.com
+  tags:
+  - Microsoft Teams SIP Trunks
+  properties:
+  - type: OpenAPI
+    url: openapi/avaya-microsoft-teams-sip-trunks-api-openapi.yml
+  - type: Documentation
+    url: https://developers.avayacloud.com/avaya-infinity/docs/introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-infinity/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-infinity/docs/quick-start
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-infinity/docs/how-to-authenticate-with-avaya-infinitytm-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-infinity/changelog
+  - type: Webhooks
+    url: asyncapi/avaya-webhooks.yml
+  - type: Documentation
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started-introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-experience-platform/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/how-to-authenticate-with-axp-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-experience-platform/changelog
+  - type: Postman
+    url: https://www.postman.com/avaya-axp/avaya-experience-platform
+- aid: avaya:avaya-organization-structure-api
+  name: Avaya Organization Structure API
+  description: APIs to manage a customer's organization structure
+  humanURL: https://developers.avayacloud.com/avaya-infinity/reference
+  baseURL: https://core.{customerId}.ec.avayacloud.com
+  tags:
+  - Organization Structure
+  properties:
+  - type: OpenAPI
+    url: openapi/avaya-organization-structure-api-openapi.yml
+  - type: Documentation
+    url: https://developers.avayacloud.com/avaya-infinity/docs/introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-infinity/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-infinity/docs/quick-start
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-infinity/docs/how-to-authenticate-with-avaya-infinitytm-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-infinity/changelog
+  - type: Webhooks
+    url: asyncapi/avaya-webhooks.yml
+  - type: Documentation
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started-introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-experience-platform/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/how-to-authenticate-with-axp-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-experience-platform/changelog
+  - type: Postman
+    url: https://www.postman.com/avaya-axp/avaya-experience-platform
+- aid: avaya:avaya-outbound-number-routing-rules-api
+  name: Avaya Outbound Number Routing Rules API
+  description: >-
+    APIs to manage Outbound Call Number Routing Rules in voice service by an account administrator.
+  humanURL: https://developers.avayacloud.com/avaya-infinity/reference
+  baseURL: https://core.{customerId}.ec.avayacloud.com
+  tags:
+  - Outbound Number Routing Rules
+  properties:
+  - type: OpenAPI
+    url: openapi/avaya-outbound-number-routing-rules-api-openapi.yml
+  - type: Documentation
+    url: https://developers.avayacloud.com/avaya-infinity/docs/introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-infinity/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-infinity/docs/quick-start
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-infinity/docs/how-to-authenticate-with-avaya-infinitytm-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-infinity/changelog
+  - type: Webhooks
+    url: asyncapi/avaya-webhooks.yml
+  - type: Documentation
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started-introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-experience-platform/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/how-to-authenticate-with-axp-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-experience-platform/changelog
+  - type: Postman
+    url: https://www.postman.com/avaya-axp/avaya-experience-platform
+- aid: avaya:avaya-participant-api
+  name: Avaya Participant API
+  description: The Participant API from Avaya — 2 operation(s) for participant.
+  humanURL: https://developers.avayacloud.com/avaya-infinity/reference
+  baseURL: https://core.{customerId}.ec.avayacloud.com
+  tags:
+  - Participant
+  properties:
+  - type: OpenAPI
+    url: openapi/avaya-participant-api-openapi.yml
+  - type: Documentation
+    url: https://developers.avayacloud.com/avaya-infinity/docs/introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-infinity/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-infinity/docs/quick-start
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-infinity/docs/how-to-authenticate-with-avaya-infinitytm-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-infinity/changelog
+  - type: Webhooks
+    url: asyncapi/avaya-webhooks.yml
+  - type: Documentation
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started-introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-experience-platform/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/how-to-authenticate-with-axp-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-experience-platform/changelog
+  - type: Postman
+    url: https://www.postman.com/avaya-axp/avaya-experience-platform
+- aid: avaya:avaya-phone-number-api
+  name: Avaya Phone Number API
+  description: >-
+    Management of phone numbers that are the entry point for contact center voice engagements. Phone number
+    can be assigned and released.
+  humanURL: https://developers.avayacloud.com/avaya-infinity/reference
+  baseURL: https://core.{customerId}.ec.avayacloud.com
+  tags:
+  - Phone Number
+  properties:
+  - type: OpenAPI
+    url: openapi/avaya-phone-number-api-openapi.yml
+  - type: Documentation
+    url: https://developers.avayacloud.com/avaya-infinity/docs/introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-infinity/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-infinity/docs/quick-start
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-infinity/docs/how-to-authenticate-with-avaya-infinitytm-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-infinity/changelog
+  - type: Webhooks
+    url: asyncapi/avaya-webhooks.yml
+  - type: Documentation
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started-introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-experience-platform/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/how-to-authenticate-with-axp-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-experience-platform/changelog
+  - type: Postman
+    url: https://www.postman.com/avaya-axp/avaya-experience-platform
+- aid: avaya:avaya-profile-api
+  name: Avaya Profile API
+  description: >-
+    A Profile is a grouping of individual features which are provisioned with pre-defined values that
+    can be applied to a User.
+  humanURL: https://developers.avayacloud.com/avaya-infinity/reference
+  baseURL: https://core.{customerId}.ec.avayacloud.com
+  tags:
+  - Profile
+  properties:
+  - type: OpenAPI
+    url: openapi/avaya-profile-api-openapi.yml
+  - type: Documentation
+    url: https://developers.avayacloud.com/avaya-infinity/docs/introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-infinity/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-infinity/docs/quick-start
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-infinity/docs/how-to-authenticate-with-avaya-infinitytm-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-infinity/changelog
+  - type: Webhooks
+    url: asyncapi/avaya-webhooks.yml
+  - type: Documentation
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started-introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-experience-platform/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/how-to-authenticate-with-axp-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-experience-platform/changelog
+  - type: Postman
+    url: https://www.postman.com/avaya-axp/avaya-experience-platform
+- aid: avaya:avaya-profile-management-api
+  name: Avaya Profile Management API
+  description: 'Operations related to profile management: Create, Get, Update, Delete, List profiles.'
+  humanURL: https://developers.avayacloud.com/avaya-infinity/reference
+  baseURL: https://core.{customerId}.ec.avayacloud.com
+  tags:
+  - Profile Management
+  properties:
+  - type: OpenAPI
+    url: openapi/avaya-profile-management-api-openapi.yml
+  - type: Documentation
+    url: https://developers.avayacloud.com/avaya-infinity/docs/introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-infinity/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-infinity/docs/quick-start
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-infinity/docs/how-to-authenticate-with-avaya-infinitytm-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-infinity/changelog
+  - type: Webhooks
+    url: asyncapi/avaya-webhooks.yml
+  - type: Documentation
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started-introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-experience-platform/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/how-to-authenticate-with-axp-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-experience-platform/changelog
+  - type: Postman
+    url: https://www.postman.com/avaya-axp/avaya-experience-platform
+- aid: avaya:avaya-provider-dialogs-api
+  name: Avaya Provider Dialogs API
+  description: >-
+    When a message for a conversation, represented by providerDialogId, is sent,  a corresponding engagement
+    and dialog is either created or existing engagement and dialog is utilized. The engagement and dialog
+    in AXP is closed by agents or bots or the system. However in scenarios where provider wants to terminate  a
+    conversation, disconnect AXP from participating in the conversation,  clean up an inactive conversation
+    or handle any erroneous situation,  call this API to terminate the live dialog within AXP.
+  humanURL: https://developers.avayacloud.com/avaya-infinity/reference
+  baseURL: https://core.{customerId}.ec.avayacloud.com
+  tags:
+  - Provider Dialogs
+  properties:
+  - type: OpenAPI
+    url: openapi/avaya-provider-dialogs-api-openapi.yml
+  - type: Documentation
+    url: https://developers.avayacloud.com/avaya-infinity/docs/introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-infinity/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-infinity/docs/quick-start
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-infinity/docs/how-to-authenticate-with-avaya-infinitytm-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-infinity/changelog
+  - type: Webhooks
+    url: asyncapi/avaya-webhooks.yml
+  - type: Documentation
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started-introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-experience-platform/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/how-to-authenticate-with-axp-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-experience-platform/changelog
+  - type: Postman
+    url: https://www.postman.com/avaya-axp/avaya-experience-platform
+- aid: avaya:avaya-queue-api
+  name: Avaya Queue API
+  description: >-
+    Queue's are used to identify a pool of contact center agents for which Customer engagements can be
+    matched and routed.
+  humanURL: https://developers.avayacloud.com/avaya-infinity/reference
+  baseURL: https://core.{customerId}.ec.avayacloud.com
+  tags:
+  - Queue
+  properties:
+  - type: OpenAPI
+    url: openapi/avaya-queue-api-openapi.yml
+  - type: Documentation
+    url: https://developers.avayacloud.com/avaya-infinity/docs/introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-infinity/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-infinity/docs/quick-start
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-infinity/docs/how-to-authenticate-with-avaya-infinitytm-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-infinity/changelog
+  - type: Webhooks
+    url: asyncapi/avaya-webhooks.yml
+  - type: Documentation
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started-introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-experience-platform/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/how-to-authenticate-with-axp-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-experience-platform/changelog
+  - type: Postman
+    url: https://www.postman.com/avaya-axp/avaya-experience-platform
+- aid: avaya:avaya-queue-metrics-api
+  name: Avaya Queue Metrics API
+  description: Metrics associated with a routing queue.
+  humanURL: https://developers.avayacloud.com/avaya-infinity/reference
+  baseURL: https://core.{customerId}.ec.avayacloud.com
+  tags:
+  - Queue Metrics
+  properties:
+  - type: OpenAPI
+    url: openapi/avaya-queue-metrics-api-openapi.yml
+  - type: Documentation
+    url: https://developers.avayacloud.com/avaya-infinity/docs/introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-infinity/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-infinity/docs/quick-start
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-infinity/docs/how-to-authenticate-with-avaya-infinitytm-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-infinity/changelog
+  - type: Webhooks
+    url: asyncapi/avaya-webhooks.yml
+  - type: Documentation
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started-introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-experience-platform/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/how-to-authenticate-with-axp-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-experience-platform/changelog
+  - type: Postman
+    url: https://www.postman.com/avaya-axp/avaya-experience-platform
+- aid: avaya:avaya-queues-api
+  name: Avaya Queues API
+  description: Queue lifecycle management — create, retrieve, update, and delete queues.
+  humanURL: https://developers.avayacloud.com/avaya-infinity/reference
+  baseURL: https://core.{customerId}.ec.avayacloud.com
+  tags:
+  - Queues
+  properties:
+  - type: OpenAPI
+    url: openapi/avaya-queues-api-openapi.yml
+  - type: Documentation
+    url: https://developers.avayacloud.com/avaya-infinity/docs/introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-infinity/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-infinity/docs/quick-start
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-infinity/docs/how-to-authenticate-with-avaya-infinitytm-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-infinity/changelog
+  - type: Webhooks
+    url: asyncapi/avaya-webhooks.yml
+  - type: Documentation
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started-introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-experience-platform/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/how-to-authenticate-with-axp-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-experience-platform/changelog
+  - type: Postman
+    url: https://www.postman.com/avaya-axp/avaya-experience-platform
+- aid: avaya:avaya-reason-codes-api
+  name: Avaya Reason Codes API
+  description: >-
+    Reason codes are a set of codes that agents can select from agent desktop clients to further describe
+    their current activity or state. Reason Codes consist of a unique codeName, codeNumber and codeType
+    combination. This API is used to create, update, retrieve and delete NOT_READY, LOGOUT reason codes
+    and CALL_WORK_CODES codes.
+  humanURL: https://developers.avayacloud.com/avaya-infinity/reference
+  baseURL: https://core.{customerId}.ec.avayacloud.com
+  tags:
+  - Reason Codes
+  properties:
+  - type: OpenAPI
+    url: openapi/avaya-reason-codes-api-openapi.yml
+  - type: Documentation
+    url: https://developers.avayacloud.com/avaya-infinity/docs/introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-infinity/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-infinity/docs/quick-start
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-infinity/docs/how-to-authenticate-with-avaya-infinitytm-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-infinity/changelog
+  - type: Webhooks
+    url: asyncapi/avaya-webhooks.yml
+  - type: Documentation
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started-introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-experience-platform/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/how-to-authenticate-with-axp-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-experience-platform/changelog
+  - type: Postman
+    url: https://www.postman.com/avaya-axp/avaya-experience-platform
+- aid: avaya:avaya-records-api
+  name: Avaya Records API
+  description: Manage outbound campaign records
+  humanURL: https://developers.avayacloud.com/avaya-infinity/reference
+  baseURL: https://core.{customerId}.ec.avayacloud.com
+  tags:
+  - Records
+  properties:
+  - type: OpenAPI
+    url: openapi/avaya-records-api-openapi.yml
+  - type: Documentation
+    url: https://developers.avayacloud.com/avaya-infinity/docs/introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-infinity/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-infinity/docs/quick-start
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-infinity/docs/how-to-authenticate-with-avaya-infinitytm-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-infinity/changelog
+  - type: Webhooks
+    url: asyncapi/avaya-webhooks.yml
+  - type: Documentation
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started-introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-experience-platform/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/how-to-authenticate-with-axp-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-experience-platform/changelog
+  - type: Postman
+    url: https://www.postman.com/avaya-axp/avaya-experience-platform
+- aid: avaya:avaya-reports-api
+  name: Avaya Reports API
+  description: >-
+    A Report is a collection of contact center measurements related to a particular dimension.
+  humanURL: https://developers.avayacloud.com/avaya-infinity/reference
+  baseURL: https://core.{customerId}.ec.avayacloud.com
+  tags:
+  - Reports
+  properties:
+  - type: OpenAPI
+    url: openapi/avaya-reports-api-openapi.yml
+  - type: Documentation
+    url: https://developers.avayacloud.com/avaya-infinity/docs/introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-infinity/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-infinity/docs/quick-start
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-infinity/docs/how-to-authenticate-with-avaya-infinitytm-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-infinity/changelog
+  - type: Webhooks
+    url: asyncapi/avaya-webhooks.yml
+  - type: Documentation
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started-introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-experience-platform/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/how-to-authenticate-with-axp-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-experience-platform/changelog
+  - type: Postman
+    url: https://www.postman.com/avaya-axp/avaya-experience-platform
+- aid: avaya:avaya-resource-partition-api
+  name: Avaya Resource Partition API
+  description: "Resource Partitions are grouping of any resources like CLID which are used while making\
+    \ outgoing communication. \nThese resource partitions ultimately assigned to the user. This will help\
+    \ to provide access of specific resources to the user."
+  humanURL: https://developers.avayacloud.com/avaya-infinity/reference
+  baseURL: https://core.{customerId}.ec.avayacloud.com
+  tags:
+  - Resource Partition
+  properties:
+  - type: OpenAPI
+    url: openapi/avaya-resource-partition-api-openapi.yml
+  - type: Documentation
+    url: https://developers.avayacloud.com/avaya-infinity/docs/introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-infinity/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-infinity/docs/quick-start
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-infinity/docs/how-to-authenticate-with-avaya-infinitytm-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-infinity/changelog
+  - type: Webhooks
+    url: asyncapi/avaya-webhooks.yml
+  - type: Documentation
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started-introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-experience-platform/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/how-to-authenticate-with-axp-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-experience-platform/changelog
+  - type: Postman
+    url: https://www.postman.com/avaya-axp/avaya-experience-platform
+- aid: avaya:avaya-sessions-api
+  name: Avaya Sessions API
+  description: >-
+    Sessions are used to hold context information about the customer and the clients used by the customer.
+    A customer can have multiple active sessions at the same time. Sessions can be passed on any explicit
+    requests made on engagements so that all the activities can be correlated back to sessions that caused
+    it.
+  humanURL: https://developers.avayacloud.com/avaya-infinity/reference
+  baseURL: https://core.{customerId}.ec.avayacloud.com
+  tags:
+  - Sessions
+  properties:
+  - type: OpenAPI
+    url: openapi/avaya-sessions-api-openapi.yml
+  - type: Documentation
+    url: https://developers.avayacloud.com/avaya-infinity/docs/introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-infinity/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-infinity/docs/quick-start
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-infinity/docs/how-to-authenticate-with-avaya-infinitytm-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-infinity/changelog
+  - type: Webhooks
+    url: asyncapi/avaya-webhooks.yml
+  - type: Documentation
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started-introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-experience-platform/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/how-to-authenticate-with-axp-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-experience-platform/changelog
+  - type: Postman
+    url: https://www.postman.com/avaya-axp/avaya-experience-platform
+- aid: avaya:avaya-signed-uri-api
+  name: Avaya Signed URI API
+  description: This section is to used to generate signed uri for the respective request.
+  humanURL: https://developers.avayacloud.com/avaya-infinity/reference
+  baseURL: https://core.{customerId}.ec.avayacloud.com
+  tags:
+  - Signed URI
+  properties:
+  - type: OpenAPI
+    url: openapi/avaya-signed-uri-api-openapi.yml
+  - type: Documentation
+    url: https://developers.avayacloud.com/avaya-infinity/docs/introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-infinity/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-infinity/docs/quick-start
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-infinity/docs/how-to-authenticate-with-avaya-infinitytm-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-infinity/changelog
+  - type: Webhooks
+    url: asyncapi/avaya-webhooks.yml
+  - type: Documentation
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started-introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-experience-platform/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/how-to-authenticate-with-axp-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-experience-platform/changelog
+  - type: Postman
+    url: https://www.postman.com/avaya-axp/avaya-experience-platform
+- aid: avaya:avaya-sip-trunks-api
+  name: Avaya SIP Trunks API
+  description: >-
+    This API is used to get list of all SIP trunk elements and update caller id for an account administrator.
+  humanURL: https://developers.avayacloud.com/avaya-infinity/reference
+  baseURL: https://core.{customerId}.ec.avayacloud.com
+  tags:
+  - SIP Trunks
+  properties:
+  - type: OpenAPI
+    url: openapi/avaya-sip-trunks-api-openapi.yml
+  - type: Documentation
+    url: https://developers.avayacloud.com/avaya-infinity/docs/introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-infinity/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-infinity/docs/quick-start
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-infinity/docs/how-to-authenticate-with-avaya-infinitytm-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-infinity/changelog
+  - type: Webhooks
+    url: asyncapi/avaya-webhooks.yml
+  - type: Documentation
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started-introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-experience-platform/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/how-to-authenticate-with-axp-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-experience-platform/changelog
+  - type: Postman
+    url: https://www.postman.com/avaya-axp/avaya-experience-platform
+- aid: avaya:avaya-skills-api
+  name: Avaya Skills API
+  description: Manage skills and agent/campaigns assignments
+  humanURL: https://developers.avayacloud.com/avaya-infinity/reference
+  baseURL: https://core.{customerId}.ec.avayacloud.com
+  tags:
+  - Skills
+  properties:
+  - type: OpenAPI
+    url: openapi/avaya-skills-api-openapi.yml
+  - type: Documentation
+    url: https://developers.avayacloud.com/avaya-infinity/docs/introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-infinity/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-infinity/docs/quick-start
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-infinity/docs/how-to-authenticate-with-avaya-infinitytm-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-infinity/changelog
+  - type: Webhooks
+    url: asyncapi/avaya-webhooks.yml
+  - type: Documentation
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started-introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-experience-platform/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/how-to-authenticate-with-axp-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-experience-platform/changelog
+  - type: Postman
+    url: https://www.postman.com/avaya-axp/avaya-experience-platform
+- aid: avaya:avaya-subscriptions-api
+  name: Avaya Subscriptions API
+  description: Manage subscriptions for digital events.
+  humanURL: https://developers.avayacloud.com/avaya-infinity/reference
+  baseURL: https://core.{customerId}.ec.avayacloud.com
+  tags:
+  - Subscriptions
+  properties:
+  - type: OpenAPI
+    url: openapi/avaya-subscriptions-api-openapi.yml
+  - type: Documentation
+    url: https://developers.avayacloud.com/avaya-infinity/docs/introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-infinity/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-infinity/docs/quick-start
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-infinity/docs/how-to-authenticate-with-avaya-infinitytm-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-infinity/changelog
+  - type: Webhooks
+    url: asyncapi/avaya-webhooks.yml
+  - type: Documentation
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started-introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-experience-platform/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/how-to-authenticate-with-axp-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-experience-platform/changelog
+  - type: Postman
+    url: https://www.postman.com/avaya-axp/avaya-experience-platform
+- aid: avaya:avaya-sync-aura-entities-api
+  name: Avaya Sync Aura Entities API
+  description: >-
+    Set of API to initiate synchronization of data from Aura to AXP admin. These API are expected to be
+    called by an account administrator.
+  humanURL: https://developers.avayacloud.com/avaya-infinity/reference
+  baseURL: https://core.{customerId}.ec.avayacloud.com
+  tags:
+  - Sync Aura Entities
+  properties:
+  - type: OpenAPI
+    url: openapi/avaya-sync-aura-entities-api-openapi.yml
+  - type: Documentation
+    url: https://developers.avayacloud.com/avaya-infinity/docs/introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-infinity/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-infinity/docs/quick-start
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-infinity/docs/how-to-authenticate-with-avaya-infinitytm-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-infinity/changelog
+  - type: Webhooks
+    url: asyncapi/avaya-webhooks.yml
+  - type: Documentation
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started-introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-experience-platform/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/how-to-authenticate-with-axp-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-experience-platform/changelog
+  - type: Postman
+    url: https://www.postman.com/avaya-axp/avaya-experience-platform
+- aid: avaya:avaya-system-manager-api
+  name: Avaya System Manager API
+  description: >-
+    Administration of System Manager. These API are expected to be called by an account administrator.
+  humanURL: https://developers.avayacloud.com/avaya-infinity/reference
+  baseURL: https://core.{customerId}.ec.avayacloud.com
+  tags:
+  - System Manager
+  properties:
+  - type: OpenAPI
+    url: openapi/avaya-system-manager-api-openapi.yml
+  - type: Documentation
+    url: https://developers.avayacloud.com/avaya-infinity/docs/introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-infinity/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-infinity/docs/quick-start
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-infinity/docs/how-to-authenticate-with-avaya-infinitytm-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-infinity/changelog
+  - type: Webhooks
+    url: asyncapi/avaya-webhooks.yml
+  - type: Documentation
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started-introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-experience-platform/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/how-to-authenticate-with-axp-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-experience-platform/changelog
+  - type: Postman
+    url: https://www.postman.com/avaya-axp/avaya-experience-platform
+- aid: avaya:avaya-timetable-api
+  name: Avaya Timetable API
+  description: >-
+    Timetables are a time zone specific schedule of holidays (non-working days) and intervals (working
+    days).
+  humanURL: https://developers.avayacloud.com/avaya-infinity/reference
+  baseURL: https://core.{customerId}.ec.avayacloud.com
+  tags:
+  - Timetable
+  properties:
+  - type: OpenAPI
+    url: openapi/avaya-timetable-api-openapi.yml
+  - type: Documentation
+    url: https://developers.avayacloud.com/avaya-infinity/docs/introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-infinity/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-infinity/docs/quick-start
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-infinity/docs/how-to-authenticate-with-avaya-infinitytm-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-infinity/changelog
+  - type: Webhooks
+    url: asyncapi/avaya-webhooks.yml
+  - type: Documentation
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started-introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-experience-platform/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/how-to-authenticate-with-axp-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-experience-platform/changelog
+  - type: Postman
+    url: https://www.postman.com/avaya-axp/avaya-experience-platform
+- aid: avaya:avaya-transcript-api
+  name: Avaya Transcript API
+  description: >-
+    Save transcript of a dialog that captures messages exchanged between different participants
+  humanURL: https://developers.avayacloud.com/avaya-infinity/reference
+  baseURL: https://core.{customerId}.ec.avayacloud.com
+  tags:
+  - Transcript
+  properties:
+  - type: OpenAPI
+    url: openapi/avaya-transcript-api-openapi.yml
+  - type: Documentation
+    url: https://developers.avayacloud.com/avaya-infinity/docs/introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-infinity/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-infinity/docs/quick-start
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-infinity/docs/how-to-authenticate-with-avaya-infinitytm-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-infinity/changelog
+  - type: Webhooks
+    url: asyncapi/avaya-webhooks.yml
+  - type: Documentation
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started-introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-experience-platform/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/how-to-authenticate-with-axp-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-experience-platform/changelog
+  - type: Postman
+    url: https://www.postman.com/avaya-axp/avaya-experience-platform
+- aid: avaya:avaya-transcription-api
+  name: Avaya Transcription API
+  description: The Transcription API from Avaya — 2 operation(s) for transcription.
+  humanURL: https://developers.avayacloud.com/avaya-infinity/reference
+  baseURL: https://core.{customerId}.ec.avayacloud.com
+  tags:
+  - Transcription
+  properties:
+  - type: OpenAPI
+    url: openapi/avaya-transcription-api-openapi.yml
+  - type: Documentation
+    url: https://developers.avayacloud.com/avaya-infinity/docs/introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-infinity/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-infinity/docs/quick-start
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-infinity/docs/how-to-authenticate-with-avaya-infinitytm-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-infinity/changelog
+  - type: Webhooks
+    url: asyncapi/avaya-webhooks.yml
+  - type: Documentation
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started-introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-experience-platform/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/how-to-authenticate-with-axp-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-experience-platform/changelog
+  - type: Postman
+    url: https://www.postman.com/avaya-axp/avaya-experience-platform
+- aid: avaya:avaya-transcripts-api
+  name: Avaya Transcripts API
+  description: Endpoints for creating and retrieving transcript messages
+  humanURL: https://developers.avayacloud.com/avaya-infinity/reference
+  baseURL: https://core.{customerId}.ec.avayacloud.com
+  tags:
+  - Transcripts
+  properties:
+  - type: OpenAPI
+    url: openapi/avaya-transcripts-api-openapi.yml
+  - type: Documentation
+    url: https://developers.avayacloud.com/avaya-infinity/docs/introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-infinity/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-infinity/docs/quick-start
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-infinity/docs/how-to-authenticate-with-avaya-infinitytm-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-infinity/changelog
+  - type: Webhooks
+    url: asyncapi/avaya-webhooks.yml
+  - type: Documentation
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started-introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-experience-platform/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/how-to-authenticate-with-axp-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-experience-platform/changelog
+  - type: Postman
+    url: https://www.postman.com/avaya-axp/avaya-experience-platform
+- aid: avaya:avaya-user-api
+  name: Avaya User API
+  description: Represents a user in the system. A user can be an Agent, Supervisor or an Administrator.
+  humanURL: https://developers.avayacloud.com/avaya-infinity/reference
+  baseURL: https://core.{customerId}.ec.avayacloud.com
+  tags:
+  - User
+  properties:
+  - type: OpenAPI
+    url: openapi/avaya-user-api-openapi.yml
+  - type: Documentation
+    url: https://developers.avayacloud.com/avaya-infinity/docs/introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-infinity/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-infinity/docs/quick-start
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-infinity/docs/how-to-authenticate-with-avaya-infinitytm-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-infinity/changelog
+  - type: Webhooks
+    url: asyncapi/avaya-webhooks.yml
+  - type: Documentation
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started-introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-experience-platform/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/how-to-authenticate-with-axp-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-experience-platform/changelog
+  - type: Postman
+    url: https://www.postman.com/avaya-axp/avaya-experience-platform
+- aid: avaya:avaya-user-password-policy-api
+  name: Avaya User Password Policy API
+  description: Represents the set of rules to be followed for the user passwords.
+  humanURL: https://developers.avayacloud.com/avaya-infinity/reference
+  baseURL: https://core.{customerId}.ec.avayacloud.com
+  tags:
+  - User Password Policy
+  properties:
+  - type: OpenAPI
+    url: openapi/avaya-user-password-policy-api-openapi.yml
+  - type: Documentation
+    url: https://developers.avayacloud.com/avaya-infinity/docs/introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-infinity/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-infinity/docs/quick-start
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-infinity/docs/how-to-authenticate-with-avaya-infinitytm-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-infinity/changelog
+  - type: Webhooks
+    url: asyncapi/avaya-webhooks.yml
+  - type: Documentation
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started-introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-experience-platform/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/how-to-authenticate-with-axp-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-experience-platform/changelog
+  - type: Postman
+    url: https://www.postman.com/avaya-axp/avaya-experience-platform
+- aid: avaya:avaya-users-api
+  name: Avaya Users API
+  description: Manage system users
+  humanURL: https://developers.avayacloud.com/avaya-infinity/reference
+  baseURL: https://core.{customerId}.ec.avayacloud.com
+  tags:
+  - Users
+  properties:
+  - type: OpenAPI
+    url: openapi/avaya-users-api-openapi.yml
+  - type: Documentation
+    url: https://developers.avayacloud.com/avaya-infinity/docs/introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-infinity/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-infinity/docs/quick-start
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-infinity/docs/how-to-authenticate-with-avaya-infinitytm-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-infinity/changelog
+  - type: Webhooks
+    url: asyncapi/avaya-webhooks.yml
+  - type: Documentation
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started-introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-experience-platform/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/how-to-authenticate-with-axp-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-experience-platform/changelog
+  - type: Postman
+    url: https://www.postman.com/avaya-axp/avaya-experience-platform
+- aid: avaya:avaya-ux-profile-api
+  name: Avaya UX Profile API
+  description: >-
+    A UX Profile represents a layout that can be applied to a user when using Avaya Workspaces.
+  humanURL: https://developers.avayacloud.com/avaya-infinity/reference
+  baseURL: https://core.{customerId}.ec.avayacloud.com
+  tags:
+  - UX Profile
+  properties:
+  - type: OpenAPI
+    url: openapi/avaya-ux-profile-api-openapi.yml
+  - type: Documentation
+    url: https://developers.avayacloud.com/avaya-infinity/docs/introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-infinity/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-infinity/docs/quick-start
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-infinity/docs/how-to-authenticate-with-avaya-infinitytm-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-infinity/changelog
+  - type: Webhooks
+    url: asyncapi/avaya-webhooks.yml
+  - type: Documentation
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started-introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-experience-platform/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/how-to-authenticate-with-axp-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-experience-platform/changelog
+  - type: Postman
+    url: https://www.postman.com/avaya-axp/avaya-experience-platform
+- aid: avaya:avaya-voice-numbers-and-extensions-api
+  name: Avaya Voice Numbers And Extensions API
+  description: >-
+    APIs to export the Voice Numbers and Agent Extensions and its associated fields in a CSV file for
+    account administrator.
+  humanURL: https://developers.avayacloud.com/avaya-infinity/reference
+  baseURL: https://core.{customerId}.ec.avayacloud.com
+  tags:
+  - Voice Numbers And Extensions
+  properties:
+  - type: OpenAPI
+    url: openapi/avaya-voice-numbers-and-extensions-api-openapi.yml
+  - type: Documentation
+    url: https://developers.avayacloud.com/avaya-infinity/docs/introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-infinity/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-infinity/docs/quick-start
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-infinity/docs/how-to-authenticate-with-avaya-infinitytm-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-infinity/changelog
+  - type: Webhooks
+    url: asyncapi/avaya-webhooks.yml
+  - type: Documentation
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started-introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-experience-platform/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/how-to-authenticate-with-axp-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-experience-platform/changelog
+  - type: Postman
+    url: https://www.postman.com/avaya-axp/avaya-experience-platform
+- aid: avaya:avaya-voice-plan-api
+  name: Avaya Voice Plan API
+  description: >-
+    Represents Voice Plan of configured Communication Managers for Account Administrator. These API are
+    expected to be called by an account administrator.
+  humanURL: https://developers.avayacloud.com/avaya-infinity/reference
+  baseURL: https://core.{customerId}.ec.avayacloud.com
+  tags:
+  - Voice Plan
+  properties:
+  - type: OpenAPI
+    url: openapi/avaya-voice-plan-api-openapi.yml
+  - type: Documentation
+    url: https://developers.avayacloud.com/avaya-infinity/docs/introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-infinity/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-infinity/docs/quick-start
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-infinity/docs/how-to-authenticate-with-avaya-infinitytm-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-infinity/changelog
+  - type: Webhooks
+    url: asyncapi/avaya-webhooks.yml
+  - type: Documentation
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started-introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-experience-platform/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/how-to-authenticate-with-axp-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-experience-platform/changelog
+  - type: Postman
+    url: https://www.postman.com/avaya-axp/avaya-experience-platform
+- aid: avaya:avaya-workflow-sessions-api
+  name: Avaya Workflow Sessions API
+  description: The Workflow Sessions API from Avaya — 5 operation(s) for workflow sessions.
+  humanURL: https://developers.avayacloud.com/avaya-infinity/reference
+  baseURL: https://core.{customerId}.ec.avayacloud.com
+  tags:
+  - Workflow Sessions
+  properties:
+  - type: OpenAPI
+    url: openapi/avaya-workflow-sessions-api-openapi.yml
+  - type: Documentation
+    url: https://developers.avayacloud.com/avaya-infinity/docs/introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-infinity/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-infinity/docs/quick-start
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-infinity/docs/how-to-authenticate-with-avaya-infinitytm-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-infinity/changelog
+  - type: Webhooks
+    url: asyncapi/avaya-webhooks.yml
+  - type: Documentation
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started-introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-experience-platform/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/how-to-authenticate-with-axp-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-experience-platform/changelog
+  - type: Postman
+    url: https://www.postman.com/avaya-axp/avaya-experience-platform
+- aid: avaya:avaya-workspaces-api
+  name: Avaya Workspaces API
+  description: >-
+    Workspaces is a web-based application that provides a unified agent desktop. This API return the URL
+    details.
+  humanURL: https://developers.avayacloud.com/avaya-infinity/reference
+  baseURL: https://core.{customerId}.ec.avayacloud.com
+  tags:
+  - Workspaces
+  properties:
+  - type: OpenAPI
+    url: openapi/avaya-workspaces-api-openapi.yml
+  - type: Documentation
+    url: https://developers.avayacloud.com/avaya-infinity/docs/introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-infinity/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-infinity/docs/quick-start
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-infinity/docs/how-to-authenticate-with-avaya-infinitytm-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-infinity/changelog
+  - type: Webhooks
+    url: asyncapi/avaya-webhooks.yml
+  - type: Documentation
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started-introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-experience-platform/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/how-to-authenticate-with-axp-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-experience-platform/changelog
+  - type: Postman
+    url: https://www.postman.com/avaya-axp/avaya-experience-platform
 common:
 - type: Website
   url: https://www.avaya.com/en/
