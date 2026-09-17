@@ -801,43 +801,6 @@ apis:
     url: https://developers.avayacloud.com/avaya-experience-platform/changelog
   - type: Postman
     url: https://www.postman.com/avaya-axp/avaya-experience-platform
-- aid: avaya:avaya-data-sets-api
-  name: Avaya Data Sets API
-  description: Manage data sets within campaigns
-  humanURL: https://developers.avayacloud.com/avaya-infinity/reference
-  baseURL: https://core.{customerId}.ec.avayacloud.com
-  tags:
-  - Data Sets
-  properties:
-  - type: OpenAPI
-    url: openapi/avaya-data-sets-api-openapi.yml
-  - type: Documentation
-    url: https://developers.avayacloud.com/avaya-infinity/docs/introduction
-  - type: APIReference
-    url: https://developers.avayacloud.com/avaya-infinity/reference
-  - type: GettingStarted
-    url: https://developers.avayacloud.com/avaya-infinity/docs/quick-start
-  - type: Authentication
-    url: >-
-      https://developers.avayacloud.com/avaya-infinity/docs/how-to-authenticate-with-avaya-infinitytm-apis
-  - type: ChangeLog
-    url: https://developers.avayacloud.com/avaya-infinity/changelog
-  - type: Webhooks
-    url: asyncapi/avaya-webhooks.yml
-  - type: Documentation
-    url: >-
-      https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started-introduction
-  - type: APIReference
-    url: https://developers.avayacloud.com/avaya-experience-platform/reference
-  - type: GettingStarted
-    url: https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started
-  - type: Authentication
-    url: >-
-      https://developers.avayacloud.com/avaya-experience-platform/docs/how-to-authenticate-with-axp-apis
-  - type: ChangeLog
-    url: https://developers.avayacloud.com/avaya-experience-platform/changelog
-  - type: Postman
-    url: https://www.postman.com/avaya-axp/avaya-experience-platform
 - aid: avaya:avaya-dataset-api
   name: Avaya Dataset API
   description: The Dataset API from Avaya — 1 operation(s) for dataset.
@@ -3249,6 +3212,43 @@ apis:
   properties:
   - type: OpenAPI
     url: openapi/avaya-workspaces-api-openapi.yml
+  - type: Documentation
+    url: https://developers.avayacloud.com/avaya-infinity/docs/introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-infinity/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-infinity/docs/quick-start
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-infinity/docs/how-to-authenticate-with-avaya-infinitytm-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-infinity/changelog
+  - type: Webhooks
+    url: asyncapi/avaya-webhooks.yml
+  - type: Documentation
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started-introduction
+  - type: APIReference
+    url: https://developers.avayacloud.com/avaya-experience-platform/reference
+  - type: GettingStarted
+    url: https://developers.avayacloud.com/avaya-experience-platform/docs/getting-started
+  - type: Authentication
+    url: >-
+      https://developers.avayacloud.com/avaya-experience-platform/docs/how-to-authenticate-with-axp-apis
+  - type: ChangeLog
+    url: https://developers.avayacloud.com/avaya-experience-platform/changelog
+  - type: Postman
+    url: https://www.postman.com/avaya-axp/avaya-experience-platform
+- aid: avaya:avaya-datasets-api
+  name: Avaya Datasets API
+  description: Manage data sets within campaigns
+  humanURL: https://developers.avayacloud.com/avaya-infinity/reference
+  baseURL: https://core.{customerId}.ec.avayacloud.com
+  tags:
+  - Datasets
+  properties:
+  - type: OpenAPI
+    url: openapi/avaya-datasets-api-openapi.yml
   - type: Documentation
     url: https://developers.avayacloud.com/avaya-infinity/docs/introduction
   - type: APIReference
