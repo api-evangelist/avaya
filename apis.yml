@@ -12,7 +12,7 @@ description: 'Avaya is a global enterprise communications company whose develope
   MCP server, no idempotency mechanism and no public pricing.'
 image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/avaya.png
 created: '2026-01-01'
-modified: '2026-09-14'
+modified: '2026-09-17'
 specificationVersion: '0.23'
 type: Index
 position: Producing
@@ -85,7 +85,7 @@ apis:
   name: Avaya Access Token API
   description: Includes token related operations.
   humanURL: https://developers.avayacloud.com/avaya-infinity/reference
-  baseURL: https://core.{customerId}.ec.avayacloud.com
+  baseURL: https://{region}.api.avayacloud.com
   tags:
   - Access Token
   properties:
@@ -122,7 +122,7 @@ apis:
   name: Avaya Account API
   description: APIs to manage Accounts.
   humanURL: https://developers.avayacloud.com/avaya-infinity/reference
-  baseURL: https://core.{customerId}.ec.avayacloud.com
+  baseURL: https://{region}.api.avayacloud.com
   tags:
   - Account
   properties:
@@ -161,7 +161,7 @@ apis:
     Agent location Routing APIs for System Administrator. It will enable agents connecting from different
     countries to be able to go through specific trunks or connection.
   humanURL: https://developers.avayacloud.com/avaya-infinity/reference
-  baseURL: https://core.{customerId}.ec.avayacloud.com
+  baseURL: https://{region}.api.avayacloud.com
   tags:
   - Agent Location
   properties:
@@ -198,7 +198,7 @@ apis:
   name: Avaya Agent Notes API
   description: The Agent Notes API from Avaya — 4 operation(s) for agent notes.
   humanURL: https://developers.avayacloud.com/avaya-infinity/reference
-  baseURL: https://core.{customerId}.ec.avayacloud.com
+  baseURL: https://{region}.api.avayacloud.com
   tags:
   - Agent Notes
   properties:
@@ -235,7 +235,7 @@ apis:
   name: Avaya Agents API
   description: Monitor and manage agent status and activity
   humanURL: https://developers.avayacloud.com/avaya-infinity/reference
-  baseURL: https://core.{customerId}.ec.avayacloud.com
+  baseURL: https://{region}.api.avayacloud.com
   tags:
   - Agents
   properties:
@@ -275,7 +275,7 @@ apis:
     messages. Based on the information passed, the contact center will either model this against existing
     entities like conversation, engagement or dialog, or else new entities will be created.
   humanURL: https://developers.avayacloud.com/avaya-infinity/reference
-  baseURL: https://core.{customerId}.ec.avayacloud.com
+  baseURL: https://{region}.api.avayacloud.com
   tags:
   - Asynchronous Messages
   properties:
@@ -312,7 +312,7 @@ apis:
   name: Avaya Audit Records API
   description: Search or export audit records for auditable objects.
   humanURL: https://developers.avayacloud.com/avaya-infinity/reference
-  baseURL: https://core.{customerId}.ec.avayacloud.com
+  baseURL: https://{region}.api.avayacloud.com
   tags:
   - Audit Records
   properties:
@@ -349,7 +349,7 @@ apis:
   name: Avaya Available Phone Numbers API
   description: The available phone numbers that can be added to the contact center.
   humanURL: https://developers.avayacloud.com/avaya-infinity/reference
-  baseURL: https://core.{customerId}.ec.avayacloud.com
+  baseURL: https://{region}.api.avayacloud.com
   tags:
   - Available Phone Numbers
   properties:
@@ -389,7 +389,7 @@ apis:
     administrator. AADS is the abbreviated form for Avaya Aura Device Service and is commonly used in
     the summary of the Apis. OIDC stands for OpenID Connect Discovery.
   humanURL: https://developers.avayacloud.com/avaya-infinity/reference
-  baseURL: https://core.{customerId}.ec.avayacloud.com
+  baseURL: https://{region}.api.avayacloud.com
   tags:
   - Avaya Aura Device Services
   properties:
@@ -426,7 +426,7 @@ apis:
   name: Avaya Avaya Cloud Office management API
   description: APIs to manage Avaya Cloud Office element in voice service
   humanURL: https://developers.avayacloud.com/avaya-infinity/reference
-  baseURL: https://core.{customerId}.ec.avayacloud.com
+  baseURL: https://{region}.api.avayacloud.com
   tags:
   - Avaya Cloud Office management
   properties:
@@ -463,7 +463,7 @@ apis:
   name: Avaya Avaya Cloud Office SIP Trunks API
   description: APIs to manage Avaya Cloud Office SIP Trunk element in voice service
   humanURL: https://developers.avayacloud.com/avaya-infinity/reference
-  baseURL: https://core.{customerId}.ec.avayacloud.com
+  baseURL: https://{region}.api.avayacloud.com
   tags:
   - Avaya Cloud Office SIP Trunks
   properties:
@@ -500,7 +500,7 @@ apis:
   name: Avaya Bulk Job API
   description: Bulk operations related to the Jobs responsible for creating users.
   humanURL: https://developers.avayacloud.com/avaya-infinity/reference
-  baseURL: https://core.{customerId}.ec.avayacloud.com
+  baseURL: https://{region}.api.avayacloud.com
   tags:
   - Bulk Job
   properties:
@@ -537,7 +537,7 @@ apis:
   name: Avaya Bulk User API
   description: Bulk operations related to Users, Add, Update, Delete, Export.
   humanURL: https://developers.avayacloud.com/avaya-infinity/reference
-  baseURL: https://core.{customerId}.ec.avayacloud.com
+  baseURL: https://{region}.api.avayacloud.com
   tags:
   - Bulk User
   properties:
@@ -574,7 +574,7 @@ apis:
   name: Avaya Calls API
   description: Trigger and complete calls
   humanURL: https://developers.avayacloud.com/avaya-infinity/reference
-  baseURL: https://core.{customerId}.ec.avayacloud.com
+  baseURL: https://{region}.api.avayacloud.com
   tags:
   - Calls
   properties:
@@ -611,7 +611,7 @@ apis:
   name: Avaya Campaigns API
   description: Manage outbound campaigns
   humanURL: https://developers.avayacloud.com/avaya-infinity/reference
-  baseURL: https://core.{customerId}.ec.avayacloud.com
+  baseURL: https://{region}.api.avayacloud.com
   tags:
   - Campaigns
   properties:
@@ -652,7 +652,7 @@ apis:
     choice or by business logic, against the attributes associated with the members of the pool of available
     agents.
   humanURL: https://developers.avayacloud.com/avaya-infinity/reference
-  baseURL: https://core.{customerId}.ec.avayacloud.com
+  baseURL: https://{region}.api.avayacloud.com
   tags:
   - Category
   properties:
@@ -691,7 +691,7 @@ apis:
     This API is used to get details of list of jobs or a single job for a specific Communication Manager.
     These API are expected to be called by an account administrator.
   humanURL: https://developers.avayacloud.com/avaya-infinity/reference
-  baseURL: https://core.{customerId}.ec.avayacloud.com
+  baseURL: https://{region}.api.avayacloud.com
   tags:
   - Comm Manager Job Details
   properties:
@@ -731,7 +731,7 @@ apis:
     administrator. CM is the abbreviated form for Communication Manager and is commonly used in the summary
     of the Apis.
   humanURL: https://developers.avayacloud.com/avaya-infinity/reference
-  baseURL: https://core.{customerId}.ec.avayacloud.com
+  baseURL: https://{region}.api.avayacloud.com
   tags:
   - Communication Manager
   properties:
@@ -768,7 +768,7 @@ apis:
   name: Avaya Country API
   description: The countries in which available phone numbers are available.
   humanURL: https://developers.avayacloud.com/avaya-infinity/reference
-  baseURL: https://core.{customerId}.ec.avayacloud.com
+  baseURL: https://{region}.api.avayacloud.com
   tags:
   - Country
   properties:
@@ -807,6 +807,8 @@ apis:
   humanURL: https://developers.avayacloud.com/avaya-infinity/reference
   baseURL: https://core.{customerId}.ec.avayacloud.com
   tags:
+  - Datasets
+  tags_raw:
   - Dataset
   properties:
   - type: OpenAPI
@@ -843,7 +845,7 @@ apis:
   description: >-
     Dictionaries contain translations for measures for a specific locale and measure producer.
   humanURL: https://developers.avayacloud.com/avaya-infinity/reference
-  baseURL: https://core.{customerId}.ec.avayacloud.com
+  baseURL: https://{region}.api.avayacloud.com
   tags:
   - Dictionaries
   properties:
@@ -882,7 +884,7 @@ apis:
     A Dimension is a collection of related contact center objects used to provide a view of measurement
     data.
   humanURL: https://developers.avayacloud.com/avaya-infinity/reference
-  baseURL: https://core.{customerId}.ec.avayacloud.com
+  baseURL: https://{region}.api.avayacloud.com
   tags:
   - Dimensions
   properties:
@@ -919,7 +921,7 @@ apis:
   name: Avaya DNC API
   description: Do Not Call list management
   humanURL: https://developers.avayacloud.com/avaya-infinity/reference
-  baseURL: https://core.{customerId}.ec.avayacloud.com
+  baseURL: https://{region}.api.avayacloud.com
   tags:
   - DNC
   properties:
@@ -958,7 +960,7 @@ apis:
     Drafts prepared by an Agent  at an early stage before it is in final form in response to Email or
     Messaging contact. At the moment, only one draft supported per engagement.
   humanURL: https://developers.avayacloud.com/avaya-infinity/reference
-  baseURL: https://core.{customerId}.ec.avayacloud.com
+  baseURL: https://{region}.api.avayacloud.com
   tags:
   - Drafts
   properties:
@@ -997,7 +999,7 @@ apis:
     An Element is a server instance which provides feature capability. Some examples of elements are Avaya
     Cloud Office, Chat Connector, Microsoft Teams and so on.
   humanURL: https://developers.avayacloud.com/avaya-infinity/reference
-  baseURL: https://core.{customerId}.ec.avayacloud.com
+  baseURL: https://{region}.api.avayacloud.com
   tags:
   - Element Management
   properties:
@@ -1036,7 +1038,7 @@ apis:
     Represents a resource of the Contact Center being allocated. Engagements can be assigned to one or
     many Conversations, although this is not mandatory.
   humanURL: https://developers.avayacloud.com/avaya-infinity/reference
-  baseURL: https://core.{customerId}.ec.avayacloud.com
+  baseURL: https://{region}.api.avayacloud.com
   tags:
   - Engagement
   properties:
@@ -1076,7 +1078,7 @@ apis:
     resources like agents, supervisors and bots. Session Id's can be passed on any explicit requests made
     on engagements so that all the activities can be correlated back to the appropriate session.
   humanURL: https://developers.avayacloud.com/avaya-infinity/reference
-  baseURL: https://core.{customerId}.ec.avayacloud.com
+  baseURL: https://{region}.api.avayacloud.com
   tags:
   - Engagements
   properties:
@@ -1115,7 +1117,7 @@ apis:
     Management of non e164 Extension that are assigned to Account. These API are expected to be called
     by an account administrator.
   humanURL: https://developers.avayacloud.com/avaya-infinity/reference
-  baseURL: https://core.{customerId}.ec.avayacloud.com
+  baseURL: https://{region}.api.avayacloud.com
   tags:
   - Extension
   properties:
@@ -1153,7 +1155,7 @@ apis:
   description: >-
     Get Details of Gateway Connection Manager. These API are expected to be called by an account administrator.
   humanURL: https://developers.avayacloud.com/avaya-infinity/reference
-  baseURL: https://core.{customerId}.ec.avayacloud.com
+  baseURL: https://{region}.api.avayacloud.com
   tags:
   - Gateway Connection Manager
   properties:
@@ -1192,7 +1194,7 @@ apis:
     A Group is a logical collection of the resources like e.g. user. These groups can be assigned to a
     user to grant access to the resources present in the group.
   humanURL: https://developers.avayacloud.com/avaya-infinity/reference
-  baseURL: https://core.{customerId}.ec.avayacloud.com
+  baseURL: https://{region}.api.avayacloud.com
   tags:
   - Group Management
   properties:
@@ -1268,6 +1270,8 @@ apis:
   humanURL: https://developers.avayacloud.com/avaya-infinity/reference
   baseURL: https://core.{customerId}.ec.avayacloud.com
   tags:
+  - Group
+  tags_raw:
   - Groups
   properties:
   - type: OpenAPI
@@ -1305,7 +1309,7 @@ apis:
     Holidays are non-working days where the contact center is not staffed by agents and therefore fall
     outside of the operating business hours.
   humanURL: https://developers.avayacloud.com/avaya-infinity/reference
-  baseURL: https://core.{customerId}.ec.avayacloud.com
+  baseURL: https://{region}.api.avayacloud.com
   tags:
   - Holiday
   properties:
@@ -1344,7 +1348,7 @@ apis:
     Administration of Avaya Hybrid Cloud Gateway. These API are expected to be called by an account administrator.
     HCG is the abbreviated form for Hybrid Cloud Gateway and is commonly used in the summary of the APIs.
   humanURL: https://developers.avayacloud.com/avaya-infinity/reference
-  baseURL: https://core.{customerId}.ec.avayacloud.com
+  baseURL: https://{region}.api.avayacloud.com
   tags:
   - Hybrid Cloud Gateway
   properties:
@@ -1382,7 +1386,7 @@ apis:
   description: >-
     Administration of Hybrid Cloud Manager.This API is expected to be called by an account administrator.
   humanURL: https://developers.avayacloud.com/avaya-infinity/reference
-  baseURL: https://core.{customerId}.ec.avayacloud.com
+  baseURL: https://{region}.api.avayacloud.com
   tags:
   - Hybrid Cloud Manager
   properties:
@@ -1421,7 +1425,7 @@ apis:
     Management of hybrid extensions assigned to users. These API are expected to be called by an account
     administrator.
   humanURL: https://developers.avayacloud.com/avaya-infinity/reference
-  baseURL: https://core.{customerId}.ec.avayacloud.com
+  baseURL: https://{region}.api.avayacloud.com
   tags:
   - Hybrid Extension
   properties:
@@ -1459,7 +1463,7 @@ apis:
   description: >-
     Administration of Hybrid Skills. These APIs are expected to be called by an account administrator.
   humanURL: https://developers.avayacloud.com/avaya-infinity/reference
-  baseURL: https://core.{customerId}.ec.avayacloud.com
+  baseURL: https://{region}.api.avayacloud.com
   tags:
   - Hybrid Skill
   properties:
@@ -1498,7 +1502,7 @@ apis:
     Represents the criteria with which a customer may be identified (Phone numbers, e-mail addresses,
     social media handles).
   humanURL: https://developers.avayacloud.com/avaya-infinity/reference
-  baseURL: https://core.{customerId}.ec.avayacloud.com
+  baseURL: https://{region}.api.avayacloud.com
   tags:
   - Identifiers
   properties:
@@ -1537,7 +1541,7 @@ apis:
     Indicators are used to indicate the status of the conversation or the activity.  For example, when
     a customer is typing a message, the typing indicator is sent  to the contact center.
   humanURL: https://developers.avayacloud.com/avaya-infinity/reference
-  baseURL: https://core.{customerId}.ec.avayacloud.com
+  baseURL: https://{region}.api.avayacloud.com
   tags:
   - Indicators
   properties:
@@ -1613,7 +1617,7 @@ apis:
     Intervals are specific dates or working days of the week when the contact center is fully operational
     and staffed by agents and therefore fall with the operating business hours.
   humanURL: https://developers.avayacloud.com/avaya-infinity/reference
-  baseURL: https://core.{customerId}.ec.avayacloud.com
+  baseURL: https://{region}.api.avayacloud.com
   tags:
   - Interval
   properties:
@@ -1651,7 +1655,7 @@ apis:
   description: >-
     Represents the history of Conversations and Engagements that a Customer has had with the business.
   humanURL: https://developers.avayacloud.com/avaya-infinity/reference
-  baseURL: https://core.{customerId}.ec.avayacloud.com
+  baseURL: https://{region}.api.avayacloud.com
   tags:
   - Journey
   properties:
@@ -1688,7 +1692,7 @@ apis:
   name: Avaya JWT Token API
   description: The API provides jwt token used by SDK
   humanURL: https://developers.avayacloud.com/avaya-infinity/reference
-  baseURL: https://core.{customerId}.ec.avayacloud.com
+  baseURL: https://{region}.api.avayacloud.com
   tags:
   - JWT Token
   properties:
@@ -1725,7 +1729,7 @@ apis:
   name: Avaya Locales API
   description: The Locales supported for a each measure producer.
   humanURL: https://developers.avayacloud.com/avaya-infinity/reference
-  baseURL: https://core.{customerId}.ec.avayacloud.com
+  baseURL: https://{region}.api.avayacloud.com
   tags:
   - Locales
   properties:
@@ -1763,7 +1767,7 @@ apis:
   description: >-
     This API is for managing location profiles. These API are expected to be called by an account administrator.
   humanURL: https://developers.avayacloud.com/avaya-infinity/reference
-  baseURL: https://core.{customerId}.ec.avayacloud.com
+  baseURL: https://{region}.api.avayacloud.com
   tags:
   - Location Profile
   properties:
@@ -1800,7 +1804,7 @@ apis:
   name: Avaya Measure Producers API
   description: Operations connected to measure producer management.
   humanURL: https://developers.avayacloud.com/avaya-infinity/reference
-  baseURL: https://core.{customerId}.ec.avayacloud.com
+  baseURL: https://{region}.api.avayacloud.com
   tags:
   - Measure Producers
   properties:
@@ -1837,7 +1841,7 @@ apis:
   name: Avaya Media API
   description: This tag is used to upload or download media using signed URI.
   humanURL: https://developers.avayacloud.com/avaya-infinity/reference
-  baseURL: https://core.{customerId}.ec.avayacloud.com
+  baseURL: https://{region}.api.avayacloud.com
   tags:
   - Media
   properties:
@@ -1911,7 +1915,7 @@ apis:
   name: Avaya Microsoft Teams management API
   description: APIs to manage Microsoft Teams element in voice service.
   humanURL: https://developers.avayacloud.com/avaya-infinity/reference
-  baseURL: https://core.{customerId}.ec.avayacloud.com
+  baseURL: https://{region}.api.avayacloud.com
   tags:
   - Microsoft Teams management
   properties:
@@ -1948,7 +1952,7 @@ apis:
   name: Avaya Microsoft Teams SIP Trunks API
   description: APIs to manage Microsoft Teams SIP Trunk element in voice service.
   humanURL: https://developers.avayacloud.com/avaya-infinity/reference
-  baseURL: https://core.{customerId}.ec.avayacloud.com
+  baseURL: https://{region}.api.avayacloud.com
   tags:
   - Microsoft Teams SIP Trunks
   properties:
@@ -1985,7 +1989,7 @@ apis:
   name: Avaya Organization Structure API
   description: APIs to manage a customer's organization structure
   humanURL: https://developers.avayacloud.com/avaya-infinity/reference
-  baseURL: https://core.{customerId}.ec.avayacloud.com
+  baseURL: https://{region}.api.avayacloud.com
   tags:
   - Organization Structure
   properties:
@@ -2023,7 +2027,7 @@ apis:
   description: >-
     APIs to manage Outbound Call Number Routing Rules in voice service by an account administrator.
   humanURL: https://developers.avayacloud.com/avaya-infinity/reference
-  baseURL: https://core.{customerId}.ec.avayacloud.com
+  baseURL: https://{region}.api.avayacloud.com
   tags:
   - Outbound Number Routing Rules
   properties:
@@ -2060,7 +2064,7 @@ apis:
   name: Avaya Participant API
   description: The Participant API from Avaya — 2 operation(s) for participant.
   humanURL: https://developers.avayacloud.com/avaya-infinity/reference
-  baseURL: https://core.{customerId}.ec.avayacloud.com
+  baseURL: https://{region}.api.avayacloud.com
   tags:
   - Participant
   properties:
@@ -2099,8 +2103,10 @@ apis:
     Management of phone numbers that are the entry point for contact center voice engagements. Phone number
     can be assigned and released.
   humanURL: https://developers.avayacloud.com/avaya-infinity/reference
-  baseURL: https://core.{customerId}.ec.avayacloud.com
+  baseURL: https://{region}.api.avayacloud.com
   tags:
+  - Phone Numbers
+  tags_raw:
   - Phone Number
   properties:
   - type: OpenAPI
@@ -2138,8 +2144,10 @@ apis:
     A Profile is a grouping of individual features which are provisioned with pre-defined values that
     can be applied to a User.
   humanURL: https://developers.avayacloud.com/avaya-infinity/reference
-  baseURL: https://core.{customerId}.ec.avayacloud.com
+  baseURL: https://{region}.api.avayacloud.com
   tags:
+  - Profiles
+  tags_raw:
   - Profile
   properties:
   - type: OpenAPI
@@ -2217,7 +2225,7 @@ apis:
     conversation, disconnect AXP from participating in the conversation,  clean up an inactive conversation
     or handle any erroneous situation,  call this API to terminate the live dialog within AXP.
   humanURL: https://developers.avayacloud.com/avaya-infinity/reference
-  baseURL: https://core.{customerId}.ec.avayacloud.com
+  baseURL: https://{region}.api.avayacloud.com
   tags:
   - Provider Dialogs
   properties:
@@ -2256,8 +2264,10 @@ apis:
     Queue's are used to identify a pool of contact center agents for which Customer engagements can be
     matched and routed.
   humanURL: https://developers.avayacloud.com/avaya-infinity/reference
-  baseURL: https://core.{customerId}.ec.avayacloud.com
+  baseURL: https://{region}.api.avayacloud.com
   tags:
+  - Queues
+  tags_raw:
   - Queue
   properties:
   - type: OpenAPI
@@ -2293,7 +2303,7 @@ apis:
   name: Avaya Queue Metrics API
   description: Metrics associated with a routing queue.
   humanURL: https://developers.avayacloud.com/avaya-infinity/reference
-  baseURL: https://core.{customerId}.ec.avayacloud.com
+  baseURL: https://{region}.api.avayacloud.com
   tags:
   - Queue Metrics
   properties:
@@ -2371,7 +2381,7 @@ apis:
     combination. This API is used to create, update, retrieve and delete NOT_READY, LOGOUT reason codes
     and CALL_WORK_CODES codes.
   humanURL: https://developers.avayacloud.com/avaya-infinity/reference
-  baseURL: https://core.{customerId}.ec.avayacloud.com
+  baseURL: https://{region}.api.avayacloud.com
   tags:
   - Reason Codes
   properties:
@@ -2408,7 +2418,7 @@ apis:
   name: Avaya Records API
   description: Manage outbound campaign records
   humanURL: https://developers.avayacloud.com/avaya-infinity/reference
-  baseURL: https://core.{customerId}.ec.avayacloud.com
+  baseURL: https://{region}.api.avayacloud.com
   tags:
   - Records
   properties:
@@ -2446,7 +2456,7 @@ apis:
   description: >-
     A Report is a collection of contact center measurements related to a particular dimension.
   humanURL: https://developers.avayacloud.com/avaya-infinity/reference
-  baseURL: https://core.{customerId}.ec.avayacloud.com
+  baseURL: https://{region}.api.avayacloud.com
   tags:
   - Reports
   properties:
@@ -2485,7 +2495,7 @@ apis:
     \ outgoing communication. \nThese resource partitions ultimately assigned to the user. This will help\
     \ to provide access of specific resources to the user."
   humanURL: https://developers.avayacloud.com/avaya-infinity/reference
-  baseURL: https://core.{customerId}.ec.avayacloud.com
+  baseURL: https://{region}.api.avayacloud.com
   tags:
   - Resource Partition
   properties:
@@ -2526,7 +2536,7 @@ apis:
     requests made on engagements so that all the activities can be correlated back to sessions that caused
     it.
   humanURL: https://developers.avayacloud.com/avaya-infinity/reference
-  baseURL: https://core.{customerId}.ec.avayacloud.com
+  baseURL: https://{region}.api.avayacloud.com
   tags:
   - Sessions
   properties:
@@ -2563,7 +2573,7 @@ apis:
   name: Avaya Signed URI API
   description: This section is to used to generate signed uri for the respective request.
   humanURL: https://developers.avayacloud.com/avaya-infinity/reference
-  baseURL: https://core.{customerId}.ec.avayacloud.com
+  baseURL: https://{region}.api.avayacloud.com
   tags:
   - Signed URI
   properties:
@@ -2601,7 +2611,7 @@ apis:
   description: >-
     This API is used to get list of all SIP trunk elements and update caller id for an account administrator.
   humanURL: https://developers.avayacloud.com/avaya-infinity/reference
-  baseURL: https://core.{customerId}.ec.avayacloud.com
+  baseURL: https://{region}.api.avayacloud.com
   tags:
   - SIP Trunks
   properties:
@@ -2638,7 +2648,7 @@ apis:
   name: Avaya Skills API
   description: Manage skills and agent/campaigns assignments
   humanURL: https://developers.avayacloud.com/avaya-infinity/reference
-  baseURL: https://core.{customerId}.ec.avayacloud.com
+  baseURL: https://{region}.api.avayacloud.com
   tags:
   - Skills
   properties:
@@ -2675,8 +2685,10 @@ apis:
   name: Avaya Subscriptions API
   description: Manage subscriptions for digital events.
   humanURL: https://developers.avayacloud.com/avaya-infinity/reference
-  baseURL: https://core.{customerId}.ec.avayacloud.com
+  baseURL: https://{region}.api.avayacloud.com
   tags:
+  - Subscription
+  tags_raw:
   - Subscriptions
   properties:
   - type: OpenAPI
@@ -2714,7 +2726,7 @@ apis:
     Set of API to initiate synchronization of data from Aura to AXP admin. These API are expected to be
     called by an account administrator.
   humanURL: https://developers.avayacloud.com/avaya-infinity/reference
-  baseURL: https://core.{customerId}.ec.avayacloud.com
+  baseURL: https://{region}.api.avayacloud.com
   tags:
   - Sync Aura Entities
   properties:
@@ -2752,7 +2764,7 @@ apis:
   description: >-
     Administration of System Manager. These API are expected to be called by an account administrator.
   humanURL: https://developers.avayacloud.com/avaya-infinity/reference
-  baseURL: https://core.{customerId}.ec.avayacloud.com
+  baseURL: https://{region}.api.avayacloud.com
   tags:
   - System Manager
   properties:
@@ -2791,7 +2803,7 @@ apis:
     Timetables are a time zone specific schedule of holidays (non-working days) and intervals (working
     days).
   humanURL: https://developers.avayacloud.com/avaya-infinity/reference
-  baseURL: https://core.{customerId}.ec.avayacloud.com
+  baseURL: https://{region}.api.avayacloud.com
   tags:
   - Timetable
   properties:
@@ -2829,7 +2841,7 @@ apis:
   description: >-
     Save transcript of a dialog that captures messages exchanged between different participants
   humanURL: https://developers.avayacloud.com/avaya-infinity/reference
-  baseURL: https://core.{customerId}.ec.avayacloud.com
+  baseURL: https://{region}.api.avayacloud.com
   tags:
   - Transcript
   properties:
@@ -2940,7 +2952,7 @@ apis:
   name: Avaya User API
   description: Represents a user in the system. A user can be an Agent, Supervisor or an Administrator.
   humanURL: https://developers.avayacloud.com/avaya-infinity/reference
-  baseURL: https://core.{customerId}.ec.avayacloud.com
+  baseURL: https://{region}.api.avayacloud.com
   tags:
   - User
   properties:
@@ -2977,7 +2989,7 @@ apis:
   name: Avaya User Password Policy API
   description: Represents the set of rules to be followed for the user passwords.
   humanURL: https://developers.avayacloud.com/avaya-infinity/reference
-  baseURL: https://core.{customerId}.ec.avayacloud.com
+  baseURL: https://{region}.api.avayacloud.com
   tags:
   - User Password Policy
   properties:
@@ -3014,8 +3026,10 @@ apis:
   name: Avaya Users API
   description: Manage system users
   humanURL: https://developers.avayacloud.com/avaya-infinity/reference
-  baseURL: https://core.{customerId}.ec.avayacloud.com
+  baseURL: https://{region}.api.avayacloud.com
   tags:
+  - User
+  tags_raw:
   - Users
   properties:
   - type: OpenAPI
@@ -3052,7 +3066,7 @@ apis:
   description: >-
     A UX Profile represents a layout that can be applied to a user when using Avaya Workspaces.
   humanURL: https://developers.avayacloud.com/avaya-infinity/reference
-  baseURL: https://core.{customerId}.ec.avayacloud.com
+  baseURL: https://{region}.api.avayacloud.com
   tags:
   - UX Profile
   properties:
@@ -3091,7 +3105,7 @@ apis:
     APIs to export the Voice Numbers and Agent Extensions and its associated fields in a CSV file for
     account administrator.
   humanURL: https://developers.avayacloud.com/avaya-infinity/reference
-  baseURL: https://core.{customerId}.ec.avayacloud.com
+  baseURL: https://{region}.api.avayacloud.com
   tags:
   - Voice Numbers And Extensions
   properties:
@@ -3130,7 +3144,7 @@ apis:
     Represents Voice Plan of configured Communication Managers for Account Administrator. These API are
     expected to be called by an account administrator.
   humanURL: https://developers.avayacloud.com/avaya-infinity/reference
-  baseURL: https://core.{customerId}.ec.avayacloud.com
+  baseURL: https://{region}.api.avayacloud.com
   tags:
   - Voice Plan
   properties:
@@ -3206,8 +3220,10 @@ apis:
     Workspaces is a web-based application that provides a unified agent desktop. This API return the URL
     details.
   humanURL: https://developers.avayacloud.com/avaya-infinity/reference
-  baseURL: https://core.{customerId}.ec.avayacloud.com
+  baseURL: https://{region}.api.avayacloud.com
   tags:
+  - Workspace
+  tags_raw:
   - Workspaces
   properties:
   - type: OpenAPI
@@ -3243,7 +3259,7 @@ apis:
   name: Avaya Datasets API
   description: Manage data sets within campaigns
   humanURL: https://developers.avayacloud.com/avaya-infinity/reference
-  baseURL: https://core.{customerId}.ec.avayacloud.com
+  baseURL: https://{region}.api.avayacloud.com
   tags:
   - Datasets
   properties:
@@ -3441,8 +3457,95 @@ common:
   url: overlays/avaya-infinity-workflow-overlay.yaml
 - type: Overlay
   url: overlays/avaya-infinity-workflow-sessions-overlay.yaml
+- type: WSDL
+  name: AACC Open Interfaces — SessionService (43 operations)
+  url: wsdl/avaya-aacc-open-interfaces-sessionserviceinterface.wsdl
+- type: WSDL
+  name: AACC Open Interfaces — ContactService (25 operations)
+  url: wsdl/avaya-aacc-open-interfaces-contactserviceinterface.wsdl
+- type: WSDL
+  name: AACC Open Interfaces — AddressService (22 operations)
+  url: wsdl/avaya-aacc-open-interfaces-addressserviceinterface.wsdl
+- type: WSDL
+  name: AACC Open Interfaces — TerminalConnectionService (20 operations)
+  url: wsdl/avaya-aacc-open-interfaces-terminalconnectionserviceinterface.wsdl
+- type: WSDL
+  name: AACC Open Interfaces — AgentService (18 operations)
+  url: wsdl/avaya-aacc-open-interfaces-agentserviceinterface.wsdl
+- type: WSDL
+  name: AACC Open Interfaces — TerminalService (17 operations)
+  url: wsdl/avaya-aacc-open-interfaces-terminalserviceinterface.wsdl
+- type: WSDL
+  name: AACC Open Interfaces — AgentTerminalService (16 operations)
+  url: wsdl/avaya-aacc-open-interfaces-agentterminalserviceinterface.wsdl
+- type: WSDL
+  name: AACC Open Interfaces — ConnectionService (16 operations)
+  url: wsdl/avaya-aacc-open-interfaces-connectionserviceinterface.wsdl
+- type: WSDL
+  name: AACC Open Interfaces — ContactManagerService (15 operations)
+  url: wsdl/avaya-aacc-open-interfaces-contactmanagerserviceinterface.wsdl
+- type: WSDL
+  name: AACC Open Interfaces — OpenQ (15 operations)
+  url: wsdl/avaya-aacc-open-interfaces-openqinterface.wsdl
+- type: WSDL
+  name: AACC Open Interfaces — DALCallbackService (13 operations)
+  url: wsdl/avaya-aacc-open-interfaces-dalcallbackserviceinterface.wsdl
+- type: WSDL
+  name: AACC Open Interfaces — AgentTerminalConnectionService (12 operations)
+  url: wsdl/avaya-aacc-open-interfaces-agentterminalconnectionserviceinterface.wsdl
+- type: WSDL
+  name: AACC Open Interfaces — UserService (10 operations)
+  url: wsdl/avaya-aacc-open-interfaces-userserviceinterface.wsdl
+- type: WSDL
+  name: AACC Open Interfaces — RoutePointConnectionService (5 operations)
+  url: wsdl/avaya-aacc-open-interfaces-routepointconnectionserviceinterface.wsdl
+- type: WSDL
+  name: AACC Open Interfaces — MetricsService (5 operations)
+  url: wsdl/avaya-aacc-open-interfaces-metricsserviceinterface.wsdl
+- type: WSDL
+  name: AACC Open Interfaces — RoutePointAddressService (4 operations)
+  url: wsdl/avaya-aacc-open-interfaces-routepointaddressserviceinterface.wsdl
+- type: WSDL
+  name: AACC Open Interfaces — NotificationProducer (WS-BaseNotification, 4 operations)
+  url: wsdl/avaya-aacc-open-interfaces-notificationproducerinterface.wsdl
+- type: WSDL
+  name: AACC Open Interfaces — OpenNetworking (3 operations)
+  url: wsdl/avaya-aacc-open-interfaces-opennetworkinginterface.wsdl
+- type: WSDL
+  name: AACC Open Interfaces — StatsNotificationProducer (3 operations)
+  url: wsdl/avaya-aacc-open-interfaces-statsnotificationproducerinterface.wsdl
+- type: WSDL
+  name: AACC CCMM Agent Web Services — Email (17 operations)
+  url: wsdl/avaya-aacc-ccmm-agent-agentemailws.wsdl
+- type: WSDL
+  name: AACC CCMM Agent Web Services — Web Communication (5 operations)
+  url: wsdl/avaya-aacc-ccmm-agent-agentwebcommws.wsdl
+- type: WSDL
+  name: AACC CCMM Agent Web Services — Contact (3 operations)
+  url: wsdl/avaya-aacc-ccmm-agent-agentcontactws.wsdl
+- type: WSDL
+  name: AACC CCMM Agent Web Services — Utility (2 operations)
+  url: wsdl/avaya-aacc-ccmm-agent-agentutilityws.wsdl
+- type: WSDL
+  name: AACC CCMM Outbound Web Services — Contact (5 operations)
+  url: wsdl/avaya-aacc-ccmm-outbound-outboundcontactws.wsdl
+- type: WSDL
+  name: AACC CCMM Outbound Web Services — Campaign (3 operations)
+  url: wsdl/avaya-aacc-ccmm-outbound-outboundcampaignws.wsdl
+- type: WSDL
+  name: AACC CCMM Outbound Web Services — Utility (2 operations)
+  url: wsdl/avaya-aacc-ccmm-outbound-outboundutilityws.wsdl
+- type: WSDL
+  name: SOAP contract inventory — 56 WSDLs, 25 services, 307 operations (provenance + harvest record)
+  url: wsdl/avaya-wsdl.yml
+- type: Protobuf
+  name: IP Office MTCTI-3 message schema (proto3, 68 messages, 12 enums, no rpc services)
+  url: grpc/avaya-ip-office-mtcti3.proto
+- type: Protobuf
+  name: Protobuf harvest record
+  url: grpc/avaya-protobuf.yml
 x-enrichment:
-  date: '2026-09-14'
+  date: '2026-09-17'
   status: enriched
-  artifacts_added: 103
+  artifacts_added: 61
   pass: local-v3

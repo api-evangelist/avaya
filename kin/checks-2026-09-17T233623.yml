@@ -2,15 +2,16 @@
 kin_checks:
   slug: avaya
   schema_version: 0.22.0
-  scored_at: '2026-09-15'
-  run_ts: 2026-09-15T230249
-  note: Actionable checks only (missed + partial). earned/na are every other check
-    in rubric/scoring-0.22.0.yml; counts below let you verify that.
+  scored_at: '2026-09-17'
+  run_ts: 2026-09-17T233623
+  note: Actionable checks (missed + partial) in `checks`, plus the ids that did not
+    apply in `na`. Everything else in rubric/scoring-0.22.0.yml was earned; counts
+    below let you verify that.
   counts:
     total: 136
-    earned: 63
-    partial: 11
-    missed: 37
+    earned: 61
+    partial: 14
+    missed: 36
     na: 25
   checks:
   - id: well_known_published
@@ -19,10 +20,7 @@ kin_checks:
     status: missed
   - id: openapi_3_2
     status: missed
-    detail: 0 of 2 openapi documents pass
-  - id: webhooks_or_callbacks
-    status: missed
-    detail: 0 of 2 openapi documents pass
+    detail: 0 of 84 openapi documents pass
   - id: json_schema_present
     status: missed
   - id: json_schema_per_resource
@@ -89,20 +87,40 @@ kin_checks:
     status: missed
   - id: agentic_commerce
     status: missed
+  - id: info_complete
+    status: partial
+    earned: 3.29
+    detail: 69 of 84 openapi documents pass
+  - id: operations_operation_ids
+    status: partial
+    earned: 3.86
+    detail: 81 of 84 openapi documents pass
+  - id: examples_present
+    status: partial
+    earned: 3.33
   - id: components_reuse
     status: partial
-    earned: 1.5
-    detail: 1 of 2 openapi documents pass
+    earned: 1.89
+    detail: 53 of 84 openapi documents pass
   - id: security_schemes_defined
     status: partial
-    earned: 2.0
-    detail: 1 of 2 openapi documents pass
+    earned: 3.95
+    detail: 83 of 84 openapi documents pass
+  - id: security_applied
+    status: partial
+    earned: 2.96
+    detail: 83 of 84 openapi documents pass
+  - id: oauth_flows_current
+    status: partial
+    earned: 3.95
+    detail: 83 of 84 openapi documents pass
+  - id: webhooks_or_callbacks
+    status: partial
+    earned: 0.02
+    detail: 1 of 84 openapi documents pass
   - id: lifecycle_documented
     status: partial
     earned: 1.29
-  - id: conformance_declared
-    status: partial
-    earned: 1.5
   - id: github_org_present
     status: partial
     earned: 1.0
@@ -118,15 +136,33 @@ kin_checks:
     status: partial
     earned: 3.5
     detail: 'grade: bearer'
-  - id: error_semantics
-    status: partial
-    earned: 4.0
-    detail: 'grade: documented'
-  - id: rate_limit_signal
-    status: partial
-    earned: 3.5
-    detail: 'grade: documented'
   - id: agent_skills
     status: partial
     earned: 1.25
     detail: 'authorship: derived'
+  na:
+  - asyncapi_3_x
+  - channels_defined
+  - contract_self_operated
+  - fhir_capability_statement
+  - fhir_resource_coverage
+  - graphql_descriptions
+  - graphql_sdl_present
+  - graphql_type_depth
+  - messages_with_schema
+  - os_code_of_conduct
+  - os_contribution_guide
+  - os_releases
+  - os_security_policy
+  - reg_camara_conformance
+  - reg_certification_signal
+  - reg_consent_model
+  - reg_entitlement_terms
+  - reg_fapi_profile
+  - reg_mandate_verified
+  - reg_named_standard_conformance
+  - reg_pci_sca
+  - reg_smart_configuration
+  - reg_write_surface
+  - security_schemes
+  - server_bindings
