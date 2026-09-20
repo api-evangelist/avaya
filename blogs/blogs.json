@@ -1,0 +1,14 @@
+{
+  "repo": "avaya",
+  "feeds": [
+    {
+      "source": "https://support.avaya.com/support/en/public",
+      "feed_url": "https://support.avaya.com/support/en/public",
+      "title": "",
+      "saved": 0,
+      "method": "none"
+    }
+  ],
+  "post_count": 0,
+  "fetched": "2026-09-19T20:17:39Z"
+}
