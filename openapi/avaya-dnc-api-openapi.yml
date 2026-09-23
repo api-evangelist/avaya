@@ -1,0 +1,227 @@
+openapi: 3.2.0
+info:
+  title: Outbound DNC API
+  description: 'Outbound API allows you to manage outbound call campaigns, records, agents, skills, and Do Not Call lists.
+
+
+    ## Authentication
+
+    All requests require an Bearer Token.
+
+
+    ## Pagination
+
+    Many list endpoints return paginated results with a limit of 200 records per page. When more records are available, the response includes `"more_records": "1"`. To retrieve subsequent pages, include a `page` parameter in your request.'
+  version: 1.0.0
+servers:
+- url: '{protocol}://{server}{basePath}'
+  description: Open API
+  variables:
+    protocol:
+      enum:
+      - https
+      default: https
+    server:
+      default: HOST-REGION.api.avayacloud.com
+    basePath:
+      default: /api/outbound
+- url: '{protocol}://{server}:{port}'
+  description: Internal API
+  variables:
+    protocol:
+      enum:
+      - http
+      - https
+      default: https
+    server:
+      default: outbound-service
+    port:
+      enum:
+      - '80'
+      - '443'
+      default: '443'
+security:
+- {}
+- BearerAuth: []
+tags:
+- name: DNC
+  description: Do Not Call list management
+paths:
+  /CheckDNC:
+    post:
+      tags:
+      - DNC
+      summary: Check if a number is on the DNC list
+      description: 'This function checks if a phone number is on the Do Not Call list for an Initiative.
+
+
+        | Response Code | Description |
+
+        | --- | --- |
+
+        | 200 | Success |
+
+        | 400 | Bad Request |
+
+        | 401 | Unauthorized |
+
+        | 405 | Method Not Allowed |
+
+        | 429 | Too Many Requests |'
+      operationId: checkDNC
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+              - initiativeid
+              - phonenumber
+              properties:
+                initiativeid:
+                  type: string
+                  description: The ID of the Initiative to check the DNC for.
+                phonenumber:
+                  type: string
+                  description: The phone number to check.
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  OnDNC:
+                    type: string
+                    enum:
+                    - 'true'
+                    - 'false'
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '405':
+          description: Method Not Allowed
+        '429':
+          description: Too Many Requests
+  /AddToDNC:
+    post:
+      tags:
+      - DNC
+      summary: Add a number to the DNC list
+      description: 'This function adds a phone number to the Do Not Call list for a specified Initiative.
+
+
+        | Response Code | Description |
+
+        | --- | --- |
+
+        | 200 | Success |
+
+        | 400 | Bad Request |
+
+        | 401 | Unauthorized |
+
+        | 405 | Method Not Allowed |
+
+        | 429 | Too Many Requests |'
+      operationId: addToDNC
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+              - initiativeid
+              - phonenumber
+              properties:
+                initiativeid:
+                  type: string
+                  description: The ID of the Initiative to add the DNC record to.
+                phonenumber:
+                  type: string
+                  description: The phone number to add to the DNC.
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Added to DNC:
+                    type: string
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '405':
+          description: Method Not Allowed
+        '429':
+          description: Too Many Requests
+  /RemoveFromDNC:
+    post:
+      tags:
+      - DNC
+      summary: Remove a number from the DNC list
+      description: 'This function removes a phone number from the Do Not Call list for a specified Initiative.
+
+
+        | Response Code | Description |
+
+        | --- | --- |
+
+        | 200 | Success |
+
+        | 400 | Bad Request |
+
+        | 401 | Unauthorized |
+
+        | 405 | Method Not Allowed |
+
+        | 429 | Too Many Requests |'
+      operationId: removeFromDNC
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+              - initiativeid
+              - phonenumber
+              properties:
+                initiativeid:
+                  type: string
+                  description: The ID of the Initiative to remove the phone number from the DNC for.
+                phonenumber:
+                  type: string
+                  description: The phone number to remove from the DNC.
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Removed from DNC:
+                    type: string
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '405':
+          description: Method Not Allowed
+        '429':
+          description: Too Many Requests
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      description: This API uses Bearer Token Authorization Flow
+      bearerFormat: JWT

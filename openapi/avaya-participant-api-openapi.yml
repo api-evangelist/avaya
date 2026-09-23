@@ -1,0 +1,412 @@
+openapi: 3.2.0
+info:
+  title: Customer Journey Participant API
+  description: Customer Journey is used to retrieve information about Engagements and Conversations that have occurred in a Customer's Journey and to configure what Identifiers should be collected as part of a Customer's Journey.
+  version: 1.1.1
+  contact:
+    name: Avaya API Team
+    url: https://developers.avayacloud.com/onecloud-ccaas
+    email: apiteam@avaya.com
+  license:
+    name: Avaya Software Development Kit (SDK) Software License Terms
+    url: http://support.avaya.com/css/P8/documents/101038288
+servers:
+- url: '{protocol}://{server}{basePath}'
+  description: Open API
+  variables:
+    protocol:
+      enum:
+      - https
+      default: https
+    server:
+      default: HOST-REGION.api.avayacloud.com
+    basePath:
+      default: /api/journey/v1
+- url: '{protocol}://{server}:{port}'
+  description: Internal API
+  variables:
+    protocol:
+      enum:
+      - http
+      - https
+      default: http
+    server:
+      default: journey-service
+    port:
+      enum:
+      - '80'
+      - '443'
+      default: '80'
+security:
+- {}
+- BearerAuth: []
+  AppKey: []
+tags:
+- name: Participant
+paths:
+  /accounts/{accountId}/engagements/{engagementId}/participants/{participantId}:add:
+    parameters:
+    - $ref: '#/components/parameters/accountId'
+    - $ref: '#/components/parameters/engagementId'
+    - $ref: '#/components/parameters/participantId'
+    post:
+      tags:
+      - Participant
+      summary: Add Participant
+      operationId: addParticipant
+      description: Adds a new Participant to an Engagement or CJ's touchpoint.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Participant'
+            examples:
+              Example-1:
+                $ref: '#/components/examples/participant-create-external'
+              Example-2:
+                $ref: '#/components/examples/participant-create-treatment'
+              Example-3:
+                $ref: '#/components/examples/participant-create-agent'
+        description: Participant details
+      responses:
+        '202':
+          description: Accepted
+        '400':
+          description: "Bad Request. \n\n* accountId must be exactly 6 characters\n\n* engagementId must be a 36 character UUID\n\n* participantId must be a 36 character UUID\n"
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                default:
+                  $ref: '#/components/examples/ErrorConstraintViolation'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServer'
+  /accounts/{accountId}/engagements/{engagementId}/participants/{participantId}:remove:
+    parameters:
+    - $ref: '#/components/parameters/accountId'
+    - $ref: '#/components/parameters/engagementId'
+    - $ref: '#/components/parameters/participantId'
+    post:
+      tags:
+      - Participant
+      summary: Remove Participant
+      operationId: removeParticipant
+      description: Removes an existing Participant from an Engagement or CJ's touchpoint.
+      responses:
+        '202':
+          description: Accepted
+        '400':
+          description: "Bad Request. \n\n* accountId must be exactly 6 characters\n\n* engagementId must be a 36 character UUID\n\n* participantId must be a 36 character UUID\n\n* type must EXTERNAL, AGENT or TREATMENT\n"
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                default:
+                  $ref: '#/components/examples/ErrorConstraintViolation'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServer'
+components:
+  examples:
+    ErrorConstraintViolation:
+      description: Constraint Violation
+      value:
+        type: https://developers.avayacloud.com/avaya-experience-platform/docs/error-handling#constraint-violation
+        title: Constraint Violation
+        status: 400
+        detail: A problem that indicates a syntactically correct, yet semantically illegal request. The Server can not process this request until the client resolves the semantic errors described in the violations section.
+        violations:
+        - field: accountId
+          message: must match "^[a-zA-Z]{6}$"
+          code: 20006
+    participant-create-treatment:
+      value:
+        type: TREATMENT
+        channelId: Voice
+        channelType: VOICE
+        automationType: SELF_SERVICE
+        timestamp: '2019-07-23T17:45:21.002Z'
+        dialogId: 67ec5131-259c-4924-bb08-d87cf315e5e3
+    ErrorNotFound:
+      description: Not Found
+      value:
+        type: https://developers.avayacloud.com/avaya-experience-platform/docs/error-handling#resource-not-found
+        title: Resource Not Found
+        status: 404
+        detail: Resource not found.
+    ErrorForbidden:
+      description: Forbidden
+      value:
+        type: https://developers.avayacloud.com/avaya-experience-platform/docs/error-handling#forbidden
+        title: Forbidden
+        status: 403
+        detail: According to the access control policy the current user and/or accountId does not have permission to access this resource.
+    participant-create-agent:
+      value:
+        type: AGENT
+        channelId: Voice
+        channelType: VOICE
+        extension: ext/1234
+        timestamp: '2019-07-23T17:45:21.003Z'
+        dialogId: 57f78d8e-5579-47de-b3d0-8aee161039c0
+    ErrorUnauthorized:
+      description: Unauthorized
+      value:
+        type: https://developers.avayacloud.com/avaya-experience-platform/docs/error-handling#unauthorized
+        title: Unauthorized
+        status: 401
+        detail: This operation requires authentication. See https://developers.avayacloud.com/avaya-experience-platform/docs/how-to-authenticate-with-ccaas-apis
+    participant-create-external:
+      value:
+        type: EXTERNAL
+        channelId: Voice
+        channelType: VOICE
+        callingNumber: 087 12345
+        dialledNumber: 1590 12345
+        timestamp: '2019-07-23T17:45:21.001Z'
+        dialogId: 67ec5131-259c-4924-bb08-d87cf315e5e3
+    ErrorInternalServerError:
+      description: Server Error
+      value:
+        type: https://developers.avayacloud.com/avaya-experience-platform/docs/error-handling#server-error
+        title: Server Error
+        status: 500
+        detail: An internal server error was encountered.
+  responses:
+    Forbidden:
+      description: Forbidden
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorForbidden'
+    NotFound:
+      description: Not Found
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorNotFound'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorUnauthorized'
+    InternalServer:
+      description: Internal Server Error
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorInternalServerError'
+  parameters:
+    accountId:
+      name: accountId
+      description: The unique 6 character internal id that represents the customer account.
+      required: true
+      in: path
+      schema:
+        type: string
+        minLength: 6
+        maxLength: 6
+        pattern: ^[a-zA-Z]{6}$
+        example: ABCDEF
+    engagementId:
+      name: engagementId
+      description: The unique 36 character internal id that represents the engagement.
+      required: true
+      in: path
+      schema:
+        type: string
+        minLength: 36
+        maxLength: 36
+        pattern: ^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}$
+        example: dfd117d7-73e3-4436-8bd7-3ce8f1a008ed
+    participantId:
+      name: participantId
+      description: The unique id that represents the participant.
+      required: true
+      in: path
+      schema:
+        type: string
+        minLength: 1
+        maxLength: 36
+        example: 1b3232rerew343432432432
+  schemas:
+    Problem:
+      type: object
+      description: '<b>Problem Detail</b> as a way to carry machine-readable details of errors in a HTTP response to avoid the need to define new error response formats for HTTP APIs <a href="https://tools.ietf.org/html/rfc7807">RFC 7807</a>
+
+        '
+      properties:
+        type:
+          type: string
+          format: uri
+          description: 'An absolute URI that identifies the problem type. When dereferenced, it SHOULD provide human-readable documentation for the problem type (e.g., using HTML).
+
+            '
+          default: about:blank
+          example: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#constraint-violation
+        title:
+          type:
+          - string
+          - 'null'
+          description: 'A short, summary of the problem type. Written in english and readable for engineers (usually not suited for non technical stakeholders and not localized).
+
+            '
+          example: Service Unavailable
+        status:
+          type:
+          - integer
+          - 'null'
+          format: int32
+          description: 'The HTTP status code generated by the origin server for this occurrence of the problem.
+
+            '
+          minimum: 100
+          example: 503
+          exclusiveMaximum: 600
+        detail:
+          type:
+          - string
+          - 'null'
+          description: 'A human readable explanation specific to this occurrence of the problem.
+
+            '
+          example: Connection to database timed out
+        instance:
+          type:
+          - string
+          - 'null'
+          format: uri
+          description: 'An absolute URI that identifies the specific occurrence of the problem. It may or may not yield further information if dereferenced.
+
+            '
+        violations:
+          type:
+          - array
+          - 'null'
+          description: 'A list of violations that occurred as a result of invalid data provided as part of a request.
+
+            '
+          items:
+            type: object
+            properties:
+              field:
+                type: string
+                description: 'The name of the field in the request that caused the violation. This can be the name of a path parameter, query parameter, or a field within the request body.
+
+                  '
+                example: accountId
+              message:
+                type: string
+                description: 'A human readable explanation specific to this occurrence of the violation.
+
+                  '
+                example: must match "^[a-zA-Z]{6}$"
+              code:
+                type: integer
+                format: int32
+                description: 'The violation code generated by the server for this occurrence of the violation. Use this code when implementing any error handling logic instead of the message, as the message can change.
+
+                  '
+                example: 20006
+          example:
+          - field: emailAddress
+            message: must not be null
+            code: 20002
+          - field: accountId
+            message: must match "^[a-zA-Z]{6}$"
+            code: 20006
+    Participant:
+      type: object
+      description: Any External, Agent or Treatment participant
+      discriminator:
+        propertyName: type
+        mapping:
+          EXTERNAL: '#/components/schemas/External'
+          AGENT: '#/components/schemas/Agent'
+          TREATMENT: '#/components/schemas/Treatment'
+      properties:
+        type:
+          type: string
+          description: The type of Participant, for example EXTERNAL, AGENT or TREATMENT.
+          enum:
+          - EXTERNAL
+          - AGENT
+          - TREATMENT
+        id:
+          type: string
+          description: The unique 36 character internal id that represents the Participant.
+          maxLength: 36
+        dialogId:
+          type: string
+          description: The unique 36 character internal id that represents the Dialog.
+          minLength: 36
+          maxLength: 36
+          pattern: ^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}$
+          example: bb4f5cf8-5bfc-4bf3-ac43-153c43671f0e
+        timestamp:
+          type: string
+          description: The datetime of when the Participant was added to the Engagement in ISO 8601 format, for example 2018-11-13T20:27:12+00:00
+          format: date-time
+        channelId:
+          type: string
+          description: The unique id representing the Contact Center Channel. Only valid Contact Center Channel Ids are accepted. See Contact Center Channel list in Developers guide for further details.
+          minLength: 3
+          maxLength: 50
+          example: Voice
+        channelType:
+          type: string
+          description: The Contact Center Channel Type. Only valid Contact Center Channel Types are accepted. See Contact Center Channel list in Developers guide for further details.
+          minLength: 3
+          maxLength: 50
+          example: VOICE
+      required:
+      - type
+      - dialogId
+      - channelId
+      - channelType
+      - timestamp
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      description: This API uses Bearer Token Authorization Flow
+      bearerFormat: JWT
+    AppKey:
+      type: apiKey
+      in: header
+      name: appkey
+      description: This API needs an appKey as header.
+x-explorer-enabled: false
+x-samples-languages:
+- curl
+- node
+- java
+- javascript
+- python
+- go

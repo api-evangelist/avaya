@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<wsdl:definitions name="metrics_service_service" 
+	targetNamespace="http://www.nortel.com/soa/oi/cct/MetricsService" 
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" 
+	xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" 
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns:tns="http://www.nortel.com/soa/oi/cct/MetricsService" 
+	xmlns:interface="http://www.nortel.com/soa/oi/cct/MetricsService">
+
+	<wsdl:import 
+		namespace="http://www.nortel.com/soa/oi/cct/MetricsService" 
+		location="MetricsServiceInterface.wsdl" />
+
+	<wsdl:binding name="MetricsServiceBinding" type="tns:MetricsService">
+
+		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http" />
+
+		<wsdl:operation name="GetActiveSessionCount">
+			<soap:operation soapAction="http://www.nortel.com/soa/oi/cct/MetricsService/GetActiveSessionCount" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="SessionNotCreatedException">
+				<soap:fault use="literal" name="SessionNotCreatedException" />
+			</wsdl:fault>
+			<wsdl:fault name="GetActiveSessionCountException">
+				<soap:fault use="literal" name="GetActiveSessionCountException" />
+			</wsdl:fault>
+		</wsdl:operation>
+		
+		<wsdl:operation name="GetLicenseConsumedCount">
+			<soap:operation soapAction="http://www.nortel.com/soa/oi/cct/MetricsService/GetLicenseConsumedCount" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="SessionNotCreatedException">
+				<soap:fault use="literal" name="SessionNotCreatedException" />
+			</wsdl:fault>
+			<wsdl:fault name="GetLicenseConsumedCountException">
+				<soap:fault use="literal" name="GetLicenseConsumedCountException" />
+			</wsdl:fault>
+		</wsdl:operation>	
+			
+		<wsdl:operation name="GetMonitoredTerminalsCount">
+			<soap:operation soapAction="http://www.nortel.com/soa/oi/cct/MetricsService/GetMonitoredTerminalsCount" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="SessionNotCreatedException">
+				<soap:fault use="literal" name="SessionNotCreatedException" />
+			</wsdl:fault>
+			<wsdl:fault name="GetMonitoredTerminalsCountException">
+				<soap:fault use="literal" name="GetMonitoredTerminalsCountException" />
+			</wsdl:fault>
+		</wsdl:operation>
+
+		<wsdl:operation name="GetMonitoredAddressCount">
+			<soap:operation soapAction="http://www.nortel.com/soa/oi/cct/MetricsService/GetMonitoredAddressCount" />	
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>		
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="SessionNotCreatedException">
+				<soap:fault use="literal" name="SessionNotCreatedException" />
+			</wsdl:fault>
+			<wsdl:fault name="GetMonitoredAddressCountException">
+				<soap:fault use="literal" name="GetMonitoredAddressCountException" />
+			</wsdl:fault>
+			
+		</wsdl:operation>
+		
+		<wsdl:operation name="GetVersion">
+			<soap:operation soapAction="http://www.nortel.com/soa/oi/cct/MetricsService/GetVersion" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="SessionNotCreatedException">
+				<soap:fault use="literal" name="SessionNotCreatedException" />
+			</wsdl:fault>
+			<wsdl:fault name="GetVersionException">
+				<soap:fault use="literal" name="GetVersionException" />
+			</wsdl:fault>
+		</wsdl:operation>
+		
+	</wsdl:binding>
+
+	<wsdl:service name="SOAOICCT_MetricsService">
+		<wsdl:port name="MetricsService" binding="tns:MetricsServiceBinding">
+			<soap:address location="http://localhost:9080/SOAOICCT/services/MetricsService" />
+		</wsdl:port>
+	</wsdl:service>
+	
+</wsdl:definitions>

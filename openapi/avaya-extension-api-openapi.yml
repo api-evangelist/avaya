@@ -1,0 +1,575 @@
+openapi: 3.2.0
+info:
+  title: Admin - Voice Extension API
+  description: 'The Voice provider APIs are used to manage information about voice specific elements and different voice related entities e.g. Phone numbers.
+
+
+    Voice Services will support multiple ways to provision voice providers
+
+    1. Programmatic Interface (Rest APIs)
+
+    2. User Interface'
+  contact:
+    name: Avaya API Team
+    url: https://developers.avayacloud.com/onecloud-ccaas
+    email: apiteam@avaya.com
+  license:
+    name: Avaya Software Development Kit (SDK) Software License Terms
+    url: http://support.avaya.com/css/P8/documents/101038288
+  version: 1.0.2
+servers:
+- url: '{protocol}://{server}{basePath}'
+  description: Open API
+  variables:
+    protocol:
+      enum:
+      - https
+      default: https
+    server:
+      default: HOST-REGION.api.avayacloud.com
+    basePath:
+      default: /api/admin/voice/v1
+security:
+- {}
+- BearerAuth: []
+  AppKey: []
+tags:
+- name: Extension
+  description: Management of non e164 Extension that are assigned to Account. These API are expected to be called by an account administrator.
+paths:
+  /accounts/{accountId}/extensions:
+    get:
+      tags:
+      - Extension
+      summary: Get Extensions
+      description: '**This API requires the Account Administrator role.**
+
+
+        Get list of Extensions belongs to specific account.'
+      operationId: getExtensions
+      parameters:
+      - $ref: '#/components/parameters/accountId'
+      - $ref: '#/components/parameters/pageNumber'
+      - $ref: '#/components/parameters/pageSize'
+      - name: filter
+        in: query
+        required: false
+        description: "The possible fields you can filter on are number and displayName. The allowed format:\n- Begins with the field name to be filtered, followed by a colon and:\n  - Either an exact string to match, or\n  - A string expression including the * wildcard character\nExamples include 'number:35311234567', 'displayName:John'\n"
+        schema:
+          type: string
+          example: displayName:john
+          maxLength: 255
+          pattern: (([a-zA-Z]+[:=]+[\*]*[^,*]*[\*]*[,]{0,1}){1}){1,}[^,]$
+      - name: orderBy
+        in: query
+        required: false
+        description: 'Field name on which ordering needs to be performed. The possible fields that can be ordered by are number and displayName.
+
+          Field names are case-senstive (should be written as it is in description).
+
+          The default sorting order is ''number ascending''.
+
+          To specify descending order, a suffix '' desc'' should be appended. For example, "name" for ascending or "name desc" for descending".
+
+          '
+        schema:
+          type: string
+          example: displayName
+          maxLength: 255
+          pattern: ([a-zA-Z]+[,]*|([a-zA-Z]+(( asc)|( desc))[,]*){1,})+(?<!,)$
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExtensionNumberPage'
+              examples:
+                Extensions:
+                  $ref: '#/components/examples/ExtensionNumberPage'
+        '400':
+          $ref: '#/components/responses/ErrorConstraintViolation'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    post:
+      tags:
+      - Extension
+      summary: Create Extension
+      description: '**This API requires the Account Administrator role.**
+
+
+        Creates a new Extension for specified account'
+      operationId: createExtension
+      parameters:
+      - $ref: '#/components/parameters/accountId'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Extension'
+            examples:
+              Extension:
+                $ref: '#/components/examples/ExtensionRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Extension'
+              examples:
+                default:
+                  $ref: '#/components/examples/ExtensionResponse'
+        '400':
+          $ref: '#/components/responses/ErrorConstraintViolation'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/ErrorExtensionExists'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /accounts/{accountId}/extensions/{extensionId}:
+    get:
+      tags:
+      - Extension
+      summary: Get Extension
+      description: '**This API requires the Account Administrator role.**'
+      operationId: getExtension
+      parameters:
+      - $ref: '#/components/parameters/accountId'
+      - $ref: '#/components/parameters/extensionId'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Extension'
+              examples:
+                default:
+                  $ref: '#/components/examples/ExtensionResponse'
+        '400':
+          $ref: '#/components/responses/ErrorConstraintViolation'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    put:
+      tags:
+      - Extension
+      summary: Update Extension
+      description: '**This API requires the Account Administrator role.**'
+      operationId: updateExtension
+      parameters:
+      - $ref: '#/components/parameters/accountId'
+      - $ref: '#/components/parameters/extensionId'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Extension'
+            examples:
+              default:
+                $ref: '#/components/examples/ExtensionRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Extension'
+              examples:
+                default:
+                  $ref: '#/components/examples/ExtensionResponse'
+        '400':
+          $ref: '#/components/responses/ErrorConstraintViolation'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/ErrorExtensionExists'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    delete:
+      tags:
+      - Extension
+      summary: Delete Extension
+      description: '**This API requires the Account Administrator role.**'
+      operationId: extensionDelete
+      parameters:
+      - $ref: '#/components/parameters/accountId'
+      - $ref: '#/components/parameters/extensionId'
+      responses:
+        '204':
+          description: No Content
+        '400':
+          $ref: '#/components/responses/ErrorConstraintViolation'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+components:
+  examples:
+    ErrorForbidden:
+      description: Forbidden
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#forbidden
+        title: Forbidden
+        status: 403
+        detail: According to the access control policy the current user does not have permission to access this resource.
+    ErrorConstraintViolation:
+      description: Constraint Violation
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#constraint-violation
+        title: Constraint Violation
+        status: 400
+        detail: A problem that indicates a syntactically correct, yet semantically illegal request. The Server can not process this request until the client resolves the semantic errors described in the violations section.
+        violations:
+        - field: accountId
+          message: must match "^[a-zA-Z]{6}$"
+          code: 20006
+    ExtensionNumberPage:
+      description: Paginated Extension Number Data
+      value:
+        pagination:
+          pageNumber: 2
+          pageSize: 10
+          total: 45
+        extensions:
+        - id: 1f15835f-1365-4913-acf3-0ffd0767ad6e
+          number: '914565637786'
+          displayName: Jon Extension
+        links:
+          prev: /api/admin/voice/v1/accounts/ABCDEF/extensions?pageNumber=1&pageSize=10
+          next: /api/admin/voice/v1/accounts/ABCDEF/extensions?pageNumber=3&pageSize=10
+    ErrorExtensionExists:
+      description: Constraint Violation
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#conflict
+        title: Conflict
+        status: 409
+        detail: A resource with the same unique constraint values already exists.
+        violations:
+        - field: extension
+          message: Extension already exists
+    ErrorNotFound:
+      description: Not Found
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#resource-not-found
+        title: Resource Not Found
+        status: 404
+        detail: Either there is no API method associated with the URL path of the request, or the request refers to one or more resources that were not found.
+    ErrorUnauthorized:
+      description: Unauthorized
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#unauthorized
+        title: Unauthorized
+        status: 401
+        detail: This operation requires authentication. See https://developers.avayacloud.com/onecloud-ccaas/docs/how-to-authenticate-with-ccaas-apis
+    ExtensionRequest:
+      description: Request model for updating an Extension Number
+      value:
+        number: '914565637786'
+        displayName: Jon Extension
+    ErrorInternalServerError:
+      description: Server Error
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#server-error
+        title: Server Error
+        status: 500
+        detail: An internal server error was encountered.
+    ExtensionResponse:
+      description: Response model for updating an Extension Number
+      value:
+        id: 18e4f754-5e42-4387-ae13-e9b4fe4aed29
+        number: '914565637786'
+        displayName: Jon Extension
+  responses:
+    NotFound:
+      description: Not Found
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorNotFound'
+    ErrorExtensionExists:
+      description: Conflict
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorExtensionExists'
+    InternalServerError:
+      description: All other application errors
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorInternalServerError'
+    ErrorConstraintViolation:
+      description: Constraint Violation
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorConstraintViolation'
+    Forbidden:
+      description: Forbidden
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorForbidden'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorUnauthorized'
+  parameters:
+    accountId:
+      name: accountId
+      description: The unique 6 character internal id that represents the customer account.
+      required: true
+      in: path
+      schema:
+        type: string
+        minLength: 6
+        maxLength: 6
+        pattern: ^[a-zA-Z]{6}$
+        example: ABCDEF
+    extensionId:
+      name: extensionId
+      in: path
+      description: The unique 36 character internal id for the extension
+      required: true
+      schema:
+        type: string
+        format: uuid
+        example: 123e4567-e89b-12d3-a456-426614174000
+    pageSize:
+      name: pageSize
+      in: query
+      description: The max number of records to retrieve per page. Default value is 5, Any value like 5,10,15,20,25,30 is allowed. If value comes more than 1000 then max 1000 records will be returned.
+      required: false
+      schema:
+        type: integer
+        format: int32
+        example: 5
+        default: 5
+        minimum: 1
+        maximum: 50
+    pageNumber:
+      name: pageNumber
+      in: query
+      description: The page number of the records to retrieve. Default value is 1.
+      required: false
+      schema:
+        type: integer
+        format: int32
+        example: 1
+        default: 1
+        minimum: 1
+  schemas:
+    ExtensionNumberPage:
+      description: Paginated Extension Numbers
+      type: object
+      properties:
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+        extensions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Extension'
+        links:
+          allOf:
+          - $ref: '#/components/schemas/Links'
+          example:
+            prev: /api/admin/voice/v1/accounts/ABCDEF/extensions?pageNumber=1&pageSize=10
+            next: /api/admin/voice/v1/accounts/ABCDEF/extensions?pageNumber=3&pageSize=10
+    Links:
+      type: object
+      properties:
+        prev:
+          type: string
+          description: URL of the previous page. Blank if currently on the first page.
+        next:
+          type: string
+          description: URL of the next page. Blank if currently on the last page.
+    Extension:
+      type: object
+      required:
+      - displayName
+      - number
+      description: Extension number of an Account
+      properties:
+        id:
+          type: string
+          example: c8c2909d-75e9-484a-94c0-b7e8d29771fe
+          description: The unique 36 character internal id that represents the extension id
+          readOnly: true
+          format: uuid
+        number:
+          type: string
+          example: '914565637786'
+          description: The extension number in non e164 format unique per tenant.
+          minLength: 4
+          maxLength: 16
+          pattern: ^[0-9]{4,16}$
+        displayName:
+          type: string
+          maxLength: 255
+          description: suitable name that will identify the number easily unique per tenant.
+          example: Jon Extension
+    Pagination:
+      type: object
+      properties:
+        pageNumber:
+          type: integer
+          description: The current page number.
+        pageSize:
+          type: integer
+          description: The max number of records that can be retrieved on this page.
+        total:
+          type: integer
+          description: The total number of records.
+    Problem:
+      type: object
+      description: '<b>Problem Detail</b> as a way to carry machine-readable details of errors in a HTTP response to avoid the need to define new error response formats for HTTP APIs <a href="https://tools.ietf.org/html/rfc7807">RFC 7807</a>
+
+        '
+      properties:
+        type:
+          type: string
+          format: uri
+          description: 'An absolute URI that identifies the problem type. When dereferenced, it SHOULD provide human-readable documentation for the problem type (e.g., using HTML).
+
+            '
+          default: about:blank
+          example: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#constraint-violation
+        title:
+          type:
+          - string
+          - 'null'
+          description: 'A short, summary of the problem type. Written in english and readable for engineers (usually not suited for non technical stakeholders and not localized).
+
+            '
+          example: Service Unavailable
+        status:
+          type:
+          - integer
+          - 'null'
+          format: int32
+          description: 'The HTTP status code generated by the origin server for this occurrence of the problem.
+
+            '
+          minimum: 100
+          example: 503
+          exclusiveMaximum: 600
+        detail:
+          type:
+          - string
+          - 'null'
+          description: 'A human readable explanation specific to this occurrence of the problem.
+
+            '
+          example: Connection to database timed out
+        instance:
+          type:
+          - string
+          - 'null'
+          format: uri
+          description: 'An absolute URI that identifies the specific occurrence of the problem. It may or may not yield further information if dereferenced.
+
+            '
+        violations:
+          type:
+          - array
+          - 'null'
+          description: 'A list of violations that occurred as a result of invalid data provided as part of a request.
+
+            '
+          items:
+            type: object
+            properties:
+              field:
+                type: string
+                description: 'The name of the field in the request that caused the violation. This can be the name of a path parameter, query parameter, or a field within the request body.
+
+                  '
+                example: accountId
+              message:
+                type: string
+                description: 'A human readable explanation specific to this occurrence of the violation.
+
+                  '
+                example: must match "^[a-zA-Z]{6}$"
+              code:
+                type: integer
+                format: int32
+                description: 'The violation code generated by the server for this occurrence of the violation. Use this code when implementing any error handling logic instead of the message, as the message can change.
+
+                  '
+                example: 20006
+          example:
+          - field: emailAddress
+            message: must not be null
+            code: 20002
+          - field: accountId
+            message: must match "^[a-zA-Z]{6}$"
+            code: 20006
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      description: This API uses Bearer Token Authorization Flow
+      bearerFormat: JWT
+    AppKey:
+      type: apiKey
+      in: header
+      name: appkey
+      description: This API needs an appKey as header
+x-explorer-enabled: false
+x-samples-languages:
+- curl
+- node
+- java
+- javascript
+- python
+- go

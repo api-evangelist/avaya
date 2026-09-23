@@ -1,0 +1,2244 @@
+# x-archived-from: avaya-axp-admin-account-openapi.yml
+# x-archived-on: 2026-09-16
+openapi: 3.0.2
+x-explorer-enabled: false
+x-samples-languages:
+- curl
+- node
+- java
+- javascript
+- python
+- go
+info:
+  title: Admin - Account
+  description: Multi Tenancy Service REST APIs are used to create,update delete,fetch the Account and Account hierarchy.
+  contact:
+    name: Avaya API Team
+    url: https://developers.avayacloud.com/onecloud-ccaas
+    email: apiteam@avaya.com
+  license:
+    name: Avaya Software Development Kit (SDK) Software License Terms
+    url: http://support.avaya.com/css/P8/documents/101038288
+  version: 1.0.1
+security:
+- {}
+- BearerAuth: []
+  AppKey: []
+servers:
+- url: '{protocol}://{server}{basePath}'
+  description: Open API
+  variables:
+    protocol:
+      enum:
+      - https
+      default: https
+    server:
+      default: HOST-REGION.api.avayacloud.com
+    basePath:
+      default: /api/admin/account/v1
+tags:
+- name: Account
+  description: APIs to manage Accounts.
+- name: Audit Records
+  description: 'Search or export audit records for auditable objects.
+
+    '
+- name: Organization Structure
+  description: APIs to manage a customer's organization structure
+paths:
+  /accounts:
+    get:
+      tags:
+      - Account
+      summary: List Accounts
+      description: '**This API requires the Administrator role.**
+
+
+        Lists the accounts based on the filter criteria provided.
+
+
+        Filtering is supported on the following fields:
+
+        * name
+
+        * accountId
+
+        * domainName
+
+        * profileName
+
+        * profileId
+
+        * isDefault
+
+        '
+      operationId: listAccounts
+      parameters:
+      - name: pageNumber
+        in: query
+        description: The page number of the records to retrieve. Default value is 1
+        required: false
+        schema:
+          type: integer
+          format: int32
+          example: 30
+          default: 1
+          minimum: 1
+      - name: pageSize
+        in: query
+        description: The max number of records to retrieve per page. Default value is 5,max value is 50.
+        required: false
+        schema:
+          type: integer
+          format: int32
+          example: 5
+          default: 5
+          minimum: 5
+          maximum: 50
+      - name: filter
+        in: query
+        required: false
+        description: "Specifies details of a row filter.\n\nThe possible fields you can filter are\n* name\n* accountId\n\n\
+          The allowed format:\n\n- Begins with the column name to be filtered, followed by a colon, (This will be used as\
+          \ Contains operator.) then:\n  - Either an exact string to match, or\n  - A string expression including the * wildcard\
+          \ character.\n    - :{PREFIX}* will be used to find out word start with.\n    - :*{POSTFIX} will be used to find\
+          \ out word end with\n    - : will be used to match exact word\n- Begin with colmun name to be filtered, followed\
+          \ by a = operator. (this will be used to match exact string)\n"
+        schema:
+          type: string
+          maxLength: 255
+        examples:
+          exact:
+            description: Example of filtering based on an exact string.
+            value: name:SyncG
+          prefix:
+            description: Example of filtering based on a prefix string.
+            value: name:SyncG*
+          postfix:
+            description: Example of filtering based on a postfix string.
+            value: name:*SyncG
+      - name: orderBy
+        in: query
+        required: false
+        description: 'Field name on which sorting needs to be performed.
+
+
+          The possible fields you ordered on
+
+          * name
+
+          * accountId
+
+
+          Field Names are case-sensitive (should be written as it is in description).
+
+
+          The default sorting order is name ascending.
+
+
+          To specify descending order, a suffix " desc" should be added. For example, "name" for ascending or "name desc"
+          for descending".
+
+          '
+        schema:
+          type: string
+          maxLength: 255
+        examples:
+          ascending:
+            value: name
+          descending:
+            value: name desc
+      responses:
+        '200':
+          description: List of accounts
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountPage'
+              examples:
+                AccountPage:
+                  $ref: '#/components/examples/AccountPage'
+        '400':
+          $ref: '#/components/responses/ErrorConstraintViolation'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /accounts/{accountId}:
+    get:
+      tags:
+      - Account
+      summary: Get Account
+      description: '**This API requires the Account Administrator role.**
+
+
+        Gets an account by ID.
+
+        '
+      operationId: getAccount
+      parameters:
+      - $ref: '#/components/parameters/accountId'
+      responses:
+        '200':
+          description: Account details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Account'
+              examples:
+                AccountDetails:
+                  $ref: '#/components/examples/AccountDetails'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    put:
+      tags:
+      - Account
+      summary: Update Account
+      description: "**This API requires the Account Administrator role.**\n\nUpdates an account. This is a complete replacement\
+        \ of the existing Account.\n\nChanges to the fields:\n  * `name`\n  * `features`\n\nWill trigger asynchronous updates\
+        \ for 'name','features' the status of which should be monitored via `/accounts:listStatuses`.\n\nThe following fields\
+        \ must be unique otherwise a `HTTP 409 Conflict` will be returned:\n  * `name`\n"
+      operationId: updateAccount
+      parameters:
+      - $ref: '#/components/parameters/accountId'
+      requestBody:
+        $ref: '#/components/requestBodies/AccountUpdateDetails'
+      responses:
+        '202':
+          description: Account update request accepted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Account'
+              examples:
+                AccountDetails:
+                  $ref: '#/components/examples/AccountDetails'
+        '400':
+          $ref: '#/components/responses/ErrorConstraintViolation'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /accounts:listStatuses:
+    post:
+      tags:
+      - Account
+      summary: List Account Statuses
+      description: '**This API requires the Account Administrator role.**
+
+
+        Lists the current statuses for the given accounts.
+
+        '
+      operationId: listAccountStatuses
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AccountIdList'
+            examples:
+              Request-Account-Statuses:
+                $ref: '#/components/examples/AccountStatusesRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AccountStatusResponse'
+              examples:
+                Account-Statuses:
+                  $ref: '#/components/examples/AccountStatuses'
+                Failed-Account-Statuses:
+                  $ref: '#/components/examples/FailedAccountStatuses'
+                InProgress-Account-Statuses:
+                  $ref: '#/components/examples/InProgressAccountStatuses'
+        '400':
+          $ref: '#/components/responses/ErrorConstraintViolation'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /accounts/{accountId}/organization-nodes:
+    post:
+      tags:
+      - Organization Structure
+      summary: Create Organization Node
+      description: "**This API requires the Account Administrator role.**\n\nCreates a new organization node at the hierarchy\
+        \ determined by the value of the `parentPath` field.\nThe following fields must be unique otherwise a `HTTP 409 Conflict`\
+        \ will be returned:\n  *  `name`\n"
+      operationId: createOrganizationNode
+      parameters:
+      - $ref: '#/components/parameters/accountId'
+      requestBody:
+        $ref: '#/components/requestBodies/OrganizationNode'
+      responses:
+        '202':
+          description: Accepted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationNode'
+              examples:
+                OrganizationNodeDetails:
+                  $ref: '#/components/examples/OrganizationNodeDetails'
+        '400':
+          $ref: '#/components/responses/ErrorConstraintViolation'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/OrganizationNodeNotFound'
+        '409':
+          $ref: '#/components/responses/OrganizationNodeConflict'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    get:
+      tags:
+      - Organization Structure
+      summary: List Organization Nodes
+      description: '**This API requires the Account Administrator role.**
+
+
+        Lists the organization nodes for an account.
+
+        '
+      operationId: listOrganizationNodes
+      parameters:
+      - $ref: '#/components/parameters/accountId'
+      - $ref: '#/components/parameters/pageNumber'
+      - name: children
+        in: query
+        description: Flag to indicate if response should contain child nodes.
+        schema:
+          type: boolean
+          default: false
+          example: false
+      - name: pageSize
+        in: query
+        description: The max number of records to retrieve per page. Default value is 5,max value is 50.
+        required: false
+        schema:
+          type: integer
+          format: int32
+          example: 5
+          default: 5
+          minimum: 5
+          maximum: 50
+      - name: filter
+        in: query
+        required: false
+        description: "Specifies details of a row filter.\n\nThe possible fields you can filter are:\n* name\n* accountId\n\
+          \nThe allowed format:\n\n- Begins with the column name to be filtered, followed by a colon, (This will be used as\
+          \ Contains operator.) then:\n  - Either an exact string to match, or\n  - A string expression including the * wildcard\
+          \ character.\n    - :{PREFIX}* will be used to find out word start with.\n    - :*{POSTFIX} will be used to find\
+          \ out word end with\n    - : will be used to match exact word\n- Begin with column name to be filtered, followed\
+          \ by a = operator. (this will be used to match exact string)\n"
+        schema:
+          type: string
+          maxLength: 255
+        examples:
+          exact:
+            description: Example of filtering based on an exact string.
+            value: name:LocationPune
+          prefix:
+            description: Example of filtering based on a prefix string.
+            value: name:LocationPune*
+          postfix:
+            description: Example of filtering based on a postfix string.
+            value: name:*LocationPune
+      - name: orderBy
+        in: query
+        required: false
+        description: 'Field name on which sorting needs to be performed.
+
+
+          The possible fields you ordered on
+
+          * name
+
+          * accountId
+
+
+          Field Names are case-sensitive (should be written as it is in description).
+
+
+          The default sorting order is name ascending.
+
+
+          To specify descending order, a suffix "desc" should be added. For example, "name" for ascending or "name desc" for
+          descending".
+
+          '
+        schema:
+          type: string
+          minLength: 4
+          maxLength: 255
+        examples:
+          ascending:
+            value: name
+          descending:
+            value: name desc
+      responses:
+        '200':
+          description: List of OrganizationNodes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationNodePage'
+              examples:
+                OrganizationNodePage:
+                  $ref: '#/components/examples/OrganizationNodePage'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/OrganizationNodeNotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /accounts/{accountId}/organization-nodes/{organizationNodeId}:
+    get:
+      tags:
+      - Organization Structure
+      summary: Get Organization Node
+      description: '**This API requires the Account Administrator role.**
+
+
+        Gets an organization node by ID.
+
+        '
+      operationId: getOrganizationNode
+      parameters:
+      - $ref: '#/components/parameters/accountId'
+      - $ref: '#/components/parameters/organizationNodeId'
+      - name: children
+        in: query
+        description: Flag to indicate if response should contain child nodes.
+        schema:
+          type: boolean
+          default: false
+          example: true
+      responses:
+        '200':
+          description: Organization node
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationNode'
+              examples:
+                OrganizationNodeDetails:
+                  $ref: '#/components/examples/OrganizationNodeDetails'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/OrganizationNodeNotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    put:
+      tags:
+      - Organization Structure
+      summary: Update Organization Node
+      description: "**This API requires the Account Administrator role.**\n\nUpdates the organization node. This is a complete\
+        \ replacement of the existing Organization Node.\n\nThe following fields must be unique otherwise a `HTTP 409 Conflict`\
+        \ will be returned:\n  *  `name`\n"
+      operationId: updateOrganizationNode
+      parameters:
+      - $ref: '#/components/parameters/accountId'
+      - $ref: '#/components/parameters/organizationNodeId'
+      requestBody:
+        $ref: '#/components/requestBodies/OrganizationNode'
+      responses:
+        '200':
+          description: Organization Node Updated Successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationNode'
+              examples:
+                OrganizationNodeDetails:
+                  $ref: '#/components/examples/OrganizationNodeDetails'
+        '400':
+          $ref: '#/components/responses/ErrorConstraintViolation'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/OrganizationNodeNotFound'
+        '409':
+          $ref: '#/components/responses/OrganizationNodeConflict'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /accounts/{accountId}/organization-nodes:listStatuses:
+    post:
+      tags:
+      - Organization Structure
+      summary: List Org. Node Statuses
+      description: '**This API requires the Account Administrator role.**
+
+
+        Lists the current statuses for the given organization nodes.
+
+        '
+      operationId: listOrganizationNodeStatuses
+      parameters:
+      - $ref: '#/components/parameters/accountId'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrganizationNodeIdList'
+            examples:
+              Request-Organization-Node-Statuses:
+                $ref: '#/components/examples/OrganizationNodeStatusesRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/OrganizationNodeStatusResponse'
+              examples:
+                OrganizationNode-Statuses:
+                  $ref: '#/components/examples/OrganizationNodeStatuses'
+                Failed-OrganizationNode-Statuses:
+                  $ref: '#/components/examples/FailedOrganizationNodeStatuses'
+                InProgress-OrganizationNode-Statuses:
+                  $ref: '#/components/examples/InProgressOrganizationNodeStatuses'
+        '400':
+          $ref: '#/components/responses/ErrorConstraintViolation'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/OrganizationNodeNotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /accounts/{accountId}/audit-records:search:
+    post:
+      tags:
+      - Audit Records
+      summary: Search Audit Records
+      description: '**This API requires the Account Administrator role.**
+
+
+        Searches the audit records based on the supplied filter.
+
+
+        The value of **searchKeyword** can be used to perform a text search across all fields within an audit record (excluding
+        date).
+
+        '
+      operationId: searchAuditRecords
+      parameters:
+      - $ref: '#/components/parameters/accountId'
+      - $ref: '#/components/parameters/pageNumber'
+      - name: pageSize
+        in: query
+        description: 'The max number of records to retrieve per page. Default value is 5, max value is 50.
+
+          '
+        required: false
+        schema:
+          type: integer
+          format: int32
+          example: 5
+          default: 5
+          minimum: 5
+          maximum: 50
+      - name: orderBy
+        in: query
+        description: 'Field name on which sorting needs to be performed. The possible fields
+
+          you ordered on are **date (date of audit record)** and **author**.
+
+          Field Names are case-sensitive (should be written as it is in description). The default sorting order is descending.
+          To specify ascending order, a suffix " asc" should be added. For example, "date asc" for ascending or "date desc"
+          for descending".
+
+          '
+        required: false
+        schema:
+          type: string
+          example: date desc
+          minLength: 4
+          maxLength: 255
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuditSearchFilter'
+            examples:
+              Search-Audit-Records:
+                $ref: '#/components/examples/SearchAuditRecordsRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuditRecords'
+              examples:
+                Search-Audit-Records:
+                  $ref: '#/components/examples/SearchAuditRecordsResponse'
+        '400':
+          $ref: '#/components/responses/ErrorConstraintViolation'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /accounts/{accountId}/audit-records:export:
+    post:
+      tags:
+      - Audit Records
+      summary: Export Audit Records
+      description: '**This API requires the Account Administrator role.**
+
+
+        Exports the audit records within the date-time range in CSV format.
+
+
+        A maximum of 1000 records can be exported for a given date-time range per request.
+
+
+        If the number of records within a date-time range exceeds the maximum then this API will
+
+        return a _HTTP 400 Bad Request_. This response will contain:
+
+        * A human readable message explaining the issue.
+
+        * A unique error code that a client can use to identify the issue.
+
+        '
+      operationId: exportAuditRecords
+      parameters:
+      - $ref: '#/components/parameters/accountId'
+      - name: orderBy
+        in: query
+        description: 'Field name on which sorting needs to be performed. The possible fields
+
+          you ordered on are **date (date of audit record)** and **author**.
+
+          Field Names are case-sensitive (should be written as it is in description). The default sorting order is descending.
+          To specify ascending order, a suffix " asc" should be added. For example, "date asc" for ascending or "date desc"
+          for descending".
+
+          '
+        required: false
+        schema:
+          type: string
+          example: date desc
+          minLength: 4
+          maxLength: 255
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuditSearchFilter'
+            examples:
+              Export-Audit-Records:
+                $ref: '#/components/examples/SearchAuditRecordsRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            text/csv:
+              schema:
+                type: string
+                format: binary
+              example: 'Account Id,Date,Event,Author,IP Address,Type,Audit Data
+
+                ABCDEF,2021-11-14T09:24:05.234Z,CREATED,jsmith@example.com,165.225.72.60,ACCOUNT,"{""name"":""AricentAccount"",""type"":""ACCOUNT"",""enabled"":""true"",""accountSize"":""10""}"
+
+                '
+        '400':
+          description: BadRequest
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                Too-many-records:
+                  $ref: '#/components/examples/ErrorTooManyRecords'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+components:
+  requestBodies:
+    OrganizationNode:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/OrganizationNode'
+          examples:
+            OrganizationNodeReqDetails:
+              $ref: '#/components/examples/OrganizationNodeReqDetails'
+      description: Organization node object
+      required: true
+    Account:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Account'
+          examples:
+            AccountDetails:
+              $ref: '#/components/examples/AccountDetails'
+      description: Account object
+      required: true
+    AccountUpdateDetails:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Account'
+          examples:
+            AccountDetails:
+              $ref: '#/components/examples/AccountUpdateDetails'
+      description: Account Update request object
+      required: true
+  schemas:
+    AccountProperty:
+      description: Free format name value pair to add information to a account beyond its standard fields.
+      type: object
+      properties:
+        name:
+          type: string
+          example: dnis
+          minLength: 1
+          maxLength: 255
+          pattern: ^[a-zA-Z0-9\p{L}\-\_\.\ ]+$
+        key:
+          type: string
+          example: dnis
+          minLength: 1
+          maxLength: 255
+          pattern: ^[a-zA-Z0-9\p{L}\-\_\.\ ]+$
+        value:
+          type: string
+          example: '1234'
+          maxLength: 255
+      title: AccountProperty
+    Problem:
+      type: object
+      description: '<b>Problem Detail</b> as a way to carry machine-readable details of errors in a HTTP response to avoid
+        the need to define new error response formats for HTTP APIs <a href="https://tools.ietf.org/html/rfc7807">RFC 7807</a>
+
+        '
+      properties:
+        type:
+          type: string
+          format: uri
+          description: 'An absolute URI that identifies the problem type. When dereferenced, it SHOULD provide human-readable
+            documentation for the problem type (e.g., using HTML).
+
+            '
+          default: about:blank
+          example: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#constraint-violation
+        title:
+          type: string
+          description: 'A short, summary of the problem type. Written in english and readable for engineers (usually not suited
+            for non technical stakeholders and not localized).
+
+            '
+          example: Service Unavailable
+          nullable: true
+        status:
+          type: integer
+          format: int32
+          description: 'The HTTP status code generated by the origin server for this occurrence of the problem.
+
+            '
+          minimum: 100
+          maximum: 600
+          exclusiveMaximum: true
+          example: 503
+          nullable: true
+        detail:
+          type: string
+          description: 'A human readable explanation specific to this occurrence of the problem.
+
+            '
+          example: Connection to database timed out
+          nullable: true
+        instance:
+          type: string
+          format: uri
+          description: 'An absolute URI that identifies the specific occurrence of the problem. It may or may not yield further
+            information if dereferenced.
+
+            '
+          nullable: true
+        violations:
+          type: array
+          description: 'A list of violations that occurred as a result of invalid data provided as part of a request.
+
+            '
+          nullable: true
+          items:
+            type: object
+            properties:
+              field:
+                type: string
+                description: 'The name of the field in the request that caused the violation. This can be the name of a path
+                  parameter, query parameter, or a field within the request body.
+
+                  '
+                example: accountId
+              message:
+                type: string
+                description: 'A human readable explanation specific to this occurrence of the violation.
+
+                  '
+                example: must match "^[a-zA-Z]{6}$"
+              code:
+                type: integer
+                format: int32
+                description: 'The violation code generated by the server for this occurrence of the violation. Use this code
+                  when implementing any error handling logic instead of the message, as the message can change.
+
+                  '
+                example: 20006
+          example:
+          - field: emailAddress
+            message: must not be null
+            code: 20002
+          - field: accountId
+            message: must match "^[a-zA-Z]{6}$"
+            code: 20006
+    OrganizationNodeType:
+      description: Type of node in a Account's organization structure. For example location, department, region, location,
+        business division, team, etc.
+      type: object
+      properties:
+        name:
+          type: string
+          example: Location
+          minLength: 1
+          maxLength: 255
+          pattern: ^[a-zA-Z0-9\p{L}\-\_\.\ ]+$
+        position:
+          type: integer
+          format: int32
+          example: 1
+      title: OrganizationNodeType
+    OrganizationNode:
+      description: A node in Account's organization structure. It is managed by an account administrator. It is an efficient
+        way to manage a large number of users, features and profiles by grouping them into different levels and hierarchical
+        nodes based on regions, lines of business, etc.
+      allOf:
+      - $ref: '#/components/schemas/OrganizationNodeBasic'
+      - type: object
+        properties:
+          children:
+            description: Complete hierarchy of child nodes.
+            type: array
+            items:
+              $ref: '#/components/schemas/ChildNodePath'
+            readOnly: true
+          profiles:
+            type: array
+            items:
+              $ref: '#/components/schemas/Profile'
+          accountId:
+            type: string
+            readOnly: true
+            example: AVSDER
+            minLength: 6
+            maxLength: 6
+            description: Unique Account
+          nodeType:
+            type: string
+            maxLength: 255
+            readOnly: true
+            example: OrganizationNode
+          countryCode:
+            type: string
+            example: IN
+            minLength: 2
+            maxLength: 2
+            description: Country code of the Organization Node
+        title: OrganizationNode
+    ChildNodePath:
+      description: Path of the child of Organization node with the complete hierarchy.
+      type: string
+      example: account/location1
+    Profile:
+      description: Unique ID of User Profile like Basic, Core, Power, Trial, etc.
+      type: object
+      required:
+      - profileId
+      properties:
+        profileId:
+          type: string
+          example: ASEDFG
+          minLength: 6
+          maxLength: 6
+          pattern: ^[a-zA-Z0-9\-\_\.\ ]+$
+        url:
+          type: string
+          example: /api/admin/user/v1/accounts/AVSDER/profiles/ASEDFG
+          minLength: 1
+          maxLength: 255
+        name:
+          type: string
+          readOnly: true
+          example: ASEDFG
+          minLength: 0
+          maxLength: 255
+      title: Profile
+    Address:
+      type: object
+      description: A real address and phone number for an Account.
+      required:
+      - addressName
+      - streetNumber
+      - streetName
+      - countryCode
+      - zip
+      properties:
+        addressName:
+          type: string
+          minLength: 1
+          maxLength: 32
+          pattern: ^[a-zA-Z\p{L}0-9]+([ ]*[a-zA-Z\p{L}0-9-\_\*\=\+\$\:\;\&\~\,\?\%\!\|\{\}\`\.\']+)*$
+          example: OfficeAddress
+        addressId:
+          type: string
+          example: c8c2909d-75e9-484a-94c0-b7e8d29771fe
+          minLength: 36
+          maxLength: 36
+          pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
+        streetNumber:
+          type: string
+          minLength: 1
+          maxLength: 16
+          example: E-11
+        streetName:
+          type: string
+          minLength: 2
+          maxLength: 128
+          example: Allstate Pkwy
+        addressType:
+          type: string
+          enum:
+          - OFFICE
+          - APARTMENT
+          - BASEMENT
+          - BUILDING
+          - DEPARTMENT
+          - FLOOR
+          - FRONT
+          - KEY
+          - LOBBY
+          - LOT
+          - LOWER
+          - PENTHOUSE
+          - PIER
+          - REAR
+          - ROOM
+          - SIDE
+          - SLIP
+          - SPACE
+          - STOP
+          - SUITE
+          - TRAILER
+          - UNIT
+          - UPPER
+          example: OFFICE
+        addressTypeNumber:
+          type: string
+          minLength: 0
+          maxLength: 64
+          example: 300A
+        city:
+          type: string
+          minLength: 0
+          maxLength: 128
+          example: Markham
+        state:
+          type: string
+          minLength: 1
+          maxLength: 3
+          example: 'ON'
+        countryCode:
+          type: string
+          example: IN
+          minLength: 2
+          maxLength: 2
+          description: Country code of the Country
+        zip:
+          type: string
+          minLength: 4
+          maxLength: 16
+          example: L3R9T8
+          pattern: ^[A-Za-z0-9\p{L}_ -]*$
+        isDefault:
+          type: boolean
+          example: true
+          description: An account can have multiple addresses. Unless specified by the administrator, the first one is marked
+            as a default address.
+          default: false
+    Domain:
+      type: object
+      description: Unique domain name of a customer
+      required:
+      - domainName
+      properties:
+        domainName:
+          type: string
+          example: acme.com
+          minLength: 3
+          maxLength: 255
+          pattern: ^((?!-)[A-Za-z0-9\p{L}-]{1,63}(?<!-)\.)+[A-Za-z\p{L}]{2,63}$
+        isDefault:
+          type: boolean
+          example: true
+          description: An account can have multiple domain names. Unless specified by the administrator, the first one is
+            marked as default.
+          default: false
+      title: Domain
+    Account:
+      type: object
+      description: 'An Account represents the following
+
+        * A customer that subscribes to an Avaya service.
+
+        * An Avaya customer can manage the Account. These customers use a share of resources and features allocated to their  Account.
+
+        '
+      required:
+      - name
+      - domains
+      - accountSize
+      properties:
+        url:
+          type: string
+          readOnly: true
+          maxLength: 1024
+          example: /api/admin/account/v1/accounts/ABCDEF
+        name:
+          type: string
+          description: Name of the account. Unique in the solution.
+          example: Acme
+          minLength: 1
+          maxLength: 255
+          pattern: ^(?=.*[a-zA-Z0-9\p{L}])[a-zA-Z0-9\p{L}(){};,:'^+<>&£@$¥€`~?#%+*"\\=\[\]\-\_\.\!\|\ ]+$
+        domains:
+          type: array
+          maxItems: 50
+          items:
+            $ref: '#/components/schemas/Domain'
+        emergencyEmailAddresses:
+          type: array
+          maxItems: 10
+          items:
+            type: string
+            example: account1@acc.com
+            minLength: 0
+            maxLength: 255
+            pattern: ^[a-zA-Z\p{L}0-9+-_.]+(?:\.[a-zA-Z\p{L}0-9+-_.]+)*@(?:[a-zA-Z\p{L}0-9-]+\.)+[a-zA-Z\p{L}]{2,6}$
+            description: Emergency Email Address of the Account
+        isDefault:
+          type: boolean
+          readOnly: true
+          example: false
+          description: There will be only one tenant in the solution with this flag set to true. Default tenant is created
+            when the service is first installed.
+        accountSize:
+          description: Maximum number of users that can be provisioned for an Account. The max value for this field is configured
+            at a solution level. An Account Administrator can not modify this field for their own Account.
+          type: integer
+          format: int32
+          minimum: 1
+          example: 500
+        description:
+          type: string
+          description: Description of the account.
+          minLength: 0
+          maxLength: 1024
+        addresses:
+          type: array
+          maxItems: 50
+          items:
+            $ref: '#/components/schemas/Address'
+        createdAt:
+          type: string
+          format: date-time
+          example: '2021-11-13T20:25:39.534Z'
+          readOnly: true
+        accountProperties:
+          type: array
+          maxItems: 50
+          items:
+            $ref: '#/components/schemas/AccountProperty'
+        organizationNodeTypes:
+          type: array
+          maxItems: 50
+          description: Model of the account's organization structure. For example, Organization -> Location -> Department
+            -> Team
+          items:
+            $ref: '#/components/schemas/OrganizationNodeType'
+        profiles:
+          type: array
+          maxItems: 200
+          items:
+            $ref: '#/components/schemas/Profile'
+        features:
+          $ref: '#/components/schemas/AccountFeatures'
+        enabled:
+          type: boolean
+          description: A global flag to enable/disable customer's access. Some reasons to disable an account are unpaid bills,
+            policy violations, incomplete setup, etc.
+          readOnly: true
+          example: true
+        accountId:
+          type: string
+          readOnly: true
+          minLength: 6
+          maxLength: 6
+          example: ABCDEF
+        enabledFeatures:
+          type: string
+          readOnly: true
+          maxLength: 1024
+          description: List of comma separated features that are enabled for the tenant.
+          example: voice,email,messaging
+        countryCode:
+          type: string
+          example: IN
+          minLength: 2
+          maxLength: 2
+          description: Country code of the Account
+        timezone:
+          type: string
+          example: Europe/Berlin
+          minLength: 2
+          maxLength: 256
+          description: Timezone of the Account
+      title: Account
+    AccountFeatures:
+      type: object
+      description: Features associated to the account
+      properties:
+        voice:
+          $ref: '#/components/schemas/VoiceFeature'
+        chat:
+          $ref: '#/components/schemas/DigitalChannelFeature'
+        messaging:
+          $ref: '#/components/schemas/MessagingFeature'
+        email:
+          $ref: '#/components/schemas/DigitalChannelFeature'
+        ucs:
+          $ref: '#/components/schemas/UcsFeature'
+        recorder:
+          $ref: '#/components/schemas/RecorderFeature'
+        aci:
+          $ref: '#/components/schemas/ACIFeature'
+        bvr:
+          $ref: '#/components/schemas/BVRFeature'
+        matching:
+          $ref: '#/components/schemas/MatchingFeature'
+        outbound:
+          $ref: '#/components/schemas/OutboundFeature'
+        cmvoice:
+          $ref: '#/components/schemas/CMVoiceFeature'
+        automatedoutreach:
+          $ref: '#/components/schemas/AutomatedOutreachFeature'
+        advancedcmvoice:
+          $ref: '#/components/schemas/AdvancedCMVoiceFeature'
+        realtimevoicetranscription:
+          $ref: '#/components/schemas/RealtimeVoiceTranscriptionFeature'
+    AccountPage:
+      type: object
+      properties:
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+        accounts:
+          type: array
+          items:
+            $ref: '#/components/schemas/Account'
+        links:
+          allOf:
+          - $ref: '#/components/schemas/Links'
+          example:
+            prev: /v1/accounts?pageNumber=1&pageSize=10
+            next: /v1/accounts?pageNumber=3&pageSize=10
+    OrganizationNodePage:
+      type: object
+      properties:
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+        organizationNodes:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrganizationNode'
+        links:
+          allOf:
+          - $ref: '#/components/schemas/Links'
+          example:
+            prev: /api/admin/account/v1/accounts/ASDFAE/organization-nodes?pageNumber=1&pageSize=10
+            next: /api/admin/account/v1/accounts/ASDFAE/organization-nodes?pageNumber=3&pageSize=10
+      title: OrganizationNodePage
+    OrganizationNodeBasic:
+      type: object
+      properties:
+        name:
+          type: string
+          example: Location 1
+          minLength: 1
+          maxLength: 255
+          pattern: ^(?=.*[a-zA-Z0-9\p{L}])[a-zA-Z0-9\p{L}(){};,'+&\[\]\-\_\.\ ]+$
+        parentPath:
+          description: Fully qualified name of this node's parent node
+          type: string
+          maxLength: 1024
+          example: AccountA
+        organizationNodeId:
+          type: string
+          minLength: 6
+          maxLength: 6
+          example: DFSAWE
+          readOnly: true
+        url:
+          type: string
+          example: /api/admin/account/v1/accounts/accountA-id/organization-nodes/accountA-location1-id
+          readOnly: true
+      title: OrganizationNodeBasic
+    AccountIdList:
+      description: List of account Ids
+      type: object
+      properties:
+        accountIds:
+          type: array
+          maxItems: 50
+          items:
+            type: string
+            example: ADFSET
+            minLength: 6
+            maxLength: 6
+          example:
+          - ADFSET
+          - WSFSET
+          description: List of account Ids
+    OrganizationNodeIdList:
+      description: List of organization node Ids
+      type: object
+      properties:
+        organizationNodeIds:
+          type: array
+          maxItems: 50
+          items:
+            type: string
+            example: ADFSET
+            minLength: 6
+            maxLength: 6
+          example:
+          - ADFSET
+          - WSFSET
+          description: List of organization node Ids
+    AccountStatusResponse:
+      description: Status of Accounts
+      type: object
+      properties:
+        accountId:
+          description: The unique 6 character id that represents the account.
+          type: string
+          example: AFSRFS
+          minLength: 6
+          maxLength: 6
+        features:
+          $ref: '#/components/schemas/AccountFeatureStatus'
+      allOf:
+      - $ref: '#/components/schemas/FeatureAction'
+    OrganizationNodeStatusResponse:
+      description: Status of OrganizationNode
+      type: object
+      properties:
+        organizationNodeId:
+          description: The unique 6 character id that represents the organization node.
+          type: string
+          example: AFSRFS
+          minLength: 6
+          maxLength: 6
+        action:
+          type: string
+          enum:
+          - ADD
+          - UPDATE
+          - DELETE
+          example: ADD
+          description: Action done for the account feature
+          readOnly: true
+        status:
+          type: string
+          enum:
+          - COMPLETED
+          - IN_PROGRESS
+          - FAILED
+          - DELETED
+          - DELETE_FAILED
+          - DELETE_IN_PROGRESS
+          example: COMPLETED
+          readOnly: true
+        message:
+          type: string
+          example: Feature added successfully
+          readOnly: true
+    AccountFeatureStatus:
+      description: Status of all features
+      type: object
+      properties:
+        chat:
+          $ref: '#/components/schemas/FeatureAction'
+        messaging:
+          $ref: '#/components/schemas/FeatureAction'
+        email:
+          $ref: '#/components/schemas/FeatureAction'
+        voice:
+          $ref: '#/components/schemas/FeatureAction'
+        desktop:
+          $ref: '#/components/schemas/FeatureAction'
+        aci:
+          $ref: '#/components/schemas/FeatureAction'
+        bvr:
+          $ref: '#/components/schemas/FeatureAction'
+        ucs:
+          $ref: '#/components/schemas/FeatureAction'
+        matching:
+          $ref: '#/components/schemas/FeatureAction'
+        recorder:
+          $ref: '#/components/schemas/FeatureAction'
+        outbound:
+          $ref: '#/components/schemas/FeatureAction'
+        cmvoice:
+          $ref: '#/components/schemas/FeatureAction'
+        advancedcmvoice:
+          $ref: '#/components/schemas/FeatureAction'
+        automatedoutreach:
+          $ref: '#/components/schemas/FeatureAction'
+        realtimevoicetranscription:
+          $ref: '#/components/schemas/FeatureAction'
+    FeatureAction:
+      description: Feature Status and action
+      type: object
+      properties:
+        action:
+          type: string
+          enum:
+          - ADD
+          - UPDATE
+          - DELETE
+          example: ADD
+          description: Action done for the account feature
+          readOnly: true
+        status:
+          type: string
+          enum:
+          - COMPLETED
+          - IN_PROGRESS
+          - FAILED
+          - DELETED
+          - DELETE_FAILED
+          - DELETE_IN_PROGRESS
+          example: COMPLETED
+          readOnly: true
+        message:
+          type: string
+          example: Feature added successfully
+          readOnly: true
+    VoiceFeature:
+      description: Voice feature object
+      type: object
+      properties:
+        consult:
+          type: boolean
+          description: flag to enable/disable the consult feature in order to allow the consult call.
+          default: true
+        mpcSIPTrunk:
+          type: string
+          description: value of SIP Trunk selected in case of UCCC
+          maxLength: 50
+        customSIPTrunk:
+          type: string
+          description: custom SIP Trunk value
+          maxLength: 255
+        emergencyCallSipTrunk:
+          type: string
+          description: emergency call SIP trunk Name
+          maxLength: 100
+        remotePartyHeader:
+          type: boolean
+          description: flag for Remote-Party-ID SIP header during transfer over BYOC Hybrid trunk
+          default: false
+    UcsFeature:
+      description: Uniform Communication Services
+      type: object
+      properties:
+        provider:
+          type: string
+          example: ACO,MSTeams,AvayaSpaces
+          readOnly: true
+          description: Value of the provider. Supported values are ACO,MSTeams,AvayaSpaces
+          maxLength: 255
+    DigitalChannelFeature:
+      type: object
+      description: Digital Channel feature
+    MessagingFeature:
+      type: object
+      description: Digital Channel feature
+    RecorderFeature:
+      description: Recorder Feature
+      type: object
+    OutboundFeature:
+      description: Outbound Feature
+      type: object
+    CMVoiceFeature:
+      description: Communication Managers Voice Feature
+      type: object
+    ACIFeature:
+      description: ACI(Avaya Conversational Intelligence) feature
+      type: object
+    BVRFeature:
+      description: BVR(Basic Voice Recorder) feature
+      type: object
+    MatchingFeature:
+      description: Matching feature
+      type: object
+    AutomatedOutreachFeature:
+      description: Automated Outreach Feature
+      type: object
+    AdvancedCMVoiceFeature:
+      description: Advanced Communication Managers Voice Feature
+      type: object
+    RealtimeVoiceTranscriptionFeature:
+      description: Realtime Voice Transcription Feature
+    Pagination:
+      type: object
+      properties:
+        pageNumber:
+          type: integer
+          description: The current page number.
+        pageSize:
+          type: integer
+          description: The max number of records that can be retrieved on this page.
+        total:
+          type: integer
+          description: The total number of records.
+    Links:
+      type: object
+      properties:
+        prev:
+          type: string
+          default: ''
+          description: URL of the previous page. Blank if currently on the first page.
+        next:
+          type: string
+          default: ''
+          description: URL of the next page. Blank if currently on the last page.
+    AuditSearchFilter:
+      type: object
+      description: 'The filter to be applied when searching for audit records.
+
+        '
+      properties:
+        startDate:
+          type: string
+          format: date-time
+          description: 'The starting datetime to use when searching for audit records (in ISO 8601 format including timezone,
+            ''yyyy-MM-dd''T''HH:mm:ss[.SSS]Z'').
+
+            '
+          example: '2021-11-13T20:25:39.534Z'
+        endDate:
+          type: string
+          format: date-time
+          description: 'The ending datetime to use when searching for audit records (in ISO 8601 format including timezone,
+            ''yyyy-MM-dd''T''HH:mm:ss[.SSS]Z'').
+
+            '
+          example: '2021-11-15T16:07:12.723Z'
+        author:
+          type: string
+          description: 'The ID of the author who changed the auditable object. This can be a user within the system or an
+            automated app.
+
+            '
+          maxLength: 255
+          pattern: ^[a-zA-Z0-9@._-]+$
+          example: jsmith@example.com
+        event:
+          type: string
+          description: "This field indicates the type of event that occurred on the auditable object.\n\nAn explanation of\
+            \ the values is listed below:\n  * CREATED - A new auditable object was created.\n  * UPDATED - An existing auditable\
+            \ object was updated.\n  * DELETED - An existing auditable object was deleted.\n"
+          enum:
+          - CREATED
+          - UPDATED
+          - DELETED
+        type:
+          description: 'The type of auditable object.
+
+
+            Accepted values:
+
+            * ACCOUNT
+
+            '
+          type: string
+          enum:
+          - ACCOUNT
+          example: ACCOUNT
+        ipAddress:
+          description: 'The originating IP Address of the author who changed the auditable object.
+
+            '
+          type: string
+          maxLength: 15
+          example: 165.225.72.60
+        searchKeyword:
+          description: 'Keyword to search for across all the audit records.
+
+            '
+          type: string
+          maxLength: 255
+      required:
+      - startDate
+      - endDate
+      - type
+    AuditRecord:
+      type: object
+      description: 'An audit record. Captures who, what, and when an auditable object changed within the system.
+
+        '
+      properties:
+        date:
+          type: string
+          description: 'The date and time of when the audit record was created.
+
+            '
+          example: '2021-06-24T19:03:01.463+00:00'
+        event:
+          type: string
+          description: "This field indicates the type of event that occurred on the auditable object.\n\nAn explanation of\
+            \ the values is listed below:\n  * CREATED - A new auditable object was created.\n  * UPDATED - An existing auditable\
+            \ object was updated.\n  * DELETED - An existing auditable object was deleted.\n  * ENABLED - An existing auditabled\
+            \ object was enabled.\n  * DISABLED - An existing auditabled object was disabled.\n"
+          enum:
+          - CREATED
+          - UPDATED
+          - DELETED
+          - ENABLED
+          - DISABLED
+        author:
+          type: string
+          example: jsmith@example.com
+          description: 'The ID of the author who changed the auditable object. This can be a user within the system or an
+            automated app.
+
+            '
+        type:
+          description: 'The type of auditable object.
+
+
+            Accepted values:
+
+            * ACCOUNT
+
+            '
+          type: string
+          enum:
+          - ACCOUNT
+        ipAddress:
+          description: 'The originating IP Address of the author who changed the auditable object.
+
+            '
+          type: string
+          example: 165.225.72.60
+        auditData:
+          $ref: '#/components/schemas/JsonNode'
+    JsonNode:
+      type: object
+      title: JsonNode
+      description: 'Contains the state of the auditable object at the time the audit record was created.
+
+        '
+    AuditRecords:
+      description: 'A collection of audit records.
+
+        '
+      type: object
+      properties:
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+        auditRecords:
+          type: array
+          items:
+            $ref: '#/components/schemas/AuditRecord'
+        links:
+          allOf:
+          - $ref: '#/components/schemas/Links'
+          example:
+            prev: /api/admin/account/v1/accounts/ASDJGE/audit-records:search?pageNumber=1&pageSize=10
+            next: /api/admin/account/v1/accounts/ASDJGE/audit-records:search?pageNumber=2&pageSize=10
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      description: This API uses Bearer Token Authorization Flow
+      bearerFormat: JWT
+    AppKey:
+      type: apiKey
+      in: header
+      name: appkey
+      description: This API needs an appKey as header
+  parameters:
+    accountId:
+      name: accountId
+      description: The unique 6 character internal id that represents the customer account.
+      required: true
+      in: path
+      schema:
+        type: string
+        minLength: 6
+        maxLength: 6
+        pattern: ^[a-zA-Z]{6}$
+        example: ABCDEF
+    pageNumber:
+      name: pageNumber
+      in: query
+      description: The page number of the records to retrieve. Default value is 1.
+      schema:
+        type: integer
+        format: int32
+        default: 1
+        minimum: 1
+        example: 2
+    organizationNodeId:
+      name: organizationNodeId
+      in: path
+      description: The unique 6 character internal id (uuid) that represents the organizationNode.
+      required: true
+      schema:
+        type: string
+        example: HAESVT
+        minLength: 6
+        maxLength: 6
+        pattern: ^[a-zA-Z]{6}$
+  examples:
+    AccountDetails:
+      description: Account Details
+      value:
+        url: /api/admin/account/v1/accounts/AQWSDE
+        name: SyncG
+        domains:
+        - domainName: avaya.com
+          isDefault: true
+        emergencyEmailAddresses:
+        - account1@avaya.com
+        isDefault: false
+        accountSize: 10
+        description: Account for SyncG
+        addresses:
+        - addressName: Office
+          addressId: 8be739b2-e4e3-411e-95aa-61e4c596e8a4
+          streetNumber: 12B
+          streetName: East Street
+          addressType: BASEMENT
+          addressTypeNumber: 12A
+          city: Pune
+          state: MH
+          countryCode: IN
+          zip: 41103Z
+          isDefault: true
+        createdAt: '2023-01-18T10:51:45.904Z'
+        organizationNodeTypes:
+        - name: Account
+          position: 1
+        - name: Location
+          position: 2
+        profiles:
+        - profileId: AQXSWF
+          url: /api/admin/user/v1/accounts/AVSDER/profiles/ASEDFG
+        features:
+          voice:
+            consult: true
+          chat: {}
+          email: {}
+          aci: {}
+          bvr: {}
+          ucs:
+            provider: MSTeams,ACO
+          recorder: {}
+          outbound: {}
+          messaging: {}
+          cmvoice: {}
+          automatedoutreach: {}
+          advancedcmvoice: {}
+          realtimevoicetranscription: {}
+        enabled: true
+        accountId: AQWSDE
+        enabledFeatures: matching,voice,chatucs,recorder,outbound,automatedoutreach,realtimevoicetranscription
+        countryCode: IN
+        timezone: Asia/Calcutta
+    AccountUpdateDetails:
+      description: Account Details
+      value:
+        name: SyncG
+        domains:
+        - domainName: avaya.com
+          isDefault: true
+        emergencyEmailAddresses:
+        - account1@avaya.com
+        accountSize: 10
+        description: Account for SyncG
+        addresses:
+        - addressName: Office
+          addressId: 8be739b2-e4e3-411e-95aa-61e4c596e8a4
+          streetNumber: 12B
+          streetName: East Street
+          addressType: BASEMENT
+          addressTypeNumber: 12A
+          city: Pune
+          state: MH
+          countryCode: IN
+          zip: 41103Z
+          isDefault: true
+        organizationNodeTypes:
+        - name: Account
+          position: 1
+        - name: Location
+          position: 2
+        profiles:
+        - profileId: AQXSWF
+          url: /api/admin/user/v1/accounts/AVSDER/profiles/ASEDFG
+        features:
+          voice:
+            consult: true
+          chat: {}
+          email: {}
+          aci: {}
+          bvr: {}
+          ucs:
+            provider: MSTeams,ACO
+          recorder: {}
+          outbound: {}
+          automatedoutreach: {}
+          messaging: {}
+          realtimevoicetranscription: {}
+        countryCode: IN
+        timezone: Asia/Calcutta
+    AccountDetails-Default:
+      description: Account Details
+      value:
+        url: /api/admin/account/v1/accounts/AQWSDE
+        name: SyncG
+        domains:
+        - domainName: avaya.com
+          isDefault: true
+        emergencyEmailAddresses:
+        - account1@avaya.com
+        isDefault: true
+        accountSize: 10
+        description: Account for SyncG
+        addresses:
+        - addressName: Office
+          addressId: 8be739b2-e4e3-411e-95aa-61e4c596e8a4
+          streetNumber: 12B
+          streetName: East Street
+          addressType: BASEMENT
+          addressTypeNumber: 12A
+          city: Pune
+          state: MH
+          countryCode: IN
+          zip: 41103Z
+          isDefault: true
+        createdAt: '2023-01-18T10:51:45.904Z'
+        organizationNodeTypes:
+        - name: Account
+          position: 1
+        - name: Location
+          position: 2
+        profiles:
+        - profileId: AQXSWF
+          url: /api/admin/user/v1/accounts/AVSDER/profiles/ASEDFG
+        features:
+          voice:
+            consult: true
+          chat: {}
+          email: {}
+          aci: {}
+          bvr: {}
+          ucs:
+            provider: MSTeams,ACO
+          recorder: {}
+          outbound: {}
+          messaging: {}
+          automatedoutreach: {}
+          realtimevoicetranscription: {}
+        enabled: true
+        accountId: AQWSDE
+        enabledFeatures: matching,voice,chatucs,recorder,outbound,automatedoutreach,realtimevoicetranscription
+        countryCode: IN
+        timezone: Asia/Calcutta
+    AccountPage:
+      description: Page of accounts
+      value:
+        pagination:
+          pageNumber: 1
+          pageSize: 10
+          total: 1
+        accounts:
+        - url: /api/admin/account/v1/accounts/AQWSDE
+          name: SyncG
+          domains:
+          - domainName: avaya.com
+            isDefault: true
+          emergencyEmailAddresses:
+          - account1@avaya.com
+          isDefault: false
+          accountSize: 10
+          description: Account for SyncG
+          addresses:
+          - addressName: Office
+            addressId: 8be739b2-e4e3-411e-95aa-61e4c596e8a4
+            streetNumber: 12B
+            streetName: East Street
+            addressType: BASEMENT
+            addressTypeNumber: 12A
+            city: Pune
+            state: MH
+            countryCode: IN
+            zip: 41103Z
+            isDefault: true
+          createdAt: '2023-01-18T10:51:45.904Z'
+          organizationNodeTypes:
+          - name: Account
+            position: 1
+          - name: Location
+            position: 2
+          profiles:
+          - profileId: AQXSWF
+            url: /api/admin/user/v1/accounts/AVSDER/profiles/ASEDFG
+          features:
+            voice:
+              consult: true
+            chat: {}
+            email: {}
+            aci: {}
+            bvr: {}
+            ucs:
+              provider: MSTeams,ACO
+            recorder: {}
+            outbound: {}
+            messaging: {}
+            automatedoutreach: {}
+            realtimevoicetranscription: {}
+          enabled: true
+          accountId: AQWSDE
+          countryCode: IN
+        links:
+          prev: https://example.avayacloud.com/api/admin/account/v1/accounts?pageNumber=1&pageSize=10
+          next: https://example.avayacloud.com/api/admin/account/v1/accounts?pageNumber=3&pageSize=10
+    AccountStatusesRequest:
+      description: Request for Account Statuses
+      value:
+        accountIds:
+        - AQSWDE
+    OrganizationNodeStatusesRequest:
+      description: Request for OrganizationNode Statuses
+      value:
+        organizationNodeIds:
+        - GFADED
+        - SWECDR
+    OrganizationNodePage:
+      description: OrganizationNode list response
+      value:
+        pagination:
+          pageNumber: 2
+          pageSize: 10
+          total: 45
+        organizationNodes:
+        - name: Location
+          parentPath: AccountA
+          organizationNodeId: ACDSFE
+          url: /api/admin/account/v1/accounts/accountA-id/organization-nodes/accountA-location1-id
+          nodeType: OrganizationNode
+          countryCode: IN
+        links:
+          prev: /api/admin/account/v1/accounts/accountId/organization-nodes?pageNumber=1&pageSize=10
+          next: /api/admin/account/v1/accounts/accountId/organization-nodes?pageNumber=3&pageSize=10
+    OrganizationNodeDetails:
+      description: OrganizationNode Details
+      value:
+        name: PuneLocation
+        parentPath: AccountA
+        organizationNodeId: ACDSFE
+        url: /api/admin/account/v1/accounts/AVSDER/organization-nodes/accountA-location1-id
+        nodeType: OrganizationNode
+        countryCode: IN
+        accountId: AVSDER
+        profiles:
+        - profileId: AQXSWF
+          url: /api/admin/user/v1/accounts/AVSDER/profiles/ASEDFG
+        children:
+        - /api/admin/account/v1/accounts/OHOTAT/organization-nodes/AQXSWF
+    OrganizationNodeReqDetails:
+      description: OrganizationNode Details
+      value:
+        name: PuneLocation
+        parentPath: AccountA
+        countryCode: IN
+    AccountStatuses:
+      description: List of Account statuses
+      value:
+      - action: ADD
+        status: COMPLETED
+        message: Completed successfully
+        accountId: DAERCS
+        features:
+          chat:
+            action: ADD
+            status: COMPLETED
+            message: Feature added successfully
+          messaging:
+            action: ADD
+            status: COMPLETED
+            message: Feature added successfully
+          email:
+            action: ADD
+            status: COMPLETED
+            message: Feature added successfully
+          voice:
+            action: ADD
+            status: COMPLETED
+            message: Feature added successfully
+          aci:
+            action: ADD
+            status: COMPLETED
+            message: Feature added successfully
+          bvr:
+            action: ADD
+            status: COMPLETED
+            message: Feature added successfully
+          cmvoice:
+            action: ADD
+            status: COMPLETED
+            message: Feature added successfully
+          advancedcmvoice:
+            action: ADD
+            status: COMPLETED
+            message: Feature added successfully
+    FailedAccountStatuses:
+      description: List of Account statuses
+      value:
+      - action: ADD
+        status: FAILED
+        message: Operation failed
+        accountId: ADESFR
+        features:
+          chat:
+            action: ADD
+            status: COMPLETED
+            message: Feature added successfully
+          messaging:
+            action: ADD
+            status: COMPLETED
+            message: Feature added successfully
+          email:
+            action: ADD
+            status: COMPLETED
+            message: Feature added successfully
+          voice:
+            action: ADD
+            status: COMPLETED
+            message: Feature added successfully
+          aci:
+            action: ADD
+            status: COMPLETED
+            message: Feature added successfully
+          bvr:
+            action: ADD
+            status: COMPLETED
+            message: Feature added successfully
+          cmvoice:
+            action: ADD
+            status: COMPLETED
+            message: Feature added successfully
+          advancedcmvoice:
+            action: ADD
+            status: COMPLETED
+            message: Feature added successfully
+    InProgressAccountStatuses:
+      description: List of Account statuses
+      value:
+      - action: ADD
+        status: IN_PROGRESS
+        message: Operation is in progress
+        accountId: AFSDET
+        features:
+          chat:
+            action: ADD
+            status: COMPLETED
+            message: Feature added successfully
+          messaging:
+            action: ADD
+            status: COMPLETED
+            message: Feature added successfully
+          email:
+            action: ADD
+            status: COMPLETED
+            message: Feature added successfully
+          voice:
+            action: ADD
+            status: IN_PROGRESS
+            message: Operation is in progress
+          aci:
+            action: ADD
+            status: COMPLETED
+            message: Feature added successfully
+          bvr:
+            action: ADD
+            status: COMPLETED
+            message: Feature added successfully
+          cmvoice:
+            action: ADD
+            status: COMPLETED
+            message: Feature added successfully
+          advancedcmvoice:
+            action: ADD
+            status: COMPLETED
+            message: Feature added successfully
+    OrganizationNodeStatuses:
+      description: List of OrganizationNode statuses
+      value:
+      - action: ADD
+        status: COMPLETED
+        message: Completed successfully
+        organizationNodeId: DAERCS
+    FailedOrganizationNodeStatuses:
+      description: List of OrganizationNode statuses
+      value:
+      - action: ADD
+        status: FAILED
+        message: Operation failed
+        organizationNodeId: ADESFR
+    InProgressOrganizationNodeStatuses:
+      description: List of OrganizationNode statuses
+      value:
+      - action: ADD
+        status: IN_PROGRESS
+        message: Operation is in progress
+        organizationNodeId: AFSDET
+    OrganizationNodeNotFoundError:
+      description: OrganizationNode not found
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#resource-not-found
+        title: OrganizationNode Not Found
+        status: 404
+        detail: Organization Node with organizationNodeId:ASDAES not found.
+    OrganizationNodeConflictError:
+      description: Conlict with the current state of the OrganizationNode
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#conflict
+        title: Conflict
+        status: 409
+        detail: Organization Node with name:PuneLocation already exists
+    ConflictError:
+      description: Conflict with the current state of the OrganizationNode
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#conflict
+        title: Conflict
+        status: 409
+        detail: Account with AccountName:SyncG already exists
+    ConstraintViolationError:
+      description: Constraint Violation
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#constraint-violation
+        title: Constraint Violation
+        status: 400
+        detail: A problem that indicates a syntactically correct, yet semantically illegal request. The Server can not process
+          this request until the client resolves the semantic errors described in the violations section.
+        violations:
+        - field: accountId
+          message: must match "^[a-zA-Z]{6}$"
+          code: 20006
+    UnauthorizedError:
+      description: Forbidden
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#unauthorized
+        title: Unauthorized
+        status: 401
+        detail: This operation requires authentication. See https://developers.avayacloud.com/onecloud-ccaas/docs/how-to-authenticate-with-ccaas-apis
+    ForbiddenError:
+      description: Forbidden
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#forbidden
+        title: Forbidden
+        status: 403
+        detail: According to the access control policy the current user and/or accountId does not have permission to access
+          this resource.
+    NotFoundError:
+      description: Resource not found
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#resource-not-found
+        title: Resource Not Found
+        status: 404
+        detail: Account with AccountId:ASDAES not found.
+    ServerError:
+      description: Internal Server Error
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#server-error
+        title: Server Error
+        status: 500
+        detail: An internal server error was encountered.
+    ErrorTooManyRecords:
+      description: Constraint Violation
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#constraint-violation
+        title: Constraint Violation
+        status: 400
+        detail: A problem that indicates a syntactically correct, yet semantically illegal request. The Server can not process
+          this request until the client resolves the semantic errors described in the violations section.
+        violations:
+        - field: interval
+          message: Too many records within the requested time interval.
+          code: 20007
+    SearchAuditRecordsRequest:
+      value:
+        startDate: '2021-11-13T20:25:39.534Z'
+        endDate: '2021-11-15T16:07:12.723Z'
+        event: CREATED
+        author: jsmith@example.com
+        type: ACCOUNT
+        ipAddress: 165.225.72.60
+        searchKeyword: Chris Dunbar
+    SearchAuditRecordsResponse:
+      value:
+        pagination:
+          pageNumber: 1
+          pageSize: 5
+          total: 1
+        auditRecords:
+        - date: '2021-11-14T09:24:05.234Z'
+          event: CREATED
+          author: jsmith@example.com
+          ipAddress: 165.225.72.60
+          type: ACCOUNT
+          auditData:
+            name: AricentAccount
+            type: ACCOUNT
+            enabled: true
+            accountSize: 10
+        links:
+          next: /api/admin/account/v1/accounts/ASDJGE/audit-records:search?pageNumber=2&pageSize=5
+          prev: /api/admin/account/v1/accounts/ASDJGE/audit-records:search?pageNumber=1&pageSize=5
+  responses:
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/UnauthorizedError'
+    Forbidden:
+      description: Forbidden
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ForbiddenError'
+    NotFound:
+      description: Not Found
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/NotFoundError'
+    OrganizationNodeNotFound:
+      description: Not Found
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/OrganizationNodeNotFoundError'
+    InternalServerError:
+      description: All other application errors
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ServerError'
+    ErrorConstraintViolation:
+      description: Constraint Violation
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ConstraintViolationError'
+    Conflict:
+      description: Conflict
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ConflictError'
+    OrganizationNodeConflict:
+      description: Conflict
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/OrganizationNodeConflictError'

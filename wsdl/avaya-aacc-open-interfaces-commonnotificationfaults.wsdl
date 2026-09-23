@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions 
+	name="NotificationFaults" 
+	targetNamespace="http://www.nortel.com/soa/oi/cct/notification/faults" 
+	xmlns="http://schemas.xmlsoap.org/wsdl/"
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" 
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+	xmlns:wsnt="http://www.nortel.com/soa/oi/cct/notification"
+	xmlns:tns="http://www.nortel.com/soa/oi/cct/notification/faults">
+
+	<wsdl:types>
+		<xsd:schema elementFormDefault="qualified" targetNamespace="http://www.nortel.com/soa/oi/cct/notification/faults">
+				<xsd:import 
+					namespace="http://www.nortel.com/soa/oi/cct/notification" 
+					schemaLocation="CommonNotificationTypes.xsd" />
+				<xsd:element name="ResourceUnknownFault" type="wsnt:ResourceUnknownFaultType"/>
+				<xsd:element name="SubscribeCreationFailedFault" type="wsnt:SubscribeCreationFailedFaultType"/>
+				<xsd:element name="TopicPathDialectUnknownFault" type="wsnt:TopicPathDialectUnknownFaultType"/>
+				<xsd:element name="InvalidTopicExpressionFault" type="wsnt:InvalidTopicExpressionFaultType"/>
+				<xsd:element name="TopicNotSupportedFault" type="wsnt:TopicNotSupportedFaultType"/>
+				<xsd:element name="RenewSubscriptionFailedFault" type="wsnt:RenewSubscriptionFailedFaultType"/>
+				<xsd:element name="UnacceptableTerminationTimeFault" type="wsnt:UnacceptableTerminationTimeFaultType" />
+				<xsd:element name="UnableToDestroySubscriptionFault" type="wsnt:UnableToDestroySubscriptionFaultType" /> 
+		</xsd:schema>
+	</wsdl:types>
+
+	<wsdl:message name="ResourceUnknownFault">
+		<part name="ResourceUnknownFault" element="tns:ResourceUnknownFault" />
+	</wsdl:message> 
+
+	<wsdl:message name="SubscribeCreationFailedFault">
+		<part name="SubscribeCreationFailedFault" element="tns:SubscribeCreationFailedFault" />
+	</wsdl:message> 
+
+	<wsdl:message name="TopicPathDialectUnknownFault">
+		<part name="TopicPathDialectUnknownFault" element="tns:TopicPathDialectUnknownFault" />
+	</wsdl:message> 
+	
+	<wsdl:message name="UnableToDestroySubscriptionFault">
+		<wsdl:part name="UnableToDestroySubscriptionFault" element="tns:UnableToDestroySubscriptionFault" />
+	</wsdl:message>
+
+	<wsdl:message name="RenewSubscriptionFailedFault">
+		<part name="RenewSubscriptionFailedFault" element="tns:RenewSubscriptionFailedFault" />
+	</wsdl:message> 
+	
+	<wsdl:message name="UnacceptableTerminationTimeFault">
+		<wsdl:part name="UnacceptableTerminationTimeFault" element="tns:UnacceptableTerminationTimeFault" />
+	</wsdl:message>
+	
+</wsdl:definitions>

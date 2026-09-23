@@ -1,0 +1,627 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<wsdl:definitions name="session_service_interface" 
+	targetNamespace="http://www.nortel.com/soa/oi/cct/SessionService" 
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" 
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+	xmlns:service="http://www.nortel.com/soa/oi/cct/SessionService"
+	xmlns:types="http://www.nortel.com/soa/oi/cct/types" 
+	xmlns:exceptions="http://www.nortel.com/soa/oi/cct/faults"
+	xmlns:local="http://www.nortel.com/soa/oi/cct/types/SessionService">
+
+	<wsdl:import 
+		namespace="http://www.nortel.com/soa/oi/cct/faults" 
+		location="SessionServiceExceptions.wsdl" />
+
+	<wsdl:types>
+		<xsd:schema 
+			elementFormDefault="qualified" 
+			xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+			targetNamespace="http://www.nortel.com/soa/oi/cct/SessionService">
+			<xsd:import namespace="http://www.nortel.com/soa/oi/cct/types/SessionService" schemaLocation="SessionService.xsd"></xsd:import>
+		</xsd:schema>
+	</wsdl:types>
+
+	<wsdl:message name="CreateContactRequest">
+		<wsdl:part name="parameters" element="local:CreateContactRequest" />
+	</wsdl:message>
+
+	<wsdl:message name="CreateContactResponse">
+		<wsdl:part name="result" element="local:CreateContactResponse"></wsdl:part>
+	</wsdl:message>
+
+	<wsdl:message name="UnHoldContactRequest">
+		<wsdl:part name="parameters" element="local:UnHoldContactRequest"></wsdl:part>
+	</wsdl:message>
+
+	<wsdl:message name="UnHoldContactResponse"></wsdl:message>
+
+	<wsdl:message name="TransferContactRequest">
+		<wsdl:part name="parameters" element="local:TransferContactRequest"></wsdl:part>
+	</wsdl:message>
+
+	<wsdl:message name="TransferContactResponse"></wsdl:message>
+
+	<wsdl:message name="AnswerContactRequest">
+		<wsdl:part name="parameters" element="local:AnswerContactRequest"></wsdl:part>
+	</wsdl:message>
+
+	<wsdl:message name="AnswerContactResponse"></wsdl:message>
+
+	<wsdl:message name="DropContactRequest">
+		<wsdl:part name="parameters" element="local:DropContactRequest"></wsdl:part>
+	</wsdl:message>
+
+	<wsdl:message name="DropContactResponse"></wsdl:message>
+
+	<wsdl:message name="HoldContactRequest">
+		<wsdl:part name="parameters" element="local:HoldContactRequest"></wsdl:part>
+	</wsdl:message>
+
+	<wsdl:message name="HoldContactResponse"></wsdl:message>
+
+	<wsdl:message name="SetToReadyStateRequest">
+		<wsdl:part name="parameters" element="local:SetToReadyStatetRequest"></wsdl:part>
+	</wsdl:message>
+
+	<wsdl:message name="SetToReadyStateResponse"></wsdl:message>
+
+	<wsdl:message name="SetToNotReadyStateRequest">
+		<wsdl:part name="parameters" element="local:SetToNotReadyStatetRequest"></wsdl:part>
+
+	</wsdl:message>
+
+	<wsdl:message name="SetToNotReadyStateResponse"></wsdl:message>
+
+	<wsdl:message name="GetReadyStateRequest">
+		<wsdl:part name="parameters" element="local:GetReadyStateRequest"></wsdl:part>
+	</wsdl:message>
+
+	<wsdl:message name="GetReadyStateResponse">
+		<wsdl:part name="parameters" element="local:GetReadyStateResponse"></wsdl:part>
+	</wsdl:message>
+
+	<wsdl:message name="MakeSetBusyRequest">
+		<wsdl:part name="parameters" element="local:MakeSetBusyRequest" />
+	</wsdl:message>
+
+	<wsdl:message name="MakeSetBusyResponse"></wsdl:message>
+
+	<wsdl:message name="SetActivityCodeRequest">
+		<wsdl:part name="parameters" element="local:SetActivityCodeRequest" />
+	</wsdl:message>
+
+	<wsdl:message name="SetActivityCodeResponse"></wsdl:message>
+
+	<wsdl:message name="GetIntrinsicsRequest">
+	<wsdl:part name="parameters" element="local:GetIntrinsicsRequest" />
+	</wsdl:message>
+	
+	<wsdl:message name="GetIntrinsicsResponse">
+	<wsdl:part name="response" element="local:GetIntrinsicsResponse" />
+	</wsdl:message>
+	
+	<wsdl:message name="SetIntrinsicsRequest">
+	<wsdl:part name="parameters" element="local:SetIntrinsicsRequest" />
+	</wsdl:message>
+	
+	<wsdl:message name="SetIntrinsicsResponse"></wsdl:message>
+
+	<wsdl:message name="SetContactDataRequest">
+		<wsdl:part name="parameters" element="local:SetContactDataRequest" />
+	</wsdl:message>
+
+	<wsdl:message name="SetContactDataResponse"></wsdl:message>
+
+	<wsdl:message name="GetContactDataRequest">
+		<wsdl:part name="parameters" element="local:GetContactDataRequest" />
+	</wsdl:message>
+	
+	<wsdl:message name="GetContactDataResponse">
+		<wsdl:part name="parameters" element="local:GetContactDataResponse" />
+	</wsdl:message>
+
+	<wsdl:message name="SetToNotReadyStateWithReasonCodeRequest">
+		<wsdl:part name="parameters" element="local:SetToNotReadyStateWithReasonCodeRequest" />
+	</wsdl:message>
+
+	<wsdl:message name="SetToNotReadyStateWithReasonCodeResponse"></wsdl:message>
+
+	<wsdl:message name="CompleteConferenceRequest">
+		<wsdl:part name="parameters" element="local:CompleteConferenceRequest" />
+	</wsdl:message>
+
+	<wsdl:message name="CompleteConferenceResponse" />
+
+	<wsdl:message name="InitiateConferenceRequest">
+		<wsdl:part name="parameters" element="local:InitiateConferenceRequest" />
+	</wsdl:message>
+
+	<wsdl:message name="InitiateConferenceResponse">
+		<wsdl:part name="result" element="local:InitiateConferenceResponse" />
+	</wsdl:message>
+
+	<wsdl:message name="LoginAgentRequest">
+		<wsdl:part name="parameters" element="local:LoginAgentRequest" />
+	</wsdl:message>
+
+	<wsdl:message name="LoginAgentResponse" />
+
+	<wsdl:message name="LogoutAgentRequest">
+		<wsdl:part name="parameters" element="local:LogoutAgentRequest" />
+	</wsdl:message>
+
+	<wsdl:message name="LogoutAgentResponse" />
+
+	<wsdl:message name="LoginAgentToStateRequest">
+		<wsdl:part name="parameters" element="local:LoginAgentToStateRequest" />
+	</wsdl:message>
+
+	<wsdl:message name="LoginAgentToStateResponse" />
+
+	<wsdl:message name="CompleteSupervisedTransferRequest">
+		<wsdl:part name="parameters" element="local:CompleteSupervisedTransferRequest" />
+	</wsdl:message>
+
+	<wsdl:message name="CompleteSupervisedTransferResponse" />
+
+	<wsdl:message name="InitiateSupervisedTransferRequest">
+		<wsdl:part name="parameters" element="local:InitiateSupervisedTransferRequest" />
+	</wsdl:message>
+
+	<wsdl:message name="InitiateSupervisedTransferResponse">
+		<wsdl:part name="result" element="local:InitiateSupervisedTransferResponse" />
+	</wsdl:message>
+
+	<wsdl:message name="EmergencyKeyRequest">
+		<wsdl:part name="parameters" element="local:EmergencyKeyRequest" />
+	</wsdl:message>
+
+	<wsdl:message name="EmergencyKeyResponse" />
+
+	<wsdl:message name="CallSupervisorRequest">
+		<wsdl:part name="parameters" element="local:CallSupervisorRequest" />
+	</wsdl:message>
+
+	<wsdl:message name="CallSupervisorResponse" />
+
+	<wsdl:message name="LogInToCCTServerRequest">
+		<wsdl:part name="parameters" element="local:LogInToCCTServerRequest" />
+	</wsdl:message>
+
+	<wsdl:message name="LogInToCCTServerResponse">
+		<wsdl:part name="result" element="local:LogInToCCTServerResponse" />
+	</wsdl:message>
+
+	<wsdl:message name="LogOffFromCCTServerRequest">
+		<wsdl:part name="parameters" element="local:LogOffFromCCTServerRequest" />
+	</wsdl:message>
+	<wsdl:message name="LogOffFromCCTServerResponse" />
+
+	<wsdl:message name="GetTerminalRequest">
+		<wsdl:part name="parameters" element="local:GetTerminalRequest" />
+	</wsdl:message>
+
+	<wsdl:message name="GetTerminalResponse">
+		<wsdl:part name="result" element="local:TerminalResponse" />
+	</wsdl:message>
+
+	<wsdl:message name="GetTerminalsRequest">
+		<wsdl:part name="parameters" element="local:GetTerminalsRequest" />
+	</wsdl:message>
+
+	<wsdl:message name="GetTerminalsResponse">
+		<wsdl:part name="result" element="local:GetTerminalsResponse" />
+	</wsdl:message>
+
+	<wsdl:message name="GetTerminalAddressesRequest">	
+	<wsdl:part name="parameters" element="local:GetTerminalAddressesRequest" />
+	</wsdl:message>
+	
+	<wsdl:message name="GetTerminalAddressesResponse">
+		<wsdl:part name="result" element="local:GetTerminalAddressesResponse" />
+	</wsdl:message>
+
+	<wsdl:message name="GetAddressRequest">
+		<wsdl:part name="parameters" element="local:GetAddressRequest" />
+	</wsdl:message>
+
+	<wsdl:message name="GetAddressResponse">
+		<wsdl:part name="result" element="local:AddressResponse" />
+	</wsdl:message>
+
+	<wsdl:message name="GetAddressesRequest">
+		<wsdl:part name="parameters" element="local:GetAddressesRequest" />
+	</wsdl:message>
+
+	<wsdl:message name="GetAddressesResponse">
+		<wsdl:part name="result" element="local:GetAddressesResponse" />
+	</wsdl:message>
+
+	<wsdl:message name="GetAgentTerminalsResponse">
+		<wsdl:part name="result" element="local:GetAgentTerminalsResponse" />
+	</wsdl:message>
+
+	<wsdl:message name="GetAgentTerminalsRequest">
+		<wsdl:part name="parameters" element="local:GetAgentTerminalsRequest" />
+	</wsdl:message>
+	
+	<wsdl:message name="GetAgentsRequest">
+		<wsdl:part name="parameters" element="local:GetAgentsRequest" />
+	</wsdl:message>
+	
+	<wsdl:message name="GetAgentsResponse">
+		<wsdl:part name="response" element="local:GetAgentsResponse" />
+	</wsdl:message>
+	
+	<wsdl:message name="LoginAgentToTerminalRequest">
+		<wsdl:part name="parameters" element="local:LoginAgentToTerminalRequest" />
+	</wsdl:message>
+	
+	<wsdl:message name="LoginAgentToTerminalResponse"/>		
+	
+	<wsdl:message name="LogoutAgentFromTerminalRequest">
+		<wsdl:part name="parameters" element="local:LogoutAgentFromTerminalRequest" />
+	</wsdl:message>
+	
+	<wsdl:message name="LogoutAgentFromTerminalResponse"/>
+	
+	<wsdl:message name="GetContactRequest">
+		<wsdl:part name="parameters" element="local:GetContactRequest" />
+	</wsdl:message>
+	
+	<wsdl:message name="GetContactResponse">
+		<wsdl:part name="response" element="local:GetContactResponse" />
+	</wsdl:message>
+	
+	<wsdl:message name="GenerateDTMFRequest">
+		<wsdl:part name="parameters" element="local:GenerateDTMFRequest" />
+	</wsdl:message>
+	
+	<wsdl:message name="GenerateDTMFResponse">
+	</wsdl:message>	
+	
+	<wsdl:message name="GetCurrentAddressCountRequest">
+		<wsdl:part name="parameters" element="local:GetCurrentAddressCountRequest" />
+	</wsdl:message>
+	
+	<wsdl:message name="GetCurrentAddressCountResponse">
+		<wsdl:part name="response" element="local:GetCurrentAddressCountResponse" />
+	</wsdl:message>
+	
+	<wsdl:message name="GetCurrentTerminalCountRequest">
+		<wsdl:part name="parameters" element="local:GetCurrentTerminalCountRequest" />
+	</wsdl:message>
+	
+	<wsdl:message name="GetCurrentTerminalCountResponse">
+		<wsdl:part name="response" element="local:GetCurrentTerminalCountResponse" />
+	</wsdl:message>
+	
+	<wsdl:message name="GetAgentAddressesRequest">
+		<wsdl:part name="parameters" element="local:GetAgentAddressesRequest" />
+	</wsdl:message>
+	
+	<wsdl:message name="GetAgentAddressesResponse">
+		<wsdl:part name="response" element="local:GetAgentAddressesResponse" />
+	</wsdl:message>
+	
+	<wsdl:message name="DisposeRequest">
+		<wsdl:part name="parameters" element="local:DisposeRequest" />
+	</wsdl:message>
+	
+	<wsdl:message name="DisposeResponse">		
+	</wsdl:message>
+	
+	<wsdl:message name="GetVersionRequest">
+		<wsdl:part name="parameters" element="local:GetVersionRequest" />
+	</wsdl:message>
+	
+	<wsdl:message name="GetVersionResponse">
+		<wsdl:part name="response" element="local:GetVersionResponse" />
+	</wsdl:message>
+
+	<wsdl:portType name="SessionService">
+
+		<wsdl:operation name="CreateContact">
+			<wsdl:input name="CreateContactRequest" message="service:CreateContactRequest" />
+			<wsdl:output name="CreateContactResponse" message="service:CreateContactResponse" />
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="CreateContactException" message="exceptions:CreateContactException" />
+		</wsdl:operation>
+
+		<wsdl:operation name="UnHoldContact">
+			<wsdl:input name="UnHoldContactRequest" message="service:UnHoldContactRequest" />
+			<wsdl:output name="UnHoldContactResponse" message="service:UnHoldContactResponse" />
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="UnHoldContactException" message="exceptions:UnHoldContactException" />
+		</wsdl:operation>
+
+		<wsdl:operation name="TransferContact">
+			<wsdl:input name="TransferContactRequest" message="service:TransferContactRequest" />
+			<wsdl:output name="TransferContactResponse" message="service:TransferContactResponse" />
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="TransferContactException" message="exceptions:TransferContactException" />
+		</wsdl:operation>
+
+		<wsdl:operation name="AnswerContact">
+			<wsdl:input name="AnswerContactRequest" message="service:AnswerContactRequest" />
+			<wsdl:output name="AnswerContactResponse" message="service:AnswerContactResponse" />
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="AnswerContactException" message="exceptions:AnswerContactException" />
+		</wsdl:operation>
+
+		<wsdl:operation name="DropContact">
+			<wsdl:input name="DropContactRequest" message="service:DropContactRequest" />
+			<wsdl:output name="DropContactResponse" message="service:DropContactResponse" />
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="DropContactException" message="exceptions:DropContactException" />
+		</wsdl:operation>
+
+		<wsdl:operation name="HoldContact">
+			<wsdl:input name="HoldContactRequest" message="service:HoldContactRequest" />
+			<wsdl:output name="HoldContactResponse" message="service:HoldContactResponse" />
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="HoldContactException" message="exceptions:HoldContactException" />
+		</wsdl:operation>
+
+		<wsdl:operation name="SetToReadyState">
+			<wsdl:input name="SetToReadyStateRequest" message="service:SetToReadyStateRequest" />
+			<wsdl:output name="SetToReadyStateResponse" message="service:SetToReadyStateResponse" />
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="SetToReadyStateException" message="exceptions:SetToReadyStateException" />
+		</wsdl:operation>
+
+		<wsdl:operation name="SetToNotReadyState">
+			<wsdl:input name="SetToNotReadyStateRequest" message="service:SetToNotReadyStateRequest" />
+			<wsdl:output name="SetToNotReadyStateResponse" message="service:SetToNotReadyStateResponse" />
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="SetToNotReadyStateException" message="exceptions:SetToNotReadyStateException" />
+		</wsdl:operation>
+
+		<wsdl:operation name="GetReadyState">
+			<wsdl:input name="GetReadyStateRequest" message="service:GetReadyStateRequest" />
+			<wsdl:output name="GetReadyStateResponse" message="service:GetReadyStateResponse" />
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="GetReadyStateException" message="exceptions:GetReadyStateException" />
+		</wsdl:operation>
+
+		<wsdl:operation name="MakeSetBusy">
+			<wsdl:input name="MakeSetBusyRequest" message="service:MakeSetBusyRequest"></wsdl:input>
+			<wsdl:output name="MakeSetBusyResponse" message="service:MakeSetBusyResponse"></wsdl:output>
+			<wsdl:fault name="MakeSetBusyException" message="exceptions:MakeSetBusyException" />
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+		</wsdl:operation>
+
+		<wsdl:operation name="SetToNotReadyStateWithReasonCode">
+			<wsdl:input name="SetToNotReadyStateWithReasonCodeRequest" message="service:SetToNotReadyStateWithReasonCodeRequest" />
+			<wsdl:output name="SetToNotReadyStateWithReasonCodeResponse" message="service:SetToNotReadyStateWithReasonCodeResponse" />
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="SetToNotReadyStateWithReasonCodeException" message="exceptions:SetToNotReadyStateWithReasonCodeException" />
+		</wsdl:operation>
+
+		<wsdl:operation name="GetIntrinsics">
+			<wsdl:input name="GetIntrinsicsRequest" message="service:GetIntrinsicsRequest" />
+			<wsdl:output name="GetIntrinsicsResponse" message="service:GetIntrinsicsResponse" />
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="GetIntrinsicsException" message="exceptions:GetIntrinsicsException" />
+		</wsdl:operation>
+
+		<wsdl:operation name="SetIntrinsics">
+			<wsdl:input name="SetIntrinsicsRequest" message="service:SetIntrinsicsRequest" />
+			<wsdl:output name="SetIntrinsicsResponse" message="service:SetIntrinsicsResponse" />
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="SetIntrinsicsException" message="exceptions:SetIntrinsicsException" />
+		</wsdl:operation>
+
+		<wsdl:operation name="SetContactData">
+			<wsdl:input name="SetContactDataRequest" message="service:SetContactDataRequest" />
+			<wsdl:output name="SetContactDataResponse" message="service:SetContactDataResponse" />
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="SetContactDataException" message="exceptions:SetContactDataException" />
+		</wsdl:operation>
+
+		<wsdl:operation name="GetContactData">
+			<wsdl:input name="GetContactDataRequest" message="service:GetContactDataRequest" />
+			<wsdl:output name="GetContactDataResponse" message="service:GetContactDataResponse" />
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="GetContactDataException" message="exceptions:GetContactDataException" />
+		</wsdl:operation>
+
+		<wsdl:operation name="SetActivityCode">
+			<wsdl:input name="SetActivityCodeRequest" message="service:SetActivityCodeRequest" />
+			<wsdl:output name="SetActivityCodeResponse" message="service:SetActivityCodeResponse" />
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="SetActivityCodeException" message="exceptions:SetActivityCodeException" />
+		</wsdl:operation>
+
+		<wsdl:operation name="InitiateConference">
+			<wsdl:input name="InitiateConferenceRequest" message="service:InitiateConferenceRequest"></wsdl:input>
+			<wsdl:output name="InitiateConferenceResponse" message="service:InitiateConferenceResponse"></wsdl:output>
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="InitiateConferenceException" message="exceptions:InitiateConferenceException" />
+		</wsdl:operation>
+
+		<wsdl:operation name="CompleteConference">
+			<wsdl:input name="CompleteConferenceRequest" message="service:CompleteConferenceRequest"></wsdl:input>
+			<wsdl:output name="CompleteConferenceResponse" message="service:CompleteConferenceResponse"></wsdl:output>
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="CompleteConferenceException" message="exceptions:CompleteConferenceException" />
+		</wsdl:operation>
+
+		<wsdl:operation name="InitiateSupervisedTransfer">
+			<wsdl:input name="InitiateSupervisedTransferRequest" message="service:InitiateSupervisedTransferRequest"></wsdl:input>
+			<wsdl:output name="InitiateSupervisedTransferResponse" message="service:InitiateSupervisedTransferResponse"></wsdl:output>
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="InitiateSupervisedTransferException" message="exceptions:InitiateSupervisedTransferException" />
+		</wsdl:operation>
+
+		<wsdl:operation name="CompleteSupervisedTransfer">
+			<wsdl:input name="CompleteSupervisedTransferRequest" message="service:CompleteSupervisedTransferRequest"></wsdl:input>
+			<wsdl:output name="CompleteSupervisedTransferResponse" message="service:CompleteSupervisedTransferResponse"></wsdl:output>
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="CompleteSupervisedTransferException" message="exceptions:CompleteSupervisedTransferException" />
+		</wsdl:operation>
+
+		<wsdl:operation name="LoginAgent">
+			<wsdl:input name="LoginAgentRequest" message="service:LoginAgentRequest" />
+			<wsdl:output name="LoginAgentResponse" message="service:LoginAgentResponse" />
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="LoginAgentException" message="exceptions:LoginAgentException" />
+		</wsdl:operation>
+
+		<wsdl:operation name="LogoutAgent">
+			<wsdl:input name="LogoutAgentRequest" message="service:LogoutAgentRequest" />
+			<wsdl:output name="LogoutAgentResponse" message="service:LogoutAgentResponse" />
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="LogoutAgentException" message="exceptions:LogoutAgentException" />
+		</wsdl:operation>
+
+		<wsdl:operation name="LoginAgentToState">
+			<wsdl:input name="LoginAgentToStateRequest" message="service:LoginAgentToStateRequest" />
+			<wsdl:output name="LoginAgentToStateResponse" message="service:LoginAgentToStateResponse" />
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="LoginAgentToStateException" message="exceptions:LoginAgentToStateException" />
+		</wsdl:operation>
+
+		<wsdl:operation name="EmergencyKey">
+			<wsdl:input name="EmergencyKeyRequest" message="service:EmergencyKeyRequest" />
+			<wsdl:output name="EmergencyKeyResponse" message="service:EmergencyKeyResponse" />
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="EmergencyKeyException" message="exceptions:EmergencyKeyException" />
+		</wsdl:operation>
+
+		<wsdl:operation name="CallSupervisor">
+			<wsdl:input name="CallSupervisorRequest" message="service:CallSupervisorRequest" />
+			<wsdl:output name="CallSupervisorResponse" message="service:CallSupervisorResponse" />
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="CallSupervisorException" message="exceptions:CallSupervisorException" />
+		</wsdl:operation>
+
+		<wsdl:operation name="LogInToCCTServer">
+			<wsdl:input name="LogInToCCTServerRequest" message="service:LogInToCCTServerRequest" />
+			<wsdl:output name="LogInToCCTServerResponse" message="service:LogInToCCTServerResponse" />
+			<wsdl:fault name="LogInToCCTServerException" message="exceptions:LogInToCCTServerException" />
+		</wsdl:operation>
+
+		<wsdl:operation name="LogOffFromCCTServer">
+			<wsdl:input name="LogOffFromCCTServerRequest" message="service:LogOffFromCCTServerRequest" />
+			<wsdl:output name="LogOffFromCCTServerResponse" message="service:LogOffFromCCTServerResponse" />
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="LogOffFromCCTServerException" message="exceptions:LogOffFromCCTServerException" />
+		</wsdl:operation>
+
+		<wsdl:operation name="GetTerminal">
+			<wsdl:input name="GetTerminalRequest" message="service:GetTerminalRequest" />
+			<wsdl:output name="GetTerminalResponse" message="service:GetTerminalResponse" />
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="GetTerminalException" message="exceptions:GetTerminalException" />
+		</wsdl:operation>
+
+		<wsdl:operation name="GetTerminals">
+			<wsdl:input name="GetTerminalsRequest" message="service:GetTerminalsRequest" />
+			<wsdl:output name="GetTerminalsResponse" message="service:GetTerminalsResponse" />
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="GetTerminalsException" message="exceptions:GetTerminalsException" />
+		</wsdl:operation>
+
+		<wsdl:operation name="GetTerminalAddresses">
+			<wsdl:input name="GetTerminalAddressesRequest" message="service:GetTerminalAddressesRequest"/>				
+			<wsdl:output name="GetTerminalAddressesResponse" message="service:GetTerminalAddressesResponse"/>
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />				
+			<wsdl:fault name="GetTerminalAddressesException" message="exceptions:GetTerminalAddressesException"/>				
+		</wsdl:operation>
+		
+		<wsdl:operation name="GetAgentTerminals">
+			<wsdl:input name="GetAgentTerminalsRequest" message="service:GetAgentTerminalsRequest" />
+			<wsdl:output name="GetAgentTerminalsResponse" message="service:GetAgentTerminalsResponse" />
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="GetAgentTerminalsException" message="exceptions:GetAgentTerminalsException" />
+		</wsdl:operation>
+
+		<wsdl:operation name="GetAddress">
+			<wsdl:input name="GetAddressRequest" message="service:GetAddressRequest" />
+			<wsdl:output name="GetAddressResponse" message="service:GetAddressResponse" />
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="GetAddressException" message="exceptions:GetAddressException" />
+		</wsdl:operation>
+
+		<wsdl:operation name="GetAddresses">
+			<wsdl:input name="GetAddressesRequest" message="service:GetAddressesRequest" />
+			<wsdl:output name="GetAddressesResponse" message="service:GetAddressesResponse" />
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="GetAddressesException" message="exceptions:GetAddressesException" />
+		</wsdl:operation>
+		
+		<wsdl:operation name="GetAgents">
+			<wsdl:input name="GetAgentsRequest" message="service:GetAgentsRequest" />
+			<wsdl:output name="GetAgentsResponse" message="service:GetAgentsResponse" />
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="GetAgentsException" message="exceptions:GetAgentsException" />
+		</wsdl:operation>
+		
+		<wsdl:operation name="LoginAgentToTerminal">
+			<wsdl:input name="LoginAgentToTerminalRequest" message="service:LoginAgentToTerminalRequest" />
+			<wsdl:output name="LoginAgentToTerminalResponse" message="service:LoginAgentToTerminalResponse" />
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="LoginAgentToTerminalException" message="exceptions:LoginAgentToTerminalException" />
+		</wsdl:operation>
+		
+		<wsdl:operation name="LogoutAgentFromTerminal">
+			<wsdl:input name="LogoutAgentFromTerminalRequest" message="service:LogoutAgentFromTerminalRequest" />
+			<wsdl:output name="LogoutAgentFromTerminalResponse" message="service:LogoutAgentFromTerminalResponse" />
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="LogoutAgentFromTerminalException" message="exceptions:LogoutAgentFromTerminalException" />
+		</wsdl:operation>
+		
+		<wsdl:operation name="GetContact">
+			<wsdl:input name="GetContactRequest" message="service:GetContactRequest" />
+			<wsdl:output name="GetContactResponse" message="service:GetContactResponse" />
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="GetContactException" message="exceptions:GetContactException" />
+		</wsdl:operation>
+		
+		<wsdl:operation name="GenerateDTMF">
+			<wsdl:input name="GenerateDTMFRequest" message="service:GenerateDTMFRequest" />
+			<wsdl:output name="GenerateDTMFResponse" message="service:GenerateDTMFResponse" />
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="GenerateDTMFException" message="exceptions:GenerateDTMFException" />
+		</wsdl:operation>		
+
+		<wsdl:operation name="GetCurrentAddressCount">
+			<wsdl:input name="GetCurrentAddressCountRequest" message="service:GetCurrentAddressCountRequest" />
+			<wsdl:output name="GetCurrentAddressCountResponse" message="service:GetCurrentAddressCountResponse" />
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="GetCurrentAddressCountException" message="exceptions:GetCurrentAddressCountException" />
+		</wsdl:operation>
+		
+		<wsdl:operation name="GetCurrentTerminalCount">
+			<wsdl:input name="GetCurrentTerminalCountRequest" message="service:GetCurrentTerminalCountRequest" />
+			<wsdl:output name="GetCurrentTerminalCountResponse" message="service:GetCurrentTerminalCountResponse" />
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="GetCurrentTerminalCountException" message="exceptions:GetCurrentTerminalCountException" />
+		</wsdl:operation>
+			
+		<wsdl:operation name="GetAgentAddresses">
+			<wsdl:input name="GetAgentAddressesRequest" message="service:GetAgentAddressesRequest" />
+			<wsdl:output name="GetAgentAddressesResponse" message="service:GetAgentAddressesResponse" />
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="GetAgentAddressesException" message="exceptions:GetAgentAddressesException" />
+		</wsdl:operation>
+		
+		<wsdl:operation name="Dispose">
+			<wsdl:input name="DisposeRequest" message="service:DisposeRequest" />
+			<wsdl:output name="DisposeResponse" message="service:DisposeResponse" />
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="DisposeException" message="exceptions:DisposeException" />
+		</wsdl:operation>
+		
+		<wsdl:operation name="GetVersion">
+			<wsdl:input message="service:GetVersionRequest" />
+			<wsdl:output message="service:GetVersionResponse" />
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="GetVersionException" message="exceptions:GetVersionException" />
+		</wsdl:operation>
+
+	</wsdl:portType>
+
+</wsdl:definitions>

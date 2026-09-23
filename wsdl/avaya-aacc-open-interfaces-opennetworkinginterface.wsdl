@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<wsdl:definitions name="OpenNetworking"
+	xmlns="http://schemas.xmlsoap.org/wsdl/"
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"  
+	xmlns:types="http://www.nortel.com/soa/oi/OpenNetworking/types"
+	xmlns:tns="http://www.nortel.com/soa/oi/OpenNetworking"
+	targetNamespace="http://www.nortel.com/soa/oi/OpenNetworking">
+  
+	<wsdl:types>
+		<xsd:schema 
+			elementFormDefault="qualified" 
+			xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+			targetNamespace="http://www.nortel.com/soa/oi/OpenNetworking">
+			<xsd:import namespace="http://www.nortel.com/soa/oi/OpenNetworking/types" schemaLocation="OpenNetworking.xsd"></xsd:import>
+		</xsd:schema>
+	</wsdl:types>  
+
+	<wsdl:message name="GetVersionRequest" >
+		<wsdl:part name="parameters" element="types:GetVersionRequest"/>
+	</wsdl:message>
+	
+	<wsdl:message name="GetVersionResponse">
+		<wsdl:part name="result" element="types:GetVersionResponse"/>
+	</wsdl:message>
+	
+	<wsdl:message name="GetVersionFault">
+		<wsdl:part name="parameters" element="types:GetVersionFault"/>
+	</wsdl:message>
+
+	<wsdl:message name="ReserveCDNLandingPadResponse">
+		<wsdl:part name="parameters" element="types:ReserveLandingPadResponse"/>
+	</wsdl:message>
+
+	<wsdl:message name="CancelCDNLandingPadResponse">
+		<wsdl:part name="parameters" element="types:CancelLandingPadResponse"/>
+	</wsdl:message>
+
+	<wsdl:message name="LandingPadReservationFault">
+		<part name="LandingPadReservationFault" element="types:LandingPadReservationFault" />
+	</wsdl:message> 
+	
+	<wsdl:message name="LandingPadCancellationFault">
+		<part name="LandingPadCancellationFault" element="types:LandingPadCancellationFault" />
+	</wsdl:message>
+	
+	<wsdl:message name="ReserveCDNLandingPadRequest" >
+		<wsdl:part name="parameters" element="types:ReserveCDNLandingPadRequest"/>
+	</wsdl:message>
+	
+	<wsdl:message name="CancelCDNLandingPadRequest" >
+		<wsdl:part name="parameters" element="types:CancelCDNLandingPadRequest"/>
+	</wsdl:message> 
+		
+	<wsdl:portType name="OpenNetworking">
+		
+		<wsdl:operation  name="GetVersion">
+			<wsdl:input  message="tns:GetVersionRequest" />
+			<wsdl:output message="tns:GetVersionResponse" />
+			<wsdl:fault  name="GetVersionFault" message="tns:GetVersionFault" />     
+		</wsdl:operation>
+		
+		<wsdl:operation  name="ReserveCDNLandingPad">
+			<wsdl:input  message="tns:ReserveCDNLandingPadRequest" />
+			<wsdl:output message="tns:ReserveCDNLandingPadResponse" />
+			<wsdl:fault  name="LandingPadReservationFault" message="tns:LandingPadReservationFault" />     
+		</wsdl:operation>
+		
+		<wsdl:operation  name="CancelCDNLandingPad">
+			<wsdl:input  message="tns:CancelCDNLandingPadRequest" />
+			<wsdl:output message="tns:CancelCDNLandingPadResponse" />
+			<wsdl:fault  name="LandingPadCancellationFault" message="tns:LandingPadCancellationFault" />     
+		</wsdl:operation>
+		
+	</wsdl:portType>
+	
+</wsdl:definitions>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<definitions name="CallEventConsumer"
+	xmlns="http://schemas.xmlsoap.org/wsdl/"
+	xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+	xmlns:tns="http://www.nortel.com/soa/oi/cct/CallEventConsumer"
+	targetNamespace="http://www.nortel.com/soa/oi/cct/CallEventConsumer">
+   
+	<types>
+		<schema elementFormDefault="qualified" xmlns="http://www.w3.org/2001/XMLSchema">			
+			<import namespace="http://www.nortel.com/soa/oi/cct/CallEventConsumer" schemaLocation="CallEventConsumer.xsd" />
+		</schema>	
+	</types>
+      
+   <message name="CallEvent">
+      <part name="callEvent" type="tns:callEvent"/>	  
+   </message>
+   
+   <portType name="CallEventConsumer">
+      <operation name="notifyCallEvent">
+         <input message="tns:CallEvent" />
+      </operation>
+   </portType>
+      
+	<binding name="CallEventConsumerPortBinding" type="tns:CallEventConsumer">
+		<soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+		<operation name="notifyCallEvent">
+			<soap:operation soapAction="http://www.nortel.com/soa/oi/cct/notificationconsumer/service/notifyCallEvent"/>
+			<input>
+				<soap:body use="literal"/>
+			</input>
+		</operation>
+	</binding>
+	
+	<service name="CallEventConsumerService">
+		<port name="CallEventConsumerPort" binding="tns:CallEventConsumerPortBinding">
+			<soap:address location="http://localhost:9090/SOAOICCT/services/CallEventConsumer" />
+		</port>
+	</service>
+	
+</definitions>

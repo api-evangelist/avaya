@@ -1,0 +1,478 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<wsdl:definitions name="terminal_service_interface"
+	targetNamespace="http://www.nortel.com/soa/oi/cct/TerminalService"
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns:service="http://www.nortel.com/soa/oi/cct/TerminalService"
+	xmlns:types="http://www.nortel.com/soa/oi/cct/types"
+	xmlns:exceptions="http://www.nortel.com/soa/oi/cct/faults"
+	xmlns:local="http://www.nortel.com/soa/oi/cct/types/TerminalService">
+
+	<wsdl:import 
+		namespace="http://www.nortel.com/soa/oi/cct/faults"
+		location="SessionServiceExceptions.wsdl" />
+
+	<wsdl:types>
+
+		<xsd:schema elementFormDefault="qualified"
+			xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+			targetNamespace="http://www.nortel.com/soa/oi/cct/types/TerminalService">
+
+			<xsd:import
+				namespace="http://www.nortel.com/soa/oi/cct/types"
+				schemaLocation="types.xsd">
+			</xsd:import>
+			
+			<xsd:complexType name="StringResponse">
+				<xsd:sequence>
+					<xsd:element name="response" type="xsd:string" />
+				</xsd:sequence>
+			</xsd:complexType>
+			
+			<xsd:complexType name="IsForwardedResponse">
+				<xsd:sequence>
+					<xsd:element name="isForwarded" type="xsd:boolean" />					
+				</xsd:sequence>
+			</xsd:complexType>
+						
+			<xsd:complexType name="GetDoNotDisturbResponse">
+				<xsd:sequence>
+					<xsd:element name="doNotDisturb" type="xsd:boolean" />					
+				</xsd:sequence>
+			</xsd:complexType>
+			
+			<xsd:complexType name="GetTerminalConnectionsResponse">
+				<xsd:sequence>
+					<xsd:element name="terminalConnection" type="types:terminalConnection" minOccurs="0" maxOccurs="unbounded"/>					
+				</xsd:sequence>
+			</xsd:complexType>
+			
+			<xsd:complexType name="GetRelatedAddressesResponse">
+				<xsd:sequence>
+					<xsd:element name="address" type="types:address" minOccurs="0" maxOccurs="unbounded"/>					
+				</xsd:sequence>
+			</xsd:complexType>
+			
+			<xsd:complexType name="GetTerminalCapabilitiesResponse">
+				<xsd:sequence>
+					<xsd:element name="terminalCapabilities" type="types:terminalCapabilities" />					
+				</xsd:sequence>
+			</xsd:complexType>
+			
+			<xsd:complexType name="TerminalRequest">
+				<xsd:sequence>
+					<xsd:element name="ssoToken" type="types:ssoToken" />
+					<xsd:element name="terminal" type="types:terminal" />															
+				</xsd:sequence>
+			</xsd:complexType>
+			
+			<xsd:complexType name="GetForwardingResponse">
+				<xsd:sequence>
+					<xsd:element name="forwarding" type="types:forwarding" minOccurs="0" maxOccurs="unbounded" />
+				</xsd:sequence>
+			</xsd:complexType>
+
+			<xsd:complexType name="SetDoNotDisturbTerminalRequest">
+				<xsd:sequence>
+					<xsd:element name="ssoToken" type="types:ssoToken" />
+					<xsd:element name="terminal" type="types:terminal" />
+					<xsd:element name="doNotDisturb" type="xsd:boolean" />
+				</xsd:sequence>
+			</xsd:complexType>
+			
+			<xsd:complexType name="SetForwardingTerminalRequest">
+				<xsd:sequence>
+					<xsd:element name="ssoToken" type="types:ssoToken" />
+					<xsd:element name="terminal" type="types:terminal" />
+					<xsd:element name="forwarding" type="types:forwarding" minOccurs="0" maxOccurs="unbounded" />
+				</xsd:sequence>
+			</xsd:complexType>
+			
+			<xsd:complexType name="TerminalOriginateRequest">
+				<xsd:sequence>
+					<xsd:element name="ssoToken" type="types:ssoToken" />
+					<xsd:element name="terminal" type="types:terminal" />
+					<xsd:element name="address" type="types:address" />					
+					<xsd:element name="destinationAddress" type="xsd:string" />
+				</xsd:sequence>
+			</xsd:complexType>
+			
+			<xsd:complexType name="ContactResponse">
+				<xsd:sequence>
+					<xsd:element name="contact" type="types:contact" />					
+				</xsd:sequence>
+			</xsd:complexType>
+			
+			<xsd:complexType name="PickupFromAddressRequest">
+				<xsd:sequence>
+					<xsd:element name="ssoToken" type="types:ssoToken" />
+					<xsd:element name="terminal" type="types:terminal" />					
+					<xsd:element name="destinationAddress" type="types:address" />
+					<xsd:element name="terminalAddress" type="types:address" />
+				</xsd:sequence>
+			</xsd:complexType>
+			
+			<xsd:complexType name="PickupFromTerminalRequest">
+				<xsd:sequence>
+					<xsd:element name="ssoToken" type="types:ssoToken" />
+					<xsd:element name="terminal" type="types:terminal" />
+					<xsd:element name="terminalConnection" type="types:terminalConnection" />
+					<xsd:element name="terminalAddress" type="types:address" />
+				</xsd:sequence>
+			</xsd:complexType>
+			
+			<xsd:complexType name="PickupFromGroupRequest">
+				<xsd:sequence>
+					<xsd:element name="ssoToken" type="types:ssoToken" />
+					<xsd:element name="terminal" type="types:terminal" />
+					<xsd:element name="pickupGroup" type="xsd:string" />
+					<xsd:element name="terminalAddress" type="types:address" />
+				</xsd:sequence>
+			</xsd:complexType>
+			
+			<xsd:complexType name="TerminalConnectionResponse">
+				<xsd:sequence>
+					<xsd:element name="terminalConnection" type="types:terminalConnection" />					
+				</xsd:sequence>
+			</xsd:complexType>
+						
+			
+			<xsd:complexType name="GetContactTypesResponse">
+				<xsd:sequence>
+					<xsd:element name="contactTypes" type="xsd:string" minOccurs="0" maxOccurs="unbounded" />					
+				</xsd:sequence>
+			</xsd:complexType>
+			
+			<!-- 
+			<xsd:complexType name="GetStateResponse">
+				<xsd:sequence>
+					<xsd:element name="state" type="types:state" />
+				</xsd:sequence>
+			</xsd:complexType>
+			-->
+			<xsd:complexType name="GetStateResponse">
+				<xsd:sequence>
+					<xsd:element name="resourseState" type="types:resourceState" />
+				</xsd:sequence>
+			</xsd:complexType>
+
+			
+			<xsd:element name="GetVersionRequest" type="types:getVersionRequest" />
+			<xsd:element name="GetVersionResponse" type="types:getVersionResponse" />
+					
+			<xsd:element name="GetCapabilitiesRequest" type="local:TerminalRequest" />					
+			<xsd:element name="GetCapabilitiesResponse" type="local:GetTerminalCapabilitiesResponse" />
+			
+			<xsd:element name="GetTerminalConnectionsRequest" type="local:TerminalRequest" />					
+			<xsd:element name="GetTerminalConnectionsResponse" type="local:GetTerminalConnectionsResponse" />
+			
+			<xsd:element name="GetRelatedAddressesRequest" type="local:TerminalRequest" />					
+			<xsd:element name="GetRelatedAddressesResponse" type="local:GetRelatedAddressesResponse" />
+			
+			<xsd:element name="GetDoNotDisturbRequest" type="local:TerminalRequest" />					
+			<xsd:element name="GetDoNotDisturbResponse" type="local:GetDoNotDisturbResponse" />
+			
+			<xsd:element name="IsForwardedRequest" type="local:TerminalRequest" />					
+			<xsd:element name="IsForwardedResponse" type="local:IsForwardedResponse" />
+					
+			<xsd:element name="SetForwardingRequest" type="local:SetForwardingTerminalRequest" />					
+			
+			<xsd:element name="SetDoNotDisturbRequest" type="local:SetDoNotDisturbTerminalRequest" />			
+			
+			<xsd:element name="GetForwardingRequest" type="local:TerminalRequest" />
+			<xsd:element name="GetForwardingResponse" type="local:GetForwardingResponse" />
+			
+			<xsd:element name="CancelForwardingRequest" type="local:TerminalRequest" />
+			
+			<xsd:element name="OriginateRequest" type="local:TerminalOriginateRequest"/>
+			<xsd:element name="OriginateResponse" type="local:ContactResponse"/>
+			
+			<xsd:element name="GetStateRequest" type="local:TerminalRequest"/>
+			<xsd:element name="GetStateResponse" type="local:GetStateResponse"/>
+			
+			<xsd:element name="PickupFromAddressRequest" type="local:PickupFromAddressRequest"/>
+			<xsd:element name="PickupFromAddressResponse" type="local:TerminalConnectionResponse"/>
+			
+			<xsd:element name="PickupFromTerminalRequest" type="local:PickupFromTerminalRequest"/>
+			<xsd:element name="PickupFromTerminalResponse" type="local:TerminalConnectionResponse"/>
+			
+			<xsd:element name="PickupFromGroupRequest" type="local:PickupFromGroupRequest"/>
+			<xsd:element name="PickupFromGroupResponse" type="local:TerminalConnectionResponse"/>
+			
+			<xsd:element name="GetContactTypesRequest" type="local:TerminalRequest"/>
+			<xsd:element name="GetContactTypesResponse" type="local:GetContactTypesResponse"/>
+			
+			<xsd:element name="GetDefaultContactTypeRequest" type="local:TerminalRequest"/>
+			<xsd:element name="GetDefaultContactTypeResponse" type="local:StringResponse"/>			
+				
+		</xsd:schema>
+	</wsdl:types>
+	
+	<wsdl:message name="GetVersionRequest">
+		<wsdl:part name="parameters" element="local:GetVersionRequest" />
+	</wsdl:message>
+	
+	<wsdl:message name="GetVersionResponse">
+		<wsdl:part name="response" element="local:GetVersionResponse" />
+	</wsdl:message>
+	
+	<wsdl:message name="GetCapabilitiesRequest">	
+		<wsdl:part name="parameters" element="local:GetCapabilitiesRequest" />
+	</wsdl:message>
+	<wsdl:message name="GetCapabilitiesResponse">
+	<wsdl:part name="response" element="local:GetCapabilitiesResponse" />
+	</wsdl:message>
+	
+	<wsdl:message name="GetTerminalConnectionsRequest">	
+		<wsdl:part name="parameters" element="local:GetTerminalConnectionsRequest" />
+	</wsdl:message>
+	
+	<wsdl:message name="GetTerminalConnectionsResponse">
+	<wsdl:part name="response" element="local:GetTerminalConnectionsResponse" />
+	</wsdl:message>
+	
+	<wsdl:message name="GetRelatedAddressesRequest">	
+		<wsdl:part name="parameters" element="local:GetRelatedAddressesRequest" />
+	</wsdl:message>
+	
+	<wsdl:message name="GetRelatedAddressesResponse">
+	<wsdl:part name="response" element="local:GetRelatedAddressesResponse" />
+	</wsdl:message>
+	
+	<wsdl:message name="GetDoNotDisturbRequest">	
+		<wsdl:part name="parameters" element="local:GetDoNotDisturbRequest" />
+	</wsdl:message>
+	<wsdl:message name="GetDoNotDisturbResponse">
+	<wsdl:part name="response" element="local:GetDoNotDisturbResponse" />
+	</wsdl:message>
+	
+	<wsdl:message name="IsForwardedRequest">	
+		<wsdl:part name="parameters" element="local:IsForwardedRequest" />
+	</wsdl:message>
+	<wsdl:message name="IsForwardedResponse">
+	<wsdl:part name="response" element="local:IsForwardedResponse" />
+	</wsdl:message>
+	
+	<wsdl:message name="SetForwardingRequest">
+		<wsdl:part name="parameters" element="local:SetForwardingRequest" />
+	</wsdl:message>
+	<wsdl:message name="SetForwardingResponse">
+	</wsdl:message>
+	
+	<wsdl:message name="SetDoNotDisturbRequest">
+		<wsdl:part name="parameters" element="local:SetDoNotDisturbRequest" />
+	</wsdl:message>
+	<wsdl:message name="SetDoNotDisturbResponse">
+	</wsdl:message>
+	
+	<wsdl:message name="CancelForwardingRequest">
+		<wsdl:part name="parameters" element="local:CancelForwardingRequest" />
+	</wsdl:message>
+	<wsdl:message name="CancelForwardingResponse">
+	</wsdl:message>
+ 
+ 
+ <wsdl:message name="GetForwardingRequest">
+		<wsdl:part name="parameters" element="local:GetForwardingRequest" />
+	</wsdl:message>
+	<wsdl:message name="GetForwardingResponse">
+		<wsdl:part name="response" element="local:GetForwardingResponse" />
+	</wsdl:message>
+
+
+<wsdl:message name="OriginateRequest">
+		<wsdl:part name="parameters" element="local:OriginateRequest" />
+	</wsdl:message>
+	<wsdl:message name="OriginateResponse">
+		<wsdl:part name="response" element="local:OriginateResponse" />
+	</wsdl:message>
+	
+	<wsdl:message name="GetStateRequest">
+		<wsdl:part name="parameters" element="local:GetStateRequest" />
+	</wsdl:message>
+	<wsdl:message name="GetStateResponse">
+		<wsdl:part name="response" element="local:GetStateResponse" />
+	</wsdl:message>
+	
+	<wsdl:message name="PickupFromAddressRequest">
+		<wsdl:part name="parameters" element="local:PickupFromAddressRequest" />
+	</wsdl:message>
+	<wsdl:message name="PickupFromAddressResponse">
+		<wsdl:part name="response" element="local:PickupFromAddressResponse" />
+	</wsdl:message>
+	
+	<wsdl:message name="PickupFromTerminalRequest">
+		<wsdl:part name="parameters" element="local:PickupFromTerminalRequest" />
+	</wsdl:message>
+	<wsdl:message name="PickupFromTerminalResponse">
+		<wsdl:part name="response" element="local:PickupFromTerminalResponse" />
+	</wsdl:message>
+	
+	<wsdl:message name="PickupFromGroupRequest">
+		<wsdl:part name="parameters" element="local:PickupFromGroupRequest" />
+	</wsdl:message>
+	<wsdl:message name="PickupFromGroupResponse">
+		<wsdl:part name="response" element="local:PickupFromGroupResponse" />
+	</wsdl:message>
+	
+	<wsdl:message name="GetContactTypesRequest">
+		<wsdl:part name="parameters" element="local:GetContactTypesRequest" />
+	</wsdl:message>
+	<wsdl:message name="GetContactTypesResponse">
+		<wsdl:part name="response" element="local:GetContactTypesResponse" />
+	</wsdl:message>
+	
+	<wsdl:message name="GetDefaultContactTypeRequest">
+		<wsdl:part name="parameters" element="local:GetDefaultContactTypeRequest" />
+	</wsdl:message>
+	<wsdl:message name="GetDefaultContactTypeResponse">
+		<wsdl:part name="response" element="local:GetDefaultContactTypeResponse" />
+	</wsdl:message>
+	
+	
+	
+
+	<wsdl:portType name="TerminalService">
+
+		<wsdl:operation name="GetVersion">
+			<wsdl:input message="service:GetVersionRequest" />
+			<wsdl:output message="service:GetVersionResponse" />
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="GetVersionException" message="exceptions:GetVersionException" />
+		</wsdl:operation>
+		
+		<wsdl:operation name="GetCapabilities">
+			<wsdl:input message="service:GetCapabilitiesRequest" />
+			<wsdl:output message="service:GetCapabilitiesResponse" />
+			<wsdl:fault name="SessionNotCreatedException"
+				message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="GetCapabilitiesException"
+				message="exceptions:GetCapabilitiesException" />
+		</wsdl:operation>
+
+		<wsdl:operation name="GetTerminalConnections">
+			<wsdl:input message="service:GetTerminalConnectionsRequest" />
+			<wsdl:output message="service:GetTerminalConnectionsResponse" />
+			<wsdl:fault name="SessionNotCreatedException"
+				message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="GetTerminalConnectionsException"
+				message="exceptions:GetTerminalConnectionsException" />
+		</wsdl:operation>
+
+
+		<wsdl:operation name="GetRelatedAddresses">
+			<wsdl:input message="service:GetRelatedAddressesRequest" />
+			<wsdl:output message="service:GetRelatedAddressesResponse" />
+			<wsdl:fault name="SessionNotCreatedException"
+				message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="GetRelatedAddressesException"
+				message="exceptions:GetRelatedAddressesException" />
+		</wsdl:operation>
+
+
+		<wsdl:operation name="GetDoNotDisturb">
+			<wsdl:input message="service:GetDoNotDisturbRequest" />
+			<wsdl:output message="service:GetDoNotDisturbResponse" />
+			<wsdl:fault name="SessionNotCreatedException"
+				message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="GetDoNotDisturbException"
+				message="exceptions:GetDoNotDisturbException" />
+		</wsdl:operation>
+
+		<wsdl:operation name="IsForwarded">
+			<wsdl:input message="service:IsForwardedRequest" />
+			<wsdl:output message="service:IsForwardedResponse" />
+			<wsdl:fault name="SessionNotCreatedException"
+				message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="IsForwardedException"
+				message="exceptions:IsForwardedException" />
+		</wsdl:operation>
+		
+		<wsdl:operation name="SetDoNotDisturb">
+			<wsdl:input message="service:SetDoNotDisturbRequest" />
+			<wsdl:output message="service:SetDoNotDisturbResponse" />
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="SetDoNotDisturbException" message="exceptions:SetDoNotDisturbException" />
+		</wsdl:operation>
+		
+		
+		<wsdl:operation name="SetForwarding">
+			<wsdl:input message="service:SetForwardingRequest" />
+			<wsdl:output message="service:SetForwardingResponse" />
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="SetForwardingException" message="exceptions:SetForwardingException" />
+		</wsdl:operation>
+		
+		<wsdl:operation name="CancelForwarding">
+			<wsdl:input message="service:CancelForwardingRequest" />
+			<wsdl:output message="service:CancelForwardingResponse" />
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="CancelForwardingException" message="exceptions:CancelForwardingException" />
+		</wsdl:operation>
+		
+		<wsdl:operation name="GetForwarding">
+			<wsdl:input message="service:GetForwardingRequest" />
+			<wsdl:output message="service:GetForwardingResponse" />
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="GetForwardingException" message="exceptions:GetForwardingException" />
+		</wsdl:operation>
+
+		<wsdl:operation name="Originate">
+			<wsdl:input message="service:OriginateRequest" />
+			<wsdl:output message="service:OriginateResponse" />
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="OriginateException" message="exceptions:OriginateException" />
+		</wsdl:operation>
+		
+		<wsdl:operation name="GetState">
+			<wsdl:input message="service:GetStateRequest" />
+			<wsdl:output message="service:GetStateResponse" />
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="GetStateException" message="exceptions:GetStateException" />
+		</wsdl:operation>
+		
+		<wsdl:operation name="PickupFromAddress">
+			<wsdl:input message="service:PickupFromAddressRequest" />
+			<wsdl:output message="service:PickupFromAddressResponse" />
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="PickupException" message="exceptions:PickupException" />
+		</wsdl:operation>
+		
+		<wsdl:operation name="PickupFromTerminal">
+			<wsdl:input message="service:PickupFromTerminalRequest" />
+			<wsdl:output message="service:PickupFromTerminalResponse" />
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="PickupException" message="exceptions:PickupException" />
+		</wsdl:operation>
+		
+		<wsdl:operation name="PickupFromGroup">
+			<wsdl:input message="service:PickupFromGroupRequest" />
+			<wsdl:output message="service:PickupFromGroupResponse" />
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="PickupFromGroupException" message="exceptions:PickupFromGroupException" />
+		</wsdl:operation>
+		
+		<wsdl:operation name="GetContactTypes">
+			<wsdl:input message="service:GetContactTypesRequest" />
+			<wsdl:output message="service:GetContactTypesResponse" />
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="GetContactTypesException" message="exceptions:GetContactTypesException" />
+		</wsdl:operation>
+		
+		<wsdl:operation name="GetDefaultContactType">
+			<wsdl:input message="service:GetDefaultContactTypeRequest" />
+			<wsdl:output message="service:GetDefaultContactTypeResponse" />
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="GetDefaultContactTypeException" message="exceptions:GetDefaultContactTypeException" />
+		</wsdl:operation>
+		
+		
+
+
+		
+	</wsdl:portType>
+
+
+
+</wsdl:definitions>

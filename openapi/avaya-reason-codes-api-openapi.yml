@@ -1,0 +1,911 @@
+openapi: 3.2.0
+info:
+  title: Admin - Voice Reason Codes API
+  description: 'The Voice provider APIs are used to manage information about voice specific elements and different voice related entities e.g. Phone numbers.
+
+
+    Voice Services will support multiple ways to provision voice providers
+
+    1. Programmatic Interface (Rest APIs)
+
+    2. User Interface'
+  contact:
+    name: Avaya API Team
+    url: https://developers.avayacloud.com/onecloud-ccaas
+    email: apiteam@avaya.com
+  license:
+    name: Avaya Software Development Kit (SDK) Software License Terms
+    url: http://support.avaya.com/css/P8/documents/101038288
+  version: 1.0.2
+servers:
+- url: '{protocol}://{server}{basePath}'
+  description: Open API
+  variables:
+    protocol:
+      enum:
+      - https
+      default: https
+    server:
+      default: HOST-REGION.api.avayacloud.com
+    basePath:
+      default: /api/admin/voice/v1
+security:
+- {}
+- BearerAuth: []
+  AppKey: []
+tags:
+- name: Reason Codes
+  description: Reason codes are a set of codes that agents can select from agent desktop clients to further describe their current activity or state. Reason Codes consist of a unique codeName, codeNumber and codeType combination. This API is used to create, update, retrieve and delete NOT_READY, LOGOUT reason codes and CALL_WORK_CODES codes.
+paths:
+  /accounts/{accountId}/communication-managers/{communicationManagerId}/reason-codes:
+    get:
+      tags:
+      - Reason Codes
+      summary: List Reason Codes
+      description: '**This API requires the Account Administrator role.**
+
+
+        Returns list of Reason Codes based on the specified filtering criteria. If no filtering criteria is specified, this call returns list of all Reason Codes.'
+      operationId: listReasonCodes
+      parameters:
+      - $ref: '#/components/parameters/accountId'
+      - $ref: '#/components/parameters/communicationManagerId'
+      - name: codeType
+        in: query
+        description: The mandatory type of the codes to query.
+        required: true
+        schema:
+          type: string
+          enum:
+          - NOT_READY
+          - LOGOUT
+          - CALL_WORK_CODE
+          example: NOT_READY
+      - name: codeName
+        in: query
+        description: The optional name of the code to query.
+        required: false
+        schema:
+          type: string
+          minLength: 1
+          maxLength: 255
+          example: Lunch
+      - name: codeNumber
+        in: query
+        description: The optional number of the code to query.
+        required: false
+        schema:
+          type: string
+          minLength: 1
+          maxLength: 16
+          example: '75'
+      - $ref: '#/components/parameters/pageNumber'
+      - name: pageSize
+        in: query
+        description: 'The maximum number of results per page. Default value is 10, max value is 100.
+
+          '
+        required: false
+        schema:
+          type: integer
+          format: int32
+          example: 10
+          default: 10
+          minimum: 1
+          maximum: 100
+      - name: orderBy
+        in: query
+        required: false
+        description: 'Specifies how response data should be sorted. Only codeName and codeNumber are valid options.
+
+          Field Names are case-senstive (should be written as it is in description).
+
+          To specify descending order, a suffix " desc" should be added. For example, "codeName asc" for ascending or "codeName desc" for descending".
+
+          The default sorting order is codeName ascending.
+
+          '
+        schema:
+          type: string
+          default: codeName
+          maxLength: 260
+        examples:
+          orderByCodeNameInDescendingOrder:
+            value: codeName desc
+            summary: sort data based on codeName in descending order
+          orderByCodeNameInAscendingOrder:
+            value: codeName
+            summary: sort data based on codeName in ascending order
+          orderByCodeNumberInDescendingOrder:
+            value: codeNumber desc
+            summary: sort data based on codeNumber in descending order
+          orderByCodeNumberInAscendingOrder:
+            value: codeNumber
+            summary: sort data based on codeNumber in ascending order
+          orderByCodeTypeInDescendingOrder:
+            value: codeType desc
+            summary: sort data based on codeType in descending order
+          orderByCodeTypeInAscendingOrder:
+            value: codeType
+            summary: sort data based on codeType in ascending order
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReasonCodePage'
+              examples:
+                default:
+                  $ref: '#/components/examples/ReasonCodePageResponse'
+        '400':
+          description: Constraint violation for accountId
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                default:
+                  $ref: '#/components/examples/ErrorConstraintViolation'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    post:
+      tags:
+      - Reason Codes
+      summary: Create Reason Code
+      description: '**This API requires the Account Administrator role.**
+
+
+        Creates a new Reason Code that can then be selected by agents in a agent desktop client. Reason codes can be of type ''NOT_READY'', ''LOGOUT'' or ''CALL_WORK_CODE''. ''NOT_READY'' is used to indicate the reason the agent has went not ready (will not receive any new Engagements).'
+      operationId: createReasonCode
+      parameters:
+      - $ref: '#/components/parameters/accountId'
+      - $ref: '#/components/parameters/communicationManagerId'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReasonCode'
+            examples:
+              Not Ready Reason Code:
+                $ref: '#/components/examples/NotReadyCreateRequest'
+              Logout Reason Code:
+                $ref: '#/components/examples/LogoutCreateRequest'
+              Call Work Code:
+                $ref: '#/components/examples/CallWorkCodeCreateRequest'
+        description: Reason Code
+        required: true
+      responses:
+        '202':
+          description: Accepted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AsynchronousOperationResponse'
+              examples:
+                default:
+                  $ref: '#/components/examples/ReasonCodeAsyncResponse'
+        '400':
+          description: Constraint violation while creating Reason Code
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                default:
+                  $ref: '#/components/examples/ErrorConstraintViolation'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /accounts/{accountId}/communication-managers/{communicationManagerId}/reason-codes/{reasonCodeId}:
+    put:
+      tags:
+      - Reason Codes
+      summary: Update Reason Code
+      description: '**This API requires the Account Administrator role.**
+
+
+        "Update an existing Reason Code name, description and/or other properties."'
+      operationId: updateReasonCode
+      parameters:
+      - $ref: '#/components/parameters/accountId'
+      - $ref: '#/components/parameters/communicationManagerId'
+      - $ref: '#/components/parameters/reasonCodeId'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateReasonCode'
+            examples:
+              Not Ready Reason Code:
+                $ref: '#/components/examples/NotReadyUpdateRequest'
+              Logout Reason Code:
+                $ref: '#/components/examples/LogoutUpdateRequest'
+              Call Work Code:
+                $ref: '#/components/examples/CallWorkCodeUpdateRequest'
+        required: true
+      responses:
+        '202':
+          description: Accepted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AsynchronousOperationResponse'
+              examples:
+                default:
+                  $ref: '#/components/examples/ReasonCodeAsyncResponse'
+        '400':
+          description: Constraint violation for accountId
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                default:
+                  $ref: '#/components/examples/ErrorConstraintViolation'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    get:
+      tags:
+      - Reason Codes
+      summary: Details of a Reason Code
+      description: '**This API requires the Account Administrator role.**
+
+
+        Gets a Reason Code by its unique reasonCodeId.'
+      operationId: getReasonCode
+      parameters:
+      - $ref: '#/components/parameters/accountId'
+      - $ref: '#/components/parameters/communicationManagerId'
+      - $ref: '#/components/parameters/reasonCodeId'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReasonCodeResponse'
+              examples:
+                default:
+                  $ref: '#/components/examples/ReasonCodeResponse'
+        '204':
+          description: No content
+        '400':
+          description: Constraint violation for reasonCodeId
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                default:
+                  $ref: '#/components/examples/ErrorConstraintViolation'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    delete:
+      tags:
+      - Reason Codes
+      summary: Delete Reason Code
+      description: '**This API requires the Account Administrator role.**
+
+
+        Deletes a Reason Code by ID.'
+      operationId: deleteReasonCode
+      parameters:
+      - $ref: '#/components/parameters/accountId'
+      - $ref: '#/components/parameters/communicationManagerId'
+      - $ref: '#/components/parameters/reasonCodeId'
+      responses:
+        '202':
+          description: Accepted
+        '400':
+          description: Constraint violation for reasonCodeId
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                default:
+                  $ref: '#/components/examples/ErrorConstraintViolation'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+components:
+  examples:
+    LogoutUpdateRequest:
+      description: Request model for updating a Logout Reason Code.
+      value:
+        codeName: Out of Office
+        codeNumber: '8'
+        description: Agent is out of office.
+        organizationNodeId: EXMPLE
+    ErrorForbidden:
+      description: Forbidden
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#forbidden
+        title: Forbidden
+        status: 403
+        detail: According to the access control policy the current user does not have permission to access this resource.
+    ReasonCodeAsyncResponse:
+      description: A HATEOAS url response that is a reference to the Reason Code under operation.
+      value:
+        url: /api/admin/voice/v1/accounts/NCWBNY/communication-managers/5e9be49a-32d3-4927-83c7-7b0952798028/reason-codes/ee2d131e-772d-4a51-acba-841f967fb9f3
+    ReasonCodeResponse:
+      description: Details of a single Reason Code
+      value:
+        reasonCodeId: 8b2ae74d-61e5-48df-8b32-81a7bc726495
+        codeName: Unreachable
+        codeNumber: '88'
+        codeType: NOT_READY
+        description: Agent is unreachable
+        isInterruptible: false
+        systemDefinedAttributes:
+        - REDIRECTION_ON_OPTIM_FAILURE
+        organizationNodeId: EXMPLE
+        status: SUCCESS
+    ErrorConstraintViolation:
+      description: Constraint Violation
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#constraint-violation
+        title: Constraint Violation
+        status: 400
+        detail: A problem that indicates a syntactically correct, yet semantically illegal request. The Server can not process this request until the client resolves the semantic errors described in the violations section.
+        violations:
+        - field: accountId
+          message: must match "^[a-zA-Z]{6}$"
+          code: 20006
+    CallWorkCodeCreateRequest:
+      description: Request model for creating a Call Work Code.
+      value:
+        codeName: Special Sale
+        codeNumber: '7345290'
+        codeType: CALL_WORK_CODE
+        description: Tracking sale of special items.
+        organizationNodeId: EXMPLE
+    CallWorkCodeUpdateRequest:
+      description: Request model for updating a Call Work Code.
+      value:
+        codeName: Special Sale
+        codeNumber: '7345290'
+        description: Tracking sale of special items.
+        organizationNodeId: EXMPLE
+    ErrorInternalServerError:
+      description: Server Error
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#server-error
+        title: Server Error
+        status: 500
+        detail: An internal server error was encountered.
+    ErrorNotFound:
+      description: Not Found
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#resource-not-found
+        title: Resource Not Found
+        status: 404
+        detail: Either there is no API method associated with the URL path of the request, or the request refers to one or more resources that were not found.
+    ErrorUnauthorized:
+      description: Unauthorized
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#unauthorized
+        title: Unauthorized
+        status: 401
+        detail: This operation requires authentication. See https://developers.avayacloud.com/onecloud-ccaas/docs/how-to-authenticate-with-ccaas-apis
+    NotReadyCreateRequest:
+      description: Request model for creating a Not Ready Reason Code.
+      value:
+        codeName: Lunch
+        codeNumber: '21'
+        codeType: NOT_READY
+        description: Agent is on Lunch.
+        isInterruptible: true
+        systemDefinedAttributes:
+        - WORK_ON_DIGITAL
+        organizationNodeId: EXMPLE
+    ReasonCodePageResponse:
+      description: Lists all Reason Codes belonging to a particular type.
+      value:
+        pagination:
+          pageNumber: 2
+          pageSize: 10
+          total: 20
+        resources:
+        - reasonCodeId: 123e4567-e89b-12d3-a456-426614174000
+          codeName: Work on Digital
+          codeNumber: '89'
+          codeType: NOT_READY
+          isInterruptible: true
+          systemDefinedAttributes:
+          - WORK_ON_DIGITAL
+          organizationNodeId: EXMPLE
+          status: SUCCESS
+        - reasonCodeId: 8b2ae74d-61e5-48df-8b32-81a7bc726495
+          codeName: Unreachable
+          codeNumber: '88'
+          codeType: NOT_READY
+          description: Agent is unreachable
+          isInterruptible: false
+          systemDefinedAttributes:
+          - REDIRECTION_ON_OPTIM_FAILURE
+          organizationNodeId: EXMPLE
+          status: SUCCESS
+        links:
+          prev: /api/admin/voice/v1/accounts/NCWBNY/communication-managers/5e9be49a-32d3-4927-83c7-7b0952798028/reason-codes?pageNumber=1&pageSize=10
+          next: /api/admin/voice/v1/accounts/NCWBNY/communication-managers/5e9be49a-32d3-4927-83c7-7b0952798028/reason-codes?pageNumber=3&pageSize=10
+    NotReadyUpdateRequest:
+      description: Request model for updating a Not Ready Reason Code.
+      value:
+        codeName: Lunch
+        codeNumber: '21'
+        description: Agent is on Lunch.
+        isInterruptible: true
+        systemDefinedAttributes:
+        - WORK_ON_DIGITAL
+        organizationNodeId: EXMPLE
+    ErrorConflict:
+      description: Conflict
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#conflict
+        title: Conflict
+        status: 409
+        detail: A resource with the same unique constraint values already exists.
+        violations:
+        - field: name
+          message: Communication Manager with same name already exists.
+        - field: hostname
+          message: Communication Manager with same hostname already exists.
+    LogoutCreateRequest:
+      description: Request model for creating a Logout Reason Code.
+      value:
+        codeName: Out of Office
+        codeNumber: '8'
+        codeType: LOGOUT
+        description: Agent is out of office.
+        organizationNodeId: EXMPLE
+  responses:
+    NotFound:
+      description: Not Found
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorNotFound'
+    InternalServerError:
+      description: All other application errors
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorInternalServerError'
+    Conflict:
+      description: Conflict
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorConflict'
+    Forbidden:
+      description: Forbidden
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorForbidden'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorUnauthorized'
+  parameters:
+    accountId:
+      name: accountId
+      description: The unique 6 character internal id that represents the customer account.
+      required: true
+      in: path
+      schema:
+        type: string
+        minLength: 6
+        maxLength: 6
+        pattern: ^[a-zA-Z]{6}$
+        example: ABCDEF
+    reasonCodeId:
+      name: reasonCodeId
+      in: path
+      description: The unique 36 character internal id for the reason code
+      required: true
+      schema:
+        type: string
+        format: uuid
+        example: 123e4567-e89b-12d3-a456-426614174000
+    pageNumber:
+      name: pageNumber
+      in: query
+      description: The page number of the records to retrieve. Default value is 1.
+      required: false
+      schema:
+        type: integer
+        format: int32
+        example: 1
+        default: 1
+        minimum: 1
+    communicationManagerId:
+      name: communicationManagerId
+      description: The unique id of the Communication Manager
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+        example: 2ec20580-d204-43f3-ae0b-34795439137f
+  schemas:
+    Links:
+      type: object
+      properties:
+        prev:
+          type: string
+          description: URL of the previous page. Blank if currently on the first page.
+        next:
+          type: string
+          description: URL of the next page. Blank if currently on the last page.
+    ReasonCodeResponse:
+      description: 'Represents the model used to get details of a single Reason Code.
+
+        '
+      type: object
+      properties:
+        reasonCodeId:
+          type: string
+          format: uuid
+          example: 123e4567-e89b-12d3-a456-426614174000
+          readOnly: true
+          description: The unique 36 character internal id for the Reason Code
+        codeName:
+          type: string
+          example: Lunch
+          minLength: 1
+          maxLength: 20
+          pattern: ^[a-zA-Z\p{L}0-9]+([ ]*[a-zA-Z\p{L}0-9-\_\*\=\+\$\:\;\&\~\,\?\%\!\|\{\}\`\.\']+)*$
+          description: The name of the Reason Code. If code type is NOT_READY or LOGOUT, code name length must be up to 16 unicode characters and if code type is CALL_WORK_CODE, code name length must be up to 20 unicode characters.
+        codeNumber:
+          type: string
+          example: '89'
+          minLength: 1
+          maxLength: 16
+          pattern: ^[0-9][0-9]*$
+          description: The number of the Reason Code. If code type is NOT_READY, code number must be between 1 to 99. If code type is LOGOUT, code number must be between 1 to 9 and if code type is CALL_WORK_CODE, code number must be of 16 digits.
+        codeType:
+          type: string
+          description: The type of the Reason Code
+          enum:
+          - NOT_READY
+          - LOGOUT
+          - CALL_WORK_CODE
+          example: NOT_READY
+        description:
+          type: string
+          example: Agent is on Lunch
+          minLength: 0
+          maxLength: 1024
+          description: The description for the Reason Code
+        isInterruptible:
+          type: boolean
+          description: Indicates if the Reason Code is interruptible. This is applicable to NOT READY Reason Codes.
+          example: false
+        systemDefinedAttributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/ReasonCodeSystemAttributes'
+          description: Indicates if the Reason Code has additional system defined behavior. This is applicable to NOT READY Reason Codes. Only one Not Ready Reason Code shall be allowed to be marked as 'Work on Digital'. If a Not Ready Reason Code is marked as 'Work on Digital', it cannot be assigned any other system-defined attribute. At least one Not Ready Reason Code needs to be marked as 'Work on Digital'.
+          example:
+          - WORK_ON_DIGITAL
+        organizationNodeId:
+          type: string
+          example: EXMPLE
+          minLength: 6
+          maxLength: 6
+          pattern: ^[a-zA-Z]{6}$
+          description: Unique Id for Account or Node where Reason Code gets created
+        status:
+          type: string
+          description: Status of the object under operation
+          enum:
+          - IN_PROGRESS
+          - FAILED
+          - SUCCESS
+          example: IN_PROGRESS
+    ReasonCode:
+      description: 'Reason codes are a set of codes that agents can select from agent desktop clients to further describe their current activity or state. Reason Codes consist of a unique codeName, codeNumber and codeType combination. This API is used to create, update, retrieve and delete NOT_READY, LOGOUT reason codes and CALL_WORK_CODE codes.
+
+        '
+      type: object
+      required:
+      - codeName
+      - codeNumber
+      - codeType
+      properties:
+        reasonCodeId:
+          type: string
+          format: uuid
+          example: 123e4567-e89b-12d3-a456-426614174000
+          readOnly: true
+          description: The unique 36 character internal id for the Reason Code
+        codeName:
+          type: string
+          example: Lunch
+          minLength: 1
+          maxLength: 20
+          pattern: ^[a-zA-Z\p{L}0-9]+([ ]*[a-zA-Z\p{L}0-9-\_\*\=\+\$\:\;\&\~\,\?\%\!\|\{\}\`\.\']+)*$
+          description: The name of the Reason Code. If code type is NOT_READY or LOGOUT, code name length must be up to 16 unicode characters and if code type is CALL_WORK_CODE, code name length must be up to 20 unicode characters.
+        codeNumber:
+          type: string
+          example: '89'
+          minLength: 1
+          maxLength: 16
+          pattern: ^[0-9][0-9]*$
+          description: The number of the Reason Code. If code type is NOT_READY, code number must be between 1 to 99. If code type is LOGOUT, code number must be between 1 to 9 and if code type is CALL_WORK_CODE, code number must be of 16 digits.
+        codeType:
+          type: string
+          description: The type of the Reason Code
+          enum:
+          - NOT_READY
+          - LOGOUT
+          - CALL_WORK_CODE
+          example: NOT_READY
+        description:
+          type: string
+          example: Agent is on Lunch
+          minLength: 0
+          maxLength: 1024
+          description: The description for the Reason Code
+        isInterruptible:
+          type: boolean
+          description: Indicates if the Reason Code is interruptible. This is applicable to NOT READY Reason Codes.
+          example: false
+        systemDefinedAttributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/ReasonCodeSystemAttributes'
+          description: Indicates if the Reason Code has additional system defined behavior. This is applicable to NOT READY Reason Codes. Only one Not Ready Reason Code shall be allowed to be marked as 'Work on Digital'. If a Not Ready Reason Code is marked as 'Work on Digital', it cannot be assigned any other system-defined attribute. At least one Not Ready Reason Code needs to be marked as 'Work on Digital'.
+          maxItems: 5
+          example:
+          - WORK_ON_DIGITAL
+        organizationNodeId:
+          type: string
+          example: EXMPLE
+          minLength: 6
+          maxLength: 6
+          pattern: ^[a-zA-Z]{6}$
+          description: Unique Id for Account or Node where Reason Code gets created
+    AsynchronousOperationResponse:
+      type: object
+      description: Represents the response for an asynchronous operation that simply returns a HATEOAS url, that provides a reference to the object under operation
+      properties:
+        url:
+          type: string
+          maxLength: 2048
+    UpdateReasonCode:
+      description: Represents the request body of an API to update a Reason Code.
+      type: object
+      properties:
+        codeName:
+          type: string
+          example: Lunch
+          minLength: 1
+          maxLength: 20
+          pattern: ^[a-zA-Z\p{L}0-9]+([ ]*[a-zA-Z\p{L}0-9-\_\*\=\+\$\:\;\&\~\,\?\%\!\|\{\}\`\.\']+)*$
+          description: The name of the Reason Code. If code type is NOT_READY or LOGOUT, code name length must be up to 16 unicode characters and if code type is CALL_WORK_CODE, code name length must be up to 20 unicode characters.
+        codeNumber:
+          type: string
+          example: '89'
+          minLength: 1
+          maxLength: 16
+          pattern: ^[0-9][0-9]*$
+          description: The number of the Reason Code. If code type is NOT_READY, code number must be between 1 to 99. If code type is LOGOUT, code number must be between 1 to 9 and if code type is CALL_WORK_CODE, code number must be of 16 digits.
+        description:
+          type: string
+          example: Agent is on Lunch
+          minLength: 0
+          maxLength: 1024
+          description: The description for the Reason Code
+        isInterruptible:
+          type: boolean
+          description: Indicates if the Reason Code is interruptible. This is applicable to NOT READY Reason Codes.
+          example: false
+        systemDefinedAttributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/ReasonCodeSystemAttributes'
+          description: Indicates if the Reason Code has additional system defined behavior. This is applicable to NOT READY Reason Codes. Only one Not Ready Reason Code shall be allowed to be marked as 'Work on Digital'. If a Not Ready Reason Code is marked as 'Work on Digital', it cannot be assigned any other system-defined attribute. At least one Not Ready Reason Code needs to be marked as 'Work on Digital'.
+          maxItems: 5
+          example:
+          - WORK_ON_DIGITAL
+        organizationNodeId:
+          type: string
+          example: EXMPLE
+          minLength: 6
+          maxLength: 6
+          pattern: ^[a-zA-Z]{6}$
+          description: Unique Id for Account or Node where Reason Code gets created
+      required:
+      - codeName
+    Pagination:
+      type: object
+      properties:
+        pageNumber:
+          type: integer
+          description: The current page number.
+        pageSize:
+          type: integer
+          description: The max number of records that can be retrieved on this page.
+        total:
+          type: integer
+          description: The total number of records.
+    ReasonCodePage:
+      title: ReasonCodePage
+      type: object
+      description: Reason Code filtered response
+      properties:
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+        resources:
+          type: array
+          items:
+            $ref: '#/components/schemas/ReasonCodeResponse'
+        links:
+          allOf:
+          - $ref: '#/components/schemas/Links'
+          example:
+            prev: /api/admin/voice/v1/accounts/{accountId}/communication-managers/{communicationManagerId}/reason-codes?pageNumber=1&pageSize=10
+            next: /api/admin/voice/v1/accounts/{accountId}/communication-managers/{communicationManagerId}/reason-codes?pageNumber=3&pageSize=10
+    Problem:
+      type: object
+      description: '<b>Problem Detail</b> as a way to carry machine-readable details of errors in a HTTP response to avoid the need to define new error response formats for HTTP APIs <a href="https://tools.ietf.org/html/rfc7807">RFC 7807</a>
+
+        '
+      properties:
+        type:
+          type: string
+          format: uri
+          description: 'An absolute URI that identifies the problem type. When dereferenced, it SHOULD provide human-readable documentation for the problem type (e.g., using HTML).
+
+            '
+          default: about:blank
+          example: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#constraint-violation
+        title:
+          type:
+          - string
+          - 'null'
+          description: 'A short, summary of the problem type. Written in english and readable for engineers (usually not suited for non technical stakeholders and not localized).
+
+            '
+          example: Service Unavailable
+        status:
+          type:
+          - integer
+          - 'null'
+          format: int32
+          description: 'The HTTP status code generated by the origin server for this occurrence of the problem.
+
+            '
+          minimum: 100
+          example: 503
+          exclusiveMaximum: 600
+        detail:
+          type:
+          - string
+          - 'null'
+          description: 'A human readable explanation specific to this occurrence of the problem.
+
+            '
+          example: Connection to database timed out
+        instance:
+          type:
+          - string
+          - 'null'
+          format: uri
+          description: 'An absolute URI that identifies the specific occurrence of the problem. It may or may not yield further information if dereferenced.
+
+            '
+        violations:
+          type:
+          - array
+          - 'null'
+          description: 'A list of violations that occurred as a result of invalid data provided as part of a request.
+
+            '
+          items:
+            type: object
+            properties:
+              field:
+                type: string
+                description: 'The name of the field in the request that caused the violation. This can be the name of a path parameter, query parameter, or a field within the request body.
+
+                  '
+                example: accountId
+              message:
+                type: string
+                description: 'A human readable explanation specific to this occurrence of the violation.
+
+                  '
+                example: must match "^[a-zA-Z]{6}$"
+              code:
+                type: integer
+                format: int32
+                description: 'The violation code generated by the server for this occurrence of the violation. Use this code when implementing any error handling logic instead of the message, as the message can change.
+
+                  '
+                example: 20006
+          example:
+          - field: emailAddress
+            message: must not be null
+            code: 20002
+          - field: accountId
+            message: must match "^[a-zA-Z]{6}$"
+            code: 20006
+    ReasonCodeSystemAttributes:
+      type: string
+      enum:
+      - WORK_ON_DIGITAL
+      - REDIRECTION_ON_OPTIM_FAILURE
+      - REDIRECTION_ON_NO_ANSWER
+      - SUPERVISOR_FORCED_NOT_READY
+      - SUPERVISOR_FORCED_LOGOUT
+      description: Indicates if the Reason Code has additional system defined behavior."
+      example: WORK_ON_DIGITAL
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      description: This API uses Bearer Token Authorization Flow
+      bearerFormat: JWT
+    AppKey:
+      type: apiKey
+      in: header
+      name: appkey
+      description: This API needs an appKey as header
+x-explorer-enabled: false
+x-samples-languages:
+- curl
+- node
+- java
+- javascript
+- python
+- go

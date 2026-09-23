@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<wsdl:definitions name="NotificationConsumer"
+	xmlns="http://schemas.xmlsoap.org/wsdl/"
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"  
+	xmlns:wsp="http://schemas.xmlsoap.org/ws/2002/12/policy"
+	xmlns:wsnc="http://www.nortel.com/soa/oi/cct/NotificationConsumer"
+	xmlns:wsncw="http://www.nortel.com/soa/oi/cct/NotificationConsumer"
+	xmlns:tns="http://www.nortel.com/soa/oi/cct/NotificationConsumer"
+	targetNamespace="http://www.nortel.com/soa/oi/cct/NotificationConsumer">
+
+	<wsdl:import 
+		namespace="http://www.nortel.com/soa/oi/cct/NotificationConsumer"
+		location="NotificationConsumerInterface.wsdl" />   
+
+	<binding name="NotificationConsumerSoapBinding" type="wsnc:NotificationConsumer">
+		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+		<wsdl:operation name="Notify">
+			<soap:operation soapAction="http://www.nortel.com/soa/oi/cct/notificationconsumer/service/Notify"/> 
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+        </wsdl:operation>
+    </binding>
+
+    <service name="SOAOICCT_NotificationConsumer">
+        <port name="NotificationConsumer" binding="tns:NotificationConsumerSoapBinding">
+	        <soap:address location="http://localhost:9090/SOAOICCT/services/NotificationConsumer"/>
+        </port>
+    </service> 
+ 
+</wsdl:definitions>

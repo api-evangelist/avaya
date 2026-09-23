@@ -1,0 +1,1039 @@
+openapi: 3.2.0
+info:
+  title: Admin - Voice Phone Number API
+  description: 'The Voice provider APIs are used to manage information about voice specific elements and different voice related entities e.g. Phone numbers.
+
+
+    Voice Services will support multiple ways to provision voice providers
+
+    1. Programmatic Interface (Rest APIs)
+
+    2. User Interface'
+  contact:
+    name: Avaya API Team
+    url: https://developers.avayacloud.com/onecloud-ccaas
+    email: apiteam@avaya.com
+  license:
+    name: Avaya Software Development Kit (SDK) Software License Terms
+    url: http://support.avaya.com/css/P8/documents/101038288
+  version: 1.0.2
+servers:
+- url: '{protocol}://{server}{basePath}'
+  description: Open API
+  variables:
+    protocol:
+      enum:
+      - https
+      default: https
+    server:
+      default: HOST-REGION.api.avayacloud.com
+    basePath:
+      default: /api/admin/voice/v1
+security:
+- {}
+- BearerAuth: []
+  AppKey: []
+tags:
+- name: Phone Number
+  description: Management of phone numbers that are the entry point for contact center voice engagements. Phone number can be assigned and released.
+paths:
+  /accounts/{accountId}/phone-numbers:
+    post:
+      tags:
+      - Phone Number
+      summary: Add Number
+      description: '**This API requires the Account Administrator role.**
+
+
+        Assign phone number which is available.
+
+        The following field must be unique otherwise a `HTTP 409 Conflcit` will be returned:
+
+        * `phoneNumber`
+
+
+        Will trigger asynchronous updates, the status of which should be monitored via `/phone-numbers/{phoneNumberId}`.'
+      operationId: addPhoneNumber
+      parameters:
+      - $ref: '#/components/parameters/accountId'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PhoneNumber'
+            examples:
+              PhoneNumber:
+                $ref: '#/components/examples/PhoneNumberRequest'
+        required: true
+      responses:
+        '202':
+          description: Accepted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PhoneNumber'
+              examples:
+                PhoneNumber INPROGRESS Status Response:
+                  $ref: '#/components/examples/PhoneNumberInProgressResponse'
+        '400':
+          $ref: '#/components/responses/ErrorConstraintViolation'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/ErrorPhoneNumberExists'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    get:
+      tags:
+      - Phone Number
+      summary: List Numbers
+      description: '**This API requires the Account Administrator role.**
+
+
+        List phone numbers with accountId'
+      operationId: searchPhoneNumbers
+      parameters:
+      - name: accountId
+        description: The unique 6 character internal id that represents the customer account
+        required: true
+        in: path
+        schema:
+          type: string
+          minLength: 1
+          maxLength: 6
+          example: ABCDEF
+      - $ref: '#/components/parameters/pageNumber'
+      - $ref: '#/components/parameters/pageSize'
+      - name: filter
+        in: query
+        required: false
+        description: "The possible fields you can filter on are phoneNumber, displayName, countryCode, type and status. The allowed format:\n- Begins with the field name to be filtered, followed by a colon and:\n  - Either an exact string to match, or\n  - A string expression including the * wildcard character\n\nExamples include 'phoneNumber:+35311234567', 'countryCode:IN'\n"
+        schema:
+          type: string
+          example: countryCode:IN
+          maxLength: 255
+          pattern: (([a-zA-Z]+[:=!]+[\*]*[^,*]*[\*]*[,]{0,1}){1}){1,}[^,]$
+      - name: orderBy
+        in: query
+        required: false
+        description: 'Field name on which ordering needs to be performed. The possible fields that can be ordered by are phoneNumber, displayName, countryCode, type.
+
+          Field names are case-sensitive (should be written as it is in description).
+
+          The default sorting order is ''phoneNumber ascending''.
+
+          To specify descending order, a suffix '' desc'' should be appended. For example, "name" for ascending or "name desc" for descending".
+
+          '
+        schema:
+          type: string
+          example: phoneNumber
+          maxLength: 255
+          pattern: ([a-zA-Z]+[,]*|([a-zA-Z]+(( asc)|( desc))[,]*){1,})+(?<!,)$
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PhoneNumberPage'
+              examples:
+                PhoneNumbers:
+                  $ref: '#/components/examples/PhoneNumberPage'
+        '400':
+          $ref: '#/components/responses/ErrorConstraintViolation'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /accounts/{accountId}/phone-numbers/{phoneNumberId}:
+    delete:
+      tags:
+      - Phone Number
+      summary: Release Number
+      description: '**This API requires the Account Administrator role.**
+
+
+        Release phone number allows you remove Number from Account'
+      operationId: releasePhoneNumber
+      parameters:
+      - $ref: '#/components/parameters/accountId'
+      - $ref: '#/components/parameters/phoneNumberId'
+      responses:
+        '204':
+          description: No Content
+        '400':
+          $ref: '#/components/responses/ErrorConstraintViolation'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    get:
+      tags:
+      - Phone Number
+      summary: Get Number
+      description: '**This API requires the Account Administrator role.**
+
+
+        Get assigned phone number'
+      operationId: getPhoneNumber
+      parameters:
+      - $ref: '#/components/parameters/accountId'
+      - $ref: '#/components/parameters/phoneNumberId'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PhoneNumber'
+              examples:
+                PhoneNumber INPROGRESS Status Response:
+                  $ref: '#/components/examples/PhoneNumberInProgressResponse'
+                PhoneNumber FAILED Status Response:
+                  $ref: '#/components/examples/PhoneNumberFailedResponse'
+                PhoneNumber INACTIVE Status Response:
+                  $ref: '#/components/examples/PhoneNumberInActiveResponse'
+                PhoneNumber ACTIVE Status Response:
+                  $ref: '#/components/examples/PhoneNumberActiveResponse'
+                PhoneNumber DISABLED Status Response:
+                  $ref: '#/components/examples/PhoneNumberDisabledResponse'
+        '400':
+          $ref: '#/components/responses/ErrorConstraintViolation'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    put:
+      tags:
+      - Phone Number
+      summary: Update Number
+      description: '**This API requires the Account Administrator role.**
+
+
+        Update phone number by using accountId and phoneNumberId. The possible field you can update is displayName.
+
+
+        The following field must be unique otherwise a `HTTP 409 Conflcit` will be returned:
+
+        * `phoneNumber`
+
+
+        Will trigger asynchronous updates, the status of which should be monitored via `/phone-numbers/{phoneNumberId}`.'
+      operationId: updatePhoneNumber
+      parameters:
+      - $ref: '#/components/parameters/accountId'
+      - $ref: '#/components/parameters/phoneNumberId'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdatePhoneNumber'
+            examples:
+              PhoneNumber:
+                $ref: '#/components/examples/PhoneNumberUpdateRequest'
+        required: true
+      responses:
+        '202':
+          description: Accepted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PhoneNumber'
+              examples:
+                PhoneNumber:
+                  $ref: '#/components/examples/PhoneNumberUpdateResponse'
+        '400':
+          $ref: '#/components/responses/ErrorConstraintViolation'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/ErrorPhoneNumberExists'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /accounts/{accountId}/phone-numbers:list:
+    post:
+      tags:
+      - Phone Number
+      summary: List Phone Numbers
+      description: '**This API requires the Account Administrator role.**
+
+
+        It will accept list of phone number Ids and return list of phone number objects which is not DISABLED.'
+      operationId: listPhoneNumbers
+      parameters:
+      - $ref: '#/components/parameters/accountId'
+      - name: orderBy
+        in: query
+        required: false
+        description: 'It Specifies how response data should be sorted.
+
+          Supported fields for orderBy - displayName, phoneNumber.
+
+          Field Names are case-senstive (should be written as it is in description).
+
+          To specify descending order, a suffix " desc" should be added. For example, "displayName asc" for ascending or "displayName desc" for descending".
+
+          The default sorting order is displayName ascending when no orderBy param will be passed.
+
+          '
+        schema:
+          type: string
+          default: displayName
+          maxLength: 255
+        examples:
+          orderByDisplayNameInDescendingOrder:
+            value: displayName desc
+            summary: sort data based on displayName in descending order
+          orderByDisplayNameInAscendingOrder:
+            value: displayName
+            summary: sort data based on displayName in ascending order
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PhoneNumberListRequest'
+            examples:
+              PhoneNumberListRequest:
+                $ref: '#/components/examples/PhoneNumberListRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PhoneNumberListResponse'
+              examples:
+                PhoneNumberListResponse:
+                  $ref: '#/components/examples/PhoneNumberListResponse'
+        '400':
+          $ref: '#/components/responses/ErrorConstraintViolation'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /accounts/{accountId}/phone-numbers:validate:
+    post:
+      tags:
+      - Phone Number
+      summary: Validate Phone Numbers
+      description: '**This API requires the Account Administrator role.**
+
+
+        It will accept list of phone number Ids and return list of Invalid Phone Number Ids with message'
+      operationId: validatePhoneNumbers
+      parameters:
+      - $ref: '#/components/parameters/accountId'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PhoneNumberValidateRequest'
+            examples:
+              PhoneNumberValidateRequest:
+                $ref: '#/components/examples/PhoneNumberValidateRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PhoneNumberValidateResponse'
+              examples:
+                PhoneNumberValidateResponse:
+                  $ref: '#/components/examples/PhoneNumberValidateResponse'
+        '400':
+          $ref: '#/components/responses/ErrorConstraintViolation'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /accounts/{accountId}/phone-numbers:getByPhoneNumbers:
+    post:
+      tags:
+      - Phone Number
+      summary: Get Phone Number Details by phone numbers
+      description: '**This API requires the Account Administrator role.**
+
+
+        It will accept list of phone numbers and return list of phone number objects.'
+      operationId: getByPhoneNumbers
+      parameters:
+      - name: accountId
+        description: The unique 6 character internal id that represents the customer account
+        required: true
+        in: path
+        schema:
+          type: string
+          minLength: 1
+          maxLength: 6
+          example: ABCDEF
+      - name: filter
+        in: query
+        required: false
+        description: 'filter can be passed to specify accountId. This can be used in the case where system admin persona will use this api with * as accountId for URI Parameter and want to query phone number from a specific Tenant.
+
+          '
+        schema:
+          type: string
+          maxLength: 255
+        examples:
+          filterByAccountId:
+            value: accountId=ABCDEF
+            summary: filter the Phone Number by passing account Id
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PhoneNumbersDetailsRequest'
+            examples:
+              PhoneNumbersDetailsRequest:
+                $ref: '#/components/examples/PhoneNumbersDetailsRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PhoneNumberListResponse'
+              examples:
+                PhoneNumberListResponse:
+                  $ref: '#/components/examples/PhoneNumberListResponse'
+        '400':
+          $ref: '#/components/responses/ErrorConstraintViolation'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+components:
+  schemas:
+    PhoneNumberValidateResponse:
+      title: PhoneNumberValidateResponse
+      type: object
+      description: Validate Phone Number Response
+      properties:
+        valid:
+          type: array
+          items:
+            $ref: '#/components/schemas/ValidatePhoneNumber'
+        invalid:
+          type: array
+          items:
+            $ref: '#/components/schemas/ValidatePhoneNumber'
+    PhoneNumberListRequest:
+      title: PhoneNumberListRequest
+      type: array
+      description: List of Phone number Ids
+      maxItems: 1000
+      items:
+        type: string
+        description: The unique 36 character internal id that represents the phone number.
+        format: uuid
+        example: c8c2909d-75e9-484a-94c0-b7e8d29771fe
+    PhoneNumberPage:
+      description: Paginated Phone Numbers
+      type: object
+      properties:
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+        phoneNumbers:
+          type: array
+          items:
+            $ref: '#/components/schemas/PhoneNumber'
+        links:
+          allOf:
+          - $ref: '#/components/schemas/Links'
+          example:
+            prev: /api/admin/voice/v1/accounts/ABCDEF/phone-numbers?pageNumber=1&pageSize=10
+            next: /api/admin/voice/v1/accounts/ABCDEF/phone-numbers?pageNumber=3&pageSize=10
+    ValidatePhoneNumber:
+      title: ValidatePhoneNumber
+      type: object
+      description: Phone Number Id with message
+      properties:
+        id:
+          type: string
+          description: Phone Number Id
+          example: c8c2909d-75e9-484a-94c0-b7e8d29771fe
+        message:
+          type: string
+          example: Doesn't exist in database
+          description: short description about phone number if it is invalid
+    UpdatePhoneNumber:
+      type: object
+      description: PhoneNumber Update request.
+      properties:
+        displayName:
+          type: string
+          description: Domestic format version of the phone number or any suitable name that will identify the number easily.
+          maxLength: 255
+          example: private Number
+        isCallingPartyNumber:
+          type: boolean
+          description: Indicates whether the number is caller Id.
+          example: true
+        preferredMediaLocation:
+          type: string
+          description: Preferred media location set by tenant instead of default coming from CPaaS.
+          example: US-LA
+          minLength: 1
+          maxLength: 7
+    Links:
+      type: object
+      properties:
+        prev:
+          type: string
+          description: URL of the previous page. Blank if currently on the first page.
+        next:
+          type: string
+          description: URL of the next page. Blank if currently on the last page.
+    PhoneNumberListResponse:
+      title: PhoneNumberListResponse
+      type: array
+      description: List of Phone Number Objects
+      maxItems: 1000
+      items:
+        $ref: '#/components/schemas/PhoneNumber'
+    Pagination:
+      type: object
+      properties:
+        pageNumber:
+          type: integer
+          description: The current page number.
+        pageSize:
+          type: integer
+          description: The max number of records that can be retrieved on this page.
+        total:
+          type: integer
+          description: The total number of records.
+    PhoneNumberValidateRequest:
+      title: PhoneNumberValidateRequest
+      type: array
+      description: List of Phone number Ids
+      maxItems: 1000
+      items:
+        type: string
+        description: The unique 36 character internal id that represents the phone number.
+        format: uuid
+        example: c8c2909d-75e9-484a-94c0-b7e8d29771fe
+    PhoneNumbersDetailsRequest:
+      title: PhoneNumbersDetailsRequest
+      type: array
+      description: List of Phone numbers
+      maxItems: 1000
+      items:
+        type: string
+        description: Actual phone number.
+        example: '+168739874'
+    Problem:
+      type: object
+      description: '<b>Problem Detail</b> as a way to carry machine-readable details of errors in a HTTP response to avoid the need to define new error response formats for HTTP APIs <a href="https://tools.ietf.org/html/rfc7807">RFC 7807</a>
+
+        '
+      properties:
+        type:
+          type: string
+          format: uri
+          description: 'An absolute URI that identifies the problem type. When dereferenced, it SHOULD provide human-readable documentation for the problem type (e.g., using HTML).
+
+            '
+          default: about:blank
+          example: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#constraint-violation
+        title:
+          type:
+          - string
+          - 'null'
+          description: 'A short, summary of the problem type. Written in english and readable for engineers (usually not suited for non technical stakeholders and not localized).
+
+            '
+          example: Service Unavailable
+        status:
+          type:
+          - integer
+          - 'null'
+          format: int32
+          description: 'The HTTP status code generated by the origin server for this occurrence of the problem.
+
+            '
+          minimum: 100
+          example: 503
+          exclusiveMaximum: 600
+        detail:
+          type:
+          - string
+          - 'null'
+          description: 'A human readable explanation specific to this occurrence of the problem.
+
+            '
+          example: Connection to database timed out
+        instance:
+          type:
+          - string
+          - 'null'
+          format: uri
+          description: 'An absolute URI that identifies the specific occurrence of the problem. It may or may not yield further information if dereferenced.
+
+            '
+        violations:
+          type:
+          - array
+          - 'null'
+          description: 'A list of violations that occurred as a result of invalid data provided as part of a request.
+
+            '
+          items:
+            type: object
+            properties:
+              field:
+                type: string
+                description: 'The name of the field in the request that caused the violation. This can be the name of a path parameter, query parameter, or a field within the request body.
+
+                  '
+                example: accountId
+              message:
+                type: string
+                description: 'A human readable explanation specific to this occurrence of the violation.
+
+                  '
+                example: must match "^[a-zA-Z]{6}$"
+              code:
+                type: integer
+                format: int32
+                description: 'The violation code generated by the server for this occurrence of the violation. Use this code when implementing any error handling logic instead of the message, as the message can change.
+
+                  '
+                example: 20006
+          example:
+          - field: emailAddress
+            message: must not be null
+            code: 20002
+          - field: accountId
+            message: must match "^[a-zA-Z]{6}$"
+            code: 20006
+    PhoneNumber:
+      type: object
+      description: PhoneNumber of an Account.
+      properties:
+        phoneNumberId:
+          type: string
+          example: c8c2909d-75e9-484a-94c0-b7e8d29771fe
+          description: The unique 36 character internal id that represents the phone number.
+          readOnly: true
+        phoneNumber:
+          type: string
+          pattern: ^\+[1-9]\d{3,13}$
+          description: The phone number in the E.164 format
+          example: '+16479308804'
+          minLength: 5
+          maxLength: 15
+        displayName:
+          type: string
+          maxLength: 255
+          description: Domestic format version of the phone number or any suitable name that will identify the number easily.
+          example: private Number
+        countryCode:
+          type: string
+          description: ISO Country code for number.
+          minLength: 2
+          maxLength: 2
+          pattern: ^[A-Z]{2}$
+          example: US
+        type:
+          type: string
+          description: Phone number type. Possible values are LOCAL, TOLLFREE and UNKNOWN (when status is INPROGRESS).
+          example: LOCAL
+          readOnly: true
+        accountId:
+          type: string
+          description: accountId for which Number is assigned.
+          example: ABCDEF
+          readOnly: true
+        isCallingPartyNumber:
+          type: boolean
+          description: Indicates whether the number is caller Id.
+          example: true
+        status:
+          type: string
+          description: Indicates that number is active or inactive
+          example: INACTIVE
+          enum:
+          - ACTIVE
+          - INACTIVE
+          - INPROGRESS
+          - DISABLED
+          - FAILED
+          readOnly: true
+        statusMessage:
+          type: string
+          description: status message for INACTIVE Number.
+          example: Verification needed. Please send the necessary documents to siptrunksupport@avaya.com to activate it.
+          readOnly: true
+        preferredMediaLocation:
+          type: string
+          description: Preferred media location set by tenant instead of default coming from CPaaS.
+          example: US-LA
+          minLength: 1
+          maxLength: 7
+  examples:
+    ErrorForbidden:
+      description: Forbidden
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#forbidden
+        title: Forbidden
+        status: 403
+        detail: According to the access control policy the current user does not have permission to access this resource.
+    PhoneNumberInProgressResponse:
+      description: PhoneNumber InProgress Response
+      value:
+        phoneNumberId: c8c2909d-75e9-484a-94c0-b7e8d29771fe
+        phoneNumber: '+16479308804'
+        displayName: private Number
+        isCallingPartyNumber: true
+        countryCode: US
+        type: UNKNOWN
+        accountId: ABCDEF
+        status: INPROGRESS
+    PhoneNumberInActiveResponse:
+      description: PhoneNumber InActive Response
+      value:
+        phoneNumberId: c8c2909d-75e9-484a-94c0-b7e8d29771fe
+        phoneNumber: '+16479308804'
+        displayName: private Number
+        isCallingPartyNumber: true
+        countryCode: US
+        type: LOCAL
+        accountId: ABCDEF
+        status: INACTIVE
+        statusMessage: Verification needed. Please send the necessary documents to siptrunksupport@avaya.com to activate it.
+        preferredMediaLocation: US-LA
+    PhoneNumberUpdateRequest:
+      description: PhoneNumber update request
+      value:
+        displayName: private Number
+        isCallingPartyNumber: true
+        preferredMediaLocation: US-LA
+    ErrorConstraintViolation:
+      description: Constraint Violation
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#constraint-violation
+        title: Constraint Violation
+        status: 400
+        detail: A problem that indicates a syntactically correct, yet semantically illegal request. The Server can not process this request until the client resolves the semantic errors described in the violations section.
+        violations:
+        - field: accountId
+          message: must match "^[a-zA-Z]{6}$"
+          code: 20006
+    PhoneNumberActiveResponse:
+      description: PhoneNumber Active Response
+      value:
+        phoneNumberId: c8c2909d-75e9-484a-94c0-b7e8d29771fe
+        phoneNumber: '+16479308804'
+        displayName: private Number
+        isCallingPartyNumber: true
+        countryCode: US
+        type: LOCAL
+        accountId: ABCDEF
+        status: ACTIVE
+        preferredMediaLocation: US-LA
+    PhoneNumbersDetailsRequest:
+      description: Get By Phone Numbers Request
+      value:
+      - '+1675904984'
+      - '+1923678899'
+    PhoneNumberDisabledResponse:
+      description: PhoneNumber Disabled Response
+      value:
+        phoneNumberId: c8c2909d-75e9-484a-94c0-b7e8d29771fe
+        phoneNumber: '+16479308804'
+        displayName: private Number
+        isCallingPartyNumber: true
+        countryCode: US
+        type: LOCAL
+        accountId: ABCDEF
+        status: DISABLED
+        preferredMediaLocation: US-LA
+    PhoneNumberRequest:
+      description: PhoneNumber create request
+      value:
+        phoneNumber: '+16479308804'
+        displayName: private Number
+        countryCode: US
+        isCallingPartyNumber: true
+    ErrorNotFound:
+      description: Not Found
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#resource-not-found
+        title: Resource Not Found
+        status: 404
+        detail: Either there is no API method associated with the URL path of the request, or the request refers to one or more resources that were not found.
+    ErrorUnauthorized:
+      description: Unauthorized
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#unauthorized
+        title: Unauthorized
+        status: 401
+        detail: This operation requires authentication. See https://developers.avayacloud.com/onecloud-ccaas/docs/how-to-authenticate-with-ccaas-apis
+    PhoneNumberValidateRequest:
+      description: Phone Number List Request
+      value:
+      - c8c2909d-75e9-484a-94c0-b7e8d29771fe
+      - 1f15835f-1365-4913-acf3-0ffd0767ad6e
+      - 1d033683-f1cc-477d-a190-a6d10d8a686d
+      - c96c4d34-57fa-4256-8dc3-5f66252acb99
+    ErrorPhoneNumberExists:
+      description: Constraint Violation
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#conflict
+        title: Conflict
+        status: 409
+        detail: A resource with the same unique constraint values already exists.
+        violations:
+        - field: phoneNumber
+          message: Number already exists
+    PhoneNumberPage:
+      description: Paginated Phone Number Data
+      value:
+        pagination:
+          pageNumber: 2
+          pageSize: 10
+          total: 45
+        phoneNumbers:
+        - phoneNumberId: c8c2909d-75e9-484a-94c0-b7e8d29771fe
+          phoneNumber: '+16479308804'
+          displayName: private Number
+          isCallingPartyNumber: true
+          countryCode: US
+          type: LOCAL
+          accountId: ABCDEF
+          status: INACTIVE
+          statusMessage: Verification needed. Please send the necessary documents to siptrunksupport@avaya.com to activate it.
+          preferredMediaLocation: US-LA
+        links:
+          prev: /api/admin/voice/v1/accounts/ABCDEF/phone-numbers?pageNumber=1&pageSize=10
+          next: /api/admin/voice/v1/accounts/ABCDEF/phone-numbers?pageNumber=3&pageSize=10
+    PhoneNumberValidateResponse:
+      value:
+        valid:
+        - id: c8c2909d-75e9-484a-94c0-b7e8d29771fe
+        - id: 1f15835f-1365-4913-acf3-0ffd0767ad6e
+        invalid:
+        - id: 1d033683-f1cc-477d-a190-a6d10d8a686d
+          message: Phone number doesn't exist or disabled
+        - id: c96c4d34-57fa-4256-8dc3-5f66252acb99
+          message: Phone number doesn't exist or disabled
+    PhoneNumberListResponse:
+      description: Phone Number List Response
+      value:
+      - phoneNumberId: c8c2909d-75e9-484a-94c0-b7e8d29771fe
+        phoneNumber: '+16479308804'
+        displayName: private Number
+        isCallingPartyNumber: true
+        countryCode: US
+        type: LOCAL
+        accountId: ABCDEF
+        status: INACTIVE
+        statusMessage: Verification needed. Please send the necessary documents to siptrunksupport@avaya.com to activate it.
+        preferredMediaLocation: US-LA
+      - phoneNumberId: 1f15835f-1365-4913-acf3-0ffd0767ad6e
+        phoneNumber: '+16479902347'
+        displayName: private Number
+        isCallingPartyNumber: true
+        countryCode: US
+        type: LOCAL
+        accountId: ABCDEF
+        status: INACTIVE
+        statusMessage: Verification needed. Please send the necessary documents to siptrunksupport@avaya.com to activate it.
+        preferredMediaLocation: US-LA
+    PhoneNumberListRequest:
+      description: Phone Number List Request
+      value:
+      - c8c2909d-75e9-484a-94c0-b7e8d29771fe
+      - 1f15835f-1365-4913-acf3-0ffd0767ad6e
+    PhoneNumberUpdateResponse:
+      description: PhoneNumber update response
+      value:
+        phoneNumberId: c8c2909d-75e9-484a-94c0-b7e8d29771fe
+        phoneNumber: '+16479308804'
+        displayName: private Number
+        countryCode: US
+        type: LOCAL
+        isCallingPartyNumber: true
+        accountId: ABCDEF
+        status: INACTIVE
+        statusMessage: Verification needed. Please send the necessary documents to siptrunksupport@avaya.com to activate it.
+        preferredMediaLocation: US-LA
+    ErrorInternalServerError:
+      description: Server Error
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#server-error
+        title: Server Error
+        status: 500
+        detail: An internal server error was encountered.
+    PhoneNumberFailedResponse:
+      description: PhoneNumber Failed Response
+      value:
+        phoneNumberId: c8c2909d-75e9-484a-94c0-b7e8d29771fe
+        phoneNumber: '+16479308804'
+        displayName: private Number
+        isCallingPartyNumber: true
+        countryCode: US
+        type: LOCAL
+        accountId: ABCDEF
+        status: FAILED
+        statusMessage: Internal Server Error
+        preferredMediaLocation: US-LA
+  responses:
+    NotFound:
+      description: Not Found
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorNotFound'
+    ErrorPhoneNumberExists:
+      description: Conflict
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            loginId:
+              $ref: '#/components/examples/ErrorPhoneNumberExists'
+    InternalServerError:
+      description: All other application errors
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorInternalServerError'
+    ErrorConstraintViolation:
+      description: Constraint Violation
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorConstraintViolation'
+    Forbidden:
+      description: Forbidden
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorForbidden'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorUnauthorized'
+  parameters:
+    accountId:
+      name: accountId
+      description: The unique 6 character internal id that represents the customer account.
+      required: true
+      in: path
+      schema:
+        type: string
+        minLength: 6
+        maxLength: 6
+        pattern: ^[a-zA-Z]{6}$
+        example: ABCDEF
+    pageSize:
+      name: pageSize
+      in: query
+      description: The max number of records to retrieve per page. Default value is 5, Any value like 5,10,15,20,25,30 is allowed. If value comes more than 1000 then max 1000 records will be returned.
+      required: false
+      schema:
+        type: integer
+        format: int32
+        example: 5
+        default: 5
+        minimum: 1
+        maximum: 50
+    pageNumber:
+      name: pageNumber
+      in: query
+      description: The page number of the records to retrieve. Default value is 1.
+      required: false
+      schema:
+        type: integer
+        format: int32
+        example: 1
+        default: 1
+        minimum: 1
+    phoneNumberId:
+      name: phoneNumberId
+      description: The unique 36 character internal id that represents the phone number.
+      required: true
+      in: path
+      schema:
+        type: string
+        minLength: 36
+        maxLength: 36
+        pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
+        example: c8c2909d-75e9-484a-94c0-b7e8d29771fe
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      description: This API uses Bearer Token Authorization Flow
+      bearerFormat: JWT
+    AppKey:
+      type: apiKey
+      in: header
+      name: appkey
+      description: This API needs an appKey as header
+x-explorer-enabled: false
+x-samples-languages:
+- curl
+- node
+- java
+- javascript
+- python
+- go

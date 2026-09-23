@@ -1,7 +1,9 @@
 ---
 title: Artificial Intelligence | Avaya Trust Center
 url: https://www.avaya.com/en/trust-center/artificial-intelligence/
-date: '2026-05-25'
+published: ''
+date_basis: harvested
+harvested: '2026-05-25'
 query: '"Avaya" press release artificial intelligence'
 position: 3
 source: serpapi-google

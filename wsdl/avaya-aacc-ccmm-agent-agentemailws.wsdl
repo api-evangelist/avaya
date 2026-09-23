@@ -1,0 +1,880 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://nortel.com/CCMMAgentWebservices/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:s1="http://datatypes.agentwebservices.ccmm.applications.nortel.com" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://nortel.com/CCMMAgentWebservices/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://nortel.com/CCMMAgentWebservices/">
+      <s:import namespace="http://datatypes.agentwebservices.ccmm.applications.nortel.com" />
+      <s:element name="Reply">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="id" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="subject" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="body" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="sessionKey" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ReplyResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="ReplyResult" type="s:long" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ReplyHtml">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="id" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="subject" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="body" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="sessionKey" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ReplyHtmlResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="ReplyHtmlResult" type="s:long" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ReplyAll">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="id" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="subject" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="body" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="sessionKey" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ReplyAllResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="ReplyAllResult" type="s:long" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ReplyAllHtml">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="id" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="subject" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="body" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="sessionKey" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ReplyAllHtmlResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="ReplyAllHtmlResult" type="s:long" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="Forward">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="id" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="subject" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="body" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="mailTo" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="mailCC" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="mailBCC" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="sessionKey" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ForwardResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="ForwardResult" type="s:long" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ForwardHtml">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="id" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="subject" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="body" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="mailTo" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="mailCC" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="mailBCC" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="sessionKey" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ForwardHtmlResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="ForwardHtmlResult" type="s:long" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="OriginateMail">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="subject" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="body" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="mailTo" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="mailCC" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="mailBCC" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="mailFrom" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="charSet" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="username" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="sSkillsetID" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="sClosedReasonCode" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="sessionKey" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="OriginateMailResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="OriginateMailResult" type="tns:ArrayOfString" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfString">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="string" nillable="true" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="OriginateMailHtml">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="subject" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="body" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="mailTo" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="mailCC" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="mailBCC" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="mailFrom" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="charSet" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="username" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="sSkillsetID" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="sClosedReasonCode" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="sessionKey" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="OriginateMailHtmlResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="OriginateMailHtmlResult" type="tns:ArrayOfString" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="OriginateMailWithAttachments">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="subject" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="body" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="mailTo" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="mailCC" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="mailBCC" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="mailFrom" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="charSet" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="username" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="sSkillsetID" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="sClosedReasonCode" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="sessionKey" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="attachments" type="tns:ArrayOfAWAttachment" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfAWAttachment">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="AWAttachment" nillable="true" type="s1:AWAttachment" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="OriginateMailWithAttachmentsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="OriginateMailWithAttachmentsResult" type="tns:ArrayOfString" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="OriginateMailWithAttachmentsHtml">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="subject" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="body" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="mailTo" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="mailCC" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="mailBCC" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="mailFrom" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="charSet" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="username" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="sSkillsetID" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="sClosedReasonCode" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="sessionKey" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="attachments" type="tns:ArrayOfAWAttachment" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="OriginateMailWithAttachmentsHtmlResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="OriginateMailWithAttachmentsHtmlResult" type="tns:ArrayOfString" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ReplyWithAttachments">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="id" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="subject" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="body" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="sessionKey" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="attachments" type="tns:ArrayOfAWAttachment" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ReplyWithAttachmentsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="ReplyWithAttachmentsResult" type="s:long" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ReplyWithAttachmentsHtml">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="id" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="subject" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="body" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="sessionKey" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="attachments" type="tns:ArrayOfAWAttachment" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ReplyWithAttachmentsHtmlResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="ReplyWithAttachmentsHtmlResult" type="s:long" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ReplyAllWithAttachments">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="id" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="subject" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="body" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="sessionKey" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="attachments" type="tns:ArrayOfAWAttachment" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ReplyAllWithAttachmentsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="ReplyAllWithAttachmentsResult" type="s:long" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ReplyAllWithAttachmentsHtml">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="id" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="subject" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="body" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="sessionKey" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="attachments" type="tns:ArrayOfAWAttachment" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ReplyAllWithAttachmentsHtmlResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="ReplyAllWithAttachmentsHtmlResult" type="s:long" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ForwardWithAttachments">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="id" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="subject" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="body" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="mailTo" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="mailCC" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="mailBCC" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="sessionKey" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="attachments" type="tns:ArrayOfAWAttachment" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ForwardWithAttachmentsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="ForwardWithAttachmentsResult" type="s:long" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ForwardWithAttachmentsHtml">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="id" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="subject" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="body" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="mailTo" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="mailCC" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="mailBCC" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="sessionKey" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="attachments" type="tns:ArrayOfAWAttachment" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ForwardWithAttachmentsHtmlResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="ForwardWithAttachmentsHtmlResult" type="s:long" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetAllSkillSets">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="sessionKey" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetAllSkillSetsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetAllSkillSetsResult" type="tns:ArrayOfAWSkillset" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfAWSkillset">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="AWSkillset" nillable="true" type="s1:AWSkillset" />
+        </s:sequence>
+      </s:complexType>
+    </s:schema>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://datatypes.agentwebservices.ccmm.applications.nortel.com">
+      <s:complexType name="AWAttachment">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="id" type="s:long" />
+          <s:element minOccurs="1" maxOccurs="1" name="idSpecified" type="s:boolean" />
+          <s:element minOccurs="0" maxOccurs="1" name="displayFileName" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="internalFileName" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="direction" type="s1:AWCodeMapping" />
+          <s:element minOccurs="0" maxOccurs="1" name="fileContents" type="s:base64Binary" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="AWCodeMapping">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="id" type="s:long" />
+          <s:element minOccurs="1" maxOccurs="1" name="idSpecified" type="s:boolean" />
+          <s:element minOccurs="0" maxOccurs="1" name="fieldName" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="numericValue" type="s:long" />
+          <s:element minOccurs="1" maxOccurs="1" name="numericValueSpecified" type="s:boolean" />
+          <s:element minOccurs="0" maxOccurs="1" name="textValue" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="AWSkillset">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="id" type="s:long" />
+          <s:element minOccurs="0" maxOccurs="1" name="name" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="ReplySoapIn">
+    <wsdl:part name="parameters" element="tns:Reply" />
+  </wsdl:message>
+  <wsdl:message name="ReplySoapOut">
+    <wsdl:part name="parameters" element="tns:ReplyResponse" />
+  </wsdl:message>
+  <wsdl:message name="ReplyHtmlSoapIn">
+    <wsdl:part name="parameters" element="tns:ReplyHtml" />
+  </wsdl:message>
+  <wsdl:message name="ReplyHtmlSoapOut">
+    <wsdl:part name="parameters" element="tns:ReplyHtmlResponse" />
+  </wsdl:message>
+  <wsdl:message name="ReplyAllSoapIn">
+    <wsdl:part name="parameters" element="tns:ReplyAll" />
+  </wsdl:message>
+  <wsdl:message name="ReplyAllSoapOut">
+    <wsdl:part name="parameters" element="tns:ReplyAllResponse" />
+  </wsdl:message>
+  <wsdl:message name="ReplyAllHtmlSoapIn">
+    <wsdl:part name="parameters" element="tns:ReplyAllHtml" />
+  </wsdl:message>
+  <wsdl:message name="ReplyAllHtmlSoapOut">
+    <wsdl:part name="parameters" element="tns:ReplyAllHtmlResponse" />
+  </wsdl:message>
+  <wsdl:message name="ForwardSoapIn">
+    <wsdl:part name="parameters" element="tns:Forward" />
+  </wsdl:message>
+  <wsdl:message name="ForwardSoapOut">
+    <wsdl:part name="parameters" element="tns:ForwardResponse" />
+  </wsdl:message>
+  <wsdl:message name="ForwardHtmlSoapIn">
+    <wsdl:part name="parameters" element="tns:ForwardHtml" />
+  </wsdl:message>
+  <wsdl:message name="ForwardHtmlSoapOut">
+    <wsdl:part name="parameters" element="tns:ForwardHtmlResponse" />
+  </wsdl:message>
+  <wsdl:message name="OriginateMailSoapIn">
+    <wsdl:part name="parameters" element="tns:OriginateMail" />
+  </wsdl:message>
+  <wsdl:message name="OriginateMailSoapOut">
+    <wsdl:part name="parameters" element="tns:OriginateMailResponse" />
+  </wsdl:message>
+  <wsdl:message name="OriginateMailHtmlSoapIn">
+    <wsdl:part name="parameters" element="tns:OriginateMailHtml" />
+  </wsdl:message>
+  <wsdl:message name="OriginateMailHtmlSoapOut">
+    <wsdl:part name="parameters" element="tns:OriginateMailHtmlResponse" />
+  </wsdl:message>
+  <wsdl:message name="OriginateMailWithAttachmentsSoapIn">
+    <wsdl:part name="parameters" element="tns:OriginateMailWithAttachments" />
+  </wsdl:message>
+  <wsdl:message name="OriginateMailWithAttachmentsSoapOut">
+    <wsdl:part name="parameters" element="tns:OriginateMailWithAttachmentsResponse" />
+  </wsdl:message>
+  <wsdl:message name="OriginateMailWithAttachmentsHtmlSoapIn">
+    <wsdl:part name="parameters" element="tns:OriginateMailWithAttachmentsHtml" />
+  </wsdl:message>
+  <wsdl:message name="OriginateMailWithAttachmentsHtmlSoapOut">
+    <wsdl:part name="parameters" element="tns:OriginateMailWithAttachmentsHtmlResponse" />
+  </wsdl:message>
+  <wsdl:message name="ReplyWithAttachmentsSoapIn">
+    <wsdl:part name="parameters" element="tns:ReplyWithAttachments" />
+  </wsdl:message>
+  <wsdl:message name="ReplyWithAttachmentsSoapOut">
+    <wsdl:part name="parameters" element="tns:ReplyWithAttachmentsResponse" />
+  </wsdl:message>
+  <wsdl:message name="ReplyWithAttachmentsHtmlSoapIn">
+    <wsdl:part name="parameters" element="tns:ReplyWithAttachmentsHtml" />
+  </wsdl:message>
+  <wsdl:message name="ReplyWithAttachmentsHtmlSoapOut">
+    <wsdl:part name="parameters" element="tns:ReplyWithAttachmentsHtmlResponse" />
+  </wsdl:message>
+  <wsdl:message name="ReplyAllWithAttachmentsSoapIn">
+    <wsdl:part name="parameters" element="tns:ReplyAllWithAttachments" />
+  </wsdl:message>
+  <wsdl:message name="ReplyAllWithAttachmentsSoapOut">
+    <wsdl:part name="parameters" element="tns:ReplyAllWithAttachmentsResponse" />
+  </wsdl:message>
+  <wsdl:message name="ReplyAllWithAttachmentsHtmlSoapIn">
+    <wsdl:part name="parameters" element="tns:ReplyAllWithAttachmentsHtml" />
+  </wsdl:message>
+  <wsdl:message name="ReplyAllWithAttachmentsHtmlSoapOut">
+    <wsdl:part name="parameters" element="tns:ReplyAllWithAttachmentsHtmlResponse" />
+  </wsdl:message>
+  <wsdl:message name="ForwardWithAttachmentsSoapIn">
+    <wsdl:part name="parameters" element="tns:ForwardWithAttachments" />
+  </wsdl:message>
+  <wsdl:message name="ForwardWithAttachmentsSoapOut">
+    <wsdl:part name="parameters" element="tns:ForwardWithAttachmentsResponse" />
+  </wsdl:message>
+  <wsdl:message name="ForwardWithAttachmentsHtmlSoapIn">
+    <wsdl:part name="parameters" element="tns:ForwardWithAttachmentsHtml" />
+  </wsdl:message>
+  <wsdl:message name="ForwardWithAttachmentsHtmlSoapOut">
+    <wsdl:part name="parameters" element="tns:ForwardWithAttachmentsHtmlResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetAllSkillSetsSoapIn">
+    <wsdl:part name="parameters" element="tns:GetAllSkillSets" />
+  </wsdl:message>
+  <wsdl:message name="GetAllSkillSetsSoapOut">
+    <wsdl:part name="parameters" element="tns:GetAllSkillSetsResponse" />
+  </wsdl:message>
+  <wsdl:portType name="AgentEmailWSSoap">
+    <wsdl:operation name="Reply">
+      <wsdl:input message="tns:ReplySoapIn" />
+      <wsdl:output message="tns:ReplySoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ReplyHtml">
+      <wsdl:input message="tns:ReplyHtmlSoapIn" />
+      <wsdl:output message="tns:ReplyHtmlSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ReplyAll">
+      <wsdl:input message="tns:ReplyAllSoapIn" />
+      <wsdl:output message="tns:ReplyAllSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ReplyAllHtml">
+      <wsdl:input message="tns:ReplyAllHtmlSoapIn" />
+      <wsdl:output message="tns:ReplyAllHtmlSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="Forward">
+      <wsdl:input message="tns:ForwardSoapIn" />
+      <wsdl:output message="tns:ForwardSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ForwardHtml">
+      <wsdl:input message="tns:ForwardHtmlSoapIn" />
+      <wsdl:output message="tns:ForwardHtmlSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="OriginateMail">
+      <wsdl:input message="tns:OriginateMailSoapIn" />
+      <wsdl:output message="tns:OriginateMailSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="OriginateMailHtml">
+      <wsdl:input message="tns:OriginateMailHtmlSoapIn" />
+      <wsdl:output message="tns:OriginateMailHtmlSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="OriginateMailWithAttachments">
+      <wsdl:input message="tns:OriginateMailWithAttachmentsSoapIn" />
+      <wsdl:output message="tns:OriginateMailWithAttachmentsSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="OriginateMailWithAttachmentsHtml">
+      <wsdl:input message="tns:OriginateMailWithAttachmentsHtmlSoapIn" />
+      <wsdl:output message="tns:OriginateMailWithAttachmentsHtmlSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ReplyWithAttachments">
+      <wsdl:input message="tns:ReplyWithAttachmentsSoapIn" />
+      <wsdl:output message="tns:ReplyWithAttachmentsSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ReplyWithAttachmentsHtml">
+      <wsdl:input message="tns:ReplyWithAttachmentsHtmlSoapIn" />
+      <wsdl:output message="tns:ReplyWithAttachmentsHtmlSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ReplyAllWithAttachments">
+      <wsdl:input message="tns:ReplyAllWithAttachmentsSoapIn" />
+      <wsdl:output message="tns:ReplyAllWithAttachmentsSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ReplyAllWithAttachmentsHtml">
+      <wsdl:input message="tns:ReplyAllWithAttachmentsHtmlSoapIn" />
+      <wsdl:output message="tns:ReplyAllWithAttachmentsHtmlSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ForwardWithAttachments">
+      <wsdl:input message="tns:ForwardWithAttachmentsSoapIn" />
+      <wsdl:output message="tns:ForwardWithAttachmentsSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ForwardWithAttachmentsHtml">
+      <wsdl:input message="tns:ForwardWithAttachmentsHtmlSoapIn" />
+      <wsdl:output message="tns:ForwardWithAttachmentsHtmlSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetAllSkillSets">
+      <wsdl:input message="tns:GetAllSkillSetsSoapIn" />
+      <wsdl:output message="tns:GetAllSkillSetsSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="AgentEmailWSSoap" type="tns:AgentEmailWSSoap">
+    <wsdl:documentation>
+      <wsi:Claim conformsTo="http://ws-i.org/profiles/basic/1.1" xmlns:wsi="http://ws-i.org/schemas/conformanceClaim/" />
+    </wsdl:documentation>
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="Reply">
+      <soap:operation soapAction="http://nortel.com/CCMMAgentWebservices/Reply" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ReplyHtml">
+      <soap:operation soapAction="http://nortel.com/CCMMAgentWebservices/ReplyHtml" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ReplyAll">
+      <soap:operation soapAction="http://nortel.com/CCMMAgentWebservices/ReplyAll" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ReplyAllHtml">
+      <soap:operation soapAction="http://nortel.com/CCMMAgentWebservices/ReplyAllHtml" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Forward">
+      <soap:operation soapAction="http://nortel.com/CCMMAgentWebservices/Forward" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ForwardHtml">
+      <soap:operation soapAction="http://nortel.com/CCMMAgentWebservices/ForwardHtml" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="OriginateMail">
+      <soap:operation soapAction="http://nortel.com/CCMMAgentWebservices/OriginateMail" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="OriginateMailHtml">
+      <soap:operation soapAction="http://nortel.com/CCMMAgentWebservices/OriginateMailHtml" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="OriginateMailWithAttachments">
+      <soap:operation soapAction="http://nortel.com/CCMMAgentWebservices/OriginateMailWithAttachments" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="OriginateMailWithAttachmentsHtml">
+      <soap:operation soapAction="http://nortel.com/CCMMAgentWebservices/OriginateMailWithAttachmentsHtml" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ReplyWithAttachments">
+      <soap:operation soapAction="http://nortel.com/CCMMAgentWebservices/ReplyWithAttachments" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ReplyWithAttachmentsHtml">
+      <soap:operation soapAction="http://nortel.com/CCMMAgentWebservices/ReplyWithAttachmentsHtml" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ReplyAllWithAttachments">
+      <soap:operation soapAction="http://nortel.com/CCMMAgentWebservices/ReplyAllWithAttachments" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ReplyAllWithAttachmentsHtml">
+      <soap:operation soapAction="http://nortel.com/CCMMAgentWebservices/ReplyAllWithAttachmentsHtml" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ForwardWithAttachments">
+      <soap:operation soapAction="http://nortel.com/CCMMAgentWebservices/ForwardWithAttachments" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ForwardWithAttachmentsHtml">
+      <soap:operation soapAction="http://nortel.com/CCMMAgentWebservices/ForwardWithAttachmentsHtml" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetAllSkillSets">
+      <soap:operation soapAction="http://nortel.com/CCMMAgentWebservices/GetAllSkillSets" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="AgentEmailWSSoap12" type="tns:AgentEmailWSSoap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="Reply">
+      <soap12:operation soapAction="http://nortel.com/CCMMAgentWebservices/Reply" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ReplyHtml">
+      <soap12:operation soapAction="http://nortel.com/CCMMAgentWebservices/ReplyHtml" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ReplyAll">
+      <soap12:operation soapAction="http://nortel.com/CCMMAgentWebservices/ReplyAll" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ReplyAllHtml">
+      <soap12:operation soapAction="http://nortel.com/CCMMAgentWebservices/ReplyAllHtml" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Forward">
+      <soap12:operation soapAction="http://nortel.com/CCMMAgentWebservices/Forward" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ForwardHtml">
+      <soap12:operation soapAction="http://nortel.com/CCMMAgentWebservices/ForwardHtml" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="OriginateMail">
+      <soap12:operation soapAction="http://nortel.com/CCMMAgentWebservices/OriginateMail" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="OriginateMailHtml">
+      <soap12:operation soapAction="http://nortel.com/CCMMAgentWebservices/OriginateMailHtml" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="OriginateMailWithAttachments">
+      <soap12:operation soapAction="http://nortel.com/CCMMAgentWebservices/OriginateMailWithAttachments" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="OriginateMailWithAttachmentsHtml">
+      <soap12:operation soapAction="http://nortel.com/CCMMAgentWebservices/OriginateMailWithAttachmentsHtml" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ReplyWithAttachments">
+      <soap12:operation soapAction="http://nortel.com/CCMMAgentWebservices/ReplyWithAttachments" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ReplyWithAttachmentsHtml">
+      <soap12:operation soapAction="http://nortel.com/CCMMAgentWebservices/ReplyWithAttachmentsHtml" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ReplyAllWithAttachments">
+      <soap12:operation soapAction="http://nortel.com/CCMMAgentWebservices/ReplyAllWithAttachments" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ReplyAllWithAttachmentsHtml">
+      <soap12:operation soapAction="http://nortel.com/CCMMAgentWebservices/ReplyAllWithAttachmentsHtml" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ForwardWithAttachments">
+      <soap12:operation soapAction="http://nortel.com/CCMMAgentWebservices/ForwardWithAttachments" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ForwardWithAttachmentsHtml">
+      <soap12:operation soapAction="http://nortel.com/CCMMAgentWebservices/ForwardWithAttachmentsHtml" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetAllSkillSets">
+      <soap12:operation soapAction="http://nortel.com/CCMMAgentWebservices/GetAllSkillSets" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="AgentEmailWS">
+    <wsdl:port name="AgentEmailWSSoap" binding="tns:AgentEmailWSSoap">
+      <soap:address location="https://ccmm-minchin/ccmmagentwebservices/AgentEmailWS.asmx" />
+    </wsdl:port>
+    <wsdl:port name="AgentEmailWSSoap12" binding="tns:AgentEmailWSSoap12">
+      <soap12:address location="https://ccmm-minchin/ccmmagentwebservices/AgentEmailWS.asmx" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

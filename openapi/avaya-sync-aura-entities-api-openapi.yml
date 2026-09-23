@@ -1,0 +1,348 @@
+openapi: 3.2.0
+info:
+  title: Admin - Voice Sync Aura Entities API
+  description: 'The Voice provider APIs are used to manage information about voice specific elements and different voice related entities e.g. Phone numbers.
+
+
+    Voice Services will support multiple ways to provision voice providers
+
+    1. Programmatic Interface (Rest APIs)
+
+    2. User Interface'
+  contact:
+    name: Avaya API Team
+    url: https://developers.avayacloud.com/onecloud-ccaas
+    email: apiteam@avaya.com
+  license:
+    name: Avaya Software Development Kit (SDK) Software License Terms
+    url: http://support.avaya.com/css/P8/documents/101038288
+  version: 1.0.2
+servers:
+- url: '{protocol}://{server}{basePath}'
+  description: Open API
+  variables:
+    protocol:
+      enum:
+      - https
+      default: https
+    server:
+      default: HOST-REGION.api.avayacloud.com
+    basePath:
+      default: /api/admin/voice/v1
+security:
+- {}
+- BearerAuth: []
+  AppKey: []
+tags:
+- name: Sync Aura Entities
+  description: Set of API to initiate synchronization of data from Aura to AXP admin. These API are expected to be called by an account administrator.
+paths:
+  /accounts/{accountId}/communication-managers/{communicationManagerId}:sync:
+    post:
+      tags:
+      - Sync Aura Entities
+      summary: Trigger sync
+      description: '**This API requires the Account Administrator role.**
+
+        Initiate synchronization of Aura entities from specified Communication Manager.'
+      operationId: initiateSync
+      parameters:
+      - $ref: '#/components/parameters/accountId'
+      - $ref: '#/components/parameters/communicationManagerId'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuraSyncRequest'
+            examples:
+              default:
+                $ref: '#/components/examples/AuraSyncRequest'
+        description: Synchronization specification for Aura entities.
+        required: true
+      responses:
+        '202':
+          description: Accepted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuraSyncResponse'
+              examples:
+                default:
+                  $ref: '#/components/examples/AuraSyncResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '405':
+          $ref: '#/components/responses/MethodNotAllowed'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+components:
+  examples:
+    AuraSyncResponse:
+      description: 'Aura Sync response example
+
+        '
+      value:
+        jobId: 55b1dc7f-38c3-48cf-9146-8cbed5622735
+        url: /api/admin/voice/v1/accounts/HGEOAV/communication-managers/90b1dc7f-38c3-98cf-8672-8cbed5698690/jobs/55b1dc7f-38c3-48cf-9146-8cbed5622735
+    ErrorNotFound:
+      description: Not Found
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#resource-not-found
+        title: Resource Not Found
+        status: 404
+        detail: Either there is no API method associated with the URL path of the request, or the request refers to one or more resources that were not found.
+    ErrorForbidden:
+      description: Forbidden
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#forbidden
+        title: Forbidden
+        status: 403
+        detail: According to the access control policy the current user does not have permission to access this resource.
+    ErrorUnauthorized:
+      description: Unauthorized
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#unauthorized
+        title: Unauthorized
+        status: 401
+        detail: This operation requires authentication. See https://developers.avayacloud.com/onecloud-ccaas/docs/how-to-authenticate-with-ccaas-apis
+    AuraSyncRequest:
+      description: 'Aura Synchronization request example
+
+        '
+      value:
+        entities:
+        - AGENT
+        name: Test_Full_Sync
+    ErrorMethodNotAllowed:
+      description: Method not allowed
+      value:
+        title: Method not allowed
+        status: 405
+        detail: The request calls an HTTP method that is not supported at the resource.
+    ErrorInternalServerError:
+      description: Server Error
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#server-error
+        title: Server Error
+        status: 500
+        detail: An internal server error was encountered.
+  responses:
+    Forbidden:
+      description: Forbidden
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorForbidden'
+    MethodNotAllowed:
+      description: Method Not Allowed
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorMethodNotAllowed'
+    NotFound:
+      description: Not Found
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorNotFound'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorUnauthorized'
+    InternalServerError:
+      description: All other application errors
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorInternalServerError'
+  schemas:
+    AuraEntity:
+      type: string
+      enum:
+      - AGENT
+      - EXTENSION
+      - VDN
+      - REASONCODE_AUX
+      - REASONCODE_LOGOUT
+      - SYSTEM_PARAMETER_FEATURES
+      description: Name of entity that need to be synchronized from Communication Manager.
+      example: AGENT
+    AuraSyncRequest:
+      type: object
+      description: Aura Synchronization request.
+      required:
+      - entities
+      properties:
+        entities:
+          type: array
+          maxItems: 10
+          items:
+            $ref: '#/components/schemas/AuraEntity'
+        name:
+          type: string
+          example: FullSync_SYNC_Mon Feb 27 10:13:22 GMT 2023
+          maxLength: 255
+          description: The name of the job. If not provided, job name is set using pattern 'FullSync_{JOBTYPE}_{GMT_DateTime}'
+    AuraSyncResponse:
+      description: Aura Synchronization response to notify that sync request accepted.
+      type: object
+      properties:
+        jobId:
+          description: An unique id mapped to each Aura Synchronization job.
+          type: string
+          example: 55b1dc7f-38c3-48cf-9146-8cbed5622735
+          minLength: 36
+          maxLength: 36
+          pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
+        url:
+          description: Details of Aura Synchronization job
+          type: string
+          example: /api/admin/voice/v1/accounts/HGEOAV/communication-managers/90b1dc7f-38c3-98cf-8672-8cbed5698690/jobs/55b1dc7f-38c3-48cf-9146-8cbed5622735
+          maxLength: 2048
+      title: AuraSyncResponse
+    Problem:
+      type: object
+      description: '<b>Problem Detail</b> as a way to carry machine-readable details of errors in a HTTP response to avoid the need to define new error response formats for HTTP APIs <a href="https://tools.ietf.org/html/rfc7807">RFC 7807</a>
+
+        '
+      properties:
+        type:
+          type: string
+          format: uri
+          description: 'An absolute URI that identifies the problem type. When dereferenced, it SHOULD provide human-readable documentation for the problem type (e.g., using HTML).
+
+            '
+          default: about:blank
+          example: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#constraint-violation
+        title:
+          type:
+          - string
+          - 'null'
+          description: 'A short, summary of the problem type. Written in english and readable for engineers (usually not suited for non technical stakeholders and not localized).
+
+            '
+          example: Service Unavailable
+        status:
+          type:
+          - integer
+          - 'null'
+          format: int32
+          description: 'The HTTP status code generated by the origin server for this occurrence of the problem.
+
+            '
+          minimum: 100
+          example: 503
+          exclusiveMaximum: 600
+        detail:
+          type:
+          - string
+          - 'null'
+          description: 'A human readable explanation specific to this occurrence of the problem.
+
+            '
+          example: Connection to database timed out
+        instance:
+          type:
+          - string
+          - 'null'
+          format: uri
+          description: 'An absolute URI that identifies the specific occurrence of the problem. It may or may not yield further information if dereferenced.
+
+            '
+        violations:
+          type:
+          - array
+          - 'null'
+          description: 'A list of violations that occurred as a result of invalid data provided as part of a request.
+
+            '
+          items:
+            type: object
+            properties:
+              field:
+                type: string
+                description: 'The name of the field in the request that caused the violation. This can be the name of a path parameter, query parameter, or a field within the request body.
+
+                  '
+                example: accountId
+              message:
+                type: string
+                description: 'A human readable explanation specific to this occurrence of the violation.
+
+                  '
+                example: must match "^[a-zA-Z]{6}$"
+              code:
+                type: integer
+                format: int32
+                description: 'The violation code generated by the server for this occurrence of the violation. Use this code when implementing any error handling logic instead of the message, as the message can change.
+
+                  '
+                example: 20006
+          example:
+          - field: emailAddress
+            message: must not be null
+            code: 20002
+          - field: accountId
+            message: must match "^[a-zA-Z]{6}$"
+            code: 20006
+  parameters:
+    accountId:
+      name: accountId
+      description: The unique 6 character internal id that represents the customer account.
+      required: true
+      in: path
+      schema:
+        type: string
+        minLength: 6
+        maxLength: 6
+        pattern: ^[a-zA-Z]{6}$
+        example: ABCDEF
+    communicationManagerId:
+      name: communicationManagerId
+      description: The unique id of the Communication Manager
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+        example: 2ec20580-d204-43f3-ae0b-34795439137f
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      description: This API uses Bearer Token Authorization Flow
+      bearerFormat: JWT
+    AppKey:
+      type: apiKey
+      in: header
+      name: appkey
+      description: This API needs an appKey as header
+x-explorer-enabled: false
+x-samples-languages:
+- curl
+- node
+- java
+- javascript
+- python
+- go

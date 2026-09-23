@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<wsdl:definitions name="exceptions" targetNamespace="http://www.nortel.com/soa/oi/cct/faults" xmlns="http://schemas.xmlsoap.org/wsdl/"
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:faults="http://www.nortel.com/soa/oi/cct/faults" xmlns:faultInfo="http://docs.oasis-open.org/wsrf/2004/06/wsrf-WS-BaseFaults-1.2-draft-01.xsd">
+
+	<wsdl:types>	
+		<xsd:schema elementFormDefault="qualified" targetNamespace="http://www.nortel.com/soa/oi/cct/faults">
+			<xsd:import namespace="http://docs.oasis-open.org/wsrf/2004/06/wsrf-WS-BaseFaults-1.2-draft-01.xsd" schemaLocation="faults.xsd" />
+
+			<xsd:element name="SessionNotCreatedException" type="faultInfo:ExceptionInfo" />
+			<xsd:element name="GetProvidersException" type="faultInfo:ExceptionInfo" />
+			<xsd:element name="GetAgentsException" type="faultInfo:ExceptionInfo" />
+			<xsd:element name="GetAgentException" type="faultInfo:ExceptionInfo" />
+			<xsd:element name="GetContactTypesException" type="faultInfo:ExceptionInfo" />
+			<xsd:element name="GetAddressesException" type="faultInfo:ExceptionInfo" />
+			<xsd:element name="GetAddressException" type="faultInfo:ExceptionInfo" />
+			<xsd:element name="GetTerminalsException" type="faultInfo:ExceptionInfo" />
+			<xsd:element name="GetTerminalException" type="faultInfo:ExceptionInfo" />
+			<xsd:element name="GetContactsException" type="faultInfo:ExceptionInfo" />
+			<xsd:element name="GetContactException" type="faultInfo:ExceptionInfo" />
+			<xsd:element name="StartCallEventListenerException" type="faultInfo:ExceptionInfo" />
+			<xsd:element name="StopCallEventListenerException" type="faultInfo:ExceptionInfo" />
+			<xsd:element name="StartAgentEventListenerException" type="faultInfo:ExceptionInfo" />
+			<xsd:element name="StopAgentEventListenerException" type="faultInfo:ExceptionInfo" />
+			<xsd:element name="GetInformationException" type="faultInfo:ExceptionInfo" />
+			
+		</xsd:schema>
+	</wsdl:types>
+
+	
+	<wsdl:message name="SessionNotCreatedException">
+		<wsdl:part name="SessionNotCreatedException" element="faults:SessionNotCreatedException" />
+	</wsdl:message>
+	
+	<wsdl:message name="GetProvidersException">
+		<wsdl:part name="GetProvidersException" element="faults:GetProvidersException" />
+	</wsdl:message>
+	
+	<wsdl:message name="GetAgentsException">
+		<wsdl:part name="GetAgentsException" element="faults:GetAgentsException" />
+	</wsdl:message>
+	
+	<wsdl:message name="GetAgentException">
+		<wsdl:part name="GetAgentException" element="faults:GetAgentException" />
+	</wsdl:message>
+	
+	<wsdl:message name="GetContactTypesException">
+		<wsdl:part name="GetContactTypesException" element="faults:GetContactTypesException" />
+	</wsdl:message>
+	
+	<wsdl:message name="GetAddressesException">
+		<wsdl:part name="GetAddressesException" element="faults:GetAddressesException" />
+	</wsdl:message>
+		
+	<wsdl:message name="GetAddressException">
+		<wsdl:part name="GetAddressException" element="faults:GetAddressException" />
+	</wsdl:message>
+	
+	<wsdl:message name="GetTerminalsException">
+		<wsdl:part name="GetTerminalsException" element="faults:GetTerminalsException" />
+	</wsdl:message>
+	
+	<wsdl:message name="GetTerminalException">
+		<wsdl:part name="GetTerminalException" element="faults:GetTerminalException" />
+	</wsdl:message>
+	
+	<wsdl:message name="GetContactsException">
+		<wsdl:part name="GetContactsException" element="faults:GetContactsException" />
+	</wsdl:message>
+
+	<wsdl:message name="GetContactException">
+		<wsdl:part name="GetContactException" element="faults:GetContactException" />
+	</wsdl:message>	
+	
+	<wsdl:message name="StartCallEventListenerException">
+		<wsdl:part name="StartCallEventListenerException" element="faults:StartCallEventListenerException" />
+	</wsdl:message>
+	
+	<wsdl:message name="StopCallEventListenerException">
+		<wsdl:part name="StopCallEventListenerException" element="faults:StopCallEventListenerException" />
+	</wsdl:message>
+	
+	<wsdl:message name="StartAgentEventListenerException">
+		<wsdl:part name="StartAgentEventListenerException" element="faults:StartAgentEventListenerException" />
+	</wsdl:message>
+	
+	<wsdl:message name="StopAgentEventListenerException">
+		<wsdl:part name="StopAgentEventListenerException" element="faults:StopAgentEventListenerException" />
+	</wsdl:message>
+	
+	<wsdl:message name="GetInformationException">
+		<wsdl:part name="GetInformationException" element="faults:GetInformationException" />
+	</wsdl:message>
+	
+</wsdl:definitions>

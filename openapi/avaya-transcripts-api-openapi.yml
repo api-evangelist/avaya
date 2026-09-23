@@ -1,0 +1,844 @@
+openapi: 3.2.0
+info:
+  title: Transcripts API
+  description: The Transcripts API enables you to send and retrieve transcript messages associated with interactions or workflow sessions in the Avaya Infinity contact center platform.
+  contact:
+    name: Avaya Developer Support
+    url: https://developers.avayacloud.com/avaya-infinity/
+  license:
+    name: Avaya Software Development Kit (SDK) Software License Terms
+    url: http://support.avaya.com/css/P8/documents/101038288
+  version: 1.0.0
+servers:
+- url: https://core.{customerId}.ec.avayacloud.com/api/transcripts/v1
+  description: Production
+  variables:
+    customerId:
+      description: Your organization subdomain identifier (e.g., avaya1234)
+      default: avaya1234
+tags:
+- name: Transcripts
+  description: Endpoints for creating and retrieving transcript messages
+paths:
+  /transcripts/{id}:
+    post:
+      tags:
+      - Transcripts
+      summary: Send transcript batch
+      operationId: transcripts.sendBatch
+      security:
+      - Bearer: []
+      description: 'Submits a batch of transcript messages for a given interaction or workflow session.
+
+
+        The `{id}` path parameter accepts either an **interactionId** or a **workflow session ID**.
+
+
+        Each message in the batch is processed sequentially. The response contains a summary of successful and failed messages. Partial success is possible — some messages may succeed while others fail.
+
+
+        **Note on the `message` field:** In the POST request body, `message` is a plain string (the text of the transcript). In the GET response, the same field name returns an array of content objects (e.g. `[{"type":"text","text":"...","isTextOnlyEmojis":false}]`). Be aware of this type difference when building integrations.
+
+
+        **Author email resolution:** If `author.type` is `user` and `author.id` is an email address, the API automatically resolves it to the corresponding `userId` for the account (best-effort — original `author.id` is used if resolution fails).
+
+
+        **410 Gone** is returned when the workflow session is found but has already ended.
+
+
+        ## Finding Your Customer Subdomain
+
+
+        Your subdomain is found in your Avaya Infinity portal URL and is required for all API calls.
+
+
+        **Example:** If your portal URL is:
+
+        ```
+
+        https://core.avaya1234.ec.avayacloud.com/app/core-config-ui/
+
+        ```
+
+        Your subdomain is: **`avaya1234`**
+
+
+        **To use this API:**
+
+        1. **Find your subdomain** from your Infinity portal URL (as shown above)
+
+        2. **Get your Bearer token** using your provisioned client credential (see Authentication below)
+
+        3. **In the API explorer on the right:**
+
+        - Click on `{customerId}` in the URL field and replace it with your actual subdomain
+
+        - Paste your Bearer token in the Credentials section
+
+        - Fill out the request body with your message batch
+
+
+        ## Authentication
+
+
+        This endpoint requires a valid OAuth 2.0 Bearer token. To get started, contact Avaya Support to request a `client_id` and `client_secret` provisioned with the `TRANSCRIPT` scope.
+
+
+        Once you have your credentials, generate an access token and include it in the `Authorization: Bearer ` header of each request.
+
+
+        ## Working with Interaction IDs
+
+
+        The `{id}` path parameter accepts:
+
+        - An **interactionId** for standard voice or digital interactions (format: `004d01...`)
+
+        - A **workflow session ID** for `WORKFLOW_SESSION` type sessions
+
+
+        Use whichever ID corresponds to the interaction context you are writing transcripts for.
+
+
+        ## Important Notes
+
+
+        - Both `messages` array and `author.type` are required. All other fields are optional.
+
+        - Omitting `direction` defaults to `in` (inbound). Omitting `createdAt` defaults to server time.
+
+        - Partial success is normal — inspect `failed` and `errors` in the response even on a `200`.
+
+        - If `author.type` is `user` and `author.id` is an email, the API attempts to resolve it to the account''s `userId`. If resolution fails, the original `author.id` is preserved.
+
+        - A `410 Gone` response indicates the workflow session exists but has already ended — no new messages can be added.
+
+        - Validation errors return `422 Unprocessable Entity`, not `400`. Each error object includes `type`, `value`, `msg`, `path`, and `location`.
+
+
+        ## DOS Protection & Rate Limiting
+
+        - Implement retry logic with exponential backoff if you encounter rate limit errors.
+
+        - Avoid sending large batches in tight loops — space requests appropriately.
+
+
+        ## Security Implementation Guidelines
+
+        - Never expose your `client_secret` or Bearer token to client-side applications.
+
+        - Implement proper error handling — avoid surfacing internal error details to end users.'
+      parameters:
+      - name: id
+        in: path
+        description: The interaction ID or workflow session ID to associate the transcript messages with. Accepts both interaction IDs and `WORKFLOW_SESSION` IDs.
+        required: true
+        schema:
+          type: string
+          example: 004d01000069d6b91753dcd4c0
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PostTranscriptBatchRequest'
+            examples:
+              voice-transcript:
+                summary: Voice call transcript batch
+                value:
+                  messages:
+                  - message: Hello, I'm calling about my bill. There seems to be an error on last month's statement.
+                    direction: in
+                    author:
+                      type: customer
+                      id: customer_phone_session_123
+                    languageCode: en-us
+                    createdAt: '2024-10-17T10:30:56.789Z'
+                  - message: Thank you for reaching out. I'll take a look at your billing history and get back to you shortly.
+                    direction: out
+                    author:
+                      type: bot
+                      id: billing_bot_001
+                    languageCode: en-us
+                    createdAt: '2024-10-17T10:31:10.123Z'
+              minimal:
+                summary: Minimal required fields
+                value:
+                  messages:
+                  - message: Customer inquiry received.
+                    author:
+                      type: customer
+                      id: cust-001
+      responses:
+        '200':
+          description: Batch processed. Inspect `failed` and `errors` for partial failures.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PostTranscriptBatchResponse'
+              examples:
+                allSucceeded:
+                  summary: All messages processed successfully
+                  value:
+                    total: 2
+                    successful: 2
+                    failed: 0
+                    results:
+                    - index: 0
+                      success: true
+                      result:
+                        status: 200
+                        data:
+                          message:
+                            id: 049d011029452f5a95fa42e9a7
+                    - index: 1
+                      success: true
+                      result:
+                        status: 200
+                        data:
+                          message:
+                            id: 049d0110290930ad042dc96ef6
+                partialFailure:
+                  summary: Partial failure — one message failed
+                  value:
+                    total: 2
+                    successful: 1
+                    failed: 1
+                    results:
+                    - index: 0
+                      success: true
+                      result:
+                        status: 200
+                        data:
+                          message:
+                            id: 049d011029452f5a95fa42e9a7
+                    errors:
+                    - index: 1
+                      message: Thank you for reaching out. I will...
+                      error: Channel not found
+                      status: 404
+        '401':
+          description: 'Unauthorized — missing or invalid Bearer token. Note: At the gateway level, missing authentication may produce a `302` redirect rather than a JSON `401` response. If your client receives an unexpected redirect, check that your `Authorization` header is present and correctly formatted.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                message: Unauthorized
+        '404':
+          description: Not Found — the interaction or workflow session does not exist.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                message: Session not found
+        '410':
+          description: Gone — the workflow session was found but has already ended. No new transcript messages can be added.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                message: Session has ended
+        '422':
+          description: Unprocessable Entity — one or more request fields failed validation. Each error object includes the field path, rejected value, and a description of the failure.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationErrorResponse'
+              examples:
+                invalidAuthorType:
+                  summary: Invalid author.type value
+                  value:
+                    message: Validation failed
+                    errors:
+                    - type: field
+                      value: unknown
+                      msg: author.type is required and must be "user", "bot", or "customer"
+                      path: messages[0].author.type
+                      location: body
+                emptyMessages:
+                  summary: Empty messages array
+                  value:
+                    message: Validation failed
+                    errors:
+                    - type: field
+                      value: []
+                      msg: messages must be a non-empty array
+                      path: messages
+                      location: body
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                error: Internal server error during batch processing
+                details: Unexpected failure
+  /transcripts/{interactionId}:
+    get:
+      tags:
+      - Transcripts
+      summary: Get transcripts for an interaction
+      operationId: transcripts.get
+      security:
+      - Bearer: []
+      description: 'Retrieves transcript messages for a given interaction or workflow session by its ID.
+
+
+        The `{interactionId}` parameter accepts either an **interactionId** or a **workflow session ID**.
+
+
+        Returns a sanitized subset of message fields appropriate for transcript display. Internal and sensitive fields are excluded from the response.
+
+
+        **Note on the `message` field:** In the GET response, `message` is an array of content objects (e.g. `[{"type":"text","text":"Hello","isTextOnlyEmojis":false}]`). This differs from the POST request body where `message` is a plain string. Be aware of this type difference when building integrations.
+
+
+        **Note on `createdAt` format:** The `createdAt` field in responses uses the format `2026-02-26 16:27:05.124000` (space separator, no `T`, no timezone), rather than standard ISO 8601. Parse accordingly.
+
+
+        **Known issue:** If the `{interactionId}` does not exist, the API currently returns a `500 Internal Server Error` (with `{"message":"Internal Server Error","errors":[]}`) rather than a `404`. This is a known behavior pending a server-side fix — treat a `500` response on this endpoint as a potential "not found" condition.
+
+
+        ## Finding Your Customer Subdomain
+
+
+        Your subdomain is found in your Avaya Infinity portal URL and is required for all API calls.
+
+
+        **Example:** If your portal URL is:
+
+        ```
+
+        https://core.avaya1234.ec.avayacloud.com/app/core-config-ui/
+
+        ```
+
+        Your subdomain is: **`avaya1234`**
+
+
+        **To use this API:**
+
+        1. **Find your subdomain** from your Infinity portal URL (as shown above)
+
+        2. **Get your Bearer token** using your provisioned client credential (see Authentication below)
+
+        3. **In the API explorer on the right:**
+
+        - Click on `{customerId}` in the URL field and replace it with your actual subdomain
+
+        - Paste your Bearer token in the Credentials section
+
+        - Provide the `interactionId` path parameter
+
+
+        ## Authentication
+
+
+        This endpoint requires a valid OAuth 2.0 Bearer token. To get started, contact Avaya Support to request a `client_id` and `client_secret` provisioned with the `TRANSCRIPT` scope.
+
+
+        Once you have your credentials, generate an access token and include it in the `Authorization: Bearer ` header of each request.
+
+
+        ## Working with Interaction IDs and Pagination
+
+
+        The `{interactionId}` path parameter accepts:
+
+        - An **interactionId** for standard voice or digital interactions (format: `004d01...`)
+
+        - A **workflow session ID** for `WORKFLOW_SESSION` type sessions
+
+
+        Use the `before` and `after` query parameters with a `paginationId` or timestamp value to page through large transcript histories. The `limit` parameter controls how many messages are returned per page.
+
+
+        ## Important Notes
+
+
+        - Transcript messages are returned in the order they were created.
+
+        - The `message` field in each returned message is an array of content objects, not a plain string.
+
+        - The `createdAt` field format is `2026-02-26 16:27:05.124000` — not standard ISO 8601. Parse using a space separator.
+
+        - For customer authors, a root-level `displayName` field may be present on the author object in addition to the `details.displayName`.
+
+        - Messages posted via the Send Transcript Batch endpoint will have `subType: "transcription"`.
+
+        - **Known issue:** A non-existent `interactionId` returns `500` instead of `404`. This is pending a server-side fix.
+
+
+        ## DOS Protection & Rate Limiting
+
+        - Implement retry logic with exponential backoff for transient errors.
+
+        - Use pagination parameters (`limit`, `before`, `after`) to retrieve large transcripts in manageable pages rather than fetching all messages in one call.
+
+
+        ## Security Implementation Guidelines
+
+        - Never expose your `client_secret` or Bearer token to client-side applications.
+
+        - Implement proper error handling — avoid surfacing internal error details to end users.'
+      parameters:
+      - name: interactionId
+        in: path
+        description: The interaction ID or workflow session ID whose transcripts should be retrieved. Accepts both interaction IDs and `WORKFLOW_SESSION` IDs.
+        required: true
+        schema:
+          type: string
+          example: 004d01000069d6b91753dcd4c0
+      - name: limit
+        in: query
+        description: Maximum number of messages to return per page.
+        required: false
+        schema:
+          type: integer
+          example: 50
+      - name: before
+        in: query
+        description: Return messages created before this pagination cursor (`paginationId` or timestamp). Used for backward pagination through results.
+        required: false
+        schema:
+          type: string
+          example: pag-001
+      - name: after
+        in: query
+        description: Return messages created after this pagination cursor (`paginationId` or timestamp). Used for forward pagination through results.
+        required: false
+        schema:
+          type: string
+          example: pag-001
+      - name: type
+        in: query
+        description: Filter messages by message type (e.g. `message`, `event`).
+        required: false
+        schema:
+          type: string
+          example: message
+      responses:
+        '200':
+          description: OK — returns transcript messages for the interaction.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetTranscriptsResponse'
+              examples:
+                withMessages:
+                  summary: Interaction with messages
+                  value:
+                    messages:
+                    - id: 049d011029452f5a95fa42e9a7
+                      channel: 004d01000069d6b91753dcd4c0
+                      direction: out
+                      type: message
+                      subType: null
+                      paginationId: pag-001
+                      author:
+                        type: user
+                        details:
+                          id: 0020005ca02e4654dfde78
+                          displayName: Agent Smith
+                          email: agent@example.com
+                          title: Support Agent
+                      message:
+                      - type: text
+                        text: Hello, how can I help you today?
+                        isTextOnlyEmojis: false
+                      languageCode: en-US
+                      createdAt: '2026-02-26 10:30:00.000000'
+                    - id: 049d0110290930ad042dc96ef6
+                      channel: 004d01000069d6b91753dcd4c0
+                      direction: in
+                      type: message
+                      subType: transcription
+                      paginationId: pag-002
+                      author:
+                        type: customer
+                        displayName: John Doe
+                        details:
+                          id: cust-12345
+                          displayName: John Doe
+                          email: null
+                          title: null
+                      message:
+                      - type: text
+                        text: I need help with my account.
+                        isTextOnlyEmojis: false
+                      languageCode: en-US
+                      createdAt: '2026-02-26 10:30:15.000000'
+                emptyTranscript:
+                  summary: No messages found
+                  value:
+                    messages: []
+        '401':
+          description: 'Unauthorized — missing or invalid Bearer token. Note: At the gateway level, missing authentication may produce a `302` redirect rather than a JSON `401` response. If your client receives an unexpected redirect, check that your `Authorization` header is present and correctly formatted.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                message: Unauthorized
+        '500':
+          description: Internal Server Error. **Known issue:** When the `{interactionId}` does not exist, the API currently returns `500` with `{"message":"Internal Server Error","errors":[]}` rather than a `404`. Treat this response as a potential "not found" condition when the interaction ID has not been verified to exist.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                message: Internal Server Error
+                errors: []
+components:
+  schemas:
+    TranscriptMessageAuthorDetails:
+      title: TranscriptMessageAuthorDetails
+      type: object
+      description: Detailed information about the message author, as returned in the GET response.
+      properties:
+        id:
+          type:
+          - string
+          - 'null'
+          description: The author's unique identifier.
+          example: 0020005ca02e4654dfde78
+        displayName:
+          type:
+          - string
+          - 'null'
+          description: The author's display name.
+          example: Agent Smith
+        email:
+          type:
+          - string
+          - 'null'
+          description: The author's email address.
+          example: agent@example.com
+        title:
+          type:
+          - string
+          - 'null'
+          description: The author's title or role.
+          example: Support Agent
+    TranscriptMessage:
+      title: TranscriptMessage
+      type: object
+      description: 'A transcript message returned by the GET endpoint. Contains a sanitized subset of channel message fields — internal and sensitive fields are excluded.
+
+
+        Note that the `message` field here is an array of content objects, not a plain string. This differs from the POST request body where `message` is a string.'
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the channel message.
+          example: 049d011029452f5a95fa42e9a7
+        channel:
+          type: string
+          description: The channel (interaction) ID this message belongs to.
+          example: 004d01000069d6b91753dcd4c0
+        author:
+          $ref: '#/components/schemas/TranscriptMessageAuthor'
+        type:
+          type: string
+          description: The message type (e.g. `message`, `event`).
+          example: message
+        subType:
+          type:
+          - string
+          - 'null'
+          description: Optional sub-type of the message. Messages posted via the Send Transcript Batch endpoint will have `subType` set to `"transcription"`.
+          example: transcription
+        direction:
+          type: string
+          description: Message direction — `in` (inbound from customer) or `out` (outbound from agent or bot).
+          enum:
+          - in
+          - out
+          example: out
+        paginationId:
+          type: string
+          description: Opaque cursor value used to paginate through messages using the `before` or `after` query parameters.
+          example: pag-001
+        message:
+          type: array
+          description: The message content represented as an array of content components. Each item contains a `type`, `text`, and `isTextOnlyEmojis` field.
+          items:
+            $ref: '#/components/schemas/MessageContentItem'
+        languageCode:
+          type: string
+          description: BCP-47 language code of the message.
+          example: en-US
+        createdAt:
+          type: string
+          description: Timestamp of when the message was created. **Note:** The format returned is `2026-02-26 16:27:05.124000` (space separator, no `T`, no timezone) rather than standard ISO 8601. Parse using a space as the date-time separator.
+          example: '2026-02-26 16:27:05.124000'
+    PostTranscriptBatchRequest:
+      title: PostTranscriptBatchRequest
+      type: object
+      description: Request body for sending a batch of transcript messages.
+      required:
+      - messages
+      properties:
+        messages:
+          type: array
+          description: A non-empty array of transcript messages to send. Each message is processed sequentially.
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/BatchMessage'
+    Author:
+      title: Author
+      type: object
+      description: The author of a transcript message in a POST request body.
+      required:
+      - type
+      - id
+      properties:
+        type:
+          type: string
+          description: The role of the author. Valid values are `user` (agent), `bot`, or `customer`.
+          enum:
+          - user
+          - bot
+          - customer
+          example: customer
+        id:
+          type: string
+          description: The unique identifier of the author. For `user` type, this can be a user ID or email address — if an email is provided, the API will attempt to resolve it to the corresponding `userId`.
+          example: customer_phone_session_123
+        displayName:
+          type: string
+          description: The display name of the author. Optional.
+          example: John Doe
+        name:
+          type: string
+          description: The name of the author. Optional.
+          example: John Doe
+    MessageContentItem:
+      title: MessageContentItem
+      type: object
+      description: A single content component within a message as returned by the GET endpoint.
+      properties:
+        type:
+          type: string
+          description: The content type of this component (e.g. `text`).
+          example: text
+        text:
+          type: string
+          description: The text content of this component.
+          example: Hello, how can I help you today?
+        isTextOnlyEmojis:
+          type: boolean
+          description: Indicates whether the text content consists entirely of emoji characters.
+          example: false
+    MessageProcessResult:
+      title: MessageProcessResult
+      type: object
+      description: Result for a successfully processed message in the batch.
+      properties:
+        index:
+          type: integer
+          description: The zero-based index of the message in the request array.
+          example: 0
+        success:
+          type: boolean
+          description: Indicates successful processing.
+          example: true
+        result:
+          type: object
+          properties:
+            status:
+              type: integer
+              description: HTTP status code of the underlying channel message API call.
+              example: 200
+            data:
+              type: object
+              description: The created message data.
+              properties:
+                message:
+                  type: object
+                  description: The created channel message object.
+                  properties:
+                    id:
+                      type: string
+                      description: The ID of the newly created channel message.
+                      example: 049d011029452f5a95fa42e9a7
+    BatchMessage:
+      title: BatchMessage
+      type: object
+      description: A single transcript message to be sent in a POST batch request.
+      required:
+      - message
+      - author
+      properties:
+        message:
+          type: string
+          description: The text content of the transcript message. Note that in the GET response, the field of the same name returns an array of content objects rather than a plain string.
+          example: Hello, I'm calling about my bill.
+        direction:
+          type: string
+          description: The direction of the message — `in` for inbound (customer) or `out` for outbound (agent/bot). Defaults to `in` if omitted.
+          enum:
+          - in
+          - out
+          example: in
+        author:
+          $ref: '#/components/schemas/Author'
+        languageCode:
+          type: string
+          description: BCP-47 language code for the message. Optional.
+          example: en-us
+        createdAt:
+          type: string
+          format: date-time
+          description: ISO 8601 timestamp indicating when the message was created. Optional — defaults to server time if omitted.
+          example: '2024-10-17T10:30:56.789Z'
+    PostTranscriptBatchResponse:
+      title: PostTranscriptBatchResponse
+      type: object
+      description: Response summarising the result of a transcript batch submission.
+      properties:
+        total:
+          type: integer
+          description: Total number of messages submitted in the request.
+          example: 2
+        successful:
+          type: integer
+          description: Number of messages successfully processed.
+          example: 2
+        failed:
+          type: integer
+          description: Number of messages that failed to process.
+          example: 0
+        results:
+          type: array
+          description: Array of results for successfully processed messages.
+          items:
+            $ref: '#/components/schemas/MessageProcessResult'
+        errors:
+          type: array
+          description: Array of errors for messages that failed. Omitted when all messages succeed.
+          items:
+            $ref: '#/components/schemas/MessageProcessError'
+    ValidationErrorResponse:
+      title: ValidationErrorResponse
+      type: object
+      description: Response body for 422 Unprocessable Entity validation errors.
+      properties:
+        message:
+          type: string
+          description: High-level description of the failure.
+          example: Validation failed
+        errors:
+          type: array
+          description: Array of individual validation errors.
+          items:
+            $ref: '#/components/schemas/ValidationErrorItem'
+    GetTranscriptsResponse:
+      title: GetTranscriptsResponse
+      type: object
+      description: Response containing transcript messages for an interaction.
+      properties:
+        messages:
+          type: array
+          description: Array of transcript messages for the interaction. Returns an empty array if no messages exist.
+          items:
+            $ref: '#/components/schemas/TranscriptMessage'
+    TranscriptMessageAuthor:
+      title: TranscriptMessageAuthor
+      type: object
+      description: Author information attached to a retrieved transcript message in the GET response.
+      properties:
+        type:
+          type: string
+          description: The role of the author. In GET responses, this may include `email` or `phoneNumber` in addition to `user` and `customer`.
+          enum:
+          - user
+          - customer
+          - email
+          - phoneNumber
+          example: user
+        displayName:
+          type:
+          - string
+          - 'null'
+          description: Root-level display name of the author. Present on customer author objects — may appear outside the `details` object.
+          example: John Doe
+        details:
+          $ref: '#/components/schemas/TranscriptMessageAuthorDetails'
+    ErrorResponse:
+      title: ErrorResponse
+      type: object
+      description: Standard error response.
+      properties:
+        message:
+          type: string
+          description: Human-readable error message.
+          example: Not found
+        error:
+          type: string
+          description: Error identifier or short description.
+          example: id parameter is required (interactionId or workflow session id)
+        errors:
+          type: array
+          description: Additional error detail array. May be empty.
+          items:
+            type: object
+    MessageProcessError:
+      title: MessageProcessError
+      type: object
+      description: Error detail for a message that failed to process in the batch.
+      properties:
+        index:
+          type: integer
+          description: The zero-based index of the message in the request array.
+          example: 1
+        message:
+          type: string
+          description: A truncated preview of the message content (up to 50 characters).
+          example: I need help with my...
+        error:
+          type: string
+          description: The error message.
+          example: Channel not found
+        status:
+          type: integer
+          description: HTTP status code associated with the error.
+          example: 404
+        details:
+          description: Additional error details. Optional.
+    ValidationErrorItem:
+      title: ValidationErrorItem
+      type: object
+      description: A single validation error returned in a 422 response.
+      properties:
+        type:
+          type: string
+          description: The category of validation error (e.g. `field`).
+          example: field
+        value:
+          description: The rejected value that caused the validation failure.
+          example: unknown
+        msg:
+          type: string
+          description: Human-readable description of the validation failure.
+          example: author.type is required and must be "user", "bot", or "customer"
+        path:
+          type: string
+          description: The dot-notation path to the field that failed validation.
+          example: messages[0].author.type
+        location:
+          type: string
+          description: Where in the request the field was found (e.g. `body`).
+          example: body
+  securitySchemes:
+    Bearer:
+      type: http
+      scheme: bearer
+      description: 'To use this API, contact Avaya Support to request a `client_id` and `client_secret` provisioned with the `TRANSCRIPT` scope.
+
+
+        Once you have your credentials, [generate an access token](https://developers.avayacloud.com/avaya-infinity/reference/access-token) and include it in the `Authorization: Bearer <token>` header of each request.'

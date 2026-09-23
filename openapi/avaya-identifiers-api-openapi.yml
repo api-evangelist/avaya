@@ -1,0 +1,578 @@
+openapi: 3.2.0
+info:
+  title: Customer Journey Identifiers API
+  description: Customer Journey is used to retrieve information about Engagements and Conversations that have occurred in a Customer's Journey and to configure what Identifiers should be collected as part of a Customer's Journey.
+  version: 1.1.1
+  contact:
+    name: Avaya API Team
+    url: https://developers.avayacloud.com/onecloud-ccaas
+    email: apiteam@avaya.com
+  license:
+    name: Avaya Software Development Kit (SDK) Software License Terms
+    url: http://support.avaya.com/css/P8/documents/101038288
+servers:
+- url: '{protocol}://{server}{basePath}'
+  description: Open API
+  variables:
+    protocol:
+      enum:
+      - https
+      default: https
+    server:
+      default: HOST-REGION.api.avayacloud.com
+    basePath:
+      default: /api/journey/v1
+- url: '{protocol}://{server}:{port}'
+  description: Internal API
+  variables:
+    protocol:
+      enum:
+      - http
+      - https
+      default: http
+    server:
+      default: journey-service
+    port:
+      enum:
+      - '80'
+      - '443'
+      default: '80'
+security:
+- {}
+- BearerAuth: []
+  AppKey: []
+tags:
+- name: Identifiers
+  description: Represents the criteria with which a customer may be identified (Phone numbers, e-mail addresses, social media handles).
+paths:
+  /accounts/{accountId}/identifiers:
+    parameters:
+    - $ref: '#/components/parameters/accountId'
+    post:
+      tags:
+      - Identifiers
+      summary: Create Identifier
+      description: '**This API requires the Account Administrator role.**
+
+
+        Creates a new identifier that can then be used to uniquely identify a Customer''s Journey.
+
+
+        This will instruct Customer Journey to collect and store identifier values that match the configured name on Customer Journeys that contain it. Unless configured to, Customer Journey will not collect identifiers for names it does not recognise.
+
+
+        Identifiers can be classified as WEAK, STRONG, or VERY STRONG. For example, a phone number is considered a WEAK identifier while an email is considered a STRONG identifier.
+
+
+        The name of the identifier must be unique for the Account, attempts to create duplicate identifiers will be rejected. A maximum of 1000 identifiers can be configured for an Account.'
+      operationId: createIdentifier
+      requestBody:
+        description: Create Identifier
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IdentifierType'
+            examples:
+              create-a-new-identifier:
+                $ref: '#/components/examples/createIdentifier'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IdentifierType'
+              examples:
+                Example-1:
+                  $ref: '#/components/examples/createIdentifierResponse'
+        '400':
+          description: "Bad Request. \n\n* accountId must be exactly 6 characters\n\n* name must not be empty\n\n* displayName must not be empty\n\n* identifierStrength must be WEAK, STRONG, or VERY STRONG\n\n* identifier 'NAME' already exists for account 'ACCOUNT_NAME'\n"
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                default:
+                  $ref: '#/components/examples/ErrorConstraintViolation'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServer'
+      deprecated: false
+    get:
+      tags:
+      - Identifiers
+      summary: List Identifiers
+      description: '**This API requires the Account Administrator role.**
+
+
+        Gets the list of configured identifiers.'
+      operationId: getIdentifiers
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/IdentifierType'
+              examples:
+                Example-1:
+                  $ref: '#/components/examples/getIdentifiers'
+        '400':
+          description: "Bad Request. \n\n* accountId must be exactly 6 characters\n"
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                default:
+                  $ref: '#/components/examples/ErrorConstraintViolation'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServer'
+      deprecated: false
+  /accounts/{accountId}/identifiers/{identifierId}:
+    parameters:
+    - $ref: '#/components/parameters/accountId'
+    - $ref: '#/components/parameters/identifierId'
+    get:
+      tags:
+      - Identifiers
+      summary: Get Identifier
+      description: '**This API requires the Account Administrator role.**
+
+
+        Gets a single identifier by its Identifier id.'
+      operationId: getIdentifier
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IdentifierType'
+              examples:
+                Example-1:
+                  $ref: '#/components/examples/getIdentifierResponse'
+        '400':
+          description: "Bad Request. \n\n* accountId must be exactly 6 characters\n\n* identifierId must exist for the account\n"
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                default:
+                  $ref: '#/components/examples/ErrorConstraintViolation'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServer'
+      deprecated: false
+    put:
+      tags:
+      - Identifiers
+      summary: Update Identifier
+      description: '**This API requires the Account Administrator role.**
+
+
+        Updates an existing identifier.
+
+
+        The name of the identifier must be unique for the Account, attempts to create duplicate identifiers will be rejected.'
+      operationId: updateIdentifier
+      requestBody:
+        description: Update Identifier
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IdentifierType'
+            examples:
+              update-an-identifier:
+                $ref: '#/components/examples/updateIdentifier'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IdentifierType'
+              examples:
+                Example-1:
+                  $ref: '#/components/examples/updateIdentifierResponse'
+        '400':
+          description: "Bad Request. \n\n* accountId must be exactly 6 characters\n\n* identifierId must exist for the account\n\n* name must not be empty\n\n* displayName must not be empty\n\n* identifierStrength must be WEAK, STRONG, or VERY STRONG\n\n* identifier 'NAME' already exists for account 'ACCOUNT_NAME'\n"
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                default:
+                  $ref: '#/components/examples/ErrorConstraintViolation'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServer'
+      deprecated: false
+  /accounts/{accountId}/identifiers:delete:
+    parameters:
+    - $ref: '#/components/parameters/accountId'
+    post:
+      tags:
+      - Identifiers
+      summary: Delete Identifier(s)
+      description: '**This API requires the Account Administrator role.**
+
+
+        Deletes the specified identifier(s), meaning they will no longer be collected and stored against Customer Journeys.
+
+
+        This has no effect for Customer Journeys that already contain the identifier(s).'
+      operationId: deleteIdentifiers
+      requestBody:
+        description: Delete Identifier(s)
+        content:
+          application/json:
+            schema:
+              type: array
+              minItems: 1
+              maxItems: 50
+              items:
+                type: string
+                description: A list of identifier(s) to be deleted by their name.
+                minLength: 3
+                maxLength: 50
+              example:
+              - e53e8dfc-a716-4f53-9647-ca4f712e1c88
+              - a2bbccea-3699-4434-94d1-07903799c8ad
+            examples:
+              delete-multiple-identifiers:
+                value:
+                - e53e8dfc-a716-4f53-9647-ca4f712e1c88
+                - 4a5d9d7f-0a91-4ed0-bc33-35875831567e
+                - 5faf5619-746e-4a30-8eb3-263b7c2a5598
+              delete-a-single-identifier:
+                value:
+                - e53e8dfc-a716-4f53-9647-ca4f712e1c88
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: "Bad Request. \n\n* accountId must be exactly 6 characters\n"
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                default:
+                  $ref: '#/components/examples/ErrorConstraintViolation'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServer'
+      deprecated: false
+components:
+  examples:
+    ErrorForbidden:
+      description: Forbidden
+      value:
+        type: https://developers.avayacloud.com/avaya-experience-platform/docs/error-handling#forbidden
+        title: Forbidden
+        status: 403
+        detail: According to the access control policy the current user and/or accountId does not have permission to access this resource.
+    updateIdentifierResponse:
+      value:
+        identifierId: feb2cc8d-696f-409e-97ce-4d122a685a42
+        identifierStrength: STRONG
+        name: emailAddresses
+        displayName: E-Mail addresses
+        url: /api/journey/v1/accounts/JDBUTC/identifiers/feb2cc8d-696f-409e-97ce-4d122a685a42
+    ErrorConstraintViolation:
+      description: Constraint Violation
+      value:
+        type: https://developers.avayacloud.com/avaya-experience-platform/docs/error-handling#constraint-violation
+        title: Constraint Violation
+        status: 400
+        detail: A problem that indicates a syntactically correct, yet semantically illegal request. The Server can not process this request until the client resolves the semantic errors described in the violations section.
+        violations:
+        - field: accountId
+          message: must match "^[a-zA-Z]{6}$"
+          code: 20006
+    createIdentifier:
+      value:
+        name: phoneNumbers
+        displayName: Phone Numbers
+        identifierStrength: WEAK
+    getIdentifierResponse:
+      value:
+        identifierId: 23aafae6-5d7e-40cd-8825-27313a5af3e8
+        identifierStrength: STRONG
+        name: universalIds
+        displayName: Universal ids
+        url: /api/journey/v1/accounts/JDBUTC/identifiers/23aafae6-5d7e-40cd-8825-27313a5af3e8
+    updateIdentifier:
+      value:
+        identifierStrength: STRONG
+        name: emailAddresses
+        displayName: E-Mail addresses
+    ErrorNotFound:
+      description: Not Found
+      value:
+        type: https://developers.avayacloud.com/avaya-experience-platform/docs/error-handling#resource-not-found
+        title: Resource Not Found
+        status: 404
+        detail: Resource not found.
+    ErrorUnauthorized:
+      description: Unauthorized
+      value:
+        type: https://developers.avayacloud.com/avaya-experience-platform/docs/error-handling#unauthorized
+        title: Unauthorized
+        status: 401
+        detail: This operation requires authentication. See https://developers.avayacloud.com/avaya-experience-platform/docs/how-to-authenticate-with-ccaas-apis
+    createIdentifierResponse:
+      value:
+        identifierId: 09c03db4-1015-42a7-b776-9527b80bfbb0
+        displayName: Phone Numbers
+        name: phoneNumbers
+        identifierStrength: WEAK
+        url: /api/journey/v1/accounts/JDBUTC/identifiers/09c03db4-1015-42a7-b776-9527b80bfbb0
+    getIdentifiers:
+      value:
+      - identifierId: 09c03db4-1015-42a7-b776-9527b80bfbb0
+        displayName: Phone Numbers
+        name: phoneNumbers
+        identifierStrength: WEAK
+        url: /api/journey/v1/accounts/JDBUTC/identifiers/09c03db4-1015-42a7-b776-9527b80bfbb0
+      - identifierId: feb2cc8d-696f-409e-97ce-4d122a685a42
+        displayName: Twitter Handles
+        name: twitterHandles
+        identifierStrength: STRONG
+        url: /api/journey/v1/accounts/JDBUTC/identifiers/feb2cc8d-696f-409e-97ce-4d122a685a42
+    ErrorInternalServerError:
+      description: Server Error
+      value:
+        type: https://developers.avayacloud.com/avaya-experience-platform/docs/error-handling#server-error
+        title: Server Error
+        status: 500
+        detail: An internal server error was encountered.
+  responses:
+    NotFound:
+      description: Not Found
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorNotFound'
+    InternalServer:
+      description: Internal Server Error
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorInternalServerError'
+    Forbidden:
+      description: Forbidden
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorForbidden'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorUnauthorized'
+  parameters:
+    accountId:
+      name: accountId
+      description: The unique 6 character internal id that represents the customer account.
+      required: true
+      in: path
+      schema:
+        type: string
+        minLength: 6
+        maxLength: 6
+        pattern: ^[a-zA-Z]{6}$
+        example: ABCDEF
+    identifierId:
+      name: identifierId
+      description: The unique 36 character internal id that represents the identifier.
+      required: true
+      in: path
+      schema:
+        type: string
+        minLength: 36
+        maxLength: 36
+        pattern: ^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}$
+        example: 9b07057b-1e15-4436-a605-280d9f030149
+  schemas:
+    IdentifierType:
+      type: object
+      description: Captures the criteria with which we identify a customer
+      required:
+      - name
+      - identifierStrength
+      properties:
+        identifierId:
+          type: string
+          description: The unique 36 character internal id that represents the identifier type.
+          readOnly: true
+        displayName:
+          type: string
+          description: A unique human readable name for an identifier, for example 'Phone Numbers'.
+          minLength: 3
+          maxLength: 50
+          example: Phone Numbers
+        name:
+          type: string
+          description: The name of the identifier, for example 'phoneNumbers'. This is how the identifier is represented in the engagement and the name it will be validated against.
+          minLength: 3
+          maxLength: 50
+          pattern: ^[a-zA-Z0-9_\.]+$
+          example: phoneNumbers
+        identifierStrength:
+          deprecated: true
+          type: string
+          description: This field is deprecated and will be removed in a future release.
+          enum:
+          - STRONG
+          - VERY_STRONG
+          - WEAK
+        url:
+          type: string
+          readOnly: true
+          description: The url for the identifier resource.
+    Problem:
+      type: object
+      description: '<b>Problem Detail</b> as a way to carry machine-readable details of errors in a HTTP response to avoid the need to define new error response formats for HTTP APIs <a href="https://tools.ietf.org/html/rfc7807">RFC 7807</a>
+
+        '
+      properties:
+        type:
+          type: string
+          format: uri
+          description: 'An absolute URI that identifies the problem type. When dereferenced, it SHOULD provide human-readable documentation for the problem type (e.g., using HTML).
+
+            '
+          default: about:blank
+          example: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#constraint-violation
+        title:
+          type:
+          - string
+          - 'null'
+          description: 'A short, summary of the problem type. Written in english and readable for engineers (usually not suited for non technical stakeholders and not localized).
+
+            '
+          example: Service Unavailable
+        status:
+          type:
+          - integer
+          - 'null'
+          format: int32
+          description: 'The HTTP status code generated by the origin server for this occurrence of the problem.
+
+            '
+          minimum: 100
+          example: 503
+          exclusiveMaximum: 600
+        detail:
+          type:
+          - string
+          - 'null'
+          description: 'A human readable explanation specific to this occurrence of the problem.
+
+            '
+          example: Connection to database timed out
+        instance:
+          type:
+          - string
+          - 'null'
+          format: uri
+          description: 'An absolute URI that identifies the specific occurrence of the problem. It may or may not yield further information if dereferenced.
+
+            '
+        violations:
+          type:
+          - array
+          - 'null'
+          description: 'A list of violations that occurred as a result of invalid data provided as part of a request.
+
+            '
+          items:
+            type: object
+            properties:
+              field:
+                type: string
+                description: 'The name of the field in the request that caused the violation. This can be the name of a path parameter, query parameter, or a field within the request body.
+
+                  '
+                example: accountId
+              message:
+                type: string
+                description: 'A human readable explanation specific to this occurrence of the violation.
+
+                  '
+                example: must match "^[a-zA-Z]{6}$"
+              code:
+                type: integer
+                format: int32
+                description: 'The violation code generated by the server for this occurrence of the violation. Use this code when implementing any error handling logic instead of the message, as the message can change.
+
+                  '
+                example: 20006
+          example:
+          - field: emailAddress
+            message: must not be null
+            code: 20002
+          - field: accountId
+            message: must match "^[a-zA-Z]{6}$"
+            code: 20006
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      description: This API uses Bearer Token Authorization Flow
+      bearerFormat: JWT
+    AppKey:
+      type: apiKey
+      in: header
+      name: appkey
+      description: This API needs an appKey as header.
+x-explorer-enabled: false
+x-samples-languages:
+- curl
+- node
+- java
+- javascript
+- python
+- go

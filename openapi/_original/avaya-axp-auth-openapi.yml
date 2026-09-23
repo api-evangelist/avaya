@@ -1,0 +1,381 @@
+# x-archived-from: avaya-axp-auth-openapi.yml
+# x-archived-on: 2026-09-16
+openapi: 3.0.2
+x-explorer-enabled: false
+x-samples-languages:
+- curl
+- node
+- java
+- javascript
+- python
+- go
+info:
+  title: Auth
+  description: 'A&A authentication
+
+    '
+  contact:
+    name: Avaya API Team
+    url: https://developers.avayacloud.com/onecloud-ccaas
+    email: apixhub@avaya.com
+  license:
+    name: Avaya Software Development Kit (SDK) Software License Terms
+    url: http://support.avaya.com/css/P8/documents/101038288
+  version: 1.0.2
+tags:
+- name: Access Token
+  description: 'Includes token related operations.
+
+    '
+servers:
+- url: '{protocol}://{server}{basePath}'
+  description: Open API
+  variables:
+    protocol:
+      enum:
+      - https
+      default: https
+    server:
+      default: HOST-REGION.api.avayacloud.com
+    basePath:
+      default: /api/auth/v1
+paths:
+  /{accountId}/protocol/openid-connect/token:
+    post:
+      tags:
+      - Access Token
+      summary: Generates an access token
+      description: "Request to obtain a token. \n\nA&A supports three grant types. A&A requires the client to authenticate\
+        \ itself with every one of these grant types, even those that additionally authenticate a user.\n\n**The 3 options\
+        \ for grant_type include:**\n\n* client_credentials\n* password\n* refresh_token\n\n\nThe request body for each grant\
+        \ type is defined below. In addition, each API invocation requires the appkey in the header.\n"
+      operationId: postGenerateToken
+      parameters:
+      - $ref: '#/components/parameters/accountId'
+      requestBody:
+        description: 'Request payload
+
+          '
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              oneOf:
+              - $ref: '#/components/schemas/GenerateTokenRequest'
+              - $ref: '#/components/schemas/ResourceOwnerPasswordRequest'
+              - $ref: '#/components/schemas/RefreshTokenRequest'
+      responses:
+        '200':
+          description: Returns token.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenerateTokenResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                default:
+                  $ref: '#/components/examples/ErrorConstraintViolation'
+        '401':
+          description: Unauthorized.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                default:
+                  $ref: '#/components/examples/ErrorUnauthorized'
+        '403':
+          description: Forbidden.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                default:
+                  $ref: '#/components/examples/ErrorForbidden'
+        '404':
+          description: Not Found.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                default:
+                  $ref: '#/components/examples/ErrorNotFound'
+        '409':
+          description: Conflict.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                default:
+                  $ref: '#/components/examples/ErrorConflict'
+        '415':
+          description: Unsupported Media Type.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                default:
+                  $ref: '#/components/examples/ErrorUnsupportedMediaType'
+        '500':
+          description: Internal Server Error.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                default:
+                  $ref: '#/components/examples/ErrorInternalServerError'
+security:
+- {}
+- ApiKeyAuth: []
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: appkey
+  parameters:
+    accountId:
+      name: accountId
+      in: path
+      description: The unique 6 character internal id that represents the customer account
+      required: true
+      schema:
+        type: string
+        minLength: 6
+        maxLength: 6
+        pattern: ^[a-zA-Z]{6}$
+        example: ABCDEF
+  schemas:
+    GenerateTokenRequest:
+      type: object
+      description: reuest payload
+      properties:
+        grant_type:
+          type: string
+          example: client_credentials
+        client_id:
+          type: string
+          example: client_id
+        client_secret:
+          type: string
+          example: client_secret
+      required:
+      - grant_type
+      - client_id
+      - client_secret
+    GenerateTokenResponse:
+      description: Generate token response.
+      type: object
+      properties:
+        access_token:
+          description: Access tokens are used in token-based authentication to allow an application to access an API
+          type: string
+          example: eett4g66678jgde....
+        expires_in:
+          description: It displayes time in sec
+          type: integer
+          format: int32
+          example: 900
+        refresh_token:
+          description: Displays new refresh token
+          type: string
+          example: eyJhbGciOiJIUzI1...
+    RefreshTokenRequest:
+      type: object
+      description: request payload
+      properties:
+        grant_type:
+          type: string
+          example: refresh_token
+        client_id:
+          type: string
+          example: client_id
+        client_secret:
+          type: string
+          example: client_secret
+        refresh_token:
+          description: Input refresh token acquired from previous generate access token response
+          type: string
+          example: eyJhbGciOiJIUzI1...
+      required:
+      - grant_type
+      - client_id
+      - client_secret
+      - refresh_token
+    ResourceOwnerPasswordRequest:
+      type: object
+      description: request payload
+      properties:
+        grant_type:
+          type: string
+          example: password
+        client_id:
+          type: string
+          example: client_id
+        client_secret:
+          type: string
+          example: client_secret
+        username:
+          type: string
+          format: string
+          example: user-account
+        password:
+          type: string
+          format: string
+          example: password1
+      required:
+      - grant_type
+      - client_id
+      - client_secret
+      - username
+      - password
+    Problem:
+      type: object
+      description: '<b>Problem Detail</b> as a way to carry machine-readable details of errors in a HTTP response to avoid
+        the need to define new error response formats for HTTP APIs <a href="https://tools.ietf.org/html/rfc7807">RFC 7807</a>
+
+        '
+      properties:
+        type:
+          type: string
+          format: uri
+          description: 'An absolute URI that identifies the problem type. When dereferenced, it SHOULD provide human-readable
+            documentation for the problem type (e.g., using HTML).
+
+            '
+          default: about:blank
+          example: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#constraint-violation
+        title:
+          type: string
+          description: 'A short, summary of the problem type. Written in english and readable for engineers (usually not suited
+            for non technical stakeholders and not localized).
+
+            '
+          example: Service Unavailable
+          nullable: true
+        status:
+          type: integer
+          format: int32
+          description: 'The HTTP status code generated by the origin server for this occurrence of the problem.
+
+            '
+          minimum: 100
+          maximum: 600
+          exclusiveMaximum: true
+          example: 503
+          nullable: true
+        detail:
+          type: string
+          description: 'A human readable explanation specific to this occurrence of the problem.
+
+            '
+          example: Connection to database timed out
+          nullable: true
+        instance:
+          type: string
+          format: uri
+          description: 'An absolute URI that identifies the specific occurrence of the problem. It may or may not yield further
+            information if dereferenced.
+
+            '
+          nullable: true
+        violations:
+          type: array
+          description: 'A list of violations that occurred as a result of invalid data provided as part of a request.
+
+            '
+          nullable: true
+          items:
+            type: object
+            properties:
+              field:
+                type: string
+                description: 'The name of the field in the request that caused the violation. This can be the name of a path
+                  parameter, query parameter, or a field within the request body.
+
+                  '
+                example: accountId
+              message:
+                type: string
+                description: 'A human readable explanation specific to this occurrence of the violation.
+
+                  '
+                example: must match "^[a-zA-Z]{6}$"
+              code:
+                type: integer
+                format: int32
+                description: 'The violation code generated by the server for this occurrence of the violation. Use this code
+                  when implementing any error handling logic instead of the message, as the message can change.
+
+                  '
+                example: 20006
+          example:
+          - field: emailAddress
+            message: must not be null
+            code: 20002
+          - field: accountId
+            message: must match "^[a-zA-Z]{6}$"
+            code: 20006
+  examples:
+    ErrorConstraintViolation:
+      description: Constraint Violation
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#constraint-violation
+        title: Constraint Violation
+        status: 400
+        detail: A problem that indicates a syntactically correct, yet semantically illegal request. The Server can not process
+          this request until the client resolves the semantic errors described in the violations section.
+    ErrorUnauthorized:
+      description: Unauthorized
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#unauthorized
+        title: Unauthorized
+        status: 401
+        detail: This operation requires authentication. See https://developers.avayacloud.com/onecloud-ccaas/docs/how-to-authenticate-with-ccaas-apis
+    ErrorForbidden:
+      description: Forbidden
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#forbidden
+        title: Forbidden
+        status: 403
+        detail: According to the access control policy the current user and/or accountId does not have permission to access
+          this resource.
+    ErrorNotFound:
+      description: Not Found
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#not-found
+        title: Not Found
+        status: 404
+        detail: Either there is no API method associated with the URL path of the request, or the request refers to one or
+          more resources that were not found.
+    ErrorConflict:
+      description: Conflict
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#conflict
+        title: Conflict
+        status: 409
+        detail: Indicates that the resource the client is trying to create already exists or some conflict when processing
+          the request.
+    ErrorUnsupportedMediaType:
+      description: Unsupported Media Type
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#conflict
+        title: Conflict
+        status: 415
+        detail: The media-type in Content-type of the request is not supported by the server.
+    ErrorInternalServerError:
+      description: Server Error
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#server-error
+        title: Server Error
+        status: 500
+        detail: An internal server error was encountered.

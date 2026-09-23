@@ -1,0 +1,947 @@
+openapi: 3.2.0
+info:
+  title: Save Transcript API
+  description: API to save transcript of a dialog that captures messages exchanged between different participants
+  contact:
+    name: Avaya API Team
+    url: https://developers.avayacloud.com/onecloud-ccaas
+    email: apiteam@avaya.com
+  license:
+    name: Avaya Software Development Kit (SDK) Software License Terms
+    url: http://support.avaya.com/css/P8/documents/101038288
+  version: 1.0.2
+servers:
+- url: '{protocol}://{server}{basePath}'
+  description: Open API
+  variables:
+    protocol:
+      enum:
+      - https
+      default: https
+    server:
+      default: HOST-REGION.api.avayacloud.com
+    basePath:
+      default: /api/digital/transcript/command/v1
+- url: '{protocol}://{server}:{port}'
+  description: Internal API
+  variables:
+    protocol:
+      enum:
+      - http
+      - https
+      default: http
+    server:
+      default: transcript-command-service
+    port:
+      enum:
+      - '80'
+      - '443'
+      default: '80'
+security:
+- {}
+- BearerAuth: []
+  AppKey: []
+tags:
+- name: Transcript
+  description: Save transcript of a dialog that captures messages exchanged between different participants
+paths:
+  /accounts/{accountId}/engagements/{engagementId}/dialogs/{dialogId}/transcripts:
+    post:
+      tags:
+      - Transcript
+      summary: Save Transcript
+      description: 'Save transcript of a dialog that captures messages exchanged between
+
+        different participants.
+
+
+        Currently, only plaintext/html messages are supported.
+
+
+        Messages are saved in the order they are present in the request.
+
+
+        If a message could not be saved, subsequent messages in the request will be discarded.
+
+        In this case the ''status'' in the response is set to PARTIAL_SUCCESS along with list of messages that were saved successfully.
+
+
+        If all messages were saved successfully then ''status'' in the response is set to COMPLETE_SUCCESS.
+
+        #### Note: The maximum supported size for the request body is 600KB.'
+      operationId: saveTranscript
+      parameters:
+      - $ref: '#/components/parameters/accountId'
+      - $ref: '#/components/parameters/engagementId'
+      - $ref: '#/components/parameters/dialogId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Transcript'
+            examples:
+              Minimal Transcript Request for VOICE:
+                $ref: '#/components/examples/MinimalTranscript'
+              Full Transcripts Request for VOICE:
+                $ref: '#/components/examples/Transcript'
+              Minimal Transcripts Request for EMAIL:
+                $ref: '#/components/examples/TranscriptMinimalEmail'
+              Full Transcripts Request for EMAIL:
+                $ref: '#/components/examples/TranscriptEmail'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TranscriptResponse'
+              examples:
+                Minimal Transcript Response (COMPLETE_SUCCESS):
+                  $ref: '#/components/examples/TranscriptMinimalCompleteResponse'
+                Minimal Transcript Response (PARTIAL_SUCCESS):
+                  $ref: '#/components/examples/TranscriptMinimalPartialResponse'
+                Full Transcript Response (COMPLETE_SUCCESS):
+                  $ref: '#/components/examples/TranscriptCompleteResponse'
+                Minimal Transcripts Request for EMAIL:
+                  $ref: '#/components/examples/TranscriptMinimalEmail'
+                Full Transcript Response (PARTIAL_SUCCESS):
+                  $ref: '#/components/examples/TranscriptPartialResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+components:
+  examples:
+    ErrorForbidden:
+      description: Forbidden
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#forbidden
+        title: Forbidden
+        status: 403
+        detail: According to the access control policy the current user and/or accountId does not have permission to access this resource.
+    TranscriptMinimalEmail:
+      value:
+        channelId: EMAIL
+        messages:
+        - body:
+            elementType: text
+            elementText:
+              text: <html><body><div>I need some <strong>help</strong> to sell my car</div><div><img src="cid:my-car-image-cid"/></div></body></html>
+              textFormat: HTML
+          headers:
+            subject: Procedure to sell
+            from: john@example.com
+            to:
+            - support@example.com
+            providerTimestamp: '2024-04-11T18:21:44.408Z'
+            additionalHeaders:
+              Content-Language: en
+          messageTimestamp: '2024-04-11T18:21:44.408Z'
+          senderParticipantId: 05570159
+          senderParticipantType: CUSTOMER
+          senderParticipantName: John
+          recipientParticipants:
+          - participantId: 8252111c-4798-4fbf-bef7-44ddc671b2b0
+            participantType: BOT
+            displayName: bot
+    TranscriptMinimalCompleteResponse:
+      value:
+        status: COMPLETE_SUCCESS
+        accountId: ABCDEF
+        engagementId: 830ef0ed-3557-41d6-a0bb-60e27db9a8d5
+        dialogId: 09989172961713382496
+        savedMessages:
+        - messageId: e1e3d642-4200-4c1f-b010-b8ac46957ebd
+          senderParticipantId: 05570159
+          senderParticipantType: CUSTOMER
+          messageTimestamp: '2024-04-11T18:21:44.408Z'
+        - messageId: bb4f5cf8-5bfc-4bf3-ac43-153c43671f0e
+          senderParticipantId: 8252111c-4798-4fbf-bef7-44ddc671b2b0
+          senderParticipantType: BOT
+          messageTimestamp: '2024-04-11T18:21:45.408Z'
+    ErrorConstraintViolation:
+      description: Constraint Violation
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#constraint-violation
+        title: Constraint Violation
+        status: 400
+        detail: A problem that indicates a syntactically correct, yet semantically illegal request. The Server can not process this request until the client resolves the semantic errors described in the violations section.
+        violations:
+        - field: engagementId
+          message: must match "^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}$"
+          code: 20006
+    ErrorInternalServerError:
+      description: Server Error
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#server-error
+        title: Server Error
+        status: 500
+        detail: An internal server error was encountered.
+    Transcript:
+      value:
+        channelId: VOICE
+        messages:
+        - body:
+            elementType: text
+            elementText:
+              text: I want to order some coffee
+              textFormat: PLAINTEXT
+          messageTimestamp: '2024-04-11T18:21:44.408Z'
+          senderParticipantId: 05570159
+          senderParticipantType: CUSTOMER
+          senderParticipantName: John
+          recipientParticipants:
+          - participantId: 8252111c-4798-4fbf-bef7-44ddc671b2b0
+            participantType: BOT
+            displayName: bot
+          providerMessageId: bafba69d-5220-4cb8-9f02-82fe4f57f825
+          providerSenderId: d29c456135dcbe326e490bb2
+          nluMetadata:
+            intents:
+            - intent: order
+              confidence: 0.1588214785085711
+            entities:
+            - entity: beverage
+              value: coffee
+            sentiment:
+              label: POSITIVE
+              score: 0.9588214785085711
+            language: en-us
+        - body:
+            elementType: text
+            elementText:
+              text: That sounds like a great choice! What type of coffee are you interested in? We have a variety of options like espresso, cappuccino, latte, or maybe something else?
+              textFormat: PLAINTEXT
+          messageTimestamp: '2024-04-11T18:21:45.408Z'
+          senderParticipantId: 8252111c-4798-4fbf-bef7-44ddc671b2b0
+          senderParticipantType: BOT
+          senderParticipantName: bot
+          recipientParticipants:
+          - participantId: 05570159
+            participantType: CUSTOMER
+            displayName: John
+          providerMessageId: 774f5cf8-5bfc-4bf3-ac43-153c43671f04
+          providerSenderId: 611c9a6a4a250100d4bd2c54
+          nluMetadata:
+            intents:
+            - intent: order
+              confidence: 0.1588214785085711
+            entities:
+            - entity: beverage
+              value: coffee
+            sentiment:
+              label: POSITIVE
+              score: 0.9588214785085711
+            language: en-us
+        dialogDirection: INCOMING
+        providerDialogId: 762d59c3-d939-40d4-af73-850124a1a698-dXMtY2VudHJhbDE
+        businessAccountName: '+50224154620'
+        correlationId: dfd117d7-73e3-4436-8bd7-3ce8f1a008ed
+    ErrorUnauthorized:
+      description: Unauthorized
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#unauthorized
+        title: Unauthorized
+        status: 401
+        detail: This operation requires authentication. See https://developers.avayacloud.com/onecloud-ccaas/docs/how-to-authenticate-with-ccaas-apis
+    TranscriptCompleteResponse:
+      value:
+        status: COMPLETE_SUCCESS
+        accountId: ABCDEF
+        engagementId: 830ef0ed-3557-41d6-a0bb-60e27db9a8d5
+        dialogId: 09989172961713382496
+        savedMessages:
+        - messageId: e1e3d642-4200-4c1f-b010-b8ac46957ebd
+          providerMessageId: bafba69d-5220-4cb8-9f02-82fe4f57f825
+          senderParticipantId: 05570159
+          senderParticipantType: CUSTOMER
+          messageTimestamp: '2024-04-11T18:21:44.408Z'
+        - messageId: bb4f5cf8-5bfc-4bf3-ac43-153c43671f0e
+          providerMessageId: 774f5cf8-5bfc-4bf3-ac43-153c43671f04
+          senderParticipantId: 8252111c-4798-4fbf-bef7-44ddc671b2b0
+          senderParticipantType: BOT
+          messageTimestamp: '2024-04-11T18:21:45.408Z'
+    TranscriptPartialResponse:
+      value:
+        status: PARTIAL_SUCCESS
+        accountId: ABCDEF
+        engagementId: 830ef0ed-3557-41d6-a0bb-60e27db9a8d5
+        dialogId: 09989172961713382496
+        savedMessages:
+        - messageId: e1e3d642-4200-4c1f-b010-b8ac46957ebd
+          providerMessageId: bafba69d-5220-4cb8-9f02-82fe4f57f825
+          senderParticipantId: 05570159
+          senderParticipantType: CUSTOMER
+          messageTimestamp: '2024-04-11T18:21:44.408Z'
+    TranscriptEmail:
+      value:
+        channelId: EMAIL
+        messages:
+        - body:
+            elementType: text
+            elementText:
+              text: <html><body><div>I need some <strong>help</strong> to sell my car</div><div><img src="cid:my-car-image-cid"/></div></body></html>
+              textFormat: HTML
+          headers:
+            subject: Procedure to sell
+            from: john@example.com
+            to:
+            - support@example.com
+            cc:
+            - supportManagement@example.com
+            bcc:
+            - supportManagement@example.com
+            replyTo: john@example.com
+            providerTimestamp: '2024-04-11T18:21:44.408Z'
+            additionalHeaders:
+              Content-Language: en
+          messageTimestamp: '2024-04-11T18:21:44.408Z'
+          senderParticipantId: 05570159
+          senderParticipantType: CUSTOMER
+          senderParticipantName: John
+          recipientParticipants:
+          - participantId: 8252111c-4798-4fbf-bef7-44ddc671b2b0
+            participantType: BOT
+            displayName: bot
+          providerMessageId: bafba69d-5220-4cb8-9f02-82fe4f57f825
+          providerSenderId: d29c456135dcbe326e490bb2
+          nluMetadata:
+            intents:
+            - intent: help
+              confidence: 0.1588214785085711
+            entities:
+            - entity: action
+              value: sell
+            sentiment:
+              label: POSITIVE
+              score: 0.9588214785085711
+            language: en-us
+    TranscriptMinimalPartialResponse:
+      value:
+        status: PARTIAL_SUCCESS
+        accountId: ABCDEF
+        engagementId: 830ef0ed-3557-41d6-a0bb-60e27db9a8d5
+        dialogId: 09989172961713382496
+        savedMessages:
+        - messageId: e1e3d642-4200-4c1f-b010-b8ac46957ebd
+          senderParticipantId: 05570159
+          senderParticipantType: CUSTOMER
+          messageTimestamp: '2024-04-11T18:21:44.408Z'
+    MinimalTranscript:
+      value:
+        channelId: VOICE
+        messages:
+        - body:
+            elementText:
+              text: I want to order some coffee
+          messageTimestamp: '2024-04-11T18:21:44.408Z'
+          senderParticipantId: 05570159
+          senderParticipantType: CUSTOMER
+        - body:
+            elementText:
+              text: That sounds like a great choice! What type of coffee are you interested in? We have a variety of options like espresso, cappuccino, latte, or maybe something else?
+          messageTimestamp: '2024-04-11T18:21:45.408Z'
+          senderParticipantId: 8252111c-4798-4fbf-bef7-44ddc671b2b0
+          senderParticipantType: BOT
+  parameters:
+    accountId:
+      name: accountId
+      description: The unique 6 character internal id that represents the customer account.
+      required: true
+      in: path
+      schema:
+        type: string
+        minLength: 6
+        maxLength: 6
+        pattern: ^[a-zA-Z]{6}$
+        example: ABCDEF
+    dialogId:
+      name: dialogId
+      required: true
+      in: path
+      description: The unique 1-100 characters internal id that represents the Dialog.
+      schema:
+        type: string
+        minLength: 1
+        maxLength: 100
+        example: 09989172961713382496
+    engagementId:
+      name: engagementId
+      description: The unique 36 character internal id that represents the engagement.
+      required: true
+      in: path
+      schema:
+        type: string
+        minLength: 36
+        maxLength: 36
+        pattern: ^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}$
+        example: dfd117d7-73e3-4436-8bd7-3ce8f1a008ed
+  schemas:
+    Attachment:
+      type: object
+      description: Meta information about the media
+      required:
+      - attachmentId
+      - name
+      - size
+      - contentType
+      - url
+      properties:
+        attachmentId:
+          type: string
+          description: The unique 36 character internal id for the attachment
+          minLength: 36
+          maxLength: 36
+          pattern: ^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}$
+        name:
+          type: string
+          maxLength: 256
+          description: The name of the attachment
+        size:
+          type: integer
+          format: int64
+          description: The size of the attachment in bytes
+        contentType:
+          type: string
+          maxLength: 256
+          description: The content type of the attachment
+        contentId:
+          type: string
+          maxLength: 256
+          description: The content id of the attachment
+        url:
+          type: string
+          maxLength: 2048
+          description: The URL link to retrieve the attachment
+        captionText:
+          type: string
+          maxLength: 256
+          description: The text describing the caption of the attachment
+        thumbnailUrl:
+          type: string
+          maxLength: 2048
+          description: The URL link to retrieve the thumbnail of the attachment
+        additionalProperties:
+          type: object
+          maxProperties: 10
+          description: Any additional properties of the attachment like labels, tags, revision numbers, display properties, etc.
+          additionalProperties:
+            type: string
+            maxLength: 256
+    Entity:
+      type: object
+      properties:
+        entity:
+          type: string
+          maxLength: 128
+          description: An entity detected in the message.
+        value:
+          type: string
+          maxLength: 256
+          description: The term in the input text that was recognized as an entity value.
+    TranscriptResponse:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/TranscriptSaveStatus'
+        accountId:
+          type: string
+          description: The unique 6 character internal id that represents the customer account
+        engagementId:
+          description: The unique 36 character internal id that represents the engagement.
+          type: string
+          example: bb4f5cf8-5bfc-4bf3-ac43-153c43671f0e
+        dialogId:
+          description: The unique 1-100 characters internal id that represents the Dialog
+          type: string
+          example: 09989172961713382496
+        savedMessages:
+          type: array
+          description: List of successfully saved messages
+          items:
+            $ref: '#/components/schemas/SavedMessagesResponse'
+    SentimentLabel:
+      description: The overall sentiment expressed in the message.
+      example: POSITIVE
+      type: string
+      enum:
+      - NEGATIVE
+      - NEUTRAL
+      - POSITIVE
+    BodyElement:
+      type: object
+      properties:
+        elementType:
+          type: string
+          maxLength: 50
+          description: Type of the body element. Currently only 'text' is supported.
+          example: text
+        elementText:
+          $ref: '#/components/schemas/ElementText'
+      description: Element of the message body
+      title: BodyElement
+    Intent:
+      type: object
+      properties:
+        intent:
+          type: string
+          maxLength: 128
+          description: The name of the recognized intent.
+        confidence:
+          type: number
+          description: "A decimal percentage that represents confidence in the intent. \nRanges from 0 to 1, where a higher score indicates a stronger likelihood of a correct match.\n"
+          format: double
+          minimum: 0
+          maximum: 1
+          example: 0.9588214785085711
+    Sentiment:
+      type: object
+      description: The sentiment of message.
+      properties:
+        label:
+          $ref: '#/components/schemas/SentimentLabel'
+        score:
+          type: number
+          description: Sentiment score between -1.0 (negative sentiment) and 1.0 (positive sentiment).
+          format: double
+          minimum: -1
+          maximum: 1
+          example: 1
+    DialogDirection:
+      description: 'Direction of the dialog. Use INCOMING if the interaction is initiated by customer,
+
+        otherwise OUTGOING. Default is INCOMING.
+
+        '
+      example: INCOMING
+      type: string
+      enum:
+      - INCOMING
+      - OUTGOING
+    Problem:
+      type: object
+      description: '<b>Problem Detail</b> as a way to carry machine-readable details of errors in a HTTP response to avoid the need to define new error response formats for HTTP APIs <a href="https://tools.ietf.org/html/rfc7807">RFC 7807</a>
+
+        '
+      properties:
+        type:
+          type: string
+          format: uri
+          description: 'An absolute URI that identifies the problem type. When dereferenced, it SHOULD provide human-readable documentation for the problem type (e.g., using HTML).
+
+            '
+          default: about:blank
+          example: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#constraint-violation
+        title:
+          type:
+          - string
+          - 'null'
+          description: 'A short, summary of the problem type. Written in english and readable for engineers (usually not suited for non technical stakeholders and not localized).
+
+            '
+          example: Service Unavailable
+        status:
+          type:
+          - integer
+          - 'null'
+          format: int32
+          description: 'The HTTP status code generated by the origin server for this occurrence of the problem.
+
+            '
+          minimum: 100
+          example: 503
+          exclusiveMaximum: 600
+        detail:
+          type:
+          - string
+          - 'null'
+          description: 'A human readable explanation specific to this occurrence of the problem.
+
+            '
+          example: Connection to database timed out
+        instance:
+          type:
+          - string
+          - 'null'
+          format: uri
+          description: 'An absolute URI that identifies the specific occurrence of the problem. It may or may not yield further information if dereferenced.
+
+            '
+        violations:
+          type:
+          - array
+          - 'null'
+          description: 'A list of violations that occurred as a result of invalid data provided as part of a request.
+
+            '
+          items:
+            type: object
+            properties:
+              field:
+                type: string
+                description: 'The name of the field in the request that caused the violation. This can be the name of a path parameter, query parameter, or a field within the request body.
+
+                  '
+                example: accountId
+              message:
+                type: string
+                description: 'A human readable explanation specific to this occurrence of the violation.
+
+                  '
+                example: must match "^[a-zA-Z]{6}$"
+              code:
+                type: integer
+                format: int32
+                description: 'The violation code generated by the server for this occurrence of the violation. Use this code when implementing any error handling logic instead of the message, as the message can change.
+
+                  '
+                example: 20006
+          example:
+          - field: emailAddress
+            message: must not be null
+            code: 20002
+          - field: accountId
+            message: must match "^[a-zA-Z]{6}$"
+            code: 20006
+    Transcript:
+      type: object
+      description: 'Represents a transcript of a dialog that captures messages exchanged between different participants.
+
+        The maximum supported size for the request body is 600 KB.
+
+        '
+      required:
+      - channelId
+      - messages
+      properties:
+        channelId:
+          type: string
+          maxLength: 15
+          description: Type of dialog channel where transcript occurred such as CHAT, MESSAGING, EMAIL, VOICE.
+        messages:
+          type: array
+          description: List of messages exchanged as part of the dialog
+          maxItems: 50
+          items:
+            $ref: '#/components/schemas/Message'
+        dialogDirection:
+          $ref: '#/components/schemas/DialogDirection'
+        providerDialogId:
+          type: string
+          maxLength: 256
+          description: "The provider side identifier for a Contact Center dialog. \nMessages with same 'providerDialogId' value are considered part of same conversation.\nFor VOICE channel this can be set to 'providerEngagementId' or unique idenfier of the interaction.\n"
+        businessAccountName:
+          type: string
+          maxLength: 256
+          description: 'Name of the business account configured on the provider using which the message was sent.
+
+            For Voice channel, this can be set to ''dialedNumber''.
+
+            For custom messaging integration, provide the unique id of the integration (integrationId) here.
+
+            '
+        correlationId:
+          type: string
+          maxLength: 256
+          description: The correlation id can be used to uniquely identify the client request. This is an optional field but when specified it will be included in any callback events and can be used to correlate the callback event with the original API request.
+          example: e099cef7-b9f3-47ca-8ea1-3a3ceea9fffc
+    Message:
+      type: object
+      description: 'A message exchanged as part of the dialog.
+
+        '
+      properties:
+        body:
+          $ref: '#/components/schemas/BodyElement'
+        headers:
+          $ref: '#/components/schemas/MessageHeaders'
+        fallbackText:
+          type: string
+          maxLength: 256
+          description: Fallback message text that clients can show if they are not capable of rendering the body
+        attachments:
+          type: array
+          maxItems: 25
+          items:
+            $ref: '#/components/schemas/Attachment'
+        messageTimestamp:
+          type: string
+          format: date-time
+          description: 'Timestamp of the message (in ISO 8601 format including timezone, ''yyyy-MM-dd''T''HH:mm:ss[.SSS]Z'')
+
+            '
+        senderParticipantType:
+          $ref: '#/components/schemas/ParticipantType'
+        senderParticipantId:
+          type: string
+          maxLength: 256
+          description: "The unique identifier for the participant that sent the message. \nFor VOICE channel, value can be set to \n'externalParticipantId' or customer's calling number for CUSTOMER participant, \nagentId for AGENT/SUPERVISOR participant, and the virtual agent's identifier for BOT/SYSTEM participant\n"
+          example: a00e1125-86b2-4c10-9f6f-0c27d065ef70
+        senderParticipantName:
+          type: string
+          maxLength: 256
+          description: The display name of participant that sent the message.
+          example: participant name
+        recipientParticipants:
+          type: array
+          maxItems: 5
+          description: List of recipients receiving message.
+          items:
+            $ref: '#/components/schemas/Participant'
+        providerMessageId:
+          type: string
+          maxLength: 256
+          description: The provider side identifier for the message.
+        providerSenderId:
+          type: string
+          maxLength: 256
+          description: The provider side identifier for the participant that sent the message.
+        nluMetadata:
+          $ref: '#/components/schemas/NluMetadata'
+      required:
+      - senderParticipantType
+      - senderParticipantId
+      - body
+      - messageTimestamp
+    SavedMessagesResponse:
+      type: object
+      description: 'Represents result of save message operation
+
+        '
+      properties:
+        messageId:
+          type: string
+          description: 'Unique identifier of a message
+
+            '
+        providerMessageId:
+          type: string
+          description: 'The provider side identifier for the message. Value can be random UUID '
+        senderParticipantType:
+          $ref: '#/components/schemas/ParticipantType'
+        senderParticipantId:
+          type: string
+          description: The unique identifier for the participant. It could be customer's calling number, email address or any ID that uniquely identifies the participant
+          example: dfd117d7-73e3-4436-8bd7-3ce8f1a008ed
+        messageTimestamp:
+          type: string
+          format: date-time
+          description: 'timestamp (milliseconds since epoch) when the message was first received by digital framework.
+
+            '
+    MessageHeaders:
+      type: object
+      description: The header of the message
+      properties:
+        subject:
+          type: string
+          maxLength: 256
+          description: The subject of the message set by the provider
+        from:
+          type: string
+          maxLength: 256
+          description: The sender of the message set by the provider
+        to:
+          type: array
+          description: The To (recipients) of the message set by the provider
+          maxItems: 50
+          items:
+            type: string
+            maxLength: 256
+        cc:
+          type: array
+          maxItems: 50
+          description: The Cc (recipients) of the message set by the provider. This field is mainly used for email messages
+          items:
+            type: string
+            maxLength: 256
+        bcc:
+          type: array
+          maxItems: 50
+          description: The Bcc (recipients) of the message set by the provider. This field is mainly used for email messages
+          items:
+            type: string
+            maxLength: 256
+        replyTo:
+          type: string
+          maxLength: 256
+          description: The address to use when replying.
+        clientDeviceTag:
+          type: string
+          maxLength: 256
+          description: The tag used to identify the client device that was used to send the message.
+        messageSourceServerTag:
+          type: string
+          maxLength: 256
+          description: The tag used by a service to identify that this message was sent by itself.
+        providerTimestamp:
+          type: string
+          format: date-time
+          description: The date time when the message was captured by the provider (in ISO 8601 format including timezone, 'yyyy-MM-dd'T'HH:mm:ss[.SSS]Z')
+        priority:
+          type: string
+          maxLength: 32
+          description: The priority of the message set by the provider
+        sensitivity:
+          type: string
+          maxLength: 32
+          description: The sensitivity of the message set by the provider
+        encoding:
+          type: string
+          maxLength: 32
+          description: The encoding used for the body of the message
+        sourceAddress:
+          type: string
+          description: The source address is intended to represent the address from which the AXP engagement was created. It might represent a mailbox, a Twitter account, a Facebook account, a chat integration will be the same as the (To) address
+          example: https://www.facebook.com/Ixcc-112670754648669
+          maxLength: 256
+        sourceType:
+          type: string
+          description: The source of the engagement. For example the platform as a keyword (Facebook, Twitter, Instagram)
+          example: Facebook
+          maxLength: 100
+        additionalHeaders:
+          type: object
+          description: The additional header fields of the message. For example if the payload is of a specific version that the clients rendering the payload need to be aware of that information can be sent here. Total size is limited to 256KB (including keys and values).
+          additionalProperties:
+            type: string
+          x-disable-custom-linter-rules:
+          - request-body-validation
+    Participant:
+      type: object
+      description: Participant sending or receiving the message
+      required:
+      - participantId
+      - participantType
+      properties:
+        participantType:
+          $ref: '#/components/schemas/ParticipantType'
+        participantId:
+          type: string
+          maxLength: 256
+          description: "The unique identifier for the participant.\nFor VOICE channel, value can be set to \n'externalParticipantId' or customer's calling number for CUSTOMER participant, \nagentId for AGENT/SUPERVISOR participant, and the virtual agent's identifier for BOT/SYSTEM participant\n"
+          example: dfd117d7-73e3-4436-8bd7-3ce8f1a008ed
+        displayName:
+          type: string
+          maxLength: 256
+          description: The display name of participant.
+          example: participant name
+    ParticipantType:
+      description: The participant type.
+      type: string
+      enum:
+      - CUSTOMER
+      - AGENT
+      - SUPERVISOR
+      - SYSTEM
+      - BOT
+    TextFormat:
+      description: Format of the text message in the body. Default is PLAINTEXT.
+      example: PLAINTEXT
+      type: string
+      enum:
+      - PLAINTEXT
+      - HTML
+      - MARKDOWN
+    TranscriptSaveStatus:
+      description: "Status of transcript save operation. \nMessages are saved in the order they are present in the request. \nIf a message could not be saved, subsequent messages in the request will be discarded. \nIn this case the 'status' in the response is set to PARTIAL_SUCCESS along with list of messages that were saved successfully.\nIf all messages were saved successfully then 'status' in the response is set to COMPLETE_SUCCESS.\n"
+      type: string
+      enum:
+      - PARTIAL_SUCCESS
+      - COMPLETE_SUCCESS
+    NluMetadata:
+      type: object
+      description: NLU Metadata of the message
+      properties:
+        intents:
+          type: array
+          description: List of intents recognized in the message.
+          maxItems: 10
+          items:
+            $ref: '#/components/schemas/Intent'
+        entities:
+          type: array
+          maxItems: 10
+          items:
+            $ref: '#/components/schemas/Entity'
+          description: List of entities identified in the message.
+        sentiment:
+          $ref: '#/components/schemas/Sentiment'
+        language:
+          type: string
+          maxLength: 10
+          description: ISO 639 code that specifies the language used in the message.
+          example: en-US
+    ElementText:
+      type: object
+      description: The message text and format of the message body
+      required:
+      - text
+      properties:
+        text:
+          type: string
+          maxLength: 524288
+          description: The message text
+        textFormat:
+          $ref: '#/components/schemas/TextFormat'
+  responses:
+    BadRequest:
+      description: Bad Request
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorConstraintViolation'
+    InternalServerError:
+      description: Internal Server Error
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorInternalServerError'
+    Forbidden:
+      description: Forbidden.
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorForbidden'
+    Unauthorized:
+      description: Unauthorized.
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorUnauthorized'
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      description: This API uses Bearer Token Authorization Flow
+      bearerFormat: JWT
+    AppKey:
+      type: apiKey
+      in: header
+      name: appkey
+      description: This API needs an appKey as header
+x-explorer-enabled: false
+x-samples-languages:
+- curl
+- node
+- java
+- javascript
+- python
+- go

@@ -1,0 +1,789 @@
+openapi: 3.2.0
+info:
+  title: Admin - Match Queue API
+  description: 'Administration of categories, attributes, and queues used in Matching.
+
+
+    Queue''s are used to identify a pool of contact center agents for which Customer engagements can be matched and routed.'
+  contact:
+    name: Avaya API Team
+    url: https://developers.avayacloud.com/onecloud-ccaas
+    email: apiteam@avaya.com
+  license:
+    name: Avaya Software Development Kit (SDK) Software License Terms
+    url: http://support.avaya.com/css/P8/documents/101038288
+  version: 1.0.1
+servers:
+- url: '{protocol}://{server}{basePath}'
+  description: Open API
+  variables:
+    protocol:
+      enum:
+      - http
+      - https
+      default: https
+    server:
+      default: HOST-REGION.api.avayacloud.com
+    basePath:
+      default: /api/admin/match/v1
+- url: '{protocol}://{server}:{port}'
+  description: Internal API
+  variables:
+    protocol:
+      enum:
+      - http
+      - https
+      default: http
+    server:
+      default: cc-admin-assisted
+    port:
+      enum:
+      - '80'
+      - '443'
+      default: '80'
+security:
+- BearerAuth: []
+  AppKey: []
+tags:
+- name: Queue
+  description: Queue's are used to identify a pool of contact center agents for which Customer engagements can be matched and routed.
+paths:
+  /accounts/{accountId}/queues:
+    post:
+      tags:
+      - Queue
+      summary: Create Queue
+      description: Creates a queue.
+      operationId: createQueue
+      parameters:
+      - $ref: '#/components/parameters/accountId'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/QueueUpdate'
+            examples:
+              Create Queue:
+                $ref: '#/components/examples/CreateQueue'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Queue'
+              examples:
+                Create Queue Response:
+                  $ref: '#/components/examples/GetQueue'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '409':
+          $ref: '#/components/responses/QueueNameExists'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    get:
+      tags:
+      - Queue
+      summary: List Queues
+      description: Lists all of the queues for an account in ascending name order.
+      operationId: listQueues
+      parameters:
+      - $ref: '#/components/parameters/accountId'
+      - name: name
+        in: query
+        description: The optional name of the match queue to query.
+        required: false
+        schema:
+          type: string
+          minLength: 3
+          maxLength: 50
+          example: EMEA Sales
+      - name: defaultAccountQueue
+        in: query
+        description: This is an optional field and when true it will return the default Account Queue only, when false it will return a list of all non-default queues.
+        required: false
+        schema:
+          type: boolean
+          example: false
+      - $ref: '#/components/parameters/pageNumber'
+      - name: pageSize
+        in: query
+        description: The maximum number of results per page. Default value is 20, max value is 20.
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 20
+          default: 20
+          example: 10
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QueuePage'
+              examples:
+                List Queues (Page 1):
+                  $ref: '#/components/examples/ListQueuesPage1'
+                List Queues (Page 2):
+                  $ref: '#/components/examples/ListQueuesPage2'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /accounts/{accountId}/queues/{queueId}:
+    get:
+      tags:
+      - Queue
+      summary: Get Queue
+      description: Gets a queue.
+      operationId: getQueue
+      parameters:
+      - $ref: '#/components/parameters/accountId'
+      - $ref: '#/components/parameters/queueId'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Queue'
+              examples:
+                Get Queue:
+                  $ref: '#/components/examples/GetQueue'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    put:
+      tags:
+      - Queue
+      summary: Update Queue
+      description: 'Updates a queue.
+
+
+        This is an entire replacement of the existing queue.'
+      operationId: updateQueue
+      parameters:
+      - $ref: '#/components/parameters/accountId'
+      - $ref: '#/components/parameters/queueId'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/QueueUpdate'
+            examples:
+              Update Queue:
+                $ref: '#/components/examples/UpdateQueue'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Queue'
+              examples:
+                Update Queue Response:
+                  $ref: '#/components/examples/PrevQueueResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/QueueNameExists'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    delete:
+      tags:
+      - Queue
+      summary: Delete Queue
+      description: Deletes a queue.
+      operationId: deleteQueue
+      parameters:
+      - $ref: '#/components/parameters/accountId'
+      - $ref: '#/components/parameters/queueId'
+      responses:
+        '204':
+          description: No Content
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /accounts/{accountId}/queues:bulkCreate:
+    post:
+      tags:
+      - Queue
+      summary: Bulk Create Queues
+      description: Bulk creates queues.
+      operationId: bulkCreateQueues
+      parameters:
+      - $ref: '#/components/parameters/accountId'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              description: List of queues.
+              minItems: 1
+              maxItems: 10
+              items:
+                $ref: '#/components/schemas/QueueUpdate'
+            examples:
+              Bulk Create Queue:
+                $ref: '#/components/examples/BulkCreateQueue'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Queue'
+              examples:
+                Bulk Create Queue Response:
+                  $ref: '#/components/examples/BulkCreateQueueResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '409':
+          $ref: '#/components/responses/BulkQueueNameExists'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /accounts/{accountId}/queues:bulkDelete:
+    post:
+      tags:
+      - Queue
+      summary: Bulk Delete Queues
+      description: 'Bulk deletes queues.
+
+
+        Any queues specified that do not require deletion will be ignored.'
+      operationId: bulkDeleteQueues
+      parameters:
+      - $ref: '#/components/parameters/accountId'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              description: List of queue ids
+              minItems: 1
+              maxItems: 10
+              items:
+                $ref: '#/components/schemas/QueueId'
+            examples:
+              Bulk Delete Queue:
+                $ref: '#/components/examples/BulkDeleteQueue'
+      responses:
+        '204':
+          description: No Content
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+components:
+  examples:
+    ErrorForbidden:
+      description: Forbidden
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#forbidden
+        title: Forbidden
+        status: 403
+        detail: According to the access control policy the current user and/or accountId does not have permission to access this resource.
+    CreateQueue:
+      description: Queue.
+      value:
+        name: EMEA Sales
+        description: Route enagements to sales agents in the EMEA Region
+        timetableId: 28002f8e-c952-428c-b67f-5a6a4dc96260
+        afterContactWork: true
+    BulkCreateQueueResponse:
+      description: Previous queues.
+      value:
+      - queueId: 689e0f6b-1d27-42a9-af19-9d0b244af0b3
+        name: EMEA Sales
+        description: Route enagements to sales agents in the EMEA Region
+        timetableId: 28002f8e-c952-428c-b67f-5a6a4dc96260
+        defaultAccountQueue: false
+        afterContactWork: true
+      - queueId: d62d5178-9920-415a-a5d9-066716384750
+        name: NA Support
+        description: Route enagements to support agents in the NA Region
+        timetableId: 7893b4a3-c952-43f5-87c7-8cefa1f49685
+        defaultAccountQueue: false
+        afterContactWork: false
+    ErrorQueueNameExists:
+      description: Constraint Violation
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#conflict
+        title: Conflict
+        status: 409
+        detail: A resource with the same unique constraint values already exists.
+        violations:
+        - field: name
+          message: A queue with this name already exists
+    ErrorConstraintViolation:
+      description: Constraint Violation
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#constraint-violation
+        title: Constraint Violation
+        status: 400
+        detail: A problem that indicates a syntactically correct, yet semantically illegal request. The Server can not process this request until the client resolves the semantic errors described in the violations section.
+        violations:
+        - field: accountId
+          message: must match "^[a-zA-Z]{6}$"
+          code: 20006
+    PrevQueueResponse:
+      description: Previous queue, if found.
+      value:
+        queueId: 689e0f6b-1d27-42a9-af19-9d0b244af0b3
+        name: EMEA Sales
+        description: Route enagements to sales agents in the EMEA Region
+        timetableId: 28002f8e-c952-428c-b67f-5a6a4dc96260
+        defaultAccountQueue: false
+        afterContactWork: true
+    BulkDeleteQueue:
+      description: Array of queues to delete.
+      value:
+      - 689e0f6b-1d27-42a9-af19-9d0b244af0b3
+      - d62d5178-9920-415a-a5d9-066716384750
+    ListQueuesPage1:
+      description: Page of queues.
+      value:
+        pagination:
+          pageNumber: 1
+          pageSize: 3
+          total: 5
+        queues:
+        - queueId: f5c6ec92-8c67-437d-9aaf-35d4b81acdec
+          name: Default
+          description: Default queue
+          defaultAccountQueue: true
+          afterContactWork: false
+        - queueId: 689e0f6b-1d27-42a9-af19-9d0b244af0b3
+          name: EMEA Sales
+          description: Route enagements to sales agents in the EMEA Region
+          timetableId: 28002f8e-c952-428c-b67f-5a6a4dc96260
+          defaultAccountQueue: false
+          afterContactWork: true
+        - queueId: d62d5178-9920-415a-a5d9-066716384750
+          name: NA Support
+          description: Route enagements to support agents in the NA Region
+          timetableId: 7893b4a3-c952-43f5-87c7-8cefa1f49685
+          defaultAccountQueue: false
+          afterContactWork: false
+        links:
+          next: /api/admin/match/v1/accounts/ABCDEF/queues?pageNumber=2&pageSize=3
+          prev: ''
+    ErrorInternalServerError:
+      description: Server Error
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#server-error
+        title: Server Error
+        status: 500
+        detail: An internal server error was encountered.
+    BulkCreateQueue:
+      description: Array of queues.
+      value:
+      - name: EMEA Sales
+        description: Route enagements to sales agents in the EMEA Region
+        timetableId: 28002f8e-c952-428c-b67f-5a6a4dc96260
+        afterContactWork: true
+      - name: NA Support
+        description: Route enagements to support agents in the NA Region
+        timetableId: 7893b4a3-c952-43f5-87c7-8cefa1f49685
+        afterContactWork: false
+    ErrorNotFound:
+      description: Not Found
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#resource-not-found
+        title: Resource Not Found
+        status: 404
+        detail: Either there is no API method associated with the URL path of the request, or the request refers to one or more resources that were not found.
+    ListQueuesPage2:
+      description: Page of queues.
+      value:
+        pagination:
+          pageNumber: 2
+          pageSize: 3
+          total: 5
+        queues:
+        - queueId: 9c602646-80d8-11eb-9439-0242ac130002
+          name: US Repairs
+          description: Route enagements to repairs in the US Region
+          timetableId: 7893b4a3-c952-43f5-87c7-8cefa1f49685
+          defaultAccountQueue: false
+          afterContactWork: false
+        - queueId: a69ecaa4-80d8-11eb-9439-0242ac130002
+          name: EU Billing
+          description: Route enagements to billing in the EU Region
+          timetableId: 28002f8e-c952-428c-b67f-5a6a4dc96260
+          defaultAccountQueue: false
+          afterContactWork: false
+        links:
+          next: ''
+          prev: /api/admin/match/v1/accounts/ABCDEF/queues?pageNumber=1&pageSize=3
+    ErrorUnauthorized:
+      description: Unauthorized
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#unauthorized
+        title: Unauthorized
+        status: 401
+        detail: This operation requires authentication. See https://developers.avayacloud.com/onecloud-ccaas/docs/how-to-authenticate-with-ccaas-apis
+    GetQueue:
+      description: Queue.
+      value:
+        queueId: 689e0f6b-1d27-42a9-af19-9d0b244af0b3
+        name: EMEA Sales
+        description: Route enagements to sales agents in the EMEA Region
+        timetableId: 28002f8e-c952-428c-b67f-5a6a4dc96260
+        defaultAccountQueue: false
+        afterContactWork: true
+    ErrorBulkQueueNameExists:
+      description: Constraint Violation
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#conflict
+        title: Conflict
+        status: 409
+        detail: A resource with the same unique constraint values already exists.
+        violations:
+        - field: bulkCreateQueues.queueUpdate[0].name
+          message: A queue with this name already exists
+    UpdateQueue:
+      description: Response queues.
+      value:
+        name: EMEA Sales
+        description: Route enagements to sales agents in the EMEA Region
+        timetableId: 28002f8e-c952-428c-b67f-5a6a4dc96260
+        afterContactWork: true
+  responses:
+    NotFound:
+      description: Not Found.
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorNotFound'
+    BulkQueueNameExists:
+      description: Conflict
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorBulkQueueNameExists'
+    QueueNameExists:
+      description: Conflict
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorQueueNameExists'
+    InternalServerError:
+      description: Internal Server Error
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorInternalServerError'
+    Forbidden:
+      description: Forbidden.
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorForbidden'
+    Unauthorized:
+      description: Unauthorized.
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorUnauthorized'
+    BadRequest:
+      description: Bad Request
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorConstraintViolation'
+  parameters:
+    accountId:
+      name: accountId
+      description: The unique 6 character internal id that represents the customer account
+      required: true
+      in: path
+      schema:
+        type: string
+        minLength: 6
+        maxLength: 6
+        pattern: ^[a-zA-Z]{6}$
+        example: ABCDEF
+    queueId:
+      name: queueId
+      description: The unique 36 character internal id (uuid) that represents the queue
+      required: true
+      in: path
+      schema:
+        type: string
+        minLength: 36
+        maxLength: 36
+        pattern: ^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}$
+        example: 689e0f6b-1d27-42a9-af19-9d0b244af0b3
+    pageNumber:
+      name: pageNumber
+      in: query
+      description: The page number of the records to retrieve. Default value is 1.
+      schema:
+        type: integer
+        format: int32
+        default: 1
+        minimum: 1
+        example: 1
+  schemas:
+    Links:
+      type: object
+      properties:
+        prev:
+          type: string
+          description: URL of the previous page. Blank if currently on the first page.
+        next:
+          type: string
+          description: URL of the next page. Blank if currently on the last page.
+    QueueName:
+      type: string
+      minLength: 3
+      maxLength: 50
+      description: The name of the queue. Name must be unique per account.
+    QueueUpdate:
+      type: object
+      description: A Queue is used to identify a pool of contact center agents for which Customer engagements can be matched and routed.
+      required:
+      - name
+      properties:
+        name:
+          $ref: '#/components/schemas/QueueName'
+        description:
+          $ref: '#/components/schemas/QueueDescription'
+        timetableId:
+          $ref: '#/components/schemas/TimetableId'
+        afterContactWork:
+          type: boolean
+          description: True indicates that an agent will undertake additional work after a contact (Engagement) on this queue ends.
+          default: false
+    QueuePage:
+      type: object
+      description: A page containing the current list of queues with links to the previous and next pages.
+      properties:
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+        queues:
+          type: array
+          description: List of queues.
+          items:
+            $ref: '#/components/schemas/Queue'
+        links:
+          $ref: '#/components/schemas/Links'
+    TimetableId:
+      type: string
+      minLength: 36
+      maxLength: 36
+      pattern: ^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}$
+      description: The unique 36 character id of the timetable applied to this queue.
+    Pagination:
+      type: object
+      properties:
+        pageNumber:
+          type: integer
+          description: The current page number.
+        pageSize:
+          type: integer
+          description: The max number of records that can be retrieved on this page.
+        total:
+          type: integer
+          description: The total number of records.
+    Queue:
+      type: object
+      description: A Queue is used to identify a pool of contact center agents for which Customer engagements can be matched and routed.
+      required:
+      - name
+      properties:
+        queueId:
+          $ref: '#/components/schemas/QueueId'
+        name:
+          $ref: '#/components/schemas/QueueName'
+        description:
+          $ref: '#/components/schemas/QueueDescription'
+        timetableId:
+          $ref: '#/components/schemas/TimetableId'
+        defaultAccountQueue:
+          type: boolean
+          readOnly: true
+          description: When true this indicates that this queue is the default queue for the account.
+        afterContactWork:
+          type: boolean
+          description: True indicates that an agent will undertake additional work after a contact (Engagement) on this queue ends.
+          default: false
+    QueueId:
+      type: string
+      minLength: 36
+      maxLength: 36
+      pattern: ^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}$
+      description: The unique 36 character internal id that represents the queue.
+    QueueDescription:
+      type: string
+      minLength: 3
+      maxLength: 256
+      description: A brief description of the intent of the queue.
+    Problem:
+      type: object
+      description: '<b>Problem Detail</b> as a way to carry machine-readable details of errors in a HTTP response to avoid the need to define new error response formats for HTTP APIs <a href="https://tools.ietf.org/html/rfc7807">RFC 7807</a>
+
+        '
+      properties:
+        type:
+          type: string
+          format: uri
+          description: 'An absolute URI that identifies the problem type. When dereferenced, it SHOULD provide human-readable documentation for the problem type (e.g., using HTML).
+
+            '
+          default: about:blank
+          example: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#constraint-violation
+        title:
+          type:
+          - string
+          - 'null'
+          description: 'A short, summary of the problem type. Written in english and readable for engineers (usually not suited for non technical stakeholders and not localized).
+
+            '
+          example: Service Unavailable
+        status:
+          type:
+          - integer
+          - 'null'
+          format: int32
+          description: 'The HTTP status code generated by the origin server for this occurrence of the problem.
+
+            '
+          minimum: 100
+          example: 503
+          exclusiveMaximum: 600
+        detail:
+          type:
+          - string
+          - 'null'
+          description: 'A human readable explanation specific to this occurrence of the problem.
+
+            '
+          example: Connection to database timed out
+        instance:
+          type:
+          - string
+          - 'null'
+          format: uri
+          description: 'An absolute URI that identifies the specific occurrence of the problem. It may or may not yield further information if dereferenced.
+
+            '
+        violations:
+          type:
+          - array
+          - 'null'
+          description: 'A list of violations that occurred as a result of invalid data provided as part of a request.
+
+            '
+          items:
+            type: object
+            properties:
+              field:
+                type: string
+                description: 'The name of the field in the request that caused the violation. This can be the name of a path parameter, query parameter, or a field within the request body.
+
+                  '
+                example: accountId
+              message:
+                type: string
+                description: 'A human readable explanation specific to this occurrence of the violation.
+
+                  '
+                example: must match "^[a-zA-Z]{6}$"
+              code:
+                type: integer
+                format: int32
+                description: 'The violation code generated by the server for this occurrence of the violation. Use this code when implementing any error handling logic instead of the message, as the message can change.
+
+                  '
+                example: 20006
+          example:
+          - field: emailAddress
+            message: must not be null
+            code: 20002
+          - field: accountId
+            message: must match "^[a-zA-Z]{6}$"
+            code: 20006
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      description: This API uses Bearer Token Authorization Flow
+      bearerFormat: JWT
+    AppKey:
+      type: apiKey
+      in: header
+      name: appkey
+      description: This API needs an appKey as header.
+x-explorer-enabled: false
+x-samples-languages:
+- curl
+- node
+- java
+- javascript
+- python
+- go

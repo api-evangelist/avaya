@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<wsdl:definitions name="route_point_connection_service_service" 
+	targetNamespace="http://www.nortel.com/soa/oi/cct/RoutePointConnectionService" 
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" 
+	xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" 
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns:tns="http://www.nortel.com/soa/oi/cct/RoutePointConnectionService" 
+	xmlns:interface="http://www.nortel.com/soa/oi/cct/RoutePointConnectionService">
+
+	<wsdl:import 
+		namespace="http://www.nortel.com/soa/oi/cct/RoutePointConnectionService" 
+		location="RoutePointConnectionServiceInterface.wsdl" />
+
+	<wsdl:binding name="RoutePointConnectionServiceBinding" type="tns:RoutePointConnectionService">
+
+		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http" />
+		
+		<wsdl:operation name="GetVersion">
+			<soap:operation soapAction="http://www.nortel.com/soa/oi/cct/RoutePointConnectionService/GetVersion" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="SessionNotCreatedException">
+				<soap:fault use="literal" name="SessionNotCreatedException" />
+			</wsdl:fault>
+			<wsdl:fault name="GetVersionException">
+				<soap:fault use="literal" name="GetVersionException" />
+			</wsdl:fault>
+		</wsdl:operation>
+		
+		<wsdl:operation name="Route">
+			<soap:operation soapAction="http://www.nortel.com/soa/oi/cct/RoutePointConnectionService/Route" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="SessionNotCreatedException">
+				<soap:fault use="literal" name="SessionNotCreatedException" />
+			</wsdl:fault>
+			<wsdl:fault name="RouteException">
+				<soap:fault use="literal" name="RouteException" />
+			</wsdl:fault>
+		</wsdl:operation>
+		
+		<wsdl:operation name="RoutePointRetrieve">
+			<soap:operation soapAction="http://www.nortel.com/soa/oi/cct/RoutePointConnectionService/RoutePointRetrieve" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="SessionNotCreatedException">
+				<soap:fault use="literal" name="SessionNotCreatedException" />
+			</wsdl:fault>
+			<wsdl:fault name="RoutePointRetrieveException">
+				<soap:fault use="literal" name="RoutePointRetrieveException" />
+			</wsdl:fault>
+		</wsdl:operation>
+		
+		<wsdl:operation name="GiveMediaTreatment">
+			<soap:operation soapAction="http://www.nortel.com/soa/oi/cct/RoutePointConnectionService/GiveMediaTreatment" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="SessionNotCreatedException">
+				<soap:fault use="literal" name="SessionNotCreatedException" />
+			</wsdl:fault>
+			<wsdl:fault name="GiveMediaTreatmentException">
+				<soap:fault use="literal" name="GiveMediaTreatmentException" />
+			</wsdl:fault>
+		</wsdl:operation>
+		
+		<wsdl:operation name="GetCapabilities">
+			<soap:operation soapAction="http://www.nortel.com/soa/oi/cct/RoutePointConnectionService/GetCapabilities" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="SessionNotCreatedException">
+				<soap:fault use="literal" name="SessionNotCreatedException" />
+			</wsdl:fault>
+			<wsdl:fault name="GetCapabilitiesException">
+				<soap:fault use="literal" name="GetCapabilitiesException" />
+			</wsdl:fault>
+		</wsdl:operation>
+		
+	</wsdl:binding>
+
+	<wsdl:service name="SOAOICCT_RoutePointConnectionService">
+		<wsdl:port name="RoutePointConnectionService" binding="tns:RoutePointConnectionServiceBinding">
+			<soap:address location="http://localhost:9080/SOAOICCT/services/RoutePointConnectionService" />
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>

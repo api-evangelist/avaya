@@ -1,0 +1,1387 @@
+openapi: 3.2.0
+info:
+  title: Queue Management Queues API
+  description: The Queue Management API allows for the programmatic creation, retrieval, updating, and deletion of queues.
+  version: 0.0.1
+  contact:
+    name: Avaya Developer Support
+    url: https://developers.avayacloud.com/avaya-infinity/
+  license:
+    name: Avaya Software Development Kit (SDK) Software License Terms
+    url: https://support.avaya.com/css/P8/documents/101038288
+servers:
+- url: https://core.{customerId}.ec.avayacloud.com/api/config/v1
+  description: Production
+  variables:
+    customerId:
+      description: Your organization subdomain identifier (e.g., avaya1234)
+      default: avaya1234
+security:
+- BearerAuth: []
+tags:
+- name: Queues
+  description: Queue lifecycle management — create, retrieve, update, and delete queues.
+paths:
+  /queues:
+    post:
+      summary: Create a new queue
+      operationId: createQueue
+      tags:
+      - Queues
+      security:
+      - BearerAuth: []
+      description: 'Creates a new queue with the specified name and configuration. The `name` field is required and must be unique within your organization.
+
+
+        ## Finding Your Customer Subdomain
+
+
+        Your subdomain is found in your Avaya Infinity portal URL and is required for all API calls.
+
+
+        **Example:** If your portal URL is:
+
+
+        ```
+
+        https://core.avaya1234.ec.avayacloud.com/app/core-config-ui/
+
+        ```
+
+
+        Your subdomain is: **`avaya1234`**
+
+
+        **To use this API:**
+
+
+        1. **Find your subdomain** from your Infinity portal URL (as shown above)
+
+        2. **Get your Bearer token** using the `ADMIN_API_CONSUMER` client credential (see Authentication below)
+
+        3. **In the API explorer on the right:**
+
+        * Click on `{customerId}` in the URL field and replace it with your actual subdomain
+
+        * Paste your Bearer token in the Credentials section
+
+        * Fill out the request body with at minimum a unique queue `name`
+
+
+        ## Authentication
+
+
+        This endpoint requires a valid OAuth 2.0 Bearer token. To get started, contact Avaya Support to request a `client_id` and `client_secret` provisioned with the `ADMIN_API_CONSUMER` scope.
+
+
+        Once you have your credentials, generate an access token and include it in the `Authorization: Bearer ` header of each request.
+
+
+        ## Important Notes
+
+
+        * `name` is the only required field. All other fields are optional and can be updated later.
+
+        * Queue names must be unique within your organization. Submitting a duplicate name returns a `422` with the message `name must be unique`.
+
+        * The `queueId` returned in the response is the permanent identifier used in all subsequent API calls for this queue.
+
+
+        ## DOS Protection & Rate Limiting
+
+
+        * This endpoint implements DOS protection and rate limiting.
+
+
+        ## Security Implementation Guidelines
+
+
+        * Never expose your `client_secret` or Bearer token to client-side applications.
+
+        * Implement proper error handling — avoid surfacing internal error details to end users.'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateQueueBody'
+            examples:
+              minimal:
+                summary: Create a queue with name only
+                value:
+                  name: Support Queue
+              full:
+                summary: Create a queue with routing and folder configuration
+                value:
+                  name: Support Queue
+                  folderId: 073d010813b941cf7da111d147
+                  routingMethod: leastRecent
+                  queueWeight: 5
+                  isActive: true
+      responses:
+        '201':
+          description: Queue created successfully. Returns the full queue object including the system-generated `queueId`.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QueueResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    get:
+      summary: List queues
+      operationId: listQueues
+      tags:
+      - Queues
+      security:
+      - BearerAuth: []
+      description: 'Returns a paginated list of queues. Results can be filtered by name, active status, folder, and type, and sorted by name, creation date, or last updated date.
+
+
+        ## Finding Your Customer Subdomain
+
+
+        Your subdomain is found in your Avaya Infinity portal URL and is required for all API calls.
+
+
+        **Example:** If your portal URL is:
+
+
+        ```
+
+        https://core.avaya1234.ec.avayacloud.com/app/core-config-ui/
+
+        ```
+
+
+        Your subdomain is: **`avaya1234`**
+
+
+        **To use this API:**
+
+
+        1. **Find your subdomain** from your Infinity portal URL (as shown above)
+
+        2. **Get your Bearer token** using the `ADMIN_API_CONSUMER` client credential (see Authentication below)
+
+        3. **In the API explorer on the right:**
+
+        * Click on `{customerId}` in the URL field and replace it with your actual subdomain
+
+        * Paste your Bearer token in the Credentials section
+
+        * Apply query parameters to filter or paginate results as needed
+
+
+        ## Authentication
+
+
+        This endpoint requires a valid OAuth 2.0 Bearer token. To get started, contact Avaya Support to request a `client_id` and `client_secret` provisioned with the `ADMIN_API_CONSUMER` scope.
+
+
+        Once you have your credentials, generate an access token and include it in the `Authorization: Bearer ` header of each request.
+
+
+        ## Working with Filters and Pagination
+
+
+        Use the `name` parameter to search queues — it performs a prefix/contains match, not an exact match. For example, `name=support` will return queues named "Support Queue", "Customer Support", etc.
+
+
+        Use the `view` parameter to control response size:
+
+        * `detailed` (default) — returns all queue fields
+
+        * `concise` — returns summary fields only (`queueId`, `name`, `isActive`, `type`, `folderId`)
+
+
+        Omit `pageSize` to return all queues without pagination.
+
+
+        ## Important Notes
+
+
+        * Soft-deleted queues are excluded from results by default.
+
+        * Use `folderId=none` to retrieve queues not assigned to any folder.
+
+        * Use `type=none` to retrieve queues without a type classification.
+
+
+        ## DOS Protection & Rate Limiting
+
+
+        * This endpoint implements DOS protection and rate limiting.
+
+
+        ## Security Implementation Guidelines
+
+
+        * Never expose your `client_secret` or Bearer token to client-side applications.
+
+        * Implement proper error handling — avoid surfacing internal error details to end users.'
+      parameters:
+      - name: pageNumber
+        in: query
+        schema:
+          type: integer
+          minimum: 1
+          default: 1
+        description: Page number (starts from 1).
+      - name: pageSize
+        in: query
+        schema:
+          type: integer
+          minimum: 1
+        description: Number of items per page. Omit to return all queues without pagination.
+      - name: isActive
+        in: query
+        schema:
+          type: boolean
+        description: Filter by active status. `true` returns only active queues, `false` returns only inactive queues.
+      - name: name
+        in: query
+        schema:
+          type: string
+        description: Filter queues by name. Performs a prefix/contains match, not an exact match.
+      - name: folderId
+        in: query
+        schema:
+          $ref: '#/components/schemas/FolderId'
+        description: Filter by folder ID. Use `none` to retrieve queues not assigned to any folder.
+      - name: type
+        in: query
+        schema:
+          type: string
+        description: Filter by queue type (e.g., `regular`, `personal`). Use `none` to retrieve queues without a type.
+      - name: sortBy
+        in: query
+        schema:
+          type: string
+          enum:
+          - name
+          - createdOn
+          - lastUpdated
+          default: name
+        description: Field to sort results by.
+      - name: sortOrder
+        in: query
+        schema:
+          type: string
+          enum:
+          - asc
+          - desc
+          default: desc
+        description: Sort direction.
+      - name: view
+        in: query
+        schema:
+          type: string
+          enum:
+          - detailed
+          - concise
+          default: detailed
+        description: Response detail level. `detailed` returns all queue fields. `concise` returns summary fields only (`queueId`, `name`, `isActive`, `type`, `folderId`).
+      responses:
+        '200':
+          description: Paginated list of queues returned successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - queues
+                - pagination
+                - links
+                properties:
+                  queues:
+                    type: array
+                    description: Array of queues. Schema depends on the `view` parameter.
+                    items:
+                      oneOf:
+                      - $ref: '#/components/schemas/QueueResponse'
+                      - $ref: '#/components/schemas/QueueResponseConcise'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+                  links:
+                    $ref: '#/components/schemas/PaginationLinks'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /queues/{id}:
+    get:
+      summary: Get a queue
+      operationId: describeQueue
+      tags:
+      - Queues
+      security:
+      - BearerAuth: []
+      description: 'Returns the full configuration details for a specific queue by its ID.
+
+
+        ## Finding Your Customer Subdomain
+
+
+        Your subdomain is found in your Avaya Infinity portal URL and is required for all API calls.
+
+
+        **Example:** If your portal URL is:
+
+
+        ```
+
+        https://core.avaya1234.ec.avayacloud.com/app/core-config-ui/
+
+        ```
+
+
+        Your subdomain is: **`avaya1234`**
+
+
+        **To use this API:**
+
+
+        1. **Find your subdomain** from your Infinity portal URL (as shown above)
+
+        2. **Get your Bearer token** using the `ADMIN_API_CONSUMER` client credential (see Authentication below)
+
+        3. **In the API explorer on the right:**
+
+        * Click on `{customerId}` in the URL field and replace it with your actual subdomain
+
+        * Paste your Bearer token in the Credentials section
+
+        * Enter the `id` of the queue you want to retrieve
+
+
+        ## Authentication
+
+
+        This endpoint requires a valid OAuth 2.0 Bearer token. To get started, contact Avaya Support to request a `client_id` and `client_secret` provisioned with the `ADMIN_API_CONSUMER` scope.
+
+
+        Once you have your credentials, generate an access token and include it in the `Authorization: Bearer ` header of each request.
+
+
+        ## Working with Queue IDs
+
+
+        Queue IDs are system-generated identifiers in the format `003xxxxxxxxxxxxxxxxxxxxxxx`. They can be found in the response of `POST /queues` or `GET /queues`, or in the Avaya Infinity portal URL when viewing a queue''s configuration.
+
+
+        ## Important Notes
+
+
+        * Returns a `404` if no queue exists with the specified ID.
+
+
+        ## DOS Protection & Rate Limiting
+
+
+        * This endpoint implements DOS protection and rate limiting.
+
+
+        ## Security Implementation Guidelines
+
+
+        * Never expose your `client_secret` or Bearer token to client-side applications.
+
+        * Implement proper error handling — avoid surfacing internal error details to end users.'
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          $ref: '#/components/schemas/QueueId'
+        description: The unique identifier of the queue to retrieve.
+      responses:
+        '200':
+          description: Queue details returned successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QueueResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    put:
+      summary: Update a queue
+      operationId: updateQueue
+      tags:
+      - Queues
+      security:
+      - BearerAuth: []
+      description: 'Updates the configuration of an existing queue. All fields are optional — only the fields included in the request body will be updated.
+
+
+        ## Finding Your Customer Subdomain
+
+
+        Your subdomain is found in your Avaya Infinity portal URL and is required for all API calls.
+
+
+        **Example:** If your portal URL is:
+
+
+        ```
+
+        https://core.avaya1234.ec.avayacloud.com/app/core-config-ui/
+
+        ```
+
+
+        Your subdomain is: **`avaya1234`**
+
+
+        **To use this API:**
+
+
+        1. **Find your subdomain** from your Infinity portal URL (as shown above)
+
+        2. **Get your Bearer token** using the `ADMIN_API_CONSUMER` client credential (see Authentication below)
+
+        3. **In the API explorer on the right:**
+
+        * Click on `{customerId}` in the URL field and replace it with your actual subdomain
+
+        * Paste your Bearer token in the Credentials section
+
+        * Enter the `id` of the queue to update and provide only the fields you want to change
+
+
+        ## Authentication
+
+
+        This endpoint requires a valid OAuth 2.0 Bearer token. To get started, contact Avaya Support to request a `client_id` and `client_secret` provisioned with the `ADMIN_API_CONSUMER` scope.
+
+
+        Once you have your credentials, generate an access token and include it in the `Authorization: Bearer ` header of each request.
+
+
+        ## Important Notes
+
+
+        * All fields in the request body are optional. Only fields explicitly provided will be modified — omitted fields retain their existing values.
+
+        * Updating the `name` to one already used by another queue returns a `422` with the message `name must be unique`.
+
+        * Returns a `404` if no queue exists with the specified ID.
+
+
+        ## DOS Protection & Rate Limiting
+
+
+        * This endpoint implements DOS protection and rate limiting.
+
+
+        ## Security Implementation Guidelines
+
+
+        * Never expose your `client_secret` or Bearer token to client-side applications.
+
+        * Implement proper error handling — avoid surfacing internal error details to end users.'
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          $ref: '#/components/schemas/QueueId'
+        description: The unique identifier of the queue to update.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateQueueBody'
+            examples:
+              renameQueue:
+                summary: Rename a queue
+                value:
+                  name: Support Queue - Tier 2
+              updateRouting:
+                summary: Update routing method and weight
+                value:
+                  queueWeight: 10
+                  routingMethod: ringAll
+              deactivate:
+                summary: Deactivate a queue
+                value:
+                  isActive: false
+      responses:
+        '200':
+          description: Queue updated successfully. Returns the full updated queue object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QueueResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    delete:
+      summary: Delete a queue
+      operationId: deleteQueue
+      tags:
+      - Queues
+      security:
+      - BearerAuth: []
+      description: 'Deletes a queue by its ID. Supports both hard delete (permanent removal) and soft delete (recoverable, marks as deleted without removing from the database).
+
+
+        ## Finding Your Customer Subdomain
+
+
+        Your subdomain is found in your Avaya Infinity portal URL and is required for all API calls.
+
+
+        **Example:** If your portal URL is:
+
+
+        ```
+
+        https://core.avaya1234.ec.avayacloud.com/app/core-config-ui/
+
+        ```
+
+
+        Your subdomain is: **`avaya1234`**
+
+
+        **To use this API:**
+
+
+        1. **Find your subdomain** from your Infinity portal URL (as shown above)
+
+        2. **Get your Bearer token** using the `ADMIN_API_CONSUMER` client credential (see Authentication below)
+
+        3. **In the API explorer on the right:**
+
+        * Click on `{customerId}` in the URL field and replace it with your actual subdomain
+
+        * Paste your Bearer token in the Credentials section
+
+        * Enter the `id` of the queue to delete and set `softDelete` as needed
+
+
+        ## Authentication
+
+
+        This endpoint requires a valid OAuth 2.0 Bearer token. To get started, contact Avaya Support to request a `client_id` and `client_secret` provisioned with the `ADMIN_API_CONSUMER` scope.
+
+
+        Once you have your credentials, generate an access token and include it in the `Authorization: Bearer ` header of each request.
+
+
+        ## Working with Soft Delete
+
+
+        By default, `softDelete=false` performs a hard delete — the queue is permanently removed and cannot be recovered.
+
+
+        Set `softDelete=true` to mark the queue as deleted without permanently removing it. Soft-deleted queues:
+
+        * Are excluded from standard `GET /queues` list results
+
+        * Remain in the database and may be recoverable for audit purposes
+
+        * Cannot be interacted with via normal queue operations
+
+
+        ## Important Notes
+
+
+        * **This action cannot be undone** for hard deletes. Confirm the correct queue ID before proceeding.
+
+        * Returns a `404` if no queue exists with the specified ID.
+
+        * Returns `204 No Content` on success — no response body is returned.
+
+
+        ## DOS Protection & Rate Limiting
+
+
+        * This endpoint implements DOS protection and rate limiting.
+
+
+        ## Security Implementation Guidelines
+
+
+        * Never expose your `client_secret` or Bearer token to client-side applications.
+
+        * Implement proper error handling — avoid surfacing internal error details to end users.'
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          $ref: '#/components/schemas/QueueId'
+        description: The unique identifier of the queue to delete.
+      - name: softDelete
+        in: query
+        schema:
+          type: boolean
+          default: false
+        description: If `true`, performs a soft delete — marks the queue as deleted without permanently removing it. If `false` (default), performs a hard delete and permanently removes the queue.
+      responses:
+        '204':
+          description: Queue deleted successfully. No content returned.
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+components:
+  schemas:
+    QueueResponse:
+      type: object
+      required:
+      - queueId
+      - name
+      - isActive
+      description: Full queue object returned by create, get, and update operations.
+      properties:
+        queueId:
+          $ref: '#/components/schemas/QueueId'
+        accountId:
+          type: string
+          description: The account/tenant identifier this queue belongs to.
+        createdOn:
+          type: string
+          format: date-time
+          description: Timestamp (ISO 8601) when the queue was created.
+        lastUpdated:
+          type: string
+          format: date-time
+          description: Timestamp (ISO 8601) when the queue was last updated.
+        name:
+          type: string
+          description: The display name of the queue.
+        folderId:
+          $ref: '#/components/schemas/FolderId'
+        configDetails:
+          type: object
+          additionalProperties: true
+        extension:
+          type:
+          - string
+          - 'null'
+        timeZone:
+          type: string
+        templates:
+          type:
+          - object
+          - 'null'
+          additionalProperties: true
+        scoreCardId:
+          type:
+          - string
+          - 'null'
+        scoreCardVersionId:
+          type:
+          - string
+          - 'null'
+        queueWeight:
+          type: integer
+        routingMethod:
+          type: string
+        tagRoutable:
+          type: boolean
+        workflows:
+          type:
+          - object
+          - 'null'
+          additionalProperties: true
+        isActive:
+          type: boolean
+        isQPerformance:
+          type: boolean
+        externalTransferUserModify:
+          type: boolean
+        externalTransferCallerIdType:
+          type: string
+        externalTransferCallerIdNumber:
+          type:
+          - string
+          - 'null'
+        tagsToAdd:
+          type:
+          - object
+          - 'null'
+          additionalProperties: true
+        tagsToRemove:
+          type:
+          - object
+          - 'null'
+          additionalProperties: true
+        validateNumberCountry:
+          type: string
+        validateCustomerPhoneNumber:
+          type: boolean
+        keyLinkedIdPath:
+          type:
+          - string
+          - 'null'
+        sttPlan:
+          type:
+          - string
+          - 'null'
+        allowPhoneCommTypeClosedUnresolved:
+          type: boolean
+        defaultCloseValue:
+          type: string
+        requireCloseResolvedConfirmation:
+          type: boolean
+        promoteViewerToOwnerOnAgentLeave:
+          type: boolean
+        allowOwnerToSetViewerAsOwner:
+          type: boolean
+        doNotMoveToCompletedOnHangup:
+          type: boolean
+        allowOwnerMuteViewer:
+          type: boolean
+        allowOwnerRemoveViewer:
+          type: boolean
+        allowOwnerInvite:
+          type: boolean
+        allowOwnerInviteExternal:
+          type: boolean
+        eliteSkillAddress:
+          type:
+          - string
+          - 'null'
+        type:
+          type:
+          - string
+          - 'null'
+        lastUpdatedBy:
+          type:
+          - string
+          - 'null'
+        customDataDisplay:
+          type:
+          - object
+          - 'null'
+          additionalProperties: true
+        agentAssistEnabled:
+          $ref: '#/components/schemas/AgentAssistEnabled'
+        agentAssistProfileId:
+          $ref: '#/components/schemas/AgentAssistProfileId'
+        agentAssistWorkflowId:
+          $ref: '#/components/schemas/AgentAssistWorkflowId'
+        postCallModalEnabled:
+          $ref: '#/components/schemas/PostCallModalEnabled'
+        postCallModalVoiceCallbackEnabled:
+          $ref: '#/components/schemas/PostCallModalVoiceCallbackEnabled'
+        postCallModalMessagingEnabled:
+          $ref: '#/components/schemas/PostCallModalMessagingEnabled'
+        postCallModalEmailEnabled:
+          $ref: '#/components/schemas/PostCallModalEmailEnabled'
+        postCallModalCloseResolvedEnabled:
+          $ref: '#/components/schemas/PostCallModalCloseResolvedEnabled'
+        postCallModalTimeout:
+          $ref: '#/components/schemas/PostCallModalTimeout'
+        postCallModalDefault:
+          $ref: '#/components/schemas/PostCallModalDefault'
+        enableWrapUp:
+          $ref: '#/components/schemas/EnableWrapUp'
+    PaginationLinks:
+      type: object
+      description: Pagination navigation links
+      required:
+      - prev
+      - next
+      properties:
+        prev:
+          type: string
+          description: URL of the previous page. Empty string if on the first page.
+          readOnly: true
+        next:
+          type: string
+          description: URL of the next page. Empty string if on the last page.
+          readOnly: true
+    PostCallModalDefault:
+      type: string
+      enum:
+      - closeResolved
+      - email
+      - voiceCallback
+      - messaging
+      default: closeResolved
+      description: The default action pre-selected in the post-call modal. `closeResolved` marks the interaction resolved, `email` opens an email follow-up, `voiceCallback` schedules a callback, `messaging` opens a messaging follow-up.
+    PostCallModalMessagingEnabled:
+      type: boolean
+      default: false
+      description: When `true`, the messaging option is shown in the post-call modal.
+    PostCallModalEnabled:
+      type:
+      - boolean
+      - 'null'
+      description: When `true`, displays a post-call modal to agents after a call ends.
+    EnableWrapUp:
+      type:
+      - boolean
+      - 'null'
+      description: When `true`, wrap-up is required before an agent can close a resolved interaction. When `null`, the queue uses the default behavior.
+    PostCallModalCloseResolvedEnabled:
+      type: boolean
+      default: false
+      description: When `true`, the close-as-resolved option is shown in the post-call modal.
+    QueueBase:
+      type: object
+      description: Base schema for queue configuration.
+      properties:
+        name:
+          type:
+          - string
+          - 'null'
+          maxLength: 50
+          description: The display name of the queue. Must be unique within your organization.
+        folderId:
+          anyOf:
+          - $ref: '#/components/schemas/FolderId'
+          - type: 'null'
+          description: The ID of the folder to assign this queue to. Optional.
+        configDetails:
+          type:
+          - object
+          - 'null'
+          additionalProperties: true
+          description: Advanced queue configuration. Contact Avaya Developer Support before use.
+        extension:
+          type:
+          - string
+          - 'null'
+          pattern: ^\d+$
+          description: Queue extension number. Must contain only digits.
+        timeZone:
+          type:
+          - string
+          - 'null'
+          default: UTC
+          description: Timezone for the queue. Defaults to UTC.
+        templates:
+          type:
+          - object
+          - 'null'
+          additionalProperties: true
+          description: Template configuration for the queue.
+        actions:
+          type:
+          - object
+          - 'null'
+          additionalProperties: true
+          description: Action mappings for the queue.
+        scoreCardId:
+          type:
+          - string
+          - 'null'
+          description: ID of the scorecard associated with this queue. Must be provided together with `scoreCardVersionId`.
+        scoreCardVersionId:
+          type:
+          - string
+          - 'null'
+          description: Version ID of the scorecard. Must be provided together with `scoreCardId`.
+        queueWeight:
+          type:
+          - integer
+          - 'null'
+          minimum: 0
+          description: Weight used for queue prioritization. Higher values indicate higher priority.
+        routingMethod:
+          type:
+          - string
+          - 'null'
+          enum:
+          - leastRecent
+          - ringAll
+          - random
+          description: Method used to route interactions to agents. `leastRecent` routes to the agent who has been idle longest, `ringAll` rings all available agents simultaneously, `random` selects an agent at random.
+        tagRoutable:
+          type: boolean
+          default: true
+          description: When `true`, enables tag-based routing for this queue.
+        workflows:
+          type:
+          - object
+          - 'null'
+          additionalProperties: true
+          description: Workflow automation settings. Contact Avaya Developer Support before use.
+        reports:
+          type:
+          - object
+          - 'null'
+          additionalProperties: true
+          description: Reporting configuration for the queue.
+        isActive:
+          type: boolean
+          default: true
+          description: Whether the queue is active and available for routing. Set to `false` to deactivate without deleting.
+        isQPerformance:
+          type: boolean
+          default: false
+          description: Performance metric flag. Contact Avaya Developer Support before use.
+        extXferCidUserModify:
+          type: boolean
+          default: false
+          description: When `true`, agents can modify the outbound caller ID for external transfers.
+        extXferCidType:
+          type:
+          - string
+          - 'null'
+          enum:
+          - customer
+          - queue
+          - custom
+          default: customer
+          description: Determines the caller ID presented on external transfers. `customer` uses the customer's number, `queue` uses the queue's number, `custom` uses the number specified in `extXferCidNumber`.
+        extXferCidNumber:
+          type:
+          - string
+          - 'null'
+          pattern: ^\\+[1-9]\\d{1,14}$
+          description: Custom caller ID number for external transfers in E.164 format (e.g., `+15551234567`). Only used when `extXferCidType` is `custom`.
+        tagsToAdd:
+          type:
+          - object
+          - 'null'
+          additionalProperties: true
+          description: Tags to associate with this queue.
+        tagsToRemove:
+          type:
+          - object
+          - 'null'
+          additionalProperties: true
+          description: Tags to remove from this queue.
+        validateNumberCountry:
+          type:
+          - string
+          - 'null'
+          default: US
+          description: Default country code used for phone number validation (e.g., `US`, `GB`).
+        validateCustomerPhoneNumber:
+          type: boolean
+          default: false
+          description: When `true`, validates the customer's phone number against the country specified in `validateNumberCountry`.
+        keyLinkedIdPath:
+          type:
+          - string
+          - 'null'
+          description: Path key for linked interactions. Contact Avaya Developer Support before use.
+        sttPlan:
+          type:
+          - string
+          - 'null'
+          description: Speech-to-text plan ID. Contact Avaya Developer Support before use.
+        allowPhoneCommTypeClosedUnresolved:
+          type: boolean
+          description: When `true`, allows phone interactions to be closed with an unresolved status.
+        defaultCloseValue:
+          type:
+          - string
+          - 'null'
+          enum:
+          - resolved
+          - unresolved
+          description: The default close status applied when an interaction is completed.
+        requireCloseResolvedConfirmation:
+          type: boolean
+          description: When `true`, agents must confirm before marking an interaction as resolved.
+        promoteViewerToOwnerOnAgentLeave:
+          type: boolean
+          description: When `true`, automatically promotes a viewer to owner if the current owner leaves the interaction.
+        allowOwnerToSetViewerAsOwner:
+          type: boolean
+          description: When `true`, the current owner can transfer ownership to a viewer.
+        doNotMoveToCompletedOnHangup:
+          type: boolean
+          description: When `true`, interactions are not automatically moved to completed status when the call ends.
+        allowOwnerMuteViewer:
+          type: boolean
+          description: When `true`, the owner can mute viewers in the interaction.
+        allowOwnerRemoveViewer:
+          type: boolean
+          description: When `true`, the owner can remove viewers from the interaction.
+        allowOwnerInvite:
+          type: boolean
+          description: When `true`, the owner can invite internal participants to the interaction.
+        allowOwnerInviteExternal:
+          type: boolean
+          description: When `true`, the owner can invite external participants to the interaction.
+        eliteSkillAddress:
+          type:
+          - string
+          - 'null'
+          description: Elite skill routing address. Contact Avaya Developer Support before use.
+        type:
+          type:
+          - string
+          - 'null'
+          description: Custom type classification for the queue (e.g., `regular`, `personal`).
+        lastUpdatedBy:
+          type:
+          - string
+          - 'null'
+          description: Identifier of the user or system that last updated the queue. Read-only.
+        customDataDisplay:
+          type:
+          - object
+          - 'null'
+          additionalProperties: true
+          description: Custom data fields displayed in the queue UI. Contact Avaya Developer Support before use.
+        agentAssistEnabled:
+          $ref: '#/components/schemas/AgentAssistEnabled'
+        agentAssistProfileId:
+          $ref: '#/components/schemas/AgentAssistProfileId'
+        agentAssistWorkflowId:
+          $ref: '#/components/schemas/AgentAssistWorkflowId'
+        postCallModalEnabled:
+          $ref: '#/components/schemas/PostCallModalEnabled'
+        postCallModalVoiceCallbackEnabled:
+          $ref: '#/components/schemas/PostCallModalVoiceCallbackEnabled'
+        postCallModalMessagingEnabled:
+          $ref: '#/components/schemas/PostCallModalMessagingEnabled'
+        postCallModalEmailEnabled:
+          $ref: '#/components/schemas/PostCallModalEmailEnabled'
+        postCallModalCloseResolvedEnabled:
+          $ref: '#/components/schemas/PostCallModalCloseResolvedEnabled'
+        postCallModalTimeout:
+          $ref: '#/components/schemas/PostCallModalTimeout'
+        postCallModalDefault:
+          $ref: '#/components/schemas/PostCallModalDefault'
+        enableWrapUp:
+          $ref: '#/components/schemas/EnableWrapUp'
+    Problem:
+      type: object
+      description: 'Problem detail as defined by RFC 7807 — a standard way to carry machine-readable error details in HTTP responses.
+
+        '
+      properties:
+        type:
+          type: string
+          format: uri
+          description: A URI identifying the problem type.
+          default: about:blank
+          example: about:blank
+        title:
+          type:
+          - string
+          - 'null'
+          description: A short, human-readable summary of the problem type.
+          example: Service Unavailable
+        status:
+          type:
+          - integer
+          - 'null'
+          format: int32
+          description: The HTTP status code for this occurrence of the problem.
+          minimum: 100
+          maximum: 600
+          exclusiveMaximum: true
+          example: 503
+        detail:
+          type:
+          - string
+          - 'null'
+          description: A human-readable explanation specific to this occurrence of the problem.
+          example: Connection to database timed out
+        instance:
+          type:
+          - string
+          - 'null'
+          format: uri
+          description: A URI identifying the specific occurrence of the problem.
+        violations:
+          type:
+          - array
+          - 'null'
+          description: A list of field-level validation violations, present on 400 and 422 responses.
+          items:
+            type: object
+            properties:
+              field:
+                type: string
+                description: The name of the field that caused the violation.
+                example: name
+              message:
+                type: string
+                description: A human-readable explanation of the violation.
+                example: Queue name is required
+              code:
+                type: integer
+                format: int32
+                description: A stable violation code. Use this in error handling logic — the message text may change.
+                example: 20001
+    AgentAssistProfileId:
+      type:
+      - string
+      - 'null'
+      format: uuid
+      description: UUID of the AI Media Gateway Profile to use as the Agent Assist provider. Optional.
+    QueueResponseConcise:
+      type: object
+      description: Concise queue summary returned when `view=concise`.
+      required:
+      - queueId
+      - name
+      - isActive
+      properties:
+        queueId:
+          $ref: '#/components/schemas/QueueId'
+        name:
+          type: string
+          description: The display name of the queue.
+        isActive:
+          type: boolean
+          description: Whether the queue is active.
+        type:
+          type:
+          - string
+          - 'null'
+          description: The queue type classification.
+        folderId:
+          type:
+          - string
+          - 'null'
+          description: The folder ID the queue is assigned to.
+    PostCallModalVoiceCallbackEnabled:
+      type: boolean
+      default: false
+      description: When `true`, the voice callback option is shown in the post-call modal.
+    PostCallModalTimeout:
+      type: integer
+      minimum: 5
+      maximum: 300
+      default: 10
+      description: Time in seconds before the post-call modal auto-dismisses. Must be between 5 and 300. Defaults to 10.
+    AgentAssistEnabled:
+      type: boolean
+      default: false
+      description: When `true`, enables Agent Assist for this queue.
+    Pagination:
+      type: object
+      description: Pagination metadata
+      required:
+      - pageNumber
+      - pageSize
+      - total
+      properties:
+        pageNumber:
+          type: integer
+          description: The current page number.
+          readOnly: true
+        pageSize:
+          type: integer
+          description: The maximum number of items per page.
+          readOnly: true
+        total:
+          type: integer
+          description: The total number of items across all pages.
+          readOnly: true
+    QueueId:
+      type: string
+      description: The unique identifier of a queue.
+      minLength: 23
+      maxLength: 26
+      pattern: ^003[0-9a-f]{20,23}$
+      example: 003d010826307dd6630992437c
+    PostCallModalEmailEnabled:
+      type: boolean
+      default: false
+      description: When `true`, the email option is shown in the post-call modal.
+    CreateQueueBody:
+      allOf:
+      - $ref: '#/components/schemas/QueueBase'
+      - type: object
+        required:
+        - name
+        description: Request body for creating a new queue. Only `name` is required.
+    FolderId:
+      type: string
+      description: The unique identifier of a folder.
+      minLength: 26
+      maxLength: 26
+      pattern: ^073[0-9a-f]{23}$
+      example: 073d010813b941cf7da111d147
+    UpdateQueueBody:
+      allOf:
+      - $ref: '#/components/schemas/QueueBase'
+      - type: object
+        description: Request body for updating an existing queue. All fields are optional — only provided fields will be updated.
+    AgentAssistWorkflowId:
+      type:
+      - string
+      - 'null'
+      maxLength: 64
+      description: Optional workflow ID for custom Agent Assist event processing.
+  examples:
+    ErrorForbidden:
+      description: Forbidden
+      value:
+        type: about:blank
+        title: Forbidden
+        status: 403
+        detail: According to the access control policy the current user and/or accountId does not have permission to access this resource.
+    ErrorUnprocessableEntity:
+      description: Validation failed
+      value:
+        type: about:blank
+        title: Validation failed
+        status: 422
+        detail: A problem that indicates a syntactically correct, yet semantically illegal request. The Server can not process this request until the client resolves the semantic errors described in the violations section.
+        violations:
+        - field: scoreCardId
+          message: Both scoreCardId and scoreCardVersionId must be provided together
+          code: 20002
+    ErrorInternalServerError:
+      description: Server Error
+      value:
+        type: about:blank
+        title: Server Error
+        status: 500
+        detail: An internal server error was encountered.
+    ErrorNotFound:
+      description: Not Found
+      value:
+        type: about:blank
+        title: Resource Not Found
+        status: 404
+        detail: Queue with the specified ID was not found.
+        instance: /api/config/v1/queues/003d010826307dd6630992437c
+    ErrorUnauthorized:
+      description: Unauthorized
+      value:
+        type: about:blank
+        title: Unauthorized
+        status: 401
+        detail: This operation requires authentication.
+    ErrorUnprocessableEntityDuplicateName:
+      description: Duplicate queue name
+      value:
+        type: about:blank
+        title: Validation failed
+        status: 422
+        detail: A problem that indicates a syntactically correct, yet semantically illegal request.
+        violations:
+        - field: name
+          message: name must be unique
+          code: 20003
+    ErrorBadRequest:
+      description: Bad Request - Validation error
+      value:
+        type: about:blank
+        title: Constraint Violation
+        status: 400
+        detail: A problem that indicates a syntactically correct, yet semantically illegal request. The Server can not process this request until the client resolves the semantic errors described in the violations section.
+        violations:
+        - field: name
+          message: Queue name is required
+          code: 20001
+  responses:
+    NotFound:
+      description: Resource not found
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorNotFound'
+    InternalServerError:
+      description: Internal Server Error
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorInternalServerError'
+    Forbidden:
+      description: Forbidden - Insufficient permissions
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorForbidden'
+    Unauthorized:
+      description: Unauthorized - Authentication required
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorUnauthorized'
+    UnprocessableEntity:
+      description: Unprocessable Entity - Semantic error
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorUnprocessableEntity'
+            duplicateName:
+              $ref: '#/components/examples/ErrorUnprocessableEntityDuplicateName'
+    BadRequest:
+      description: Bad Request - Validation error
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorBadRequest'
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: 'OAuth 2.0 Bearer Token authentication using the client credentials flow.
+
+
+        To get started, contact Avaya Support to request a `client_id` and `client_secret` provisioned with the `ADMIN_API_CONSUMER` scope.
+
+
+        Once you have your credentials, [generate an access token](https://developers.avayacloud.com/avaya-infinity/reference/access-token) and include it as: `Authorization: Bearer <access_token>`
+
+        '

@@ -1,0 +1,804 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- January 5, 2006 -->
+<wsdl:definitions name="exceptions" targetNamespace="http://www.nortel.com/soa/oi/cct/faults" xmlns="http://schemas.xmlsoap.org/wsdl/"
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:faults="http://www.nortel.com/soa/oi/cct/faults"
+	xmlns:faultInfo="http://docs.oasis-open.org/wsrf/2004/06/wsrf-WS-BaseFaults-1.2-draft-01.xsd">
+
+	<wsdl:types>
+	
+		<xsd:schema elementFormDefault="qualified" targetNamespace="http://www.nortel.com/soa/oi/cct/faults">
+
+			<xsd:import namespace="http://docs.oasis-open.org/wsrf/2004/06/wsrf-WS-BaseFaults-1.2-draft-01.xsd" schemaLocation="faults.xsd" />
+
+			<xsd:element name="GenerateDTMFException" type="faultInfo:ExceptionInfo" />
+			<xsd:element name="LogOffFromCCTServerException" type="faultInfo:ExceptionInfo" />
+			<xsd:element name="LogInToCCTServerException" type="faultInfo:ExceptionInfo" />
+			<xsd:element name="CallSupervisorException" type="faultInfo:ExceptionInfo" />
+			<xsd:element name="EmergencyKeyException" type="faultInfo:ExceptionInfo" />
+			<xsd:element name="CreateContactException" type="faultInfo:ExceptionInfo" />
+			<xsd:element name="SessionNotCreatedException" type="faultInfo:ExceptionInfo" />
+			<xsd:element name="UnHoldContactException" type="faultInfo:ExceptionInfo" />
+			<xsd:element name="HoldContactException" type="faultInfo:ExceptionInfo" />
+			<xsd:element name="AnswerContactException" type="faultInfo:ExceptionInfo" />
+			<xsd:element name="TransferContactException" type="faultInfo:ExceptionInfo" />
+			<xsd:element name="GetReadyStateException" type="faultInfo:ExceptionInfo" />
+			<xsd:element name="SetActivityCodeException" type="faultInfo:ExceptionInfo" />
+			<xsd:element name="DropContactException" type="faultInfo:ExceptionInfo" />
+			<xsd:element name="GetContactDataException" type="faultInfo:ExceptionInfo" />
+			<xsd:element name="SetContactDataException" type="faultInfo:ExceptionInfo" />
+			<xsd:element name="SetToNotReadyStateException" type="faultInfo:ExceptionInfo" />
+			<xsd:element name="SetToNotReadyStateWithReasonCodeException" type="faultInfo:ExceptionInfo" />
+			<xsd:element name="SetToReadyStateException" type="faultInfo:ExceptionInfo" />
+			<xsd:element name="MakeSetBusyException" type="faultInfo:ExceptionInfo" />
+			<xsd:element name="GetTerminalInfoException" type="faultInfo:ExceptionInfo" />
+			<xsd:element name="InitiateConferenceException" type="faultInfo:ExceptionInfo" />
+			<xsd:element name="CompleteConferenceException" type="faultInfo:ExceptionInfo" />
+			<xsd:element name="LoginAgentException" type="faultInfo:ExceptionInfo" />
+			<xsd:element name="LoginAgentToStateException" type="faultInfo:ExceptionInfo" />
+			<xsd:element name="LogoutAgentException" type="faultInfo:ExceptionInfo" />
+			<xsd:element name="InitiateSupervisedTransferException" type="faultInfo:ExceptionInfo" />
+			<xsd:element name="CompleteSupervisedTransferException" type="faultInfo:ExceptionInfo" />
+
+			<xsd:element name="GetCapabilitiesException" type="faultInfo:ExceptionInfo" />
+			<xsd:element name="GetConnectionsException" type="faultInfo:ExceptionInfo" />
+			<xsd:element name="GetTerminalConnectionsException" type="faultInfo:ExceptionInfo" />
+			<xsd:element name="GetDoNotDisturbException" type="faultInfo:ExceptionInfo" />
+			<xsd:element name="GetVersionException" type="faultInfo:ExceptionInfo" />
+			<xsd:element name="IsForwardedException" type="faultInfo:ExceptionInfo" />
+			<xsd:element name="IsMessageWaitingException" type="faultInfo:ExceptionInfo" />
+			<xsd:element name="GetRelatedAddressesException" type="faultInfo:ExceptionInfo" />
+
+			<xsd:element name="GetNotReadyReasonCodeException" type="faultInfo:ExceptionInfo" />
+
+			<xsd:element name="SetNotReadyReasonCodeException" type="faultInfo:ExceptionInfo" />
+
+			<xsd:element name="GetLoginIdException" type="faultInfo:ExceptionInfo" />
+
+			<xsd:element name="SetIsReadyException" type="faultInfo:ExceptionInfo" />
+
+			<xsd:element name="IsReadyException" type="faultInfo:ExceptionInfo" />
+
+			<xsd:element name="GetActivityCodeException" type="faultInfo:ExceptionInfo" />
+		
+			<xsd:element name="GetOriginalDestinationAddressException" type="faultInfo:ExceptionInfo" />
+
+			<xsd:element name="GetLastRedirectedAddressException" type="faultInfo:ExceptionInfo" />
+
+			<xsd:element name="SetAttachedDataException" type="faultInfo:ExceptionInfo" />
+
+			<xsd:element name="GetAttachedDataException" type="faultInfo:ExceptionInfo" />
+			
+			<xsd:element name="GetAttachedXMLDataException" type="faultInfo:ExceptionInfo" />
+
+			<xsd:element name="GetConnectionException" type="faultInfo:ExceptionInfo" />
+
+			<xsd:element name="GetCallingTerminalException" type="faultInfo:ExceptionInfo" />
+
+			<xsd:element name="GetCallingAddressException" type="faultInfo:ExceptionInfo" />
+
+			<xsd:element name="GetCalledAddressException" type="faultInfo:ExceptionInfo" />
+
+			<xsd:element name="GetAddressException" type="faultInfo:ExceptionInfo" />
+
+			<xsd:element name="GetConnectionCapabilitiesException" type="faultInfo:ExceptionInfo" />
+
+			<xsd:element name="GetContactException" type="faultInfo:ExceptionInfo" />
+
+			<xsd:element name="GetConferenceConsultContactException" type="faultInfo:ExceptionInfo" />
+
+			<xsd:element name="GetConsultContactException" type="faultInfo:ExceptionInfo" />
+
+			<xsd:element name="GetTerminalConnectionCapabilitiesException" type="faultInfo:ExceptionInfo" />
+
+			<xsd:element name="GetStateException" type="faultInfo:ExceptionInfo" />
+
+			<xsd:element name="GetTerminalException" type="faultInfo:ExceptionInfo" />
+			
+			<xsd:element name="GetTerminalAddressesException" type="faultInfo:ExceptionInfo" />
+
+			<xsd:element name="GetTransferConsultContactException" type="faultInfo:ExceptionInfo" />
+
+			<xsd:element name="GetTerminalStatusException" type="faultInfo:ExceptionInfo" />
+
+			<xsd:element name="GiveTreatmentException" type="faultInfo:ExceptionInfo" />
+			<xsd:element name="GetAgentTerminalsException" type="faultInfo:ExceptionInfo" />
+
+			<xsd:element name="AlertException" type="faultInfo:ExceptionInfo" />
+			<xsd:element name="RejectException" type="faultInfo:ExceptionInfo" />
+			<xsd:element name="AnswerException" type="faultInfo:ExceptionInfo" />
+			<xsd:element name="DisconnectException" type="faultInfo:ExceptionInfo" />
+			<xsd:element name="RedirectException" type="faultInfo:ExceptionInfo" />
+			<xsd:element name="AcceptException" type="faultInfo:ExceptionInfo" />
+
+			<xsd:element name="GetContactTypeException" type="faultInfo:ExceptionInfo" />
+			<xsd:element name="HoldException" type="faultInfo:ExceptionInfo" />
+			<xsd:element name="UnholdException" type="faultInfo:ExceptionInfo" />
+			<xsd:element name="WhisperException" type="faultInfo:ExceptionInfo" />
+			<xsd:element name="BargeInException" type="faultInfo:ExceptionInfo" />
+			<xsd:element name="AddPartyException" type="faultInfo:ExceptionInfo" />
+			<xsd:element name="GetContactTypesException" type="faultInfo:ExceptionInfo" />
+			<xsd:element name="SetIntrinsicsException" type="faultInfo:ExceptionInfo" />
+			<xsd:element name="GetIntrinsicsException" type="faultInfo:ExceptionInfo" />
+			<xsd:element name="SetUUIException" type="faultInfo:ExceptionInfo" />
+			<xsd:element name="GetUUIException" type="faultInfo:ExceptionInfo" />
+			<xsd:element name="SetInstantMessagesException" type="faultInfo:ExceptionInfo" />
+			<xsd:element name="GetInstantMessagesException" type="faultInfo:ExceptionInfo" />
+			<xsd:element name="ParkException" type="faultInfo:ExceptionInfo" />
+			
+			<xsd:element name="StartRecordingException" type="faultInfo:ExceptionInfo" />
+			<xsd:element name="StopRecordingException" type="faultInfo:ExceptionInfo" />
+			<xsd:element name="GetRecordingStateException" type="faultInfo:ExceptionInfo" />
+			<xsd:element name="GetRecordingStateReasonException" type="faultInfo:ExceptionInfo" />
+			<xsd:element name="RequestRecordingException" type="faultInfo:ExceptionInfo" />
+			<xsd:element name="CancelRecordingException" type="faultInfo:ExceptionInfo" />
+			<xsd:element name="ConfirmDemandRecordingRequestException" type="faultInfo:ExceptionInfo" />
+			<xsd:element name="GetRecordOnDemandStateException" type="faultInfo:ExceptionInfo" />
+			<xsd:element name="GetRecordOnDemandStateReasonException" type="faultInfo:ExceptionInfo" />
+			<xsd:element name="SaveRecordingException" type="faultInfo:ExceptionInfo" />
+			<xsd:element name="UnsaveRecordingException" type="faultInfo:ExceptionInfo" />
+			<xsd:element name="ConfirmSaveRecordingException" type="faultInfo:ExceptionInfo" />
+			<xsd:element name="GetSaveRecordingStateException" type="faultInfo:ExceptionInfo" />
+			<xsd:element name="GetSaveRecordingStateReasonException" type="faultInfo:ExceptionInfo" />
+			
+			<xsd:element name="CancelForwardingException" type="faultInfo:ExceptionInfo" />
+			<xsd:element name="GetMessageWaitingException" type="faultInfo:ExceptionInfo" />
+			<xsd:element name="GetForwardingException" type="faultInfo:ExceptionInfo" />			
+			<xsd:element name="GetPresenceException" type="faultInfo:ExceptionInfo" />
+			<xsd:element name="GetTerminalsException" type="faultInfo:ExceptionInfo" />
+			<xsd:element name="GetAddressesException" type="faultInfo:ExceptionInfo" />
+			<xsd:element name="GetUriException" type="faultInfo:ExceptionInfo" />
+
+			<xsd:element name="PresenceSubscribeException" type="faultInfo:ExceptionInfo" />
+			<xsd:element name="PresenceUnsubscribeException" type="faultInfo:ExceptionInfo" />
+			<xsd:element name="SetDoNotDisturbException" type="faultInfo:ExceptionInfo" />
+			<xsd:element name="SetForwardingException" type="faultInfo:ExceptionInfo" />
+			<xsd:element name="SetMessageWaitingException" type="faultInfo:ExceptionInfo" />
+			
+			<xsd:element name="GetAgentsException" type="faultInfo:ExceptionInfo" />
+			<xsd:element name="GetStaticVoiceTerminalException" type="faultInfo:ExceptionInfo" />
+			
+			<xsd:element name="SetStaticVoiceTerminalException" type="faultInfo:ExceptionInfo" />
+			
+			<xsd:element name="SetReadyException" type="faultInfo:ExceptionInfo" />
+			
+			<xsd:element name="GetSupervisorException" type="faultInfo:ExceptionInfo" />
+			<xsd:element name="SetSupervisorException" type="faultInfo:ExceptionInfo" />
+			<xsd:element name="IsSupervisorException" type="faultInfo:ExceptionInfo" />
+			<xsd:element name="IsLoggedInException" type="faultInfo:ExceptionInfo" />
+			
+			<xsd:element name="RetrieveException" type="faultInfo:ExceptionInfo" />
+			<xsd:element name="LoginException" type="faultInfo:ExceptionInfo" />
+			<xsd:element name="LogoutException" type="faultInfo:ExceptionInfo" />
+			
+			<xsd:element name="GetTypeException" type="faultInfo:ExceptionInfo" />
+			
+			<xsd:element name="LoginAgentToTerminalException" type="faultInfo:ExceptionInfo" />
+			<xsd:element name="LogoutAgentFromTerminalException" type="faultInfo:ExceptionInfo" />
+			
+			<xsd:element name="OriginateException" type="faultInfo:ExceptionInfo" />
+			
+			<xsd:element name="PickupException" type="faultInfo:ExceptionInfo" />
+			<xsd:element name="PickupFromGroupException" type="faultInfo:ExceptionInfo" />
+		
+			<xsd:element name="GetDefaultContactTypeException" type="faultInfo:ExceptionInfo" />
+			
+			<xsd:element name="ObserveException" type="faultInfo:ExceptionInfo" />
+			<xsd:element name="DisposeException" type="faultInfo:ExceptionInfo" />
+			
+			<xsd:element name="GetAgentAddressesException" type="faultInfo:ExceptionInfo" />
+			<xsd:element name="GetCurrentTerminalCountException" type="faultInfo:ExceptionInfo" />
+			<xsd:element name="GetCurrentAddressCountException" type="faultInfo:ExceptionInfo" />
+			
+			<xsd:element name="GiveMediaTreatmentException" type="faultInfo:ExceptionInfo" />
+			
+			<xsd:element name="IsControlledException" type="faultInfo:ExceptionInfo" />
+			<xsd:element name="ControlException" type="faultInfo:ExceptionInfo" />
+			<xsd:element name="ReleaseControlException" type="faultInfo:ExceptionInfo" />
+			
+			<xsd:element name="RouteException" type="faultInfo:ExceptionInfo" />
+			<xsd:element name="RoutePointRetrieveException" type="faultInfo:ExceptionInfo" />
+			
+			<xsd:element name="MonitoredAddressesCountException" type="faultInfo:ExceptionInfo" />
+			<xsd:element name="MonitoredTerminalsCountException" type="faultInfo:ExceptionInfo" />
+			
+			<!--  EoinMc new exceptions Consult and Transfer -->
+			<xsd:element name="ConsultException" type="faultInfo:ExceptionInfo" />
+			<xsd:element name="TransferException" type="faultInfo:ExceptionInfo" />
+			<xsd:element name="DropException" type="faultInfo:ExceptionInfo" />
+			
+			<xsd:element name="SendInstantMessageException" type="faultInfo:ExceptionInfo" />
+			
+			<!-- Contact Manager Service Exception Types -->
+			<xsd:element name="GetProvidersException" type="faultInfo:ExceptionInfo" />
+
+		</xsd:schema>
+
+	</wsdl:types>
+
+	<wsdl:message name="SessionNotCreatedException">
+		<wsdl:part name="SessionNotCreatedException" element="faults:SessionNotCreatedException" />
+	</wsdl:message>
+
+	<wsdl:message name="UnHoldContactException">
+		<wsdl:part name="UnHoldContactException" element="faults:UnHoldContactException" />
+	</wsdl:message>
+
+	<wsdl:message name="HoldContactException">
+		<wsdl:part name="HoldContactException" element="faults:HoldContactException" />
+	</wsdl:message>
+
+	<wsdl:message name="AnswerContactException">
+		<wsdl:part name="AnswerContactException" element="faults:AnswerContactException" />
+	</wsdl:message>
+
+	<wsdl:message name="TransferContactException">
+		<wsdl:part name="TransferContactException" element="faults:TransferContactException" />
+	</wsdl:message>
+
+	<wsdl:message name="CreateContactException">
+		<wsdl:part name="CreateContactException" element="faults:CreateContactException" />
+	</wsdl:message>
+
+	<wsdl:message name="GetReadyStateException">
+		<wsdl:part name="GetReadyStateExceptio" element="faults:GetReadyStateException" />
+	</wsdl:message>
+
+	<wsdl:message name="DropContactException">
+		<wsdl:part name="DropContactException" element="faults:DropContactException" />
+	</wsdl:message>
+	
+	<wsdl:message name="SetContactDataException">
+		<wsdl:part name="SetContactDataException" element="faults:SetContactDataException" />
+	</wsdl:message>
+
+	<wsdl:message name="GetContactDataException">
+		<wsdl:part name="GetContactDataException" element="faults:GetContactDataException" />
+	</wsdl:message>
+
+	<wsdl:message name="SetToNotReadyStateException">
+		<wsdl:part name="SetToNotReadyStateException" element="faults:SetToNotReadyStateException" />
+	</wsdl:message>
+	
+	<wsdl:message name="SetToNotReadyStateWithReasonCodeException">
+		<wsdl:part name="SetToNotReadyStateWithReasonCodeException" element="faults:SetToNotReadyStateWithReasonCodeException" />
+	</wsdl:message>
+	
+	<wsdl:message name="SetToReadyStateException">
+		<wsdl:part name="SetToReadyStateException" element="faults:SetToReadyStateException" />
+	</wsdl:message>
+
+	<wsdl:message name="MakeSetBusyException">
+		<wsdl:part name="MakeSetBusyException" element="faults:MakeSetBusyException" />
+	</wsdl:message>
+
+	<wsdl:message name="GetTerminalInfoException">
+		<wsdl:part name="GetTerminalInfoException" element="faults:GetTerminalInfoException" />
+	</wsdl:message>
+
+	<wsdl:message name="InitiateConferenceException">
+		<wsdl:part name="InitiateConferenceException" element="faults:InitiateConferenceException" />
+	</wsdl:message>
+
+	<wsdl:message name="CompleteConferenceException">
+		<wsdl:part name="CompleteConferenceException" element="faults:CompleteConferenceException" />
+	</wsdl:message>
+
+	<wsdl:message name="LoginAgentException">
+		<wsdl:part name="LoginAgentException" element="faults:LoginAgentException" />
+	</wsdl:message>
+
+	<wsdl:message name="LoginAgentToStateException">
+		<wsdl:part name="LoginAgentToStateException" element="faults:LoginAgentToStateException" />
+	</wsdl:message>
+
+	<wsdl:message name="LogoutAgentException">
+		<wsdl:part name="LogoutAgentException" element="faults:LogoutAgentException" />
+	</wsdl:message>
+
+	<wsdl:message name="InitiateSupervisedTransferException">
+		<wsdl:part name="InitiateSupervisedTransferException" element="faults:InitiateSupervisedTransferException" />
+	</wsdl:message>
+
+	<wsdl:message name="CompleteSupervisedTransferException">
+		<wsdl:part name="CompleteSupervisedTransferException" element="faults:CompleteSupervisedTransferException" />
+	</wsdl:message>
+
+	<wsdl:message name="EmergencyKeyException">
+		<wsdl:part name="EmergencyKeyException" element="faults:EmergencyKeyException" />
+	</wsdl:message>
+
+	<wsdl:message name="CallSupervisorException">
+		<wsdl:part name="CallSupervisorException" element="faults:CallSupervisorException" />
+	</wsdl:message>
+
+	<wsdl:message name="GenerateDTMFException">
+		<wsdl:part name="GenerateDTMFException" element="faults:GenerateDTMFException" />
+	</wsdl:message>
+
+	<wsdl:message name="LogOffFromCCTServerException">
+		<wsdl:part name="LogOffFromCCTServerException" element="faults:LogOffFromCCTServerException" />
+	</wsdl:message>
+
+	<wsdl:message name="LogInToCCTServerException">
+		<wsdl:part name="LogInToCCTServerException" element="faults:LogInToCCTServerException" />
+	</wsdl:message>
+
+	<wsdl:message name="IsMessageWaitingException">
+		<wsdl:part name="IsMessageWaitingException" element="faults:IsMessageWaitingException" />
+	</wsdl:message>
+	
+	<wsdl:message name="IsForwardedException">
+		<wsdl:part name="IsForwardedException" element="faults:IsForwardedException" />
+	</wsdl:message>
+	
+	<wsdl:message name="GetVersionException">
+		<wsdl:part name="GetVersionException" element="faults:GetVersionException" />
+	</wsdl:message>
+	
+	<wsdl:message name="GetDoNotDisturbException">
+		<wsdl:part name="GetDoNotDisturbException" element="faults:GetDoNotDisturbException" />
+	</wsdl:message>
+	
+	<wsdl:message name="GetConnectionsException">
+		<wsdl:part name="GetConnectionsException" element="faults:GetConnectionsException" />
+	</wsdl:message>
+	
+	<wsdl:message name="GetTerminalConnectionsException">
+		<wsdl:part name="GetTerminalConnectionsException" element="faults:GetConnectionsException" />
+	</wsdl:message>
+	
+	<wsdl:message name="GetCapabilitiesException">
+		<wsdl:part name="GetCapabilitiesException" element="faults:GetCapabilitiesException" />
+	</wsdl:message>
+
+	<wsdl:message name="GetRelatedAddressesException">
+		<wsdl:part name="GetRelatedAddressesException" element="faults:GetRelatedAddressesException" />
+	</wsdl:message>
+
+	<wsdl:message name="GetNotReadyReasonCodeException">
+		<wsdl:part name="GetNotReadyReasonCodeException" element="faults:GetNotReadyReasonCodeException" />
+	</wsdl:message>
+
+	<wsdl:message name="SetNotReadyReasonCodeException">
+		<wsdl:part name="SetNotReadyReasonCodeException" element="faults:SetNotReadyReasonCodeException" />
+	</wsdl:message>
+
+	<wsdl:message name="GetLoginIdException">
+		<wsdl:part name="GetLoginIdException" element="faults:GetLoginIdException" />
+	</wsdl:message>
+
+	<wsdl:message name="SetIsReadyException">
+		<wsdl:part name="SetIsReadyException" element="faults:SetIsReadyException" />
+	</wsdl:message>
+
+	<wsdl:message name="IsReadyException">
+		<wsdl:part name="IsReadyException" element="faults:IsReadyException" />
+	</wsdl:message>
+
+	<wsdl:message name="GetActivityCodeException">
+		<wsdl:part name="GetActivityCodeException" element="faults:GetActivityCodeException" />
+	</wsdl:message>
+	
+	<wsdl:message name="SetActivityCodeException">
+		<wsdl:part name="SetActivityCodeException" element="faults:SetActivityCodeException" />
+	</wsdl:message>
+
+	<wsdl:message name="GetOriginalDestinationAddressException">
+		<wsdl:part name="GetOriginalDestinationAddressException" element="faults:GetOriginalDestinationAddressException" />
+	</wsdl:message>
+
+	<wsdl:message name="GetLastRedirectedAddressException">
+		<wsdl:part name="GetLastRedirectedAddressException" element="faults:GetLastRedirectedAddressException" />
+	</wsdl:message>
+
+	<wsdl:message name="SetAttachedDataException">
+		<wsdl:part name="SetAttachedDataException" element="faults:SetAttachedDataException" />
+	</wsdl:message>
+
+	<wsdl:message name="GetAttachedDataException">
+		<wsdl:part name="GetAttachedDataException" element="faults:GetAttachedDataException" />
+	</wsdl:message>
+	
+	<wsdl:message name="GetAttachedXMLDataException">
+		<wsdl:part name="GetAttachedXMLDataException" element="faults:GetAttachedXMLDataException" />
+	</wsdl:message>
+
+	<wsdl:message name="GetConnectionException">
+		<wsdl:part name="GetConnectionException" element="faults:GetConnectionException" />
+	</wsdl:message>
+
+	<wsdl:message name="GetCallingTerminalException">
+		<wsdl:part name="GetCallingTerminalException" element="faults:GetCallingTerminalException" />
+	</wsdl:message>
+
+	<wsdl:message name="GetCallingAddressException">
+		<wsdl:part name="GetCallingAddressException" element="faults:GetCallingAddressException" />
+	</wsdl:message>
+
+	<wsdl:message name="GetCalledAddressException">
+		<wsdl:part name="GetCalledAddressException" element="faults:GetCalledAddressException" />
+	</wsdl:message>
+
+	<wsdl:message name="GetContactException">
+		<wsdl:part name="GetContactException" element="faults:GetContactException" />
+	</wsdl:message>
+
+	<wsdl:message name="GetConnectionCapabilitiesException">
+		<wsdl:part name="GetConnectionCapabilitiesException" element="faults:GetConnectionCapabilitiesException" />
+	</wsdl:message>
+
+	<wsdl:message name="GetAddressException">
+		<wsdl:part name="GetAddressException" element="faults:GetAddressException" />
+	</wsdl:message>
+
+	<wsdl:message name="GetTransferConsultContactException">
+		<wsdl:part name="GetTransferConsultContactException" element="faults:GetTransferConsultContactException" />
+	</wsdl:message>
+
+	<wsdl:message name="GetTerminalException">
+		<wsdl:part name="GetTerminalException" element="faults:GetTerminalException" />
+	</wsdl:message>
+
+	<wsdl:message name="GetTerminalAddressesException">
+		<wsdl:part name="GetTerminalAddressesException" element="faults:GetTerminalAddressesException"/>
+	</wsdl:message>
+   
+	<wsdl:message name="GetStateException">
+		<wsdl:part name="GetStateException" element="faults:GetStateException" />
+	</wsdl:message>
+
+	<wsdl:message name="GetTerminalConnectionCapabilitiesException">
+		<wsdl:part name="GetTerminalConnectionCapabilitiesException" element="faults:GetTerminalConnectionCapabilitiesException" />
+	</wsdl:message>
+
+	<wsdl:message name="GetConsultContactException">
+		<wsdl:part name="GetConsultContactException" element="faults:GetConsultContactException" />
+	</wsdl:message>
+
+	<wsdl:message name="GetConferenceConsultContactException">
+		<wsdl:part name="GetConferenceConsultContactException" element="faults:GetConferenceConsultContactException" />
+	</wsdl:message>
+
+	<wsdl:message name="GetTerminalStatusException">
+		<wsdl:part name="GetTerminalStatusException" element="faults:GetTerminalStatusException" />
+	</wsdl:message>
+
+	<wsdl:message name="GiveTreatmentException">
+		<wsdl:part name="GiveTreatmentException" element="faults:GiveTreatmentException" />
+	</wsdl:message>
+
+	<wsdl:message name="GetAgentTerminalsException">
+		<wsdl:part name="GetAgentTerminalsException" element="faults:GetAgentTerminalsException" />
+	</wsdl:message>
+
+	<wsdl:message name="AcceptException">
+		<wsdl:part name="AcceptException" element="faults:AcceptException" />
+	</wsdl:message>
+
+	<wsdl:message name="RejectException">
+		<wsdl:part name="RejectException" element="faults:RejectException" />
+	</wsdl:message>
+
+	<wsdl:message name="AlertException">
+		<wsdl:part name="AlertException" element="faults:AlertException" />
+	</wsdl:message>
+
+	<wsdl:message name="RedirectException">
+		<wsdl:part name="RedirectException" element="faults:RedirectException" />
+	</wsdl:message>
+
+	<wsdl:message name="DisconnectException">
+		<wsdl:part name="DisconnectException" element="faults:DisconnectException" />
+	</wsdl:message>
+
+	<wsdl:message name="GetContactTypeException">
+		<wsdl:part name="GetContactTypeException" element="faults:GetContactTypeException" />
+	</wsdl:message>
+
+	<wsdl:message name="HoldException">
+		<wsdl:part name="HoldException" element="faults:HoldException" />
+	</wsdl:message>
+
+	<wsdl:message name="UnholdException">
+		<wsdl:part name="UnholdException" element="faults:UnholdException" />
+	</wsdl:message>
+
+	<wsdl:message name="AnswerException">
+		<wsdl:part name="AnswerException" element="faults:AnswerException" />
+	</wsdl:message>
+
+	<wsdl:message name="AddPartyException">
+		<wsdl:part name="AddPartyException" element="faults:AddPartyException" />
+	</wsdl:message>
+
+	<wsdl:message name="BargeInException">
+		<wsdl:part name="BargeInException" element="faults:BargeInException" />
+	</wsdl:message>
+
+	<wsdl:message name="WhisperException">
+		<wsdl:part name="WhisperException" element="faults:WhisperException" />
+	</wsdl:message>
+
+	<wsdl:message name="GetContactTypesException">
+		<wsdl:part name="GetContactTypesException" element="faults:GetContactTypesException" />
+	</wsdl:message>
+
+	<wsdl:message name="GetInstantMessagesException">
+		<wsdl:part name="GetInstantMessagesException" element="faults:GetInstantMessagesException" />
+	</wsdl:message>
+
+	<wsdl:message name="SetInstantMessagesException">
+		<wsdl:part name="SetInstantMessagesException" element="faults:SetInstantMessagesException" />
+	</wsdl:message>
+
+	<wsdl:message name="GetUUIException">
+		<wsdl:part name="GetUUIException" element="faults:GetUUIException" />
+	</wsdl:message>
+
+	<wsdl:message name="SetUUIException">
+		<wsdl:part name="SetUUIException" element="faults:SetUUIException" />
+	</wsdl:message>
+
+	<wsdl:message name="ParkException">
+		<wsdl:part name="ParkException" element="faults:ParkException" />
+	</wsdl:message>
+
+	<wsdl:message name="StartRecordingException">
+		<wsdl:part name="StartRecordingException" element="faults:StartRecordingException" />
+	</wsdl:message>
+	
+	<wsdl:message name="StopRecordingException">
+		<wsdl:part name="StopRecordingException" element="faults:StopRecordingException" />
+	</wsdl:message>
+	
+	<wsdl:message name="GetRecordingStateException">
+		<wsdl:part name="GetRecordingStateException" element="faults:GetRecordingStateException" />
+	</wsdl:message>
+	
+	<wsdl:message name="GetRecordingStateReasonException">
+		<wsdl:part name="GetRecordingStateReasonException" element="faults:GetRecordingStateReasonException" />
+	</wsdl:message>
+	
+	<wsdl:message name="RequestRecordingException">
+		<wsdl:part name="RequestRecordingException" element="faults:RequestRecordingException" />
+	</wsdl:message>
+	
+	<wsdl:message name="CancelRecordingException">
+		<wsdl:part name="CancelRecordingException" element="faults:CancelRecordingException" />
+	</wsdl:message>
+	
+	<wsdl:message name="ConfirmDemandRecordingRequestException">
+		<wsdl:part name="ConfirmDemandRecordingRequestException" element="faults:ConfirmDemandRecordingRequestException" />
+	</wsdl:message>
+	
+	<wsdl:message name="GetRecordOnDemandStateException">
+		<wsdl:part name="GetRecordOnDemandStateException" element="faults:GetRecordOnDemandStateException" />
+	</wsdl:message>
+	
+	<wsdl:message name="GetRecordOnDemandStateReasonException">
+		<wsdl:part name="GetRecordOnDemandStateReasonException" element="faults:GetRecordOnDemandStateReasonException" />
+	</wsdl:message>
+	
+	<wsdl:message name="SaveRecordingException">
+		<wsdl:part name="SaveRecordingException" element="faults:SaveRecordingException" />
+	</wsdl:message>
+	
+	<wsdl:message name="UnsaveRecordingException">
+		<wsdl:part name="UnsaveRecordingException" element="faults:UnsaveRecordingException" />
+	</wsdl:message>
+	
+	<wsdl:message name="ConfirmSaveRecordingException">
+		<wsdl:part name="ConfirmSaveRecordingException" element="faults:ConfirmSaveRecordingException" />
+	</wsdl:message>
+	
+	<wsdl:message name="GetSaveRecordingStateException">
+		<wsdl:part name="GetSaveRecordingStateException" element="faults:GetSaveRecordingStateException" />
+	</wsdl:message>
+	
+	<wsdl:message name="GetSaveRecordingStateReasonException">
+		<wsdl:part name="GetSaveRecordingStateReasonException" element="faults:GetSaveRecordingStateReasonException" />
+	</wsdl:message>
+	
+	<wsdl:message name="CancelForwardingException">
+		<wsdl:part name="CancelForwardingException" element="faults:CancelForwardingException" />
+	</wsdl:message>
+
+	<wsdl:message name="GetForwardingException">
+		<wsdl:part name="GetForwardingException" element="faults:GetForwardingException" />
+	</wsdl:message>
+
+	<wsdl:message name="GetMessageWaitingException">
+		<wsdl:part name="GetMessageWaitingException" element="faults:GetMessageWaitingException" />
+	</wsdl:message>
+
+	<wsdl:message name="GetPresenceException">
+		<wsdl:part name="GetPresenceException" element="faults:GetPresenceException" />
+	</wsdl:message>
+
+	<wsdl:message name="GetTerminalsException">
+		<wsdl:part name="GetTerminalsException" element="faults:GetTerminalsException" />
+	</wsdl:message>
+
+	<wsdl:message name="GetAddressesException">
+		<wsdl:part name="GetAddressesException" element="faults:GetAddressesException" />
+	</wsdl:message>
+
+	<wsdl:message name="GetUriException">
+		<wsdl:part name="GetUriException" element="faults:GetUriException" />
+	</wsdl:message>
+
+	<wsdl:message name="PresenceSubscribeException">
+		<wsdl:part name="PresenceSubscribeException" element="faults:PresenceSubscribeException" />
+	</wsdl:message>
+
+	<wsdl:message name="PresenceUnsubscribeException">
+		<wsdl:part name="PresenceUnsubscribeException" element="faults:PresenceUnsubscribeException" />
+	</wsdl:message>
+
+	<wsdl:message name="SetDoNotDisturbException">
+		<wsdl:part name="SetDoNotDisturbException" element="faults:SetDoNotDisturbException" />
+	</wsdl:message>
+
+	<wsdl:message name="SetForwardingException">
+		<wsdl:part name="SetForwardingException" element="faults:SetForwardingException" />
+	</wsdl:message>
+
+	<wsdl:message name="SetMessageWaitingException">
+		<wsdl:part name="SetMessageWaitingException" element="faults:SetMessageWaitingException" />
+	</wsdl:message>
+
+	<wsdl:message name="GetIntrinsicsException">
+		<wsdl:part name="GetIntrinsicsException" element="faults:GetIntrinsicsException" />
+	</wsdl:message>
+
+	<wsdl:message name="SetIntrinsicsException">
+		<wsdl:part name="SetIntrinsicsException" element="faults:SetIntrinsicsException" />
+	</wsdl:message>
+	
+	<wsdl:message name="GetAgentsException">
+		<wsdl:part name="GetAgentsException" element="faults:GetAgentsException" />
+	</wsdl:message>
+	
+	<wsdl:message name="GetStaticVoiceTerminalException">
+		<wsdl:part name="GetStaticVoiceTerminalException" element="faults:GetStaticVoiceTerminalException" />
+	</wsdl:message>
+	
+	<wsdl:message name="SetStaticVoiceTerminalException">
+		<wsdl:part name="SetStaticVoiceTerminalException" element="faults:SetStaticVoiceTerminalException" />
+	</wsdl:message>
+	
+	<wsdl:message name="SetReadyException">
+		<wsdl:part name="SetReadyException" element="faults:SetReadyException" />
+	</wsdl:message>
+	
+	<wsdl:message name="GetSupervisorException">
+		<wsdl:part name="GetSupervisorException" element="faults:GetSupervisorException" />
+	</wsdl:message>
+	
+	<wsdl:message name="SetSupervisorException">
+		<wsdl:part name="SetSupervisorException" element="faults:SetSupervisorException" />
+	</wsdl:message>
+	
+	<wsdl:message name="IsSupervisorException">
+		<wsdl:part name="IsSupervisorException" element="faults:IsSupervisorException" />
+	</wsdl:message>
+	
+	<wsdl:message name="IsLoggedInException">
+		<wsdl:part name="IsLoggedInException" element="faults:IsLoggedInException" />
+	</wsdl:message>
+	
+	<wsdl:message name="RetrieveException">
+		<wsdl:part name="RetrieveException" element="faults:RetrieveException" />
+	</wsdl:message>
+	
+	<wsdl:message name="LoginException">
+		<wsdl:part name="LoginException" element="faults:LoginException" />
+	</wsdl:message>
+	
+	<wsdl:message name="LogoutException">
+		<wsdl:part name="LogoutException" element="faults:LogoutException" />
+	</wsdl:message>
+	
+	<wsdl:message name="GetTypeException">
+		<wsdl:part name="GetTypeException" element="faults:GetTypeException" />
+	</wsdl:message>
+	
+	<wsdl:message name="LoginAgentToTerminalException">
+		<wsdl:part name="LoginAgentToTerminalException" element="faults:LoginAgentToTerminalException" />
+	</wsdl:message>
+	
+	<wsdl:message name="LogoutAgentFromTerminalException">
+		<wsdl:part name="LogoutAgentFromTerminalException" element="faults:LogoutAgentFromTerminalException" />
+	</wsdl:message>
+	
+	<wsdl:message name="OriginateException">
+		<wsdl:part name="OriginateException" element="faults:OriginateException" />
+	</wsdl:message>
+	
+	<wsdl:message name="PickupException">
+		<wsdl:part name="PickupException" element="faults:PickupException" />
+	</wsdl:message>
+	
+	<wsdl:message name="PickupFromGroupException">
+		<wsdl:part name="PickupFromGroupException" element="faults:PickupFromGroupException" />
+	</wsdl:message>
+	
+	<wsdl:message name="GetDefaultContactTypeException">
+		<wsdl:part name="GetDefaultContactTypeException" element="faults:GetDefaultContactTypeException" />
+	</wsdl:message>
+	
+	<wsdl:message name="ObserveException">
+		<wsdl:part name="ObserveException" element="faults:ObserveException" />
+	</wsdl:message>
+	
+	<wsdl:message name="DisposeException">
+		<wsdl:part name="DisposeException" element="faults:DisposeException" />
+	</wsdl:message>
+	
+	<wsdl:message name="GetAgentAddressesException">
+		<wsdl:part name="GetAgentAddressesException" element="faults:GetAgentAddressesException" />
+	</wsdl:message>
+	
+	<wsdl:message name="GetCurrentTerminalCountException">
+		<wsdl:part name="GetCurrentTerminalCountException" element="faults:GetCurrentTerminalCountException" />
+	</wsdl:message>
+	
+	<wsdl:message name="GetCurrentAddressCountException">
+		<wsdl:part name="GetCurrentAddressCountException" element="faults:GetCurrentAddressCountException" />
+	</wsdl:message>
+	
+	<wsdl:message name="GiveMediaTreatmentException">
+		<wsdl:part name="GiveMediaTreatmentException" element="faults:GiveMediaTreatmentException" />
+	</wsdl:message>
+	
+	<wsdl:message name="IsControlledException">
+		<wsdl:part name="IsControlledException" element="faults:IsControlledException" />
+	</wsdl:message>
+	
+	<wsdl:message name="ControlException">
+		<wsdl:part name="ControlException" element="faults:ControlException" />
+	</wsdl:message>
+	
+	<wsdl:message name="ReleaseControlException">
+		<wsdl:part name="ReleaseControlException" element="faults:ReleaseControlException" />
+	</wsdl:message>
+	
+	<wsdl:message name="RouteException">
+		<wsdl:part name="ControlException" element="faults:RouteException" />
+	</wsdl:message>
+	
+	<wsdl:message name="RoutePointRetrieveException">
+		<wsdl:part name="RoutePointRetrieveException" element="faults:RoutePointRetrieveException" />
+	</wsdl:message>
+	
+	<wsdl:message name="MonitoredAddressesCountException">
+		<wsdl:part name="MonitoredAddressesCountException" element="faults:MonitoredAddressesCountException" />
+	</wsdl:message>
+	
+	<wsdl:message name="MonitoredTerminalsCountException">
+		<wsdl:part name="MonitoredTerminalsCountException" element="faults:MonitoredTerminalsCountException" />
+	</wsdl:message>
+	
+	<!--  EoinMc Consult and Transfer,Drop added -->
+	<wsdl:message name="ConsultException">
+		<wsdl:part name="ConsultException" element="faults:ConsultException" />
+	</wsdl:message>
+	
+	<wsdl:message name="TransferException">
+		<wsdl:part name="TransferException" element="faults:TransferException" />
+	</wsdl:message>
+
+	<wsdl:message name="DropException">
+		<wsdl:part name="DropException" element="faults:DropException" />
+	</wsdl:message>
+	
+	<wsdl:message name="SendInstantMessageException">
+		<wsdl:part name="SendInstantMessageException" element="faults:SendInstantMessageException" />
+	</wsdl:message>
+	
+	<!-- Contact Manager Service Exceptions -->
+	<wsdl:message name="GetProvidersException">
+		<wsdl:part name="GetProvidersException" element="faults:GetProvidersException" />
+	</wsdl:message>
+	
+</wsdl:definitions>

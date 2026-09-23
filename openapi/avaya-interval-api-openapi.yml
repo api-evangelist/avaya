@@ -1,0 +1,621 @@
+openapi: 3.2.0
+info:
+  title: Admin - Timetable Interval API
+  description: 'Timetable is a configuration of working hours for a specific Contact Center account. Each account can have multiple
+
+    timetables. It is possible to configure a timetable with intervals - days of the week or specific dates with a
+
+    range of working hours, as well as holidays, which are non-working days.'
+  contact:
+    name: Avaya API Team
+    url: https://developers.avayacloud.com/onecloud-ccaas
+    email: apiteam@avaya.com
+  license:
+    name: Avaya Software Development Kit (SDK) Software License Terms
+    url: http://support.avaya.com/css/P8/documents/101038288
+  version: 1.0.1
+servers:
+- url: '{protocol}://{server}{basePath}'
+  description: Open API
+  variables:
+    protocol:
+      enum:
+      - https
+      default: https
+    server:
+      default: HOST-REGION.api.avayacloud.com
+    basePath:
+      default: /api/business-hours/v1
+- url: '{protocol}://{server}:{port}'
+  description: Internal API
+  variables:
+    protocol:
+      enum:
+      - http
+      - https
+      default: http
+    server:
+      default: timetable-service
+    port:
+      enum:
+      - '80'
+      - '443'
+      default: '80'
+security:
+- {}
+- BearerAuth: []
+  AppKey: []
+tags:
+- name: Interval
+  description: Intervals are specific dates or working days of the week when the contact center is fully operational and staffed by agents and therefore fall with the operating business hours.
+paths:
+  /accounts/{accountId}/timetables/{timetableId}/intervals:
+    parameters:
+    - $ref: '#/components/parameters/accountId'
+    - $ref: '#/components/parameters/timetableId'
+    get:
+      tags:
+      - Interval
+      summary: List Intervals
+      operationId: listIntervals
+      description: Gets the list of Intervals for a Timetable.
+      parameters:
+      - $ref: '#/components/parameters/pageSize'
+      - $ref: '#/components/parameters/pageNumber'
+      - $ref: '#/components/parameters/intervalType'
+      responses:
+        '200':
+          $ref: '#/components/responses/IntervalsPageResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServer'
+    post:
+      tags:
+      - Interval
+      summary: Create Interval
+      operationId: createInterval
+      description: Creates a new Interval.
+      requestBody:
+        $ref: '#/components/requestBodies/IntervalRequestBody'
+      responses:
+        '201':
+          $ref: '#/components/responses/IntervalResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServer'
+  /accounts/{accountId}/timetables/{timetableId}/intervals/{intervalId}:
+    parameters:
+    - $ref: '#/components/parameters/accountId'
+    - $ref: '#/components/parameters/timetableId'
+    - $ref: '#/components/parameters/intervalId'
+    get:
+      tags:
+      - Interval
+      summary: Get Interval
+      operationId: getInterval
+      description: Gets an Interval by ID.
+      responses:
+        '200':
+          $ref: '#/components/responses/IntervalResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServer'
+    put:
+      tags:
+      - Interval
+      summary: Update Interval
+      operationId: updateInterval
+      description: Updates an Interval.
+      requestBody:
+        $ref: '#/components/requestBodies/IntervalRequestBody'
+      responses:
+        '200':
+          $ref: '#/components/responses/IntervalResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServer'
+    delete:
+      tags:
+      - Interval
+      summary: Delete Interval
+      operationId: deleteInterval
+      description: Deletes an Interval.
+      responses:
+        '204':
+          description: No Content
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServer'
+components:
+  schemas:
+    Interval:
+      type: object
+      required:
+      - name
+      - description
+      - timeFrom
+      - timeTo
+      - type
+      - appliesTo
+      properties:
+        intervalId:
+          type: string
+          readOnly: true
+          description: The unique 36 character internal id that represents the interval.
+          minLength: 36
+          maxLength: 36
+          pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
+        name:
+          type: string
+          description: The name of the interval. Interval names are not unique.
+          maxLength: 256
+        description:
+          type: string
+          description: The description of the interval
+          maxLength: 1024
+        timeFrom:
+          type: string
+          pattern: ^(\d){2}:(\d){2}:(\d){2}$
+          description: The start time of the interval in 24 hour format = '  HH:mm:ss' i.e. 08:00:00
+          minLength: 8
+          maxLength: 8
+          example: 08:00:00
+        timeTo:
+          type: string
+          pattern: ^(\d){2}:(\d){2}:(\d){2}$
+          description: The end time of the interval in 24 hour format = 'HH:mm:ss' i.e. 17:00:00
+          minLength: 8
+          maxLength: 8
+          example: '17:00:00'
+        type:
+          $ref: '#/components/schemas/IntervalType'
+        appliesTo:
+          type: array
+          description: List of specific dates (when type is DATES) or days (when type is DAYS) for which the time interval will be applied. When type is DATES then list must contain dates in the format 'YYYY-MM-dd' containing no more than 366 days, when type is DAY the list must contain days of the week in the format 'dddd', it has to be no more than 7 days.
+          minItems: 1
+          maxItems: 366
+          items:
+            type: string
+            maxLength: 10
+            description: Specific date or day of the week
+            example: '2021-01-03'
+    IntervalType:
+      type: string
+      description: The type of interval
+      enum:
+      - DAYS
+      - DATES
+      example: DAYS
+    Links:
+      type: object
+      properties:
+        prev:
+          type: string
+          description: URL of the previous page. Blank if currently on the first page.
+        next:
+          type: string
+          description: URL of the next page. Blank if currently on the last page.
+    IntervalsPage:
+      description: A paginated list of intervals
+      type: object
+      properties:
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+        intervals:
+          type: array
+          description: List of intervals
+          items:
+            $ref: '#/components/schemas/Interval'
+        links:
+          $ref: '#/components/schemas/Links'
+    Pagination:
+      type: object
+      properties:
+        pageNumber:
+          type: integer
+          description: The current page number.
+        pageSize:
+          type: integer
+          description: The max number of records that can be retrieved on this page.
+        total:
+          type: integer
+          description: The total number of records.
+    Problem:
+      type: object
+      description: '<b>Problem Detail</b> as a way to carry machine-readable details of errors in a HTTP response to avoid the need to define new error response formats for HTTP APIs <a href="https://tools.ietf.org/html/rfc7807">RFC 7807</a>
+
+        '
+      properties:
+        type:
+          type: string
+          format: uri
+          description: 'An absolute URI that identifies the problem type. When dereferenced, it SHOULD provide human-readable documentation for the problem type (e.g., using HTML).
+
+            '
+          default: about:blank
+          example: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#constraint-violation
+        title:
+          type:
+          - string
+          - 'null'
+          description: 'A short, summary of the problem type. Written in english and readable for engineers (usually not suited for non technical stakeholders and not localized).
+
+            '
+          example: Service Unavailable
+        status:
+          type:
+          - integer
+          - 'null'
+          format: int32
+          description: 'The HTTP status code generated by the origin server for this occurrence of the problem.
+
+            '
+          minimum: 100
+          example: 503
+          exclusiveMaximum: 600
+        detail:
+          type:
+          - string
+          - 'null'
+          description: 'A human readable explanation specific to this occurrence of the problem.
+
+            '
+          example: Connection to database timed out
+        instance:
+          type:
+          - string
+          - 'null'
+          format: uri
+          description: 'An absolute URI that identifies the specific occurrence of the problem. It may or may not yield further information if dereferenced.
+
+            '
+        violations:
+          type:
+          - array
+          - 'null'
+          description: 'A list of violations that occurred as a result of invalid data provided as part of a request.
+
+            '
+          items:
+            type: object
+            properties:
+              field:
+                type: string
+                description: 'The name of the field in the request that caused the violation. This can be the name of a path parameter, query parameter, or a field within the request body.
+
+                  '
+                example: accountId
+              message:
+                type: string
+                description: 'A human readable explanation specific to this occurrence of the violation.
+
+                  '
+                example: must match "^[a-zA-Z]{6}$"
+              code:
+                type: integer
+                format: int32
+                description: 'The violation code generated by the server for this occurrence of the violation. Use this code when implementing any error handling logic instead of the message, as the message can change.
+
+                  '
+                example: 20006
+          example:
+          - field: emailAddress
+            message: must not be null
+            code: 20002
+          - field: accountId
+            message: must match "^[a-zA-Z]{6}$"
+            code: 20006
+  examples:
+    ErrorForbidden:
+      description: Forbidden
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#forbidden
+        title: Forbidden
+        status: 403
+        detail: According to the access control policy the current user and/or accountId does not have permission to access this resource.
+    ErrorConstraintViolation:
+      description: Constraint Violation
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#constraint-violation
+        title: Constraint Violation
+        status: 400
+        detail: A problem that indicates a syntactically correct, yet semantically illegal request. The Server can not process this request until the client resolves the semantic errors described in the violations section.
+        violations:
+        - field: accountId
+          message: must match "^[a-zA-Z]{6}$"
+          code: 20006
+    IntervalDaysCreate:
+      value:
+        name: New Year's support
+        description: Standard opening hours
+        timeFrom: 09:00:00
+        timeTo: '17:00:00'
+        type: DAYS
+        appliesTo:
+        - MONDAY
+        - TUESDAY
+        - WEDNESDAY
+        - THURSDAY
+        - FRIDAY
+        - SATURDAY
+        - SUNDAY
+    IntervalPageResponse:
+      value:
+        pagination:
+          pageNumber: 2
+          pageSize: 10
+          total: 11
+        intervals:
+        - intervalId: b2fb1032-2b50-11ec-8d3d-0242ac130003
+          name: New Year's support
+          description: Reduced opening hours during the New Year holidays.
+          timeFrom: '10:00:00'
+          timeTo: '15:00:00'
+          type: DATES
+          appliesTo:
+          - '2021-01-03'
+          - '2021-01-04'
+          - '2021-01-05'
+          - '2021-01-06'
+        links:
+          prev: /api/business-hours/v1/accounts/JDBUTC/timetables/8c872648-2b50-11ec-8d3d-0242ac130003/intervals?pageNumber=2&pageSize=10
+          next: ''
+    IntervalDatesCreate:
+      value:
+        name: New Year's support
+        description: Reduced opening hours during the New Year holidays.
+        timeFrom: '10:00:00'
+        timeTo: '15:00:00'
+        type: DATES
+        appliesTo:
+        - '2021-01-03'
+        - '2021-01-04'
+        - '2021-01-05'
+        - '2021-01-06'
+    ErrorNotFound:
+      description: Not Found
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#resource-not-found
+        title: Resource Not Found
+        status: 404
+        detail: Resource not found.
+    ErrorUnauthorized:
+      description: Unauthorized
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#unauthorized
+        title: Unauthorized
+        status: 401
+        detail: This operation requires authentication. See https://developers.avayacloud.com/onecloud-ccaas/docs/how-to-authenticate-with-ccaas-apis
+    IntervalDaysResponse:
+      value:
+        intervalId: b2fb1032-2b50-11ec-8d3d-0242ac130003
+        name: New Year's support
+        description: Standard opening hours
+        timeFrom: 09:00:00
+        timeTo: '17:00:00'
+        type: DAYS
+        appliesTo:
+        - MONDAY
+        - TUESDAY
+        - WEDNESDAY
+        - THURSDAY
+        - FRIDAY
+        - SATURDAY
+        - SUNDAY
+    IntervalDatesResponse:
+      value:
+        intervalId: b2fb1032-2b50-11ec-8d3d-0242ac130003
+        name: New Year's support
+        description: Reduced opening hours during the New Year holidays.
+        timeFrom: '10:00:00'
+        timeTo: '15:00:00'
+        type: DATES
+        appliesTo:
+        - '2021-01-03'
+        - '2021-01-04'
+        - '2021-01-05'
+        - '2021-01-06'
+    ErrorInternalServerError:
+      description: Server Error
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#server-error
+        title: Server Error
+        status: 500
+        detail: An internal server error was encountered.
+  responses:
+    NotFound:
+      description: Not Found
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorNotFound'
+    IntervalResponse:
+      description: Interval Response
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Interval'
+          examples:
+            Interval-with-Days-Response:
+              $ref: '#/components/examples/IntervalDaysResponse'
+            Interval-with-Dates-Response:
+              $ref: '#/components/examples/IntervalDatesResponse'
+    BadRequest:
+      description: BadRequest
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorConstraintViolation'
+    IntervalsPageResponse:
+      description: Interval Page Response
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/IntervalsPage'
+          examples:
+            Interval-Page-Response:
+              $ref: '#/components/examples/IntervalPageResponse'
+    InternalServer:
+      description: Internal Server Error
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorInternalServerError'
+    Forbidden:
+      description: Forbidden
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorForbidden'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorUnauthorized'
+  parameters:
+    accountId:
+      name: accountId
+      description: The unique 6 character internal id that represents the customer account.
+      required: true
+      in: path
+      schema:
+        type: string
+        minLength: 6
+        maxLength: 6
+        pattern: ^[a-zA-Z]{6}$
+        example: ABCDEF
+    pageSize:
+      name: pageSize
+      description: The maximum number of results per page.
+      required: false
+      in: query
+      schema:
+        type: integer
+        format: int32
+        default: 5
+        minimum: 5
+        maximum: 50
+        example: 5
+    intervalId:
+      name: intervalId
+      in: path
+      required: true
+      description: The unique 36 character internal id that represents the interval.
+      schema:
+        type: string
+        minLength: 36
+        maxLength: 36
+        pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
+        example: b2fb1032-2b50-11ec-8d3d-0242ac130003
+    pageNumber:
+      name: pageNumber
+      description: The target page of results.
+      required: false
+      in: query
+      schema:
+        type: integer
+        format: int32
+        default: 1
+        minimum: 1
+        example: 1
+    intervalType:
+      name: intervalType
+      in: query
+      required: false
+      description: The type of interval
+      schema:
+        $ref: '#/components/schemas/IntervalType'
+    timetableId:
+      name: timetableId
+      in: path
+      required: true
+      description: The unique 36 character internal id that represents the timetable.
+      schema:
+        type: string
+        minLength: 36
+        maxLength: 36
+        pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
+        example: 8c872648-2b50-11ec-8d3d-0242ac130003
+  requestBodies:
+    IntervalRequestBody:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Interval'
+          examples:
+            CreateOrUpdate-Days-Intervals:
+              $ref: '#/components/examples/IntervalDaysCreate'
+            CreateOrUpdate-Dates-Intervals:
+              $ref: '#/components/examples/IntervalDatesCreate'
+      required: true
+      description: Create/Update Interval request
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      description: This API uses Bearer Token Authorization Flow
+      bearerFormat: JWT
+    AppKey:
+      type: apiKey
+      in: header
+      name: appkey
+      description: This API needs an appKey as header
+x-explorer-enabled: false
+x-samples-languages:
+- curl
+- node
+- java
+- javascript
+- python
+- go

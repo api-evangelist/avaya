@@ -1,0 +1,652 @@
+openapi: 3.2.0
+info:
+  title: Digital - Custom Chat Sessions API
+  description: This API facilitates session-based communication. Only "Chat" channel is supported now.
+  contact:
+    name: Avaya API Team
+    url: https://developers.avayacloud.com/onecloud-ccaas
+    email: apiteam@avaya.com
+  license:
+    name: Avaya Software Development Kit (SDK) Software License Terms
+    url: http://support.avaya.com/css/P8/documents/101038288
+  version: 1.0.1
+servers:
+- url: '{protocol}://{server}{basePath}'
+  description: Open API
+  variables:
+    protocol:
+      enum:
+      - https
+      default: https
+    server:
+      default: HOST-REGION.api.avayacloud.com
+    basePath:
+      default: /api/digital/channel/v1
+- url: '{protocol}://{server}:{port}'
+  description: Internal API
+  variables:
+    protocol:
+      enum:
+      - http
+      - https
+      default: http
+    server:
+      default: msg-web-gateway
+    port:
+      enum:
+      - '80'
+      - '443'
+      default: '80'
+security:
+- {}
+- BearerAuth: []
+  AppKey: []
+tags:
+- name: Sessions
+  description: Sessions are used to hold context information about the customer and the clients used by the customer. A customer can have multiple active sessions at the same time. Sessions can be passed on any explicit requests made on engagements so that all the activities can be correlated back to sessions that caused it.
+paths:
+  /accounts/{accountId}/sessions:
+    post:
+      tags:
+      - Sessions
+      summary: Create Session
+      description: Creates a new client session for the customer. A single customer can have multiple active sessions concurrently. For example, if a customer is logged-in through a mobile device and a computer, activities from both the devices can be represented using two separate sessions.
+      operationId: createDigitalSession
+      parameters:
+      - $ref: '#/components/parameters/accountId'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateSession'
+            examples:
+              Create-Session:
+                $ref: '#/components/examples/CreateSession'
+        description: request
+        required: true
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionCreated'
+              examples:
+                Session-Created:
+                  $ref: '#/components/examples/GetSession'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      deprecated: false
+  /accounts/{accountId}/sessions/{sessionId}:
+    get:
+      tags:
+      - Sessions
+      summary: Get Session
+      description: Gets the details of an existing session by sessionId.
+      operationId: getDigitalSession
+      parameters:
+      - $ref: '#/components/parameters/accountId'
+      - $ref: '#/components/parameters/sessionId'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Session'
+              examples:
+                Get-Session:
+                  $ref: '#/components/examples/GetSession'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      deprecated: false
+    delete:
+      tags:
+      - Sessions
+      summary: Delete Session
+      description: Deletes the specified session.
+      operationId: deleteDigitalSession
+      parameters:
+      - $ref: '#/components/parameters/accountId'
+      - $ref: '#/components/parameters/sessionId'
+      - name: reason
+        in: query
+        description: The reason for deleting the customers client session
+        required: true
+        schema:
+          type: string
+          enum:
+          - USER_CLOSED
+          - USER_INACTIVE
+          - SYSTEM_CLOSED
+          - UNKNOWN
+          default: USER_CLOSED
+          example: USER_CLOSED
+      responses:
+        '204':
+          description: No Content
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      deprecated: false
+  /accounts/{accountId}/sessions/{sessionId}:appendIdentifiers:
+    post:
+      tags:
+      - Sessions
+      summary: Append Customer Identifiers
+      description: Appends customer identifiers to an existing session. If the key of the identifier already exists, the new value will be appended to the existing list.
+      operationId: appendIdentifiersInDigitalSession
+      parameters:
+      - $ref: '#/components/parameters/accountId'
+      - $ref: '#/components/parameters/sessionId'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomerIdentifiers'
+            examples:
+              Append-Identifiers:
+                $ref: '#/components/examples/AppendIdentifiers'
+        description: request
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Session'
+              examples:
+                Append-Identifiers-Response:
+                  $ref: '#/components/examples/AppendIdentifiersSessionResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      deprecated: false
+  /accounts/{accountId}/sessions/{sessionId}:updateSessionParameters:
+    post:
+      tags:
+      - Sessions
+      summary: Update Session Parameters
+      description: Updates the session parameters of an existing session. If the key of the parameter already exists, it will be updated with the new value else both the key and the value will be added to existing parameters.
+      operationId: updateSessionParametersInDigitalSession
+      parameters:
+      - $ref: '#/components/parameters/accountId'
+      - $ref: '#/components/parameters/sessionId'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SessionParameters'
+            examples:
+              Update-Session-Parameters:
+                $ref: '#/components/examples/UpdateSessionParameters'
+        description: request
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Session'
+              examples:
+                Update-Session-Parameters-Response:
+                  $ref: '#/components/examples/UpdateSessionParametersSessionResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      deprecated: false
+components:
+  examples:
+    ErrorForbidden:
+      description: Forbidden
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#forbidden
+        title: Forbidden
+        status: 403
+        detail: According to the access control policy the current user and/or accountId does not have permission to access this resource.
+    UpdateSessionParametersSessionResponse:
+      value:
+        sessionId: 10494b78-710c-11eb-9439-0242ac130002
+        accountId: ABCDEF
+        channelProviderId: ChatConnector01
+        displayName: John Doe
+        customerIdentifiers:
+          emailAddresses:
+          - john@example.com
+          phoneNumbers:
+          - +91 20 4101 8003
+        sessionParameters:
+          language: english
+          device: mobile
+          app: chrome-mobile
+          country: Ireland
+        sessionStatus: ACTIVE
+        providerCustomerId: '55'
+        createdAt: '2018-11-13T20:25:39.534Z'
+        lastUpdatedAt: '2018-11-13T20:25:39.734Z'
+        url: /api/digital/channel/v1/sessions/10494b78-710c-11eb-9439-0242ac130002
+    ErrorConstraintViolation:
+      description: Constraint Violation
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#constraint-violation
+        title: Constraint Violation
+        status: 400
+        detail: A problem that indicates a syntactically correct, yet semantically illegal request. The Server can not process this request until the client resolves the semantic errors described in the violations section.
+        violations:
+        - field: channelId
+          message: must not be null
+    GetSession:
+      value:
+        sessionId: 10494b78-710c-11eb-9439-0242ac130002
+        accountId: ABCDEF
+        channelProviderId: ChatConnector01
+        displayName: John Doe
+        customerIdentifiers:
+          emailAddresses:
+          - john@example.com
+          phoneNumbers:
+          - +91 20 4101 8003
+        sessionParameters:
+          language: english
+          device: mobile
+          app: chrome-mobile
+        sessionStatus: ACTIVE
+        providerCustomerId: '55'
+        createdAt: '2018-11-13T20:25:39.534Z'
+        lastUpdatedAt: '2018-11-13T20:25:39.734Z'
+        url: /api/digital/channel/v1/sessions/10494b78-710c-11eb-9439-0242ac130002
+    AppendIdentifiers:
+      value:
+        emailAddresses:
+        - dave@example.com
+        phoneNumbers:
+        - +31 20 5101 9005
+    ErrorNotFound:
+      description: Not Found
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#not-found
+        title: Not Found
+        status: 404
+        detail: Either there is no API method associated with the URL path of the request, or the request refers to one or more resources that were not found.
+    CreateSession:
+      value:
+        accountId: ABCDEF
+        channelProviderId: ChatConnector01
+        customerIdentifiers:
+          emailAddresses:
+          - john@example.com
+          phoneNumbers:
+          - +91 20 4101 8003
+        displayName: John Doe
+        sessionParameters:
+          language: english
+          device: mobile
+          app: chrome-mobile
+        providerCustomerId: '55'
+        correlationId: zc38400d-c44f-4451-8316-e75c4efbt779
+    ErrorUnauthorized:
+      description: Unauthorized
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#unauthorized
+        title: Unauthorized
+        status: 401
+        detail: This operation requires authentication. See https://developers.avayacloud.com/onecloud-ccaas/docs/how-to-authenticate-with-ccaas-apis
+    UpdateSessionParameters:
+      value:
+        country: Ireland
+    AppendIdentifiersSessionResponse:
+      value:
+        sessionId: 10494b78-710c-11eb-9439-0242ac130002
+        accountId: ABCDEF
+        channelProviderId: ChatConnector01
+        displayName: John Doe
+        customerIdentifiers:
+          emailAddresses:
+          - john@example.com
+          - dave@example.com
+          phoneNumbers:
+          - +91 20 4101 8003
+          - +31 20 5101 9005
+        sessionParameters:
+          language: english
+          device: mobile
+          app: chrome-mobile
+        sessionStatus: ACTIVE
+        providerCustomerId: '55'
+        createdAt: '2018-11-13T20:25:39.534Z'
+        lastUpdatedAt: '2018-11-13T20:25:39.734Z'
+        url: /api/digital/channel/v1/sessions/10494b78-710c-11eb-9439-0242ac130002
+    ErrorInternalServerError:
+      description: Server Error
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#server-error
+        title: Server Error
+        status: 500
+        detail: An internal server error was encountered.
+  responses:
+    NotFound:
+      description: Not Found.
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorNotFound'
+    BadRequest:
+      description: Bad Request
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorConstraintViolation'
+    InternalServerError:
+      description: Internal Server Error
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorInternalServerError'
+    Forbidden:
+      description: Forbidden.
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorForbidden'
+    Unauthorized:
+      description: Unauthorized.
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorUnauthorized'
+  parameters:
+    accountId:
+      name: accountId
+      description: The unique 6 character internal id that represents the customer account.
+      required: true
+      in: path
+      schema:
+        type: string
+        minLength: 6
+        maxLength: 6
+        pattern: ^[a-zA-Z]{6}$
+        example: ABCDEF
+    sessionId:
+      name: sessionId
+      description: The unique 36 character internal id that represents the session.
+      required: true
+      in: path
+      schema:
+        type: string
+        minLength: 36
+        maxLength: 36
+        pattern: ^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}$
+        example: 10494b78-710c-11eb-9439-0242ac130002
+  schemas:
+    SessionCreated:
+      allOf:
+      - $ref: '#/components/schemas/Session'
+      - type: object
+        additionalProperties: true
+        properties:
+          correlationId:
+            type: string
+            description: The correlation id is used to uniquely identify the client request. This is an optional field but when specified can be used to correlate the callback event with the original API request. If the client does not pass any value for the correlation id in the request, a unique value will be generated automatically and sent back in the response.
+          participantId:
+            type: string
+    SessionParameters:
+      type: object
+      description: Optional key/value session parameters for capturing properties of the user and the user's client device. Key is limited to 64 characters
+      maxProperties: 20
+      additionalProperties:
+        type: string
+        maxLength: 256
+    CustomerIdentifiers:
+      type: object
+      description: Unique identifiers for identifying the customer during an Engagement such as phoneNumbers or emailAddresses.
+      minProperties: 1
+      maxProperties: 10
+      additionalProperties:
+        type: array
+        description: 'Identifiers related to the Customer. The maximum length of an identifer key is 50 characters and must be a valid "name" of a pre-configured identifier in Customer Journey.
+
+          '
+        maxItems: 5
+        items:
+          type: string
+          minLength: 1
+          maxLength: 256
+    SessionStatus:
+      description: Status of the session
+      type: string
+      enum:
+      - ACTIVE
+      - TERMINATING
+      - TERMINATED
+    CreateSession:
+      type: object
+      required:
+      - accountId
+      - channelProviderId
+      - customerIdentifiers
+      properties:
+        channelProviderId:
+          type: string
+          description: The unique id that represents the channel provider
+          minLength: 3
+          maxLength: 256
+        customerIdentifiers:
+          $ref: '#/components/schemas/CustomerIdentifiers'
+        displayName:
+          type: string
+          maxLength: 70
+          description: The display name of the session
+        sessionParameters:
+          $ref: '#/components/schemas/SessionParameters'
+        providerCustomerId:
+          type: string
+          maxLength: 256
+          description: The provider side identifier for the user
+        correlationId:
+          type: string
+          maxLength: 256
+          description: The correlation id is used to uniquely identify the client request. This is an optional field but when specified can be used to correlate the callback event with the original API request. If the client does not pass any value for the correlation id in the request, a unique value will be generated automatically and sent back in the response.
+    Problem:
+      type: object
+      description: '<b>Problem Detail</b> as a way to carry machine-readable details of errors in a HTTP response to avoid the need to define new error response formats for HTTP APIs <a href="https://tools.ietf.org/html/rfc7807">RFC 7807</a>
+
+        '
+      properties:
+        type:
+          type: string
+          format: uri
+          description: 'An absolute URI that identifies the problem type. When dereferenced, it SHOULD provide human-readable documentation for the problem type (e.g., using HTML).
+
+            '
+          default: about:blank
+          example: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#constraint-violation
+        title:
+          type:
+          - string
+          - 'null'
+          description: 'A short, summary of the problem type. Written in english and readable for engineers (usually not suited for non technical stakeholders and not localized).
+
+            '
+          example: Service Unavailable
+        status:
+          type:
+          - integer
+          - 'null'
+          format: int32
+          description: 'The HTTP status code generated by the origin server for this occurrence of the problem.
+
+            '
+          minimum: 100
+          example: 503
+          exclusiveMaximum: 600
+        detail:
+          type:
+          - string
+          - 'null'
+          description: 'A human readable explanation specific to this occurrence of the problem.
+
+            '
+          example: Connection to database timed out
+        instance:
+          type:
+          - string
+          - 'null'
+          format: uri
+          description: 'An absolute URI that identifies the specific occurrence of the problem. It may or may not yield further information if dereferenced.
+
+            '
+        violations:
+          type:
+          - array
+          - 'null'
+          description: 'A list of violations that occurred as a result of invalid data provided as part of a request.
+
+            '
+          items:
+            type: object
+            properties:
+              field:
+                type: string
+                description: 'The name of the field in the request that caused the violation. This can be the name of a path parameter, query parameter, or a field within the request body.
+
+                  '
+                example: accountId
+              message:
+                type: string
+                description: 'A human readable explanation specific to this occurrence of the violation.
+
+                  '
+                example: must match "^[a-zA-Z]{6}$"
+              code:
+                type: integer
+                format: int32
+                description: 'The violation code generated by the server for this occurrence of the violation. Use this code when implementing any error handling logic instead of the message, as the message can change.
+
+                  '
+                example: 20006
+          example:
+          - field: emailAddress
+            message: must not be null
+            code: 20002
+          - field: accountId
+            message: must match "^[a-zA-Z]{6}$"
+            code: 20006
+    Session:
+      description: Client session of a customer
+      type: object
+      required:
+      - sessionId
+      - accountId
+      - channelProviderId
+      - sessionStatus
+      - createdAt
+      - lastUpdatedAt
+      - url
+      properties:
+        sessionId:
+          type: string
+          description: The unique 36 character id (uuid) that represents the users session.
+        accountId:
+          type: string
+          description: The unique 6 character internal id that represents the customer account
+        channelProviderId:
+          type: string
+          description: The unique id that represents the channel provider
+        displayName:
+          type: string
+          description: The display name of the session
+        customerIdentifiers:
+          $ref: '#/components/schemas/CustomerIdentifiers'
+        sessionParameters:
+          type: object
+          description: Additional parameter of the created session
+          additionalProperties:
+            type: string
+        sessionStatus:
+          $ref: '#/components/schemas/SessionStatus'
+        providerCustomerId:
+          type: string
+          description: The provider side identifier for the customer
+        createdAt:
+          type: string
+          format: date-time
+          description: The datetime when the session was created (in ISO 8601 format including timezone, 'yyyy-MM-dd'T'HH:mm:ss[.SSS]Z')
+        lastUpdatedAt:
+          type: string
+          format: date-time
+          description: The datetime when the session was last updated (in ISO 8601 format including timezone, 'yyyy-MM-dd'T'HH:mm:ss[.SSS]Z')
+        url:
+          type: string
+          example: /api/digital/channel/v1/sessions/e0f70943-dc9f-4be3-966f-fa41d4e1b7d4
+          description: The Get Session API URL for the session
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      description: This API uses Bearer Token Authorization Flow
+      bearerFormat: JWT
+    AppKey:
+      type: apiKey
+      in: header
+      name: appkey
+      description: This API needs an appKey as header
+x-explorer-enabled: false
+x-samples-languages:
+- curl
+- node
+- java
+- javascript
+- python
+- go

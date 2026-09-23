@@ -1,7 +1,9 @@
 ---
 title: 'Avaya news: Avaya Infinity to support secure AI interaction'
 url: https://www.convergedsystems.com/blog/avaya-news-july-2025-avaya-infinity-platform-to-add-ai-model-context-protocol-mcp/
-date: '2026-05-25'
+published: ''
+date_basis: harvested
+harvested: '2026-05-25'
 query: '"Avaya" press release artificial intelligence'
 position: 4
 source: serpapi-google

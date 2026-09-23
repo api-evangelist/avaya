@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<wsdl:definitions name="OpenNetworking"
+	xmlns="http://schemas.xmlsoap.org/wsdl/"
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"  
+	xmlns:interface="http://www.nortel.com/soa/oi/OpenNetworking"
+	xmlns:tns="http://www.nortel.com/soa/oi/OpenNetworking"
+	targetNamespace="http://www.nortel.com/soa/oi/OpenNetworking">
+  
+	<wsdl:import location="OpenNetworkingInterface.wsdl" namespace="http://www.nortel.com/soa/oi/OpenNetworking"/>
+
+	<!-- ========== Bindings =========== -->
+	<wsdl:binding name="OpenNetworkingSoapBinding" type="interface:OpenNetworking">
+		<soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
+		
+		<wsdl:operation name="GetVersion">
+			<soap:operation soapAction="http://www.nortel.com/soa/oi/OpenNetworking/GetVersion" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="GetVersionFault">
+				<soap:fault name="GetVersionFault" use="literal" />
+			</wsdl:fault>
+		</wsdl:operation>
+		
+		<wsdl:operation name="ReserveCDNLandingPad">
+			<soap:operation soapAction="http://www.nortel.com/soa/oi/OpenNetworking/ReserveCDNLandingPad"/>
+			<wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+    	   <wsdl:fault name="LandingPadReservationFault">
+				<soap:fault name="LandingPadReservationFault" use="literal"/>
+			</wsdl:fault>            
+        </wsdl:operation>
+        
+        <wsdl:operation name="CancelCDNLandingPad">
+			<soap:operation soapAction="http://www.nortel.com/soa/oi/OpenNetworking/CancelCDNLandingPad"/>
+			<wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+    	   <wsdl:fault name="LandingPadCancellationFault">
+				<soap:fault name="LandingPadCancellationFault" use="literal"/>
+			</wsdl:fault>            
+        </wsdl:operation>
+        
+        </wsdl:binding>
+	<!-- ========== Service =========== -->    
+	<wsdl:service name="SOAOI_OpenNetworking">
+        <wsdl:port name="OpenNetworking" binding="tns:OpenNetworkingSoapBinding">
+	        <soap:address location="http://localhost:9060/SOAOI/services/OpenNetworking"/>
+        </wsdl:port>
+    </wsdl:service>
+
+</wsdl:definitions>

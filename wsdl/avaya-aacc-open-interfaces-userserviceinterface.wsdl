@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<wsdl:definitions name="UserService"
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" 
+	xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+	xmlns:types="http://www.nortel.com/soa/oi/cct/types/UserService"
+	xmlns:sst="http://www.nortel.com/soa/oi/cct/types/SessionService"
+	xmlns:exceptions="http://www.nortel.com/soa/oi/cct/faults"
+  	xmlns:tns="http://www.nortel.com/soa/oi/cct/UserService"
+  	targetNamespace="http://www.nortel.com/soa/oi/cct/UserService">
+
+	<wsdl:import 
+		namespace="http://www.nortel.com/soa/oi/cct/faults" 
+		location="SessionServiceExceptions.wsdl" />
+		
+	<wsdl:types>
+		<xsd:schema 
+			elementFormDefault="qualified" 
+			xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+			targetNamespace="http://www.nortel.com/soa/oi/cct/UserService">
+			<xsd:import namespace="http://www.nortel.com/soa/oi/cct/types/UserService" schemaLocation="UserService.xsd"></xsd:import>
+			<xsd:import namespace="http://www.nortel.com/soa/oi/cct/types/SessionService" schemaLocation="SessionService.xsd"></xsd:import>
+		</xsd:schema>
+	</wsdl:types>
+	
+	<wsdl:message name="GetVersionRequest">
+		<wsdl:part name="parameters" element="sst:GetVersionRequest" />
+	</wsdl:message>
+	
+	<wsdl:message name="GetVersionResponse">
+		<wsdl:part name="response" element="sst:GetVersionResponse" />
+	</wsdl:message>
+	
+	<wsdl:message name="LogInToCCTServerRequest">
+		<wsdl:part name="parameters" element="sst:LogInToCCTServerRequest" />
+	</wsdl:message>
+
+	<wsdl:message name="LogInToCCTServerResponse">
+		<wsdl:part name="result" element="sst:LogInToCCTServerResponse" />
+	</wsdl:message>
+
+	<wsdl:message name="LogOffFromCCTServerRequest">
+		<wsdl:part name="parameters" element="sst:LogOffFromCCTServerRequest" />
+	</wsdl:message>
+	<wsdl:message name="LogOffFromCCTServerResponse" />
+
+	<wsdl:message name="GetTerminalsRequest">
+		<wsdl:part name="parameters" element="sst:GetTerminalsRequest" />
+	</wsdl:message>
+
+	<wsdl:message name="GetTerminalsResponse">
+		<wsdl:part name="result" element="sst:GetTerminalsResponse" />
+	</wsdl:message>
+	
+	<wsdl:message name="GetAddressesRequest">
+		<wsdl:part name="parameters" element="sst:GetAddressesRequest" />
+	</wsdl:message>
+
+	<wsdl:message name="GetAddressesResponse">
+		<wsdl:part name="result" element="sst:GetAddressesResponse" />
+	</wsdl:message>
+
+	<wsdl:message name="GetTerminalRequest">
+		<wsdl:part name="parameters" element="sst:GetTerminalRequest" />
+	</wsdl:message>
+
+	<wsdl:message name="GetTerminalResponse">
+		<wsdl:part name="result" element="sst:TerminalResponse" />
+	</wsdl:message>
+
+	<wsdl:message name="GetAddressRequest">
+		<wsdl:part name="parameters" element="sst:GetAddressRequest" />
+	</wsdl:message>
+
+	<wsdl:message name="GetAddressResponse">
+		<wsdl:part name="result" element="sst:AddressResponse" />
+	</wsdl:message>
+	
+	<wsdl:message name="GetAgentsRequest">
+		<wsdl:part name="parameters" element="sst:GetAgentsRequest" />
+	</wsdl:message>
+	
+	<wsdl:message name="GetAgentsResponse">
+		<wsdl:part name="response" element="sst:GetAgentsResponse" />
+	</wsdl:message>	
+	
+    <wsdl:message name="SubscribeRequest">
+        <wsdl:part name="parameters" element="types:Subscribe"/>
+    </wsdl:message>
+    
+    <wsdl:message name="SubscribeResponse">
+        <wsdl:part name="parameters" element="types:SubscribeResponse"/>
+    </wsdl:message>
+    
+    <wsdl:message name="LogOffFromCCTServerException">
+		<wsdl:part name="LogOffFromCCTServerException" element="exceptions:LogOffFromCCTServerException" />
+	</wsdl:message>
+
+	<wsdl:message name="LogInToCCTServerException">
+		<wsdl:part name="LogInToCCTServerException" element="exceptions:LogInToCCTServerException" />
+	</wsdl:message>
+	
+	<wsdl:message name="SessionNotCreatedException">
+		<wsdl:part name="SessionNotCreatedException" element="exceptions:SessionNotCreatedException" />
+	</wsdl:message>	
+	
+	<wsdl:message name="GetTerminalsException">
+		<wsdl:part name="GetTerminalsException" element="exceptions:GetTerminalsException" />
+	</wsdl:message>
+	
+	<wsdl:message name="GetAddressesException">
+		<wsdl:part name="GetAddressesException" element="exceptions:GetAddressesException" />
+	</wsdl:message>
+	
+	<wsdl:message name="GetTerminalException">
+		<wsdl:part name="GetTerminalException" element="exceptions:GetTerminalException" />
+	</wsdl:message>
+	
+	<wsdl:message name="GetAddressException">
+		<wsdl:part name="GetAddressException" element="exceptions:GetAddressException" />
+	</wsdl:message>
+	
+	<wsdl:message name="GetAgentsException">
+		<wsdl:part name="GetAgentsException" element="exceptions:GetAgentsException" />
+	</wsdl:message>		
+	
+    <wsdl:message name="SubscribeFailedFault">
+		<wsdl:part name="SubscribeFailedFault" element="types:SubscribeFailedFault" />
+	</wsdl:message>    
+	
+    <wsdl:message name="UnsubscribeRequest">
+        <wsdl:part name="parameters" element="types:Unsubscribe"/>
+    </wsdl:message>
+    
+    <wsdl:message name="UnsubscribeResponse">
+        <wsdl:part name="parameters" element="types:UnsubscribeResponse"/>
+    </wsdl:message>    
+    
+    <wsdl:message name="UnsubscribeFailedFault">
+		<wsdl:part name="UnsubscribeFailedFault" element="types:UnsubscribeFailedFault" />
+	</wsdl:message> 
+
+    <wsdl:portType name="UserService">
+    	
+    	<wsdl:operation name="GetVersion">
+			<wsdl:input name="GetVersionRequest" message="tns:GetVersionRequest" />
+			<wsdl:output name="GetVersionResponse" message="tns:GetVersionResponse" />
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="GetVersionException" message="exceptions:GetVersionException" />
+		</wsdl:operation>
+    	
+    	<wsdl:operation  name="LogInToCCTServer">
+			<wsdl:input  name="LogInToCCTServerRequest" message="tns:LogInToCCTServerRequest" />
+			<wsdl:output name="LogInToCCTServerResponse" message="tns:LogInToCCTServerResponse" />
+			<wsdl:fault  name="LogInToCCTServerException" message="exceptions:LogInToCCTServerException" />
+		</wsdl:operation>
+
+		<wsdl:operation  name="LogOffFromCCTServer">
+			<wsdl:input  name="LogOffFromCCTServerRequest" message="tns:LogOffFromCCTServerRequest" />
+			<wsdl:output name="LogOffFromCCTServerResponse" message="tns:LogOffFromCCTServerResponse" />
+			<wsdl:fault  name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault  name="LogOffFromCCTServerException" message="exceptions:LogOffFromCCTServerException" />
+		</wsdl:operation>
+		
+    	<wsdl:operation  name="GetTerminals">
+			<wsdl:input  name="GetTerminalsRequest" message="tns:GetTerminalsRequest" />
+			<wsdl:output name="GetTerminalsResponse" message="tns:GetTerminalsResponse" />
+			<wsdl:fault  name="GetTerminalsException" message="exceptions:GetTerminalsException" />
+			<wsdl:fault  name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+		</wsdl:operation>
+		
+		<wsdl:operation  name="GetAddresses">
+			<wsdl:input  name="GetAddressesRequest" message="tns:GetAddressesRequest" />
+			<wsdl:output name="GetAddressesResponse" message="tns:GetAddressesResponse" />
+			<wsdl:fault  name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault  name="GetAddressesException" message="exceptions:GetAddressesException" />
+		</wsdl:operation>
+		
+    	<wsdl:operation  name="GetTerminal">
+			<wsdl:input  name="GetTerminalRequest" message="tns:GetTerminalRequest" />
+			<wsdl:output name="GetTerminalResponse" message="tns:GetTerminalResponse" />
+			<wsdl:fault  name="GetTerminalException" message="exceptions:GetTerminalException" />
+			<wsdl:fault  name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+		</wsdl:operation>
+		
+		<wsdl:operation  name="GetAddress">
+			<wsdl:input  name="GetAddressRequest" message="tns:GetAddressRequest" />
+			<wsdl:output name="GetAddressResponse" message="tns:GetAddressResponse" />
+			<wsdl:fault  name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault  name="GetAddressException" message="exceptions:GetAddressException" />
+		</wsdl:operation>		
+		
+		<wsdl:operation  name="GetAgents">
+			<wsdl:input  name="GetAgentsRequest" message="tns:GetAgentsRequest" />
+			<wsdl:output name="GetAgentsResponse" message="tns:GetAgentsResponse" />
+			<wsdl:fault  name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault  name="GetAgentsException" message="exceptions:GetAgentsException" />
+		</wsdl:operation>
+
+    	<wsdl:operation  name="Subscribe">
+			<wsdl:input  name="SubscribeRequest" message="tns:SubscribeRequest" />
+			<wsdl:output name="SubscribeResponse" message="tns:SubscribeResponse" />
+			<wsdl:fault  name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault  name="SubscribeFailedFault" message="tns:SubscribeFailedFault"/>
+    	</wsdl:operation>
+        
+        <wsdl:operation  name="Unsubscribe">
+            <wsdl:input  name="UnsubscribeRequest" message="tns:UnsubscribeRequest"/>
+			<wsdl:output name="UnsubscribeResponse" message="tns:UnsubscribeResponse" />
+			<wsdl:fault  name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault  name="UnsubscribeFailedFault" message="tns:UnsubscribeFailedFault"/>
+        </wsdl:operation>     
+
+	</wsdl:portType>
+</wsdl:definitions>

@@ -1,0 +1,535 @@
+openapi: 3.2.0
+info:
+  title: Admin Timetable API
+  description: 'Timetable is a configuration of working hours for a specific Contact Center account. Each account can have multiple
+
+    timetables. It is possible to configure a timetable with intervals - days of the week or specific dates with a
+
+    range of working hours, as well as holidays, which are non-working days.'
+  contact:
+    name: Avaya API Team
+    url: https://developers.avayacloud.com/onecloud-ccaas
+    email: apiteam@avaya.com
+  license:
+    name: Avaya Software Development Kit (SDK) Software License Terms
+    url: http://support.avaya.com/css/P8/documents/101038288
+  version: 1.0.1
+servers:
+- url: '{protocol}://{server}{basePath}'
+  description: Open API
+  variables:
+    protocol:
+      enum:
+      - https
+      default: https
+    server:
+      default: HOST-REGION.api.avayacloud.com
+    basePath:
+      default: /api/business-hours/v1
+- url: '{protocol}://{server}:{port}'
+  description: Internal API
+  variables:
+    protocol:
+      enum:
+      - http
+      - https
+      default: http
+    server:
+      default: timetable-service
+    port:
+      enum:
+      - '80'
+      - '443'
+      default: '80'
+security:
+- {}
+- BearerAuth: []
+  AppKey: []
+tags:
+- name: Timetable
+  description: Timetables are a time zone specific schedule of holidays (non-working days) and intervals (working days).
+paths:
+  /accounts/{accountId}/timetables:
+    parameters:
+    - $ref: '#/components/parameters/accountId'
+    get:
+      tags:
+      - Timetable
+      summary: List Timetables
+      operationId: listTimetables
+      description: Gets the list of Timetables for an Account.
+      parameters:
+      - $ref: '#/components/parameters/pageSize'
+      - $ref: '#/components/parameters/pageNumber'
+      responses:
+        '200':
+          $ref: '#/components/responses/TimetablesPageResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServer'
+    post:
+      tags:
+      - Timetable
+      summary: Create Timetable
+      operationId: createTimetable
+      description: Creates a new Timetable.
+      requestBody:
+        $ref: '#/components/requestBodies/TimetableRequestBody'
+      responses:
+        '201':
+          $ref: '#/components/responses/TimetableResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '500':
+          $ref: '#/components/responses/InternalServer'
+  /accounts/{accountId}/timetables/{timetableId}:
+    parameters:
+    - $ref: '#/components/parameters/accountId'
+    - $ref: '#/components/parameters/timetableId'
+    get:
+      tags:
+      - Timetable
+      summary: Get Timetable
+      operationId: getTimetable
+      description: Gets a Timetable by ID.
+      responses:
+        '200':
+          $ref: '#/components/responses/TimetableResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServer'
+    put:
+      tags:
+      - Timetable
+      summary: Update Timetable
+      operationId: updateTimetable
+      description: Updates a Timetable.
+      requestBody:
+        $ref: '#/components/requestBodies/TimetableRequestBody'
+      responses:
+        '200':
+          $ref: '#/components/responses/TimetableResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '500':
+          $ref: '#/components/responses/InternalServer'
+    delete:
+      tags:
+      - Timetable
+      summary: Delete Timetable
+      operationId: deleteTimetable
+      description: Deletes a Timetable.
+      responses:
+        '204':
+          description: No Content
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServer'
+components:
+  examples:
+    TimetablePageResponse:
+      value:
+        pagination:
+          pageNumber: 2
+          pageSize: 10
+          total: 11
+        timetables:
+        - timetableId: 8c872648-2b50-11ec-8d3d-0242ac130003
+          name: Timetable 2021
+          description: A timetable for 2021 that contains a five-day working week without interruptions
+          timeZone: Europe/Dublin
+          autoDaylightSavingTime: true
+        links:
+          prev: /api/business-hours/v1/accounts/JDBUTC/timetables?pageNumber=2&pageSize=10
+          next: ''
+    ErrorForbidden:
+      description: Forbidden
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#forbidden
+        title: Forbidden
+        status: 403
+        detail: According to the access control policy the current user and/or accountId does not have permission to access this resource.
+    TimetableCreate:
+      value:
+        name: Timetable 2021
+        description: A timetable for 2021 that contains a five-day working week without interruptions
+        timeZone: Europe/Dublin
+        autoDaylightSavingTime: true
+    ErrorConstraintViolation:
+      description: Constraint Violation
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#constraint-violation
+        title: Constraint Violation
+        status: 400
+        detail: A problem that indicates a syntactically correct, yet semantically illegal request. The Server can not process this request until the client resolves the semantic errors described in the violations section.
+        violations:
+        - field: accountId
+          message: must match "^[a-zA-Z]{6}$"
+          code: 20006
+    ErrorNotFound:
+      description: Not Found
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#resource-not-found
+        title: Resource Not Found
+        status: 404
+        detail: Resource not found.
+    ErrorUnauthorized:
+      description: Unauthorized
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#unauthorized
+        title: Unauthorized
+        status: 401
+        detail: This operation requires authentication. See https://developers.avayacloud.com/onecloud-ccaas/docs/how-to-authenticate-with-ccaas-apis
+    TimetableResponse:
+      value:
+        timetableId: 8c872648-2b50-11ec-8d3d-0242ac130003
+        name: Timetable 2021
+        description: A timetable for 2021 that contains a five-day working week without interruptions
+        timeZone: Europe/Dublin
+        autoDaylightSavingTime: true
+    ErrorConflict:
+      description: Conflict
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#conflict
+        title: Conflict
+        status: 409
+        detail: Conflict data.
+    ErrorInternalServerError:
+      description: Server Error
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#server-error
+        title: Server Error
+        status: 500
+        detail: An internal server error was encountered.
+  responses:
+    NotFound:
+      description: Not Found
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorNotFound'
+    BadRequest:
+      description: BadRequest
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorConstraintViolation'
+    InternalServer:
+      description: Internal Server Error
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorInternalServerError'
+    Conflict:
+      description: Conflict
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorConflict'
+    Forbidden:
+      description: Forbidden
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorForbidden'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorUnauthorized'
+    TimetablesPageResponse:
+      description: Timetable Page Response
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/TimetablesPage'
+          examples:
+            Timetable-Page-Response:
+              $ref: '#/components/examples/TimetablePageResponse'
+    TimetableResponse:
+      description: Timetable Response
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Timetable'
+          examples:
+            Timetable-Response:
+              $ref: '#/components/examples/TimetableResponse'
+  requestBodies:
+    TimetableRequestBody:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Timetable'
+          examples:
+            CreateOrUpdate-Timetable:
+              $ref: '#/components/examples/TimetableCreate'
+      required: true
+      description: Create/Update Timetable request
+  parameters:
+    accountId:
+      name: accountId
+      description: The unique 6 character internal id that represents the customer account.
+      required: true
+      in: path
+      schema:
+        type: string
+        minLength: 6
+        maxLength: 6
+        pattern: ^[a-zA-Z]{6}$
+        example: ABCDEF
+    pageSize:
+      name: pageSize
+      description: The maximum number of results per page.
+      required: false
+      in: query
+      schema:
+        type: integer
+        format: int32
+        default: 5
+        minimum: 5
+        maximum: 50
+        example: 5
+    pageNumber:
+      name: pageNumber
+      description: The target page of results.
+      required: false
+      in: query
+      schema:
+        type: integer
+        format: int32
+        default: 1
+        minimum: 1
+        example: 1
+    timetableId:
+      name: timetableId
+      in: path
+      required: true
+      description: The unique 36 character internal id that represents the timetable.
+      schema:
+        type: string
+        minLength: 36
+        maxLength: 36
+        pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
+        example: 8c872648-2b50-11ec-8d3d-0242ac130003
+  schemas:
+    TimetablesPage:
+      description: A paginated list of timetables
+      type: object
+      properties:
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+        timetables:
+          type: array
+          description: List of timetables
+          items:
+            $ref: '#/components/schemas/Timetable'
+        links:
+          $ref: '#/components/schemas/Links'
+    Links:
+      type: object
+      properties:
+        prev:
+          type: string
+          description: URL of the previous page. Blank if currently on the first page.
+        next:
+          type: string
+          description: URL of the next page. Blank if currently on the last page.
+    Timetable:
+      type: object
+      required:
+      - name
+      - description
+      - timeZone
+      properties:
+        timetableId:
+          type: string
+          readOnly: true
+          description: The unique 36 character internal id that represents the timetable.
+          minLength: 36
+          maxLength: 36
+          pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
+        name:
+          type: string
+          description: The name of the timetable. Timetable names are not unique.
+          maxLength: 256
+        description:
+          type: string
+          description: The description of the timetable
+          maxLength: 1024
+        timeZone:
+          type: string
+          description: The time zone of the timetable. Formatted as an IANA Time Zone Database name, e.g. 'Europe/Zurich'
+          maxLength: 50
+        autoDaylightSavingTime:
+          type: boolean
+          default: false
+          description: When true auto daylight saving time will be enabled. Default value is false.
+    Pagination:
+      type: object
+      properties:
+        pageNumber:
+          type: integer
+          description: The current page number.
+        pageSize:
+          type: integer
+          description: The max number of records that can be retrieved on this page.
+        total:
+          type: integer
+          description: The total number of records.
+    Problem:
+      type: object
+      description: '<b>Problem Detail</b> as a way to carry machine-readable details of errors in a HTTP response to avoid the need to define new error response formats for HTTP APIs <a href="https://tools.ietf.org/html/rfc7807">RFC 7807</a>
+
+        '
+      properties:
+        type:
+          type: string
+          format: uri
+          description: 'An absolute URI that identifies the problem type. When dereferenced, it SHOULD provide human-readable documentation for the problem type (e.g., using HTML).
+
+            '
+          default: about:blank
+          example: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#constraint-violation
+        title:
+          type:
+          - string
+          - 'null'
+          description: 'A short, summary of the problem type. Written in english and readable for engineers (usually not suited for non technical stakeholders and not localized).
+
+            '
+          example: Service Unavailable
+        status:
+          type:
+          - integer
+          - 'null'
+          format: int32
+          description: 'The HTTP status code generated by the origin server for this occurrence of the problem.
+
+            '
+          minimum: 100
+          example: 503
+          exclusiveMaximum: 600
+        detail:
+          type:
+          - string
+          - 'null'
+          description: 'A human readable explanation specific to this occurrence of the problem.
+
+            '
+          example: Connection to database timed out
+        instance:
+          type:
+          - string
+          - 'null'
+          format: uri
+          description: 'An absolute URI that identifies the specific occurrence of the problem. It may or may not yield further information if dereferenced.
+
+            '
+        violations:
+          type:
+          - array
+          - 'null'
+          description: 'A list of violations that occurred as a result of invalid data provided as part of a request.
+
+            '
+          items:
+            type: object
+            properties:
+              field:
+                type: string
+                description: 'The name of the field in the request that caused the violation. This can be the name of a path parameter, query parameter, or a field within the request body.
+
+                  '
+                example: accountId
+              message:
+                type: string
+                description: 'A human readable explanation specific to this occurrence of the violation.
+
+                  '
+                example: must match "^[a-zA-Z]{6}$"
+              code:
+                type: integer
+                format: int32
+                description: 'The violation code generated by the server for this occurrence of the violation. Use this code when implementing any error handling logic instead of the message, as the message can change.
+
+                  '
+                example: 20006
+          example:
+          - field: emailAddress
+            message: must not be null
+            code: 20002
+          - field: accountId
+            message: must match "^[a-zA-Z]{6}$"
+            code: 20006
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      description: This API uses Bearer Token Authorization Flow
+      bearerFormat: JWT
+    AppKey:
+      type: apiKey
+      in: header
+      name: appkey
+      description: This API needs an appKey as header
+x-explorer-enabled: false
+x-samples-languages:
+- curl
+- node
+- java
+- javascript
+- python
+- go

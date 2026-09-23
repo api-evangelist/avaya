@@ -1,0 +1,190 @@
+openapi: 3.2.0
+info:
+  title: Outbound Calls API
+  description: 'Outbound API allows you to manage outbound call campaigns, records, agents, skills, and Do Not Call lists.
+
+
+    ## Authentication
+
+    All requests require an Bearer Token.
+
+
+    ## Pagination
+
+    Many list endpoints return paginated results with a limit of 200 records per page. When more records are available, the response includes `"more_records": "1"`. To retrieve subsequent pages, include a `page` parameter in your request.'
+  version: 1.0.0
+servers:
+- url: '{protocol}://{server}{basePath}'
+  description: Open API
+  variables:
+    protocol:
+      enum:
+      - https
+      default: https
+    server:
+      default: HOST-REGION.api.avayacloud.com
+    basePath:
+      default: /api/outbound
+- url: '{protocol}://{server}:{port}'
+  description: Internal API
+  variables:
+    protocol:
+      enum:
+      - http
+      - https
+      default: https
+    server:
+      default: outbound-service
+    port:
+      enum:
+      - '80'
+      - '443'
+      default: '443'
+security:
+- {}
+- BearerAuth: []
+tags:
+- name: Calls
+  description: Trigger and complete calls
+paths:
+  /CompleteCall:
+    put:
+      tags:
+      - Calls
+      summary: Complete a call
+      description: 'This function completes a specified call. Outcomes can be derived from the `GetOutcome` function. Optionally set an agent callback by supplying a User ID and callback date/time.
+
+
+        | Response Code | Description |
+
+        | --- | --- |
+
+        | 200 | Success |
+
+        | 400 | Bad Request |
+
+        | 401 | Unauthorized |
+
+        | 405 | Method Not Allowed |
+
+        | 429 | Too Many Requests |'
+      operationId: completeCall
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+              - callid
+              - outcomeid
+              properties:
+                callid:
+                  type: string
+                  description: Call ID of the call to complete.
+                outcomeid:
+                  type: string
+                  description: Outcome ID to set on the call.
+                callbackdatetime:
+                  type: string
+                  description: 'Optional: Callback date and time. Format: ''yyyy-mm-dd hh:mm:ss'''
+                userid:
+                  type: string
+                  description: 'Optional: User ID to assign the callback to.'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: string
+                    example: Call Has Been Completed
+                  info:
+                    type: object
+                    properties:
+                      RecordId:
+                        type: string
+                      InitiativeId:
+                        type: string
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '405':
+          description: Method Not Allowed
+        '429':
+          description: Too Many Requests
+  /MakeCall:
+    post:
+      tags:
+      - Calls
+      summary: Trigger a phone call
+      description: 'This function allows you to trigger a phone call using the Call ID and Phone Number ID.
+
+
+        | Response Code | Description |
+
+        | --- | --- |
+
+        | 200 | Success |
+
+        | 400 | Bad Request |
+
+        | 401 | Unauthorized |
+
+        | 405 | Method Not Allowed |
+
+        | 429 | Too Many Requests |'
+      operationId: makeCall
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+              - callid
+              - phonenumberid
+              properties:
+                callid:
+                  type: string
+                  description: The Call ID of the record to call.
+                phonenumberid:
+                  type: string
+                  description: The ID of the phone number to dial for that record.
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: string
+                    example: Call Has Been Placed
+                  info:
+                    type: object
+                    properties:
+                      targetno:
+                        type: string
+                      outboundcallid:
+                        type: string
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '405':
+          description: Method Not Allowed
+        '429':
+          description: Too Many Requests
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      description: This API uses Bearer Token Authorization Flow
+      bearerFormat: JWT

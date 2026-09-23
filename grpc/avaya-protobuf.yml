@@ -1,0 +1,42 @@
+generated: '2026-09-17'
+method: searched
+source: >-
+  https://support.avaya.com/css/public/documents/101095743 — "IP Office Release 12.3 MTCTI-3 Web
+  Services API SDK Version 1.2", linked from https://www.avaya.com/en/developer-support/sdks/. Served
+  as application/zip (1,577,305 bytes) with no login. The archive carries bundle/ipo_mtcti3.proto,
+  bundle/MTCTI3_API_version1p0.pdf and bundle/SDK.
+ownership:
+  verdict: avaya
+  justification: >-
+    Avaya IP Office is an Avaya product, the .proto ships inside Avaya's own SDK download on
+    avaya.com, and the file dates from 2025-10-06 — the most recently authored machine-readable
+    contract found anywhere on Avaya's on-premises surface.
+files:
+  - file: avaya-ip-office-mtcti3.proto
+    product: Avaya IP Office Platform Release 12.3
+    interface: MTCTI-3 (Multi-Tenant CTI, third generation)
+    syntax: proto3
+    messages: 68
+    enums: 12
+    services: 0
+    rpcs: 0
+    bytes: 14749
+    source_path: bundle/ipo_mtcti3.proto
+    note: >-
+      HONEST READING OF WHAT THIS IS: a proto3 MESSAGE schema, not a gRPC service definition. It
+      declares 68 messages and 12 enums (PartyInfo, DialInfo, TrunkInfo and the call/agent state
+      families) and contains no `service` or `rpc` block at all. MTCTI-3 frames these Protobuf messages
+      over its own transport rather than over gRPC, so an agent cannot generate a client stub from this
+      file the way it could from a gRPC .proto. It is still a real, first-party, machine-readable
+      contract for the IP Office CTI wire format, and it is the only Protobuf Avaya publishes.
+not_found:
+  - probe: github.com/avaya organization
+    result: >-
+      7 repos (6 CPaaS clients + oss-example-automation). No .proto, no buf.build module, no gRPC
+      service anywhere in the org.
+  - probe: buf.build
+    result: no Avaya module published.
+  - probe: developers.avayacloud.com (Infinity + Experience Platform hubs)
+    result: >-
+      No gRPC or Protobuf reference section. The cloud platforms are REST + webhooks only; see
+      openapi/ and asyncapi/.

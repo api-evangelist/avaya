@@ -1,0 +1,432 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<wsdl:definitions name="contact_service_service"
+	targetNamespace="http://www.nortel.com/soa/oi/cct/ContactService"
+   	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+   	xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+   	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns:tns="http://www.nortel.com/soa/oi/cct/ContactService"
+	xmlns:interface="http://www.nortel.com/soa/oi/cct/ContactService">
+
+	<wsdl:import namespace="http://www.nortel.com/soa/oi/cct/ContactService"
+		location="ContactServiceInterface.wsdl" />
+
+	<wsdl:binding name="ContactServiceBinding"
+		type="interface:ContactService">
+
+		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http" />
+		<wsdl:operation name="GetCalledAddress">
+			<soap:operation soapAction="http://www.nortel.com/soa/oi/cct/ContactService/GetCalledAddress" />			
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>			
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>			
+			<wsdl:fault name="SessionNotCreatedException" >
+					<soap:fault use="literal" name="SessionNotCreatedException"/>					
+			</wsdl:fault>
+			<wsdl:fault name="GetCalledAddressException">
+				<soap:fault use="literal" name="GetCalledAddressException" />
+			</wsdl:fault>
+		</wsdl:operation>
+		
+		<wsdl:operation name="GetCallingAddress">
+			<soap:operation soapAction="http://www.nortel.com/soa/oi/cct/ContactService/GetCallingAddress" />			
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>			
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>			
+			<wsdl:fault name="SessionNotCreatedException" >
+					<soap:fault use="literal" name="SessionNotCreatedException"/>					
+			</wsdl:fault>
+			<wsdl:fault name="GetCallingAddressException">
+				<soap:fault use="literal" name="GetCallingAddressException" />
+			</wsdl:fault>
+		</wsdl:operation>
+		
+		<wsdl:operation name="GetCallingTerminal">
+			<soap:operation soapAction="http://www.nortel.com/soa/oi/cct/ContactService/GetCallingTerminal" />			
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>			
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>			
+			<wsdl:fault name="SessionNotCreatedException" >
+					<soap:fault use="literal" name="SessionNotCreatedException"/>					
+			</wsdl:fault>
+			<wsdl:fault name="GetCallingTerminalException">
+				<soap:fault use="literal" name="GetCallingTerminalException" />
+			</wsdl:fault>
+		</wsdl:operation>
+		
+		<wsdl:operation name="GetCapabilities">
+			<soap:operation soapAction="http://www.nortel.com/soa/oi/cct/ContactService/GetCapabilities" />			
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>			
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>			
+			<wsdl:fault name="SessionNotCreatedException" >
+					<soap:fault use="literal" name="SessionNotCreatedException"	/>				
+			</wsdl:fault>
+			<wsdl:fault name="GetCapabilitiesException">
+				<soap:fault use="literal" name="GetCapabilitiesException" />
+			</wsdl:fault>
+		</wsdl:operation>
+		
+		
+		<wsdl:operation name="GetConnections">
+			<soap:operation soapAction="http://www.nortel.com/soa/oi/cct/ContactService/GetConnections" />			
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>			
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>			
+			<wsdl:fault name="SessionNotCreatedException" >
+					<soap:fault use="literal" name="SessionNotCreatedException"/>					
+			</wsdl:fault>
+			<wsdl:fault name="GetConnectionsException">
+				<soap:fault use="literal" name="GetConnectionsException" />
+			</wsdl:fault>
+		</wsdl:operation>
+		
+		<wsdl:operation name="GetConnection">
+			<soap:operation soapAction="http://www.nortel.com/soa/oi/cct/ContactService/GetConnection" />			
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>			
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>			
+			<wsdl:fault name="SessionNotCreatedException" >
+					<soap:fault use="literal" name="SessionNotCreatedException"/>					
+			</wsdl:fault>
+			<wsdl:fault name="GetConnectionException">
+				<soap:fault use="literal" name="GetConnectionException" />
+			</wsdl:fault>
+		</wsdl:operation>
+		
+		
+		<wsdl:operation name="GetAttachedData">
+			<soap:operation soapAction="http://www.nortel.com/soa/oi/cct/ContactService/GetAttachedData" />			
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>			
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>			
+			<wsdl:fault name="SessionNotCreatedException" >
+					<soap:fault use="literal" name="SessionNotCreatedException"/>					
+			</wsdl:fault>
+			<wsdl:fault name="GetAttachedDataException">
+				<soap:fault use="literal" name="GetAttachedDataException" />
+			</wsdl:fault>
+		</wsdl:operation>
+		
+		<wsdl:operation name="SetAttachedData">
+			<soap:operation soapAction="http://www.nortel.com/soa/oi/cct/ContactService/SetAttachedData" />			
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>			
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>			
+			<wsdl:fault name="SessionNotCreatedException" >
+					<soap:fault use="literal" name="SessionNotCreatedException"/>					
+			</wsdl:fault>
+			<wsdl:fault name="SetAttachedDataException">
+				<soap:fault use="literal" name="SetAttachedDataException" />
+			</wsdl:fault>
+		</wsdl:operation>
+		
+		<wsdl:operation name="GetAttachedXMLData">
+			<soap:operation soapAction="http://www.nortel.com/soa/oi/cct/ContactService/GetAttachedXMLData" />			
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>			
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>			
+			<wsdl:fault name="SessionNotCreatedException" >
+					<soap:fault use="literal" name="SessionNotCreatedException"/>					
+			</wsdl:fault>
+			<wsdl:fault name="GetAttachedXMLDataException">
+				<soap:fault use="literal" name="GetAttachedXMLDataException" />
+			</wsdl:fault>
+		</wsdl:operation>
+		
+		<wsdl:operation name="GetLastRedirectedAddress">
+			<soap:operation soapAction="http://www.nortel.com/soa/oi/cct/ContactService/GetLastRedirectedAddress" />			
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>			
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>			
+			<wsdl:fault name="SessionNotCreatedException" >
+					<soap:fault use="literal" name="SessionNotCreatedException"/>					
+			</wsdl:fault>
+			<wsdl:fault name="GetLastRedirectedAddressException">
+				<soap:fault use="literal" name="GetLastRedirectedAddressException" />
+			</wsdl:fault>
+		</wsdl:operation>
+		
+		
+		<wsdl:operation name="GetOriginalDestinationAddress">
+			<soap:operation soapAction="http://www.nortel.com/soa/oi/cct/ContactService/GetOriginalDestinationAddress" />			
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>			
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>			
+			<wsdl:fault name="SessionNotCreatedException" >
+					<soap:fault use="literal" name="SessionNotCreatedException"/>					
+			</wsdl:fault>
+			<wsdl:fault name="GetOriginalDestinationAddressException">
+				<soap:fault use="literal" name="GetOriginalDestinationAddressException" />
+			</wsdl:fault>
+		</wsdl:operation>
+		
+		<wsdl:operation name="GiveTreatment">
+			<soap:operation soapAction="http://www.nortel.com/soa/oi/cct/ContactService/GiveTreatmentRequest" />			
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>			
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>			
+			<wsdl:fault name="SessionNotCreatedException" >
+					<soap:fault use="literal" name="SessionNotCreatedException"/>					
+			</wsdl:fault>
+			<wsdl:fault name="GiveTreatmentException">
+				<soap:fault use="literal" name="GiveTreatmentException" />
+			</wsdl:fault>
+		</wsdl:operation>
+			
+		
+				
+		<wsdl:operation name="GetContactTypes">
+			<soap:operation soapAction="http://www.nortel.com/soa/oi/cct/ContactService/GetContactTypes" />			
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>			
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>			
+			<wsdl:fault name="SessionNotCreatedException" >
+					<soap:fault use="literal" name="SessionNotCreatedException"/>					
+			</wsdl:fault>
+			<wsdl:fault name="GetContactTypesException">
+				<soap:fault use="literal" name="GetContactTypesException" />
+			</wsdl:fault>
+		</wsdl:operation>
+		
+		<wsdl:operation name="GetInstantMessages">
+			<soap:operation soapAction="http://www.nortel.com/soa/oi/cct/ContactService/GetInstantMessages" />			
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>			
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>			
+			<wsdl:fault name="SessionNotCreatedException" >
+					<soap:fault use="literal" name="SessionNotCreatedException"/>					
+			</wsdl:fault>
+			<wsdl:fault name="GetInstantMessagesException">
+				<soap:fault use="literal" name="GetInstantMessagesException" />
+			</wsdl:fault>
+		</wsdl:operation>
+		
+		<wsdl:operation name="SetInstantMessages">
+			<soap:operation soapAction="http://www.nortel.com/soa/oi/cct/ContactService/SetInstantMessages" />			
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>			
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>			
+			<wsdl:fault name="SessionNotCreatedException" >
+					<soap:fault use="literal" name="SessionNotCreatedException"/>					
+			</wsdl:fault>
+			<wsdl:fault name="SetInstantMessagesException">
+				<soap:fault use="literal" name="SetInstantMessagesException" />
+			</wsdl:fault>
+		</wsdl:operation>
+		
+		<wsdl:operation name="GetUUI">
+			<soap:operation soapAction="http://www.nortel.com/soa/oi/cct/ContactService/GetUUI" />			
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>			
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>			
+			<wsdl:fault name="SessionNotCreatedException" >
+					<soap:fault use="literal" name="SessionNotCreatedException"/>					
+			</wsdl:fault>
+			<wsdl:fault name="GetUUIException">
+				<soap:fault use="literal" name="GetUUIException" />
+			</wsdl:fault>
+		</wsdl:operation>
+		
+		<wsdl:operation name="GetVersion">
+			<soap:operation soapAction="http://www.nortel.com/soa/oi/cct/ContactService/GetVersion" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="SessionNotCreatedException">
+				<soap:fault use="literal" name="SessionNotCreatedException" />
+			</wsdl:fault>
+			<wsdl:fault name="GetVersionException">
+				<soap:fault use="literal" name="GetVersionException" />
+			</wsdl:fault>
+		</wsdl:operation>
+		
+		<wsdl:operation name="SetUUI">
+			<soap:operation soapAction="http://www.nortel.com/soa/oi/cct/ContactService/SetUUI" />			
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>			
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>			
+			<wsdl:fault name="SessionNotCreatedException" >
+					<soap:fault use="literal" name="SessionNotCreatedException"/>					
+			</wsdl:fault>
+			<wsdl:fault name="SetUUIException">
+				<soap:fault use="literal" name="SetUUIException" />
+			</wsdl:fault>
+		</wsdl:operation>
+		
+		<wsdl:operation name="GetIntrinsics">
+			<soap:operation soapAction="http://www.nortel.com/soa/oi/cct/ContactService/GetIntrinsics" />			
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>			
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>			
+			<wsdl:fault name="SessionNotCreatedException" >
+					<soap:fault use="literal" name="SessionNotCreatedException"/>					
+			</wsdl:fault>
+			<wsdl:fault name="GetIntrinsicsException">
+				<soap:fault use="literal" name="GetIntrinsicsException" />
+			</wsdl:fault>
+		</wsdl:operation>
+		
+		<wsdl:operation name="SetIntrinsics">
+			<soap:operation soapAction="http://www.nortel.com/soa/oi/cct/ContactService/SetIntrinsics" />			
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>			
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>			
+			<wsdl:fault name="SessionNotCreatedException" >
+					<soap:fault use="literal" name="SessionNotCreatedException"/>					
+			</wsdl:fault>
+			<wsdl:fault name="SetIntrinsicsException">
+				<soap:fault use="literal" name="SetIntrinsicsException" />
+			</wsdl:fault>
+		</wsdl:operation>
+		
+		<wsdl:operation name="BargeIn">
+			<soap:operation soapAction="http://www.nortel.com/soa/oi/cct/ContactService/BargeIn" />			
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>			
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>			
+			<wsdl:fault name="SessionNotCreatedException" >
+					<soap:fault use="literal" name="SessionNotCreatedException"/>					
+			</wsdl:fault>
+			<wsdl:fault name="BargeInException">
+				<soap:fault use="literal" name="BargeInException" />
+			</wsdl:fault>
+		</wsdl:operation>
+		
+		<wsdl:operation name="AddParty">
+			<soap:operation soapAction="http://www.nortel.com/soa/oi/cct/ContactService/AddParty" />			
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>			
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>			
+			<wsdl:fault name="SessionNotCreatedException" >
+					<soap:fault use="literal" name="SessionNotCreatedException"/>					
+			</wsdl:fault>
+			<wsdl:fault name="AddPartyException">
+				<soap:fault use="literal" name="AddPartyException" />
+			</wsdl:fault>
+		</wsdl:operation>
+		
+		<wsdl:operation name="Whisper">
+			<soap:operation soapAction="http://www.nortel.com/soa/oi/cct/ContactService/Whisper" />			
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>			
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>			
+			<wsdl:fault name="SessionNotCreatedException" >
+					<soap:fault use="literal" name="SessionNotCreatedException"/>					
+			</wsdl:fault>
+			<wsdl:fault name="WhisperException">
+				<soap:fault use="literal" name="WhisperException" />
+			</wsdl:fault>
+		</wsdl:operation>
+		
+		<wsdl:operation name="Observe">
+			<soap:operation soapAction="http://www.nortel.com/soa/oi/cct/ContactService/Observe" />			
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>			
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>			
+			<wsdl:fault name="SessionNotCreatedException" >
+					<soap:fault use="literal" name="SessionNotCreatedException"/>					
+			</wsdl:fault>
+			<wsdl:fault name="ObserveException">
+				<soap:fault use="literal" name="ObserveException" />
+			</wsdl:fault>
+		</wsdl:operation>
+		
+		<wsdl:operation name="Drop">
+			<soap:operation soapAction="http://www.nortel.com/soa/oi/cct/ContactService/Drop" />			
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>			
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>			
+			<wsdl:fault name="SessionNotCreatedException" >
+					<soap:fault use="literal" name="SessionNotCreatedException"/>					
+			</wsdl:fault>
+			<wsdl:fault name="DropException">
+				<soap:fault use="literal" name="DropException" />
+			</wsdl:fault>
+		</wsdl:operation>
+		
+	</wsdl:binding>
+ 
+	<wsdl:service name="SOAOICCT_ContactService">
+		<wsdl:port name="ContactService"
+			binding="tns:ContactServiceBinding">
+			<soap:address location="http://localhost:9080/SOAOICCT/services/ContactService" />
+		</wsdl:port>
+	</wsdl:service>
+	 
+</wsdl:definitions>

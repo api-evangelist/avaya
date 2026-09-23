@@ -1,0 +1,327 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<wsdl:definitions name="OpenQ"
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" 
+	xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+	xmlns:types="http://www.nortel.com/soa/oi/OpenQ/types"
+  	xmlns:tns="http://www.nortel.com/soa/oi/OpenQ"
+  	targetNamespace="http://www.nortel.com/soa/oi/OpenQ">
+
+	<wsdl:types>
+		<xsd:schema 
+			elementFormDefault="qualified" 
+			xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+			targetNamespace="http://www.nortel.com/soa/oi/OpenQ">
+			<xsd:import namespace="http://www.nortel.com/soa/oi/OpenQ/types" schemaLocation="OpenQ.xsd"></xsd:import>
+		</xsd:schema>
+	</wsdl:types>
+
+	<wsdl:message name="GetVersionRequest">
+        <wsdl:part name="parameters" element="types:GetVersionRequest"/>
+    </wsdl:message>
+    
+    <wsdl:message name="GetVersionResponse">
+        <wsdl:part name="result" element="types:GetVersionResponse"/>
+    </wsdl:message>
+    
+    <wsdl:message name="GetVersionFault">
+		<wsdl:part name="GetVersionFault" element="types:GetVersionFault" />
+	</wsdl:message>
+	
+	<wsdl:message name="LogInRequest">
+        <wsdl:part name="parameters" element="types:LogIn"/>
+    </wsdl:message>
+    
+    <wsdl:message name="LogInResponse">
+        <wsdl:part name="parameters" element="types:LogInResponse"/>
+    </wsdl:message>
+    
+    <wsdl:message name="LogInFailedFault">
+		<wsdl:part name="LogInFailedFault" element="types:LogInFailedFault" />
+	</wsdl:message>    
+	
+	<wsdl:message name="LogOffRequest">
+        <wsdl:part name="parameters" element="types:LogOff"/>
+    </wsdl:message>
+    
+    <wsdl:message name="LogOffResponse">
+        <wsdl:part name="parameters" element="types:LogOffResponse"/>
+    </wsdl:message>
+    
+    <wsdl:message name="LogOffFailedFault">
+		<wsdl:part name="LogOffFailedFault" element="types:LogOffFailedFault" />
+	</wsdl:message>
+	
+	<wsdl:message name="LogOffSessionRequest">
+        <wsdl:part name="parameters" element="types:LogOffSession"/>
+    </wsdl:message>
+    
+    <wsdl:message name="LogOffSessionResponse"></wsdl:message>
+    
+    <wsdl:message name="LogOffSessionFailedFault">
+		<wsdl:part name="LogOffSessionFailedFault" element="types:LogOffSessionFailedFault" />
+	</wsdl:message> 
+   
+    <wsdl:message name="CreateContactRequest">
+        <wsdl:part name="parameters" element="types:CreateContact"/>
+    </wsdl:message>
+    
+    <wsdl:message name="CreateContactResponse">
+        <wsdl:part name="parameters" element="types:CreateContactResponse"/>
+    </wsdl:message>
+    
+    <wsdl:message name="CreateOQContactRequest">
+        <wsdl:part name="parameters" element="types:CreateOQContact"/>
+    </wsdl:message>
+    
+     <wsdl:message name="CreateOQContactResponse">
+        <wsdl:part name="parameters" element="types:CreateOQContactResponse"/>
+    </wsdl:message>
+    
+    <wsdl:message name="CreateContactFailedFault">
+		<wsdl:part name="CreateContactFailedFault" element="types:CreateContactFailedFault" />
+	</wsdl:message> 
+   
+    <wsdl:message name="CreateOQContactFailedFault">
+		<wsdl:part name="CreateOQContactFailedFault" element="types:CreateOQContactFailedFault" />
+	</wsdl:message> 
+	
+    <wsdl:message name="DropContactRequest">
+        <wsdl:part name="parameters" element="types:DropContact"/>
+    </wsdl:message>
+   
+    <wsdl:message name="DropOQContactRequest">
+        <wsdl:part name="parameters" element="types:DropOQContact"/>
+    </wsdl:message>
+
+    <wsdl:message name="DropContactResponse">
+        <wsdl:part name="parameters" element="types:DropContactResponse"/>
+    </wsdl:message>    
+    
+    <wsdl:message name="DropOQContactResponse">
+        <wsdl:part name="parameters" element="types:DropOQContactResponse"/>
+    </wsdl:message>   
+    
+    <wsdl:message name="DropContactFailedFault">
+    	<wsdl:part name="DropContactFailedFault" element="types:DropContactFailedFault"/>
+    </wsdl:message>
+    
+    <wsdl:message name="DropOQContactFailedFault">
+    	<wsdl:part name="DropOQContactFailedFault" element="types:DropOQContactFailedFault"/>
+    </wsdl:message>    
+    
+	<wsdl:message name="GetContactRequest">
+        <wsdl:part name="parameters" element="types:GetContact"/>
+    </wsdl:message>
+    
+    <wsdl:message name="GetContactResponse">
+        <wsdl:part name="parameters" element="types:GetContactResponse"/>
+    </wsdl:message>
+    
+    <wsdl:message name="GetContactFailedFault">
+		<wsdl:part name="GetContactFailedFault" element="types:GetContactFailedFault" />
+	</wsdl:message> 
+	
+	<wsdl:message name="GetOQContactRequest">
+        <wsdl:part name="parameters" element="types:GetOQContact"/>
+    </wsdl:message>
+    
+    <wsdl:message name="GetOQContactResponse">
+        <wsdl:part name="parameters" element="types:GetOQContactResponse"/>
+    </wsdl:message>
+    
+    <wsdl:message name="GetOQContactFailedFault">
+		<wsdl:part name="GetOQContactFailedFault" element="types:GetOQContactFailedFault" />
+	</wsdl:message> 	
+	    
+    <wsdl:message name="AddServiceProviderStatusListenerRequest">
+        <wsdl:part name="parameters" element="types:AddServiceProviderStatusListener"/>
+    </wsdl:message>
+    
+    <wsdl:message name="AddServiceProviderStatusListenerResponse">
+        <wsdl:part name="parameters" element="types:AddServiceProviderStatusListenerResponse"/>
+    </wsdl:message>
+    
+    <wsdl:message name="AddServiceProviderStatusListenerFailedFault">
+		<wsdl:part name="AddServiceProviderStatusListenerFailedFault" element="types:AddServiceProviderStatusListenerFailedFault" />
+	</wsdl:message>    
+	
+    <wsdl:message name="RemoveServiceProviderStatusListenerRequest">
+        <wsdl:part name="parameters" element="types:RemoveServiceProviderStatusListener"/>
+    </wsdl:message>
+    
+    <wsdl:message name="RemoveServiceProviderStatusListenerResponse">
+        <wsdl:part name="parameters" element="types:RemoveServiceProviderStatusListenerResponse"/>
+    </wsdl:message>    
+    
+    <wsdl:message name="RemoveServiceProviderStatusListenerFailedFault">
+		<wsdl:part name="RemoveServiceProviderStatusListenerFailedFault" element="types:RemoveServiceProviderStatusListenerFailedFault" />
+	</wsdl:message> 	 
+    
+    <wsdl:message name="AddForceDisconnectListenerRequest">
+        <wsdl:part name="parameters" element="types:AddForceDisconnectListener"/>
+    </wsdl:message>
+    
+    <wsdl:message name="AddForceDisconnectListenerResponse">
+        <wsdl:part name="parameters" element="types:AddForceDisconnectListenerResponse"/>
+    </wsdl:message>
+    
+    <wsdl:message name="AddForceDisconnectListenerFailedFault">
+		<wsdl:part name="AddForceDisconnectListenerFailedFault" element="types:AddForceDisconnectListenerFailedFault" />
+	</wsdl:message>    
+	
+    <wsdl:message name="RemoveForceDisconnectListenerRequest">
+        <wsdl:part name="parameters" element="types:RemoveForceDisconnectListener"/>
+    </wsdl:message>
+    
+    <wsdl:message name="RemoveForceDisconnectListenerResponse">
+        <wsdl:part name="parameters" element="types:RemoveForceDisconnectListenerResponse"/>
+    </wsdl:message>    
+    
+    <wsdl:message name="RemoveForceDisconnectListenerFailedFault">
+		<wsdl:part name="RemoveForceDisconnectListenerFailedFault" element="types:RemoveForceDisconnectListenerFailedFault" />
+	</wsdl:message> 	 
+
+    <wsdl:message name="AddDefaultTreatmentListenerRequest">
+        <wsdl:part name="parameters" element="types:AddDefaultTreatmentListener"/>
+    </wsdl:message>
+    
+    <wsdl:message name="AddDefaultTreatmentListenerResponse">
+        <wsdl:part name="parameters" element="types:AddDefaultTreatmentListenerResponse"/>
+    </wsdl:message>
+    
+    <wsdl:message name="AddDefaultTreatmentListenerFailedFault">
+		<wsdl:part name="AddDefaultTreatmentListenerFailedFault" element="types:AddDefaultTreatmentListenerFailedFault" />
+	</wsdl:message>    
+	
+    <wsdl:message name="RemoveDefaultTreatmentListenerRequest">
+        <wsdl:part name="parameters" element="types:RemoveDefaultTreatmentListener"/>
+    </wsdl:message>
+    
+	<wsdl:message name="RemoveDefaultTreatmentListenerResponse">
+        <wsdl:part name="parameters" element="types:RemoveDefaultTreatmentListenerResponse"/>
+    </wsdl:message>    
+    
+    <wsdl:message name="RemoveDefaultTreatmentListenerFailedFault">
+		<wsdl:part name="RemoveDefaultTreatmentListenerFailedFault" element="types:RemoveDefaultTreatmentListenerFailedFault" />
+	</wsdl:message> 	
+	
+	<wsdl:message name="SubscribeRequest">
+        <wsdl:part name="parameters" element="types:Subscribe"/>
+    </wsdl:message>
+    
+    <wsdl:message name="SubscribeResponse">
+        <wsdl:part name="parameters" element="types:SubscribeResponse"/>
+    </wsdl:message>
+    
+	<wsdl:message name="SubscribeFailedFault">
+		<wsdl:part name="SubscribeFailedFault" element="types:SubscribeFailedFault" />
+	</wsdl:message>    
+	
+    <wsdl:message name="UnsubscribeRequest">
+        <wsdl:part name="parameters" element="types:Unsubscribe"/>
+    </wsdl:message>
+    
+    <wsdl:message name="UnsubscribeResponse">
+        <wsdl:part name="parameters" element="types:UnsubscribeResponse"/>
+    </wsdl:message>    
+    
+    <wsdl:message name="UnsubscribeFailedFault">
+		<wsdl:part name="UnsubscribeFailedFault" element="types:UnsubscribeFailedFault" />
+	</wsdl:message> 
+
+    <wsdl:portType name="OpenQ">
+    
+    	<wsdl:operation  name="GetVersion">
+			<wsdl:input  name="GetVersionRequest" message="tns:GetVersionRequest" />
+			<wsdl:output name="GetVersionResponse" message="tns:GetVersionResponse" />
+			<wsdl:fault  name="GetVersionFault" message="tns:GetVersionFault"/>
+    	</wsdl:operation>
+    
+        <wsdl:operation  name="LogIn">
+			<wsdl:input  name="LogInRequest" message="tns:LogInRequest" />
+			<wsdl:output name="LogInResponse" message="tns:LogInResponse" />
+			<wsdl:fault  name="LogInFailedFault" message="tns:LogInFailedFault"/>
+    	</wsdl:operation>
+
+        <wsdl:operation  name="LogOff">
+			<wsdl:input  name="LogOffRequest" message="tns:LogOffRequest" />
+			<wsdl:output name="LogOffResponse" message="tns:LogOffResponse" />
+			<wsdl:fault  name="LogOffFailedFault" message="tns:LogOffFailedFault"/>
+    	</wsdl:operation>
+    	
+    	<wsdl:operation  name="LogOffSession">
+			<wsdl:input  name="LogOffSessionRequest" message="tns:LogOffSessionRequest" />
+			<wsdl:output name="LogOffSessionResponse" message="tns:LogOffSessionResponse" />
+			<wsdl:fault  name="LogOffSessionFailedFault" message="tns:LogOffSessionFailedFault"/>
+    	</wsdl:operation>
+
+	   	<wsdl:operation  name="CreateOQContact">
+			<wsdl:input  name="CreateOQContactRequest" message="tns:CreateOQContactRequest" />
+			<wsdl:output name="CreateOQContactResponse" message="tns:CreateOQContactResponse" />
+			<wsdl:fault  name="CreateOQContactFailedFault" message="tns:CreateOQContactFailedFault"/>
+    	</wsdl:operation>    	
+        
+        <wsdl:operation  name="DropOQContact">
+            <wsdl:input  name="DropOQContactRequest" message="tns:DropOQContactRequest" />
+			<wsdl:output name="DropOQContactResponse" message="tns:DropOQContactResponse" />
+			<wsdl:fault  name="DropOQContactFailedFault" message="tns:DropOQContactFailedFault"/>            
+        </wsdl:operation>
+        
+    	<wsdl:operation  name="GetOQContact">
+			<wsdl:input  name="GetOQContactRequest" message="tns:GetOQContactRequest" />
+			<wsdl:output name="GetOQContactResponse" message="tns:GetOQContactResponse" />
+			<wsdl:fault  name="GetOQContactFailedFault" message="tns:GetOQContactFailedFault"/>
+    	</wsdl:operation>
+    	
+    	<wsdl:operation  name="AddServiceProviderStatusListener">
+			<wsdl:input  name="AddServiceProviderStatusListenerRequest" message="tns:AddServiceProviderStatusListenerRequest" />
+			<wsdl:output name="AddServiceProviderStatusListenerResponse" message="tns:AddServiceProviderStatusListenerResponse" />
+			<wsdl:fault  name="AddServiceProviderStatusListenerFailedFault" message="tns:AddServiceProviderStatusListenerFailedFault"/>
+    	</wsdl:operation>
+        
+        <wsdl:operation  name="RemoveServiceProviderStatusListener">
+            <wsdl:input  name="RemoveServiceProviderStatusListenerRequest" message="tns:RemoveServiceProviderStatusListenerRequest"/>
+			<wsdl:output name="RemoveServiceProviderStatusListenerResponse" message="tns:RemoveServiceProviderStatusListenerResponse" />
+			<wsdl:fault  name="RemoveServiceProviderStatusListenerFailedFault" message="tns:RemoveServiceProviderStatusListenerFailedFault"/>
+        </wsdl:operation>     
+        
+    	<wsdl:operation  name="AddForceDisconnectListener">
+			<wsdl:input  name="AddForceDisconnectListenerRequest" message="tns:AddForceDisconnectListenerRequest" />
+			<wsdl:output name="AddForceDisconnectListenerResponse" message="tns:AddForceDisconnectListenerResponse" />
+			<wsdl:fault  name="AddForceDisconnectListenerFailedFault" message="tns:AddForceDisconnectListenerFailedFault"/>
+    	</wsdl:operation>
+        
+        <wsdl:operation  name="RemoveForceDisconnectListener">
+            <wsdl:input  name="RemoveForceDisconnectListenerRequest" message="tns:RemoveForceDisconnectListenerRequest"/>
+			<wsdl:output name="RemoveForceDisconnectListenerResponse" message="tns:RemoveForceDisconnectListenerResponse" />
+			<wsdl:fault  name="RemoveForceDisconnectListenerFailedFault" message="tns:RemoveForceDisconnectListenerFailedFault"/>            
+        </wsdl:operation>  
+        
+		<wsdl:operation  name="AddDefaultTreatmentListener">
+			<wsdl:input  name="AddDefaultTreatmentListenerRequest" message="tns:AddDefaultTreatmentListenerRequest" />
+			<wsdl:output name="AddDefaultTreatmentListenerResponse" message="tns:AddDefaultTreatmentListenerResponse" />
+			<wsdl:fault  name="AddDefaultTreatmentListenerFailedFault" message="tns:AddDefaultTreatmentListenerFailedFault"/>
+    	</wsdl:operation>
+        
+        <wsdl:operation  name="RemoveDefaultTreatmentListener">
+            <wsdl:input  name="RemoveDefaultTreatmentListenerRequest" message="tns:RemoveDefaultTreatmentListenerRequest"/>
+			<wsdl:output name="RemoveDefaultTreatmentListenerResponse" message="tns:RemoveDefaultTreatmentListenerResponse" />
+			<wsdl:fault  name="RemoveDefaultTreatmentListenerFailedFault" message="tns:RemoveDefaultTreatmentListenerFailedFault"/>            
+        </wsdl:operation> 
+        
+        <wsdl:operation  name="Subscribe">
+			<wsdl:input  name="SubscribeRequest" message="tns:SubscribeRequest" />
+			<wsdl:output name="SubscribeResponse" message="tns:SubscribeResponse" />
+			<wsdl:fault  name="SubscribeFailedFault" message="tns:SubscribeFailedFault"/>
+    	</wsdl:operation>
+        
+        <wsdl:operation  name="Unsubscribe">
+            <wsdl:input  name="UnsubscribeRequest" message="tns:UnsubscribeRequest"/>
+			<wsdl:output name="UnsubscribeResponse" message="tns:UnsubscribeResponse" />
+			<wsdl:fault  name="UnsubscribeFailedFault" message="tns:UnsubscribeFailedFault"/>
+        </wsdl:operation>   
+    </wsdl:portType>    
+
+</wsdl:definitions>

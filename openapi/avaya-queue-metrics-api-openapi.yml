@@ -1,0 +1,930 @@
+openapi: 3.2.0
+info:
+  title: Avaya Queue Metrics API
+  version: '1.0'
+  description: 'Operations tagged Queue Metrics across 2 of this provider''s published API definitions: avaya-axp-routing-queue-metrics-openapi-original.json, avaya-infinity-queue-metrics-openapi-original.json. Each path carries the servers of the definition it was published in.'
+servers:
+- url: '{protocol}://{server}{basePath}'
+  description: Open API
+  variables:
+    protocol:
+      enum:
+      - https
+      default: https
+    server:
+      default: HOST-REGION.api.avayacloud.com
+    basePath:
+      default: /api/queue-metrics/v1
+- url: '{protocol}://{server}:{port}'
+  description: Internal API
+  variables:
+    protocol:
+      enum:
+      - http
+      - https
+      default: http
+    server:
+      default: vrc-metrics-aggregator-service
+    port:
+      enum:
+      - '80'
+      - '443'
+      default: '80'
+- url: https://core.{customerId}.ec.avayacloud.com/api/matching-extensions/v1
+  description: Production
+  variables:
+    customerId:
+      description: Your organization subdomain identifier (e.g., avaya1234)
+      default: your-org-id
+tags:
+- name: Queue Metrics
+  description: Metrics associated with a routing queue.
+paths:
+  /accounts/{accountId}/queues/{queueId}/channels/{channelId}/metrics:
+    get:
+      tags:
+      - Queue Metrics
+      summary: Request Metrics
+      description: 'Request to obtain metrics for a match queue.
+
+
+        The client will send a request for metrics for the specified queue, channel, attributes and priority, upon successful calculation of the metrics the server will respond back with a list of the calculated queue metrics.
+
+
+        Queue metrics are statistical measures related to the operation of a contact center queue. These metrics include measures related to engagements that are queued, and to the agents that staff the queue.'
+      operationId: getMetricsRequestPriorityAttributesOptional
+      parameters:
+      - $ref: '#/components/parameters/accountId'
+      - $ref: '#/components/parameters/queueId'
+      - $ref: '#/components/parameters/channelId'
+      - $ref: '#/components/parameters/attributes'
+      - $ref: '#/components/parameters/priority'
+      responses:
+        '200':
+          description: Returned Metrics.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SynchronousMetricsResponse'
+              examples:
+                MetricsResponse:
+                  $ref: '#/components/examples/MetricsResponse'
+                MetricsQueueResponse:
+                  $ref: '#/components/examples/MetricsQueueResponse'
+                MetricsDefaultResponse:
+                  $ref: '#/components/examples/MetricsDefaultResponse'
+        '400':
+          description: 'Constraint violation in the request.
+
+
+            Reasons such as Queue can''t be null, Attributes can''t be empty in a queue, Attributes must contain 10 or less attributes.
+
+            '
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                default:
+                  $ref: '#/components/examples/ErrorConstraintViolation'
+        '401':
+          description: Unauthorized.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                default:
+                  $ref: '#/components/examples/ErrorUnauthorized'
+        '403':
+          description: Forbidden.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                default:
+                  $ref: '#/components/examples/ErrorForbidden'
+        '404':
+          description: Not Found.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                default:
+                  $ref: '#/components/examples/ErrorNotFound'
+        '500':
+          description: Internal Server Error.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                default:
+                  $ref: '#/components/examples/ErrorInternalServerError'
+      security:
+      - {}
+      - BearerAuth: []
+        AppKey: []
+    servers:
+    - url: '{protocol}://{server}{basePath}'
+      description: Open API
+      variables:
+        protocol:
+          enum:
+          - https
+          default: https
+        server:
+          default: HOST-REGION.api.avayacloud.com
+        basePath:
+          default: /api/queue-metrics/v1
+    - url: '{protocol}://{server}:{port}'
+      description: Internal API
+      variables:
+        protocol:
+          enum:
+          - http
+          - https
+          default: http
+        server:
+          default: vrc-metrics-aggregator-service
+        port:
+          enum:
+          - '80'
+          - '443'
+          default: '80'
+  /queue-metrics:
+    post:
+      summary: Query queue metrics
+      description: 'Returns real-time metrics for a specific queue and communication channel, including agent counts, engagement wait counts, queue occupancy, and the timestamp of the oldest waiting engagement.
+
+
+        Both `commType` and `queueId` are required. Optionally include `tags` to filter metrics to a specific tag subset within the queue.
+
+
+        ## Finding Your Customer Subdomain
+
+
+        Your subdomain is found in your Avaya Infinity portal URL and is required for all API calls.
+
+
+        **Example:** If your portal URL is:
+
+
+        ```
+
+        https://core.avaya1234.ec.avayacloud.com/app/core-config-ui/
+
+        ```
+
+
+        Your subdomain is: **`avaya1234`**
+
+
+        **To use this API:**
+
+
+        1. **Find your subdomain** from your Infinity portal URL (as shown above)
+
+        2. **Get your Bearer token** using the `QUEUE_METRICS` client credential (see Authentication below)
+
+        3. **In the API explorer on the right:**
+
+        * Click on `{customerId}` in the URL field and replace it with your actual subdomain
+
+        * Paste your Bearer token in the Credentials section
+
+        * Fill out the Body Parameters with your `commType` and `queueId`
+
+
+        ## Authentication
+
+
+        This endpoint requires a valid OAuth 2.0 Bearer token. To use this API, you will need a `client_id` and `client_secret` provisioned with the **`QUEUE_METRICS`** scope — this is not self-serve and requires raising a request with Avaya Support.
+
+
+        Once you have your credentials, use the client credentials flow to obtain a token:
+
+
+        ```
+
+        POST https://core.{customerId}.ec.avayacloud.com/auth/realms/avaya/protocol/openid-connect/token
+
+        Content-Type: application/x-www-form-urlencoded
+
+
+        grant_type=client_credentials&client_id=&client_secret=&scope=QUEUE_METRICS
+
+        ```
+
+
+        Include the returned token in the `Authorization: Bearer ` header of each request.
+
+
+        For full authentication instructions, see How to Authenticate with Avaya Infinity APIs.
+
+
+        ## Working with Queue IDs and Tags
+
+
+        The `queueId` field accepts the unique identifier of the queue — not its display name. Queue IDs can be found in the Avaya Infinity portal or retrieved via the Queue Management API.
+
+
+        Optionally, filter metrics further by providing one or more tag IDs in the `tags` field. When provided, metrics are scoped to only engagements and agents matching both the queue and the specified tags.
+
+
+        **Supported tag formats:**
+
+
+        ```
+
+        Single tag: "006d0110160d0bea955297d80e"
+
+        Comma-separated: "006d0110160d0bea955297d80e, 006d01101602a2f055c1a03dcb"
+
+        Array notation: "[006d0110160d0bea955297d80e, 006d01101602a2f055c1a03dcb]"
+
+        ```
+
+
+        ## Important Notes
+
+
+        * Metrics are real-time — each request returns the current state of the queue at the time of the call.
+
+        * If no engagements are currently waiting, `oldestEngagementWaiting` returns an empty string and `queueOccupancy` returns `0`.
+
+        * If an unrecognized or non-existent `queueId` is provided, the API returns a `200` with all metrics zeroed out rather than a `404`.
+
+        * The `commType` field must match an active channel configured on the queue.
+
+        * The account/tenant is automatically derived from your Bearer token — no separate account identifier is required in the request.
+
+
+        ## DOS Protection & Rate Limiting
+
+
+        * This endpoint is rate limited to 600 requests per minute per client credential.
+
+
+        ## Security Implementation Guidelines
+
+
+        * Never expose your `client_secret` or Bearer token to client-side applications.
+
+        * Implement proper error handling — avoid surfacing internal error details to end users.'
+      operationId: queryQueueMetrics
+      tags:
+      - Queue Metrics
+      security:
+      - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/QueueMetricsQueryRequest'
+            examples:
+              basicQuery:
+                summary: Query metrics for a voice queue
+                value:
+                  commType: voice
+                  queueId: 003d010826307dd6630992437c
+              queryWithTags:
+                summary: Query metrics for a chat queue filtered by tags
+                value:
+                  commType: chat
+                  queueId: 003d010826307dd6630992437c
+                  tags: 006d0110160d0bea955297d80e, 006d01101602a2f055c1a03dcb
+      responses:
+        '200':
+          description: Real-time metrics returned successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MetricsResponse'
+              examples:
+                voiceQueueMetrics:
+                  summary: Voice queue with active agents and waiting engagements
+                  value:
+                    type: attribute
+                    channel: voice
+                    accountId: '1234567890'
+                    agentStaffedCount: 40
+                    agentReadyCount: 8
+                    agentBusyCount: 22
+                    waitingEngagementCount: 31
+                    processingEngagementCount: 16
+                    queueOccupancy: 0.0076899347
+                    oldestEngagementWaiting: '2025-11-03T13:26:24Z'
+                    timestamp: '2025-11-03T13:26:24Z'
+                    attributes:
+                    - queue:003d010826307dd6630992437c
+                emptyQueue:
+                  summary: Queue with no activity, or unrecognized queue ID — both return zeroed metrics
+                  value:
+                    type: attribute
+                    channel: voice
+                    accountId: '1234567890'
+                    agentStaffedCount: 10
+                    agentReadyCount: 10
+                    agentBusyCount: 0
+                    waitingEngagementCount: 0
+                    processingEngagementCount: 0
+                    queueOccupancy: 0
+                    oldestEngagementWaiting: ''
+                    timestamp: '2025-11-03T13:26:24Z'
+                    attributes:
+                    - queue:003d010826307dd6630992437c
+                queryWithTags:
+                  summary: Queue metrics filtered by tags
+                  value:
+                    type: attribute
+                    channel: chat
+                    accountId: '1234567890'
+                    agentStaffedCount: 15
+                    agentReadyCount: 4
+                    agentBusyCount: 8
+                    waitingEngagementCount: 5
+                    processingEngagementCount: 3
+                    queueOccupancy: 0.034
+                    oldestEngagementWaiting: '2025-11-03T13:20:10Z'
+                    timestamp: '2025-11-03T13:26:24Z'
+                    attributes:
+                    - queue:003d010826307dd6630992437c
+                    - tag:006d0110160d0bea955297d80e
+                    - tag:006d01101602a2f055c1a03dcb
+        '400':
+          description: Bad request — missing or malformed required fields.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                missingCommType:
+                  summary: commType is missing
+                  value:
+                    error: commType is required
+                missingQueueId:
+                  summary: queueId is missing
+                  value:
+                    error: queueId is required
+                malformedBody:
+                  summary: Request body could not be parsed
+                  value:
+                    error: failed to decode request body
+        '401':
+          description: 'Missing or invalid Bearer token. Note that in practice, requests made without a valid token may receive a `302` redirect response at the gateway level rather than a `401` JSON error. Ensure your HTTP client does not automatically follow redirects when an unexpected `302` is received — this is an indicator of a missing or expired token.
+
+            '
+        '403':
+          description: Forbidden — token is valid but does not have the `QUEUE_METRICS` scope.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                error: 'RBAC: access denied'
+        '404':
+          description: 'Returned when a timeout occurs waiting for initial metrics. Note that providing an unrecognized or non-existent `queueId` does **not** return a 404 — the API returns a `200` with all metrics fields zeroed out in that case.
+
+            '
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                timeout:
+                  summary: Timed out waiting for initial metrics
+                  value:
+                    error: timeout waiting for initial metrics
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                error: metrics service not available
+        '503':
+          description: Service temporarily unavailable. Retry after a short delay.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                error: 'service is not ready: stream not connected'
+    servers:
+    - url: https://core.{customerId}.ec.avayacloud.com/api/matching-extensions/v1
+      description: Production
+      variables:
+        customerId:
+          description: Your organization subdomain identifier (e.g., avaya1234)
+          default: your-org-id
+components:
+  examples:
+    ErrorConstraintViolation:
+      description: Constraint Violation
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#constraint-violation
+        title: Constraint Violation
+        status: 400
+        detail: A problem that indicates a syntactically correct, yet semantically illegal request. The Server can not process this request until the client resolves the semantic errors described in the violations section.
+        violations:
+        - field: channelId
+          message: size must be between 3 and 256
+          code: 20003
+    ErrorNotFound:
+      description: Not Found
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#not-found
+        title: Not Found
+        status: 404
+        detail: Either there is no API method associated with the URL path of the request, or the request refers to one or more resources that were not found.
+    ErrorForbidden:
+      description: Forbidden
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#forbidden
+        title: Forbidden
+        status: 403
+        detail: According to the access control policy the current user and/or accountId does not have permission to access this resource.
+    ErrorUnauthorized:
+      description: Unauthorized
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#unauthorized
+        title: Unauthorized
+        status: 401
+        detail: This operation requires authentication. See https://developers.avayacloud.com/onecloud-ccaas/docs/how-to-authenticate-with-ccaas-apis
+    MetricsQueueResponse:
+      description: Queue based metrics response, calculated metrics will be available soon.
+      value:
+        accountId: ABCDEF
+        matchQueue:
+          queueId: bea76b16-5aff-4cd6-8db0-5d8d649dd865
+          channelId: Voice
+          attributes:
+          - Language.English
+          - Product.Landline
+          priority: 3
+        metricType: QUEUE
+        metrics:
+        - metricName: agentStaffedCount
+          metricValue: '0'
+        - metricName: agentReadyCount
+          metricValue: '0'
+        - metricName: agentBusyCount
+          metricValue: '0'
+        - metricName: waitingEngagementCount
+          metricValue: '0'
+        - metricName: processingEngagementCount
+          metricValue: '0'
+        - metricName: oldestEngagementWaiting
+          metricValue: '0'
+        - metricName: rollingASA
+          metricValue: '0'
+        - metricName: queueOccupancy
+          metricValue: '0'
+        - metricName: expectedWaitTime
+          metricValue: '9999'
+    MetricsDefaultResponse:
+      description: Default metrics response.
+      value:
+        accountId: ABCDEF
+        matchQueue:
+          queueId: bea76b16-5aff-4cd6-8db0-5d8d649dd865
+          channelId: Voice
+          attributes:
+          - Language.English
+          - Product.Landline
+          priority: 3
+        metricType: DEFAULT
+        metrics:
+        - metricName: agentStaffedCount
+          metricValue: '0'
+        - metricName: agentReadyCount
+          metricValue: '0'
+        - metricName: agentBusyCount
+          metricValue: '0'
+        - metricName: waitingEngagementCount
+          metricValue: '0'
+        - metricName: processingEngagementCount
+          metricValue: '0'
+        - metricName: oldestEngagementWaiting
+          metricValue: '0'
+        - metricName: rollingASA
+          metricValue: '0'
+        - metricName: queueOccupancy
+          metricValue: '0'
+        - metricName: expectedWaitTime
+          metricValue: '9999'
+    MetricsResponse:
+      description: Metrics response example.
+      value:
+        accountId: ABCDEF
+        matchQueue:
+          queueId: bea76b16-5aff-4cd6-8db0-5d8d649dd865
+          channelId: Voice
+          attributes:
+          - Language.English
+          - Product.Landline
+          priority: 3
+        metricType: SPECIALIZED_QUEUE
+        metrics:
+        - metricName: agentStaffedCount
+          metricValue: '10'
+        - metricName: agentReadyCount
+          metricValue: '5'
+        - metricName: agentBusyCount
+          metricValue: '5'
+        - metricName: waitingEngagementCount
+          metricValue: '2'
+        - metricName: processingEngagementCount
+          metricValue: '3'
+        - metricName: oldestEngagementWaiting
+          metricValue: '30'
+        - metricName: rollingASA
+          metricValue: '10'
+        - metricName: queueOccupancy
+          metricValue: '100'
+        - metricName: expectedWaitTime
+          metricValue: '10'
+    ErrorInternalServerError:
+      description: Server Error
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#server-error
+        title: Server Error
+        status: 500
+        detail: An internal server error was encountered.
+  schemas:
+    MatchQueue:
+      description: The Match Queue defines the properties that are used in the matching of engagements against a pool of contact center agents.
+      type: object
+      required:
+      - queueId
+      - channelId
+      properties:
+        queueId:
+          description: The unique uuid of the queue. Only valid Contact Center Queue Id's are accepted.
+          type: string
+          minLength: 36
+          maxLength: 36
+          pattern: ^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}$
+        channelId:
+          description: The id representing the Contact Center Channel. Only valid Contact Center Channel Id's are accepted. See Channel page in CCaaS Fundamentals section of Developer Guides for a list of supported Channel Id's.
+          type: string
+          minLength: 3
+          maxLength: 256
+        attributes:
+          description: 'Attributes are used to describe the skills of the agents. A max of 10 attributes per queue are allowed, and the Attribute format must follow the ''X.X'' style, for example ''CategoryName.AttributeName''. Engagements are typically routed to a suitable agent that shares the same attribute combination that make up a queue. Queue metrics results for queues with attributes may be less favorable than queue metrics without attributes, as only a subset of the agent pool may be configured to handle requests with the additional attributes.
+
+            '
+          type: array
+          minItems: 0
+          maxItems: 10
+          items:
+            type: string
+            minLength: 3
+            maxLength: 101
+            pattern: ^[^\s|\[\*`/?=;,.\]]([^\[\*`/?=;,.\]]{0,48}[^\s|\[\*`/?=;,.\]])?\.[^\s|\[\*`/?=;,.\]]([^\[\*`/?=;,.\]]{0,48}[^\s|\[\*`/?=;,.\]])?$
+        priority:
+          description: 'Represents the priority of the Engagements for the requested queue, channel and attributes. If ''Priority'' is not specified then the Engagement metrics returned will be an aggregate of all the Engagements across all priorities currently in Queue.  If ''Priority'' is specified then the Engagement metrics returned are for engagements with the specified Priority in that Queue. Metrics for higher priority requests against a queue will have more favorable queue metrics (e.g. lower queue wait times). Match requests made with a higher priority will be handled before lower priority requests. The smaller the number meaning the higher the priority.
+
+            '
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 10
+    Metrics:
+      description: The metrics relating to the queue.
+      type: object
+      required:
+      - metricName
+      - metricValue
+      properties:
+        metricName:
+          description: The name of the metric eg. AgentStaffedCount, ExpectedWaitTime. See Queue Metrics table in Developer Guides for list of available metrics.
+          type: string
+        metricValue:
+          description: The corresponding value of the metric e.g. value of 10 for AgentStaffedCount. See Queue Metrics table in Developer Guides for possible values for each metric.
+          type: string
+    SynchronousMetricsResponse:
+      description: The synchronous metrics response.
+      type: object
+      required:
+      - accountId
+      - matchQueue
+      properties:
+        accountId:
+          description: The unique 6 character internal id that represents the customer account
+          type: string
+        matchQueue:
+          $ref: '#/components/schemas/MatchQueue'
+        metricType:
+          description: The type of metrics returned, default or calculated based on attributes
+          type: string
+          enum:
+          - QUEUE
+          - SPECIALIZED_QUEUE
+          - DEFAULT
+        metrics:
+          description: The queue metrics that were requested.
+          type: array
+          items:
+            $ref: '#/components/schemas/Metrics'
+    Problem:
+      type: object
+      description: '<b>Problem Detail</b> as a way to carry machine-readable details of errors in a HTTP response to avoid the need to define new error response formats for HTTP APIs <a href="https://tools.ietf.org/html/rfc7807">RFC 7807</a>
+
+        '
+      properties:
+        type:
+          type: string
+          format: uri
+          description: 'An absolute URI that identifies the problem type. When dereferenced, it SHOULD provide human-readable documentation for the problem type (e.g., using HTML).
+
+            '
+          default: about:blank
+          example: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#constraint-violation
+        title:
+          type:
+          - string
+          - 'null'
+          description: 'A short, summary of the problem type. Written in english and readable for engineers (usually not suited for non technical stakeholders and not localized).
+
+            '
+          example: Service Unavailable
+        status:
+          type:
+          - integer
+          - 'null'
+          format: int32
+          description: 'The HTTP status code generated by the origin server for this occurrence of the problem.
+
+            '
+          minimum: 100
+          example: 503
+          exclusiveMaximum: 600
+        detail:
+          type:
+          - string
+          - 'null'
+          description: 'A human readable explanation specific to this occurrence of the problem.
+
+            '
+          example: Connection to database timed out
+        instance:
+          type:
+          - string
+          - 'null'
+          format: uri
+          description: 'An absolute URI that identifies the specific occurrence of the problem. It may or may not yield further information if dereferenced.
+
+            '
+        violations:
+          type:
+          - array
+          - 'null'
+          description: 'A list of violations that occurred as a result of invalid data provided as part of a request.
+
+            '
+          items:
+            type: object
+            properties:
+              field:
+                type: string
+                description: 'The name of the field in the request that caused the violation. This can be the name of a path parameter, query parameter, or a field within the request body.
+
+                  '
+                example: accountId
+              message:
+                type: string
+                description: 'A human readable explanation specific to this occurrence of the violation.
+
+                  '
+                example: must match "^[a-zA-Z]{6}$"
+              code:
+                type: integer
+                format: int32
+                description: 'The violation code generated by the server for this occurrence of the violation. Use this code when implementing any error handling logic instead of the message, as the message can change.
+
+                  '
+                example: 20006
+          example:
+          - field: emailAddress
+            message: must not be null
+            code: 20002
+          - field: accountId
+            message: must match "^[a-zA-Z]{6}$"
+            code: 20006
+    MetricsResponse:
+      type: object
+      description: Real-time metrics snapshot for the requested queue and channel.
+      required:
+      - type
+      - channel
+      - accountId
+      - agentStaffedCount
+      - agentReadyCount
+      - agentBusyCount
+      - waitingEngagementCount
+      - processingEngagementCount
+      - queueOccupancy
+      - oldestEngagementWaiting
+      - timestamp
+      properties:
+        type:
+          $ref: '#/components/schemas/MetricsType'
+        channel:
+          type: string
+          description: The communication channel these metrics apply to.
+          example: voice
+        accountId:
+          type: string
+          description: The account/tenant identifier derived from the Bearer token.
+          example: '1234567890'
+        agentStaffedCount:
+          type: integer
+          format: int32
+          description: Total number of agents currently logged in and assigned to this queue.
+          example: 40
+        agentReadyCount:
+          type: integer
+          format: int32
+          description: Number of agents in a Ready state and available to handle engagements.
+          example: 8
+        agentBusyCount:
+          type: integer
+          format: int32
+          description: Number of agents currently handling an active engagement.
+          example: 22
+        waitingEngagementCount:
+          type: integer
+          format: int32
+          description: Number of engagements currently waiting in queue to be assigned to an agent.
+          example: 31
+        processingEngagementCount:
+          type: integer
+          format: int32
+          description: Number of engagements currently being handled by an agent (in progress).
+          example: 16
+        queueOccupancy:
+          type: number
+          format: float
+          description: Queue occupancy rate as a decimal between 0 and 1 (e.g., `0.75` means 75% occupied). Returns `0` when no engagements are waiting or in progress.
+          example: 0.0076899347
+        oldestEngagementWaiting:
+          type: string
+          format: date-time
+          description: Timestamp (ISO 8601) of the oldest engagement currently waiting in queue. Returns an empty string if no engagements are waiting.
+          example: '2025-11-03T13:26:24Z'
+        timestamp:
+          type: string
+          format: date-time
+          description: Timestamp (ISO 8601) indicating when this metrics snapshot was collected.
+          example: '2025-11-03T13:26:24Z'
+        attributes:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          description: The attribute values used to resolve these metrics, in `queue:{queueId}` and `tag:{tagId}` format.
+          example:
+          - queue:003d010826307dd6630992437c
+    MetricsType:
+      type: string
+      enum:
+      - attribute
+      - user
+      description: 'The internal type of the metrics query. For queue-based queries via this API, this will always be `attribute`.
+
+        '
+    QueueMetricsQueryRequest:
+      type: object
+      required:
+      - commType
+      - queueId
+      description: Request body for querying real-time metrics for a specific queue and channel.
+      properties:
+        commType:
+          type: string
+          description: 'The communication channel to query metrics for. Must match a channel actively configured on the target queue.
+
+
+            Valid values: `voice`, `chat`, `email`
+
+            '
+          example: voice
+        queueId:
+          type: string
+          description: 'The unique identifier of the queue to query. Queue IDs can be found in the Avaya Infinity portal or via the Queue Management API.
+
+            '
+          example: 003d010826307dd6630992437c
+        tags:
+          type: string
+          description: 'Optional. One or more tag IDs to filter metrics to a specific subset of agents and engagements within the queue. When provided, metrics are scoped to only those matching all specified tags.
+
+
+            Supported formats:
+
+            - Single tag: `"006d0110160d0bea955297d80e"`
+
+            - Comma-separated: `"006d0110160d0bea955297d80e, 006d01101602a2f055c1a03dcb"`
+
+            - Array notation: `"[006d0110160d0bea955297d80e, 006d01101602a2f055c1a03dcb]"`
+
+            '
+          example: 006d0110160d0bea955297d80e, 006d01101602a2f055c1a03dcb
+    ErrorResponse:
+      type: object
+      description: Standard error response.
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          description: A message describing what went wrong.
+          example: metrics not found
+  parameters:
+    accountId:
+      name: accountId
+      in: path
+      description: The unique 6 character internal id that represents the customer account
+      required: true
+      schema:
+        type: string
+        minLength: 6
+        maxLength: 6
+        pattern: ^[a-zA-Z]{6}$
+        example: ABCDEF
+    attributes:
+      name: attributes
+      in: query
+      description: Attributes are used to describe the skills of the agents. A max of 10 attributes per queue are allowed, and the Attribute format must follow the 'X.X' style, for example 'CategoryName.AttributeName'. Engagements are typically routed to a suitable agent that shares the same attribute combination that make up a queue. Queue metrics results for queues with attributes may be less favorable than queue metrics without attributes, as only a subset of the agent pool may be configured to handle requests with the additional attributes.
+      required: false
+      schema:
+        type: array
+        items:
+          type: string
+          maxLength: 256
+        minItems: 0
+        maxItems: 10
+        example:
+        - Language.English
+        - Product.Landline
+    queueId:
+      name: queueId
+      in: path
+      description: The unique uuid of the queue. Only valid Contact Center Queue Id's are accepted
+      required: true
+      schema:
+        type: string
+        minLength: 36
+        maxLength: 36
+        pattern: ^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}$
+        example: bea76b16-5aff-4cd6-8db0-5d8d649dd865
+    priority:
+      name: priority
+      in: query
+      description: The priority of this queue request. The smaller the number meaning the higher the priority.
+      required: false
+      schema:
+        type: integer
+        format: int32
+        minimum: 1
+        maximum: 10
+        example: 3
+    channelId:
+      name: channelId
+      in: path
+      description: The id representing the Contact Center Channel. Only valid Contact Center Channel Id's are accepted. See Channel page in CCaaS Fundamentals section of Developer Guides for a list of supported Channel Id's.
+      required: true
+      schema:
+        type: string
+        minLength: 3
+        maxLength: 256
+        example: Voice
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      description: This API uses Bearer Token Authorization Flow
+      bearerFormat: JWT
+    AppKey:
+      type: apiKey
+      in: header
+      name: appkey
+      description: This API needs an appKey as header
+x-refined-from:
+- avaya-axp-routing-queue-metrics-openapi-original.json
+- avaya-infinity-queue-metrics-openapi-original.json
+x-explorer-enabled: false
+x-samples-languages:
+- curl
+- node
+- java
+- javascript
+- python
+- go

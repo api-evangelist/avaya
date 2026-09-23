@@ -1,0 +1,929 @@
+openapi: 3.2.0
+info:
+  title: Admin - Voice Outbound Number Routing Rules API
+  description: 'The Voice provider APIs are used to manage information about voice specific elements and different voice related entities e.g. Phone numbers.
+
+
+    Voice Services will support multiple ways to provision voice providers
+
+    1. Programmatic Interface (Rest APIs)
+
+    2. User Interface'
+  contact:
+    name: Avaya API Team
+    url: https://developers.avayacloud.com/onecloud-ccaas
+    email: apiteam@avaya.com
+  license:
+    name: Avaya Software Development Kit (SDK) Software License Terms
+    url: http://support.avaya.com/css/P8/documents/101038288
+  version: 1.0.2
+servers:
+- url: '{protocol}://{server}{basePath}'
+  description: Open API
+  variables:
+    protocol:
+      enum:
+      - https
+      default: https
+    server:
+      default: HOST-REGION.api.avayacloud.com
+    basePath:
+      default: /api/admin/voice/v1
+security:
+- {}
+- BearerAuth: []
+  AppKey: []
+tags:
+- name: Outbound Number Routing Rules
+  description: APIs to manage Outbound Call Number Routing Rules in voice service by an account administrator.
+paths:
+  /accounts/{accountId}/outbound-routing-rules:
+    post:
+      tags:
+      - Outbound Number Routing Rules
+      summary: Add Routing Rules
+      description: '**This API requires the Account Administrator role.**
+
+
+        The following field must be unique otherwise a `HTTP 409 Conflict` will be returned:
+
+        * `priority`
+
+
+        Creates Outbound Call Number Routing Rules for mixed type of MPC trunks.'
+      operationId: createOutboundRoutingRule
+      parameters:
+      - $ref: '#/components/parameters/accountId'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OutboundRoutingRule'
+            examples:
+              OutboundRoutingRules:
+                $ref: '#/components/examples/OutboundRoutingRules'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OutboundRoutingRule'
+              examples:
+                OutboundRoutingRuleResponse:
+                  $ref: '#/components/examples/OutboundRoutingRuleResponse'
+        '400':
+          $ref: '#/components/responses/ErrorConstraintViolation'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/ErrorOutboundDuplicatePriorityExists'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    put:
+      tags:
+      - Outbound Number Routing Rules
+      summary: Update Bulk Routing Rules
+      description: '**This API requires the Account Administrator role.**
+
+
+        The following field must be unique otherwise a `HTTP 409 Conflict` will be returned:
+
+        * `priority`
+
+
+        Updates Outbound Call Number Routing Rules for mixed type of MPC trunks.'
+      operationId: bulkUpdateOutboundRoutingRule
+      parameters:
+      - $ref: '#/components/parameters/accountId'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              maxItems: 100
+              items:
+                $ref: '#/components/schemas/BulkUpdateOutboundRoutingRule'
+            example:
+            - id: c8c2909d-75e9-484a-94c0-b7e8d29771fe
+              type: NUMBER_PREFIX
+              priority: 4
+              prefix: '+1'
+              minLength: 1
+              maxLength: 50
+              sipTrunkId: c8c2909d-75e9-484a-94c0-b7e8d29771fe
+              callerId: c8c2909d-75e9-484a-94c0-b7e8d29771fe
+              isoCountry: IN-MH
+              locationIds:
+              - c8c2909d-75e9-484a-94c0-b7e8d29771fe
+            - id: c8c2909d-75e9-484a-94c0-b7e8d29771ff
+              type: NUMBER_PREFIX
+              priority: 2
+              prefix: '+1'
+              minLength: 1
+              maxLength: 50
+              sipTrunkId: c8c2909d-75e9-484a-94c0-b7e8d29771ff
+              callerId: c8c2909d-75e9-484a-94c0-b7e8d29771ff
+              isoCountry: IN-MH
+              locationIds:
+              - c8c2909d-75e9-484a-94c0-b7e8d29771fe
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                maxItems: 100
+                items:
+                  $ref: '#/components/schemas/BulkUpdateOutboundRoutingRule'
+              example:
+              - id: c8c2909d-75e9-484a-94c0-b7e8d29771fe
+                type: NUMBER_PREFIX
+                priority: 4
+                prefix: '+1'
+                minLength: 1
+                maxLength: 50
+                sipTrunkId: c8c2909d-75e9-484a-94c0-b7e8d29771fe
+                callerId: c8c2909d-75e9-484a-94c0-b7e8d29771fe
+                isoCountry: IN-MH
+                locationIds:
+                - c8c2909d-75e9-484a-94c0-b7e8d29771fe
+              - id: c8c2909d-75e9-484a-94c0-b7e8d29771ff
+                type: NUMBER_PREFIX
+                priority: 2
+                prefix: '+1'
+                minLength: 1
+                maxLength: 50
+                sipTrunkId: c8c2909d-75e9-484a-94c0-b7e8d29771ff
+                callerId: c8c2909d-75e9-484a-94c0-b7e8d29771ff
+                isoCountry: IN-MH
+                locationIds:
+                - c8c2909d-75e9-484a-94c0-b7e8d29771fe
+        '400':
+          $ref: '#/components/responses/ErrorConstraintViolation'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/ErrorOutboundDuplicatePriorityExists'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    get:
+      tags:
+      - Outbound Number Routing Rules
+      summary: List Outbound Routing Rules
+      description: '**This API requires the Account Administrator role.**
+
+
+        Get list of outbound routing rules for different SIP trunks.'
+      operationId: listOutboundRoutingRule
+      parameters:
+      - $ref: '#/components/parameters/accountId'
+      - $ref: '#/components/parameters/pageNumber'
+      - name: pageSize
+        in: query
+        description: The max number of records to retrieve per page. Default value is 5, Any value like 5,10,15,20,25,30 is allowed. If value comes more than 100 then max 100 records will be returned.
+        required: false
+        schema:
+          type: integer
+          format: int32
+          example: 5
+          default: 5
+          minimum: 1
+          maximum: 100
+      - name: filter
+        in: query
+        required: false
+        description: "The possible fields you can filter on are type,priority,prefix,minLength,maxLength,callerId,trunkId,isoCountryCode. \nThe allowed format:\n- Begins with the field name to be filtered, followed by a colon and:\n  - Either an exact string to match, or\n  - A string expression including the * wildcard character\n\nExamples include 'callerId:+35311234567', 'isoCountryCode:IN'\n"
+        schema:
+          type: string
+          example: isoCountryCode:IN
+          maxLength: 255
+      - name: orderBy
+        in: query
+        required: false
+        description: 'The possible fields you can filter on are type,priority,prefix,minLength,maxLength,callerId,trunkId,isoCountryCode.
+
+          Specifies how response data should be sorted.
+
+          Field Names are case-senstive (should be written as it is in description).
+
+          To specify descending order, a suffix " desc" should be added. For example, "priority asc" for ascending or "priority desc" for descending".
+
+          The default sorting order is priority ascending.
+
+          '
+        schema:
+          type: string
+          default: priority
+          maxLength: 255
+        examples:
+          orderByPriorityInDescendingOrder:
+            value: priority desc
+            summary: sort data based on priority in descending order
+          orderByPriorityInAscendingOrder:
+            value: priority
+            summary: sort data based on priority in ascending order
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OutboundRoutingRulePage'
+              examples:
+                OutboundRoutingRulePageResponse:
+                  $ref: '#/components/examples/OutboundRoutingRulePageResponse'
+        '400':
+          $ref: '#/components/responses/ErrorConstraintViolation'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /accounts/{accountId}/outbound-routing-rules/{routingRuleId}:
+    get:
+      tags:
+      - Outbound Number Routing Rules
+      summary: Get Routing Rule
+      description: '**This API requires the Account Administrator role.**
+
+
+        Get existing single outbound routing rule.'
+      operationId: getOutboundRoutingRule
+      parameters:
+      - $ref: '#/components/parameters/accountId'
+      - $ref: '#/components/parameters/routingRuleId'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OutboundRoutingRule'
+              examples:
+                default:
+                  $ref: '#/components/examples/OutboundRoutingRuleResponse'
+        '400':
+          $ref: '#/components/responses/ErrorConstraintViolation'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    put:
+      tags:
+      - Outbound Number Routing Rules
+      summary: Update Routing Rule
+      description: '**This API requires the Account Administrator role.**
+
+
+        Update the existing outbound routing rule.'
+      operationId: updateOutboundRoutingRule
+      parameters:
+      - $ref: '#/components/parameters/accountId'
+      - $ref: '#/components/parameters/routingRuleId'
+      requestBody:
+        description: '**This API requires the Account Administrator role.**
+
+
+          Update existing outbound routing rule for mixed type of MPC trunks.
+
+          '
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateOutboundRoutingRule'
+            examples:
+              OutboundRoutingRules:
+                $ref: '#/components/examples/UpdateOutboundRoutingRule'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OutboundRoutingRule'
+              examples:
+                default:
+                  $ref: '#/components/examples/OutboundRoutingRuleResponse'
+        '400':
+          $ref: '#/components/responses/ErrorConstraintViolation'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/ErrorOutboundDuplicatePriorityExists'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    delete:
+      tags:
+      - Outbound Number Routing Rules
+      summary: Delete Routing Rule
+      description: '**This API requires the Account Administrator role.**
+
+
+        Delete the existing outbound routing rule.'
+      operationId: deleteOutboundRoutingRule
+      parameters:
+      - $ref: '#/components/parameters/accountId'
+      - $ref: '#/components/parameters/routingRuleId'
+      responses:
+        '204':
+          description: No Content
+        '400':
+          $ref: '#/components/responses/ErrorConstraintViolation'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+components:
+  schemas:
+    OutboundRoutingRule:
+      type: object
+      description: Outbound Routing Rule Model.
+      required:
+      - type
+      - prefix
+      - minLength
+      - maxLength
+      properties:
+        id:
+          type: string
+          example: c8c2909d-75e9-484a-94c0-b7e8d29771fe
+          description: The unique 36 character internal id that represents the Outbound Routing Rule.
+          readOnly: true
+        type:
+          type: string
+          description: The Number type can be Phone Number.
+          enum:
+          - NUMBER_PREFIX
+        priority:
+          type: integer
+          description: The priority for Outbound Routing Rule
+          example: 1
+        prefix:
+          type: string
+          description: The prefix for Outbound Routing Rule
+          example: '+1'
+          minLength: 1
+          maxLength: 50
+        minLength:
+          type: integer
+          description: The minimum String Length for Outbound Routing Rule
+          example: '7'
+          minimum: 1
+          maximum: 50
+        maxLength:
+          type: integer
+          description: The maximum String Length for Outbound Routing Rule
+          example: '50'
+          minimum: 1
+          maximum: 50
+        sipTrunkId:
+          type: string
+          maxLength: 50
+          example: c8c2909d-75e9-484a-94c0-b7e8d29771fe
+          description: The unique uuid that represents the different type of SIP Trunk like MS Teams, ACO etc.
+        callerId:
+          type: string
+          maxLength: 50
+          example: c8c2909d-75e9-484a-94c0-b7e8d29771fe
+          description: The Unique id of DNIS Details fetched from CPaas Server
+        isoCountry:
+          type: string
+          example: IN-MH
+          description: 'ISO 3166-2 location code for country and region. For various country and region codes, check : https://www.iso.org/obp/ui/#search'
+          minLength: 1
+          maxLength: 7
+        locationIds:
+          type: array
+          maxItems: 20
+          items:
+            type: string
+          description: List of Agent Location Id
+          example:
+          - c8c2909d-75e9-484a-94c0-b7e8d29771fe
+          - c8c2909d-75e9-484a-94c0-b7e8d29771fe
+    BulkUpdateOutboundRoutingRule:
+      type: object
+      description: Outbound Routing Rule Model.
+      required:
+      - id
+      - type
+      - priority
+      - prefix
+      - minLength
+      - maxLength
+      properties:
+        id:
+          type: string
+          example: c8c2909d-75e9-484a-94c0-b7e8d29771fe
+          description: The unique 36 character internal id that represents the Outbound Routing Rule.
+          readOnly: true
+        type:
+          type: string
+          description: The Number type can be Phone Number.
+          enum:
+          - NUMBER_PREFIX
+        priority:
+          type: integer
+          description: The priority for Outbound Routing Rule
+          example: 1
+        prefix:
+          type: string
+          description: The prefix for Outbound Routing Rule
+          example: '+1'
+          minLength: 1
+          maxLength: 50
+        minLength:
+          type: integer
+          description: The minimum String Length for Outbound Routing Rule
+          example: '7'
+          minimum: 1
+          maximum: 50
+        maxLength:
+          type: integer
+          description: The maximum String Length for Outbound Routing Rule
+          example: '50'
+          minimum: 1
+          maximum: 50
+        sipTrunkId:
+          type: string
+          maxLength: 50
+          example: c8c2909d-75e9-484a-94c0-b7e8d29771fe
+          description: The unique uuid that represents the different type of SIP Trunk like MS Teams, ACO etc.
+        callerId:
+          type: string
+          maxLength: 50
+          example: c8c2909d-75e9-484a-94c0-b7e8d29771fe
+          description: The unique id of DNIS Details fetched from CPaas Server
+        isoCountry:
+          type: string
+          example: IN-MH
+          description: 'ISO 3166-2 location code for country and region. For various country and region codes, check : https://www.iso.org/obp/ui/#search'
+          minLength: 1
+          maxLength: 7
+        locationIds:
+          type: array
+          maxItems: 20
+          items:
+            type: string
+          description: List of Agent Locations Id
+          example:
+          - c8c2909d-75e9-484a-94c0-b7e8d29771fe
+          - c8c2909d-75e9-484a-94c0-b7e8d29771fe
+    Links:
+      type: object
+      properties:
+        prev:
+          type: string
+          description: URL of the previous page. Blank if currently on the first page.
+        next:
+          type: string
+          description: URL of the next page. Blank if currently on the last page.
+    UpdateOutboundRoutingRule:
+      type: object
+      description: Outbound Routing Rule Model.
+      required:
+      - type
+      - priority
+      - prefix
+      - minLength
+      - maxLength
+      properties:
+        id:
+          type: string
+          example: c8c2909d-75e9-484a-94c0-b7e8d29771fe
+          description: The unique 36 character internal id that represents the Outbound Routing Rule.
+          readOnly: true
+        type:
+          type: string
+          description: The Number type can be Phone Number.
+          enum:
+          - NUMBER_PREFIX
+        priority:
+          type: integer
+          description: The priority for Outbound Routing Rule
+          example: 1
+        prefix:
+          type: string
+          description: The prefix for Outbound Routing Rule
+          example: '+1'
+          minLength: 1
+          maxLength: 50
+        minLength:
+          type: integer
+          description: The minimum String Length for Outbound Routing Rule
+          example: '7'
+          minimum: 1
+          maximum: 50
+        maxLength:
+          type: integer
+          description: The maximum String Length for Outbound Routing Rule
+          example: '50'
+          minimum: 1
+          maximum: 50
+        sipTrunkId:
+          type: string
+          maxLength: 50
+          example: c8c2909d-75e9-484a-94c0-b7e8d29771fe
+          description: The unique uuid that represents the different type of SIP Trunk like MS Teams, ACO etc.
+        callerId:
+          type: string
+          maxLength: 50
+          example: c8c2909d-75e9-484a-94c0-b7e8d29771fe
+          description: The unique id of DNIS Details fetched from CPaas Server
+        isoCountry:
+          type: string
+          example: IN-MH
+          description: 'ISO 3166-2 location code for country and region. For various country and region codes, check : https://www.iso.org/obp/ui/#search'
+          minLength: 1
+          maxLength: 7
+        locationIds:
+          type: array
+          maxItems: 20
+          items:
+            type: string
+          description: List of Agent Location Id
+          example:
+          - c8c2909d-75e9-484a-94c0-b7e8d29771fe
+          - c8c2909d-75e9-484a-94c0-b7e8d29771fe
+    Pagination:
+      type: object
+      properties:
+        pageNumber:
+          type: integer
+          description: The current page number.
+        pageSize:
+          type: integer
+          description: The max number of records that can be retrieved on this page.
+        total:
+          type: integer
+          description: The total number of records.
+    OutboundRoutingRulePage:
+      title: OutboundRoutingRulePage
+      type: object
+      description: Outbound Routing Rule filtered response
+      properties:
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+        outboundRoutingRules:
+          type: array
+          maxItems: 50
+          items:
+            $ref: '#/components/schemas/OutboundRoutingRule'
+        links:
+          allOf:
+          - $ref: '#/components/schemas/Links'
+          example:
+            prev: /api/admin/voice/v1/accounts/ABCDEF/outbound-routing-rules?pageNumber=1&pageSize=10
+            next: /api/admin/voice/v1/accounts/ABCDEF/outbound-routing-rules?pageNumber=3&pageSize=10
+    Problem:
+      type: object
+      description: '<b>Problem Detail</b> as a way to carry machine-readable details of errors in a HTTP response to avoid the need to define new error response formats for HTTP APIs <a href="https://tools.ietf.org/html/rfc7807">RFC 7807</a>
+
+        '
+      properties:
+        type:
+          type: string
+          format: uri
+          description: 'An absolute URI that identifies the problem type. When dereferenced, it SHOULD provide human-readable documentation for the problem type (e.g., using HTML).
+
+            '
+          default: about:blank
+          example: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#constraint-violation
+        title:
+          type:
+          - string
+          - 'null'
+          description: 'A short, summary of the problem type. Written in english and readable for engineers (usually not suited for non technical stakeholders and not localized).
+
+            '
+          example: Service Unavailable
+        status:
+          type:
+          - integer
+          - 'null'
+          format: int32
+          description: 'The HTTP status code generated by the origin server for this occurrence of the problem.
+
+            '
+          minimum: 100
+          example: 503
+          exclusiveMaximum: 600
+        detail:
+          type:
+          - string
+          - 'null'
+          description: 'A human readable explanation specific to this occurrence of the problem.
+
+            '
+          example: Connection to database timed out
+        instance:
+          type:
+          - string
+          - 'null'
+          format: uri
+          description: 'An absolute URI that identifies the specific occurrence of the problem. It may or may not yield further information if dereferenced.
+
+            '
+        violations:
+          type:
+          - array
+          - 'null'
+          description: 'A list of violations that occurred as a result of invalid data provided as part of a request.
+
+            '
+          items:
+            type: object
+            properties:
+              field:
+                type: string
+                description: 'The name of the field in the request that caused the violation. This can be the name of a path parameter, query parameter, or a field within the request body.
+
+                  '
+                example: accountId
+              message:
+                type: string
+                description: 'A human readable explanation specific to this occurrence of the violation.
+
+                  '
+                example: must match "^[a-zA-Z]{6}$"
+              code:
+                type: integer
+                format: int32
+                description: 'The violation code generated by the server for this occurrence of the violation. Use this code when implementing any error handling logic instead of the message, as the message can change.
+
+                  '
+                example: 20006
+          example:
+          - field: emailAddress
+            message: must not be null
+            code: 20002
+          - field: accountId
+            message: must match "^[a-zA-Z]{6}$"
+            code: 20006
+  examples:
+    ErrorForbidden:
+      description: Forbidden
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#forbidden
+        title: Forbidden
+        status: 403
+        detail: According to the access control policy the current user does not have permission to access this resource.
+    ErrorConstraintViolation:
+      description: Constraint Violation
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#constraint-violation
+        title: Constraint Violation
+        status: 400
+        detail: A problem that indicates a syntactically correct, yet semantically illegal request. The Server can not process this request until the client resolves the semantic errors described in the violations section.
+        violations:
+        - field: accountId
+          message: must match "^[a-zA-Z]{6}$"
+          code: 20006
+    OutboundRoutingRules:
+      value:
+        type: NUMBER_PREFIX
+        priority: 1
+        prefix: '+1'
+        minLength: 1
+        maxLength: 50
+        sipTrunkId: c8c2909d-75e9-484a-94c0-b7e8d29771fe
+        callerId: c8c2909d-75e9-484a-94c0-b7e8d29771fe
+        isoCountry: IN-MH
+        locationIds:
+        - c8c2909d-75e9-484a-94c0-b7e8d29771fe
+    ErrorOutboundDuplicatePriorityExists:
+      description: Constraint Violation
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#conflict
+        title: Conflict
+        status: 409
+        detail: A resource with the same unique constraint values already exists.
+        violations:
+        - field: priority
+          message: Priority already exists
+    OutboundRoutingRuleResponse:
+      value:
+        id: c8c2909d-75e9-484a-94c0-b7e8d29771fe
+        type: NUMBER_PREFIX
+        priority: 1
+        prefix: '+1'
+        minLength: 1
+        maxLength: 50
+        sipTrunkId: c8c2909d-75e9-484a-94c0-b7e8d29771fe
+        callerId: c8c2909d-75e9-484a-94c0-b7e8d29771fe
+        isoCountry: IN-MH
+        locationIds:
+        - c8c2909d-75e9-484a-94c0-b7e8d29771fe
+    ErrorNotFound:
+      description: Not Found
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#resource-not-found
+        title: Resource Not Found
+        status: 404
+        detail: Either there is no API method associated with the URL path of the request, or the request refers to one or more resources that were not found.
+    ErrorUnauthorized:
+      description: Unauthorized
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#unauthorized
+        title: Unauthorized
+        status: 401
+        detail: This operation requires authentication. See https://developers.avayacloud.com/onecloud-ccaas/docs/how-to-authenticate-with-ccaas-apis
+    UpdateOutboundRoutingRule:
+      description: Outbound Number Routing Rule Request
+      value:
+        type: NUMBER_PREFIX
+        priority: 5
+        prefix: '+44'
+        minLength: 1
+        maxLength: 50
+        sipTrunkId: c8c2909d-75e9-484a-94c0-b7e8d29771fe
+        callerId: c8c2909d-75e9-484a-94c0-b7e8d29771fe
+        isoCountry: IN-MH
+        locationIds:
+        - c8c2909d-75e9-484a-94c0-b7e8d29771fe
+    OutboundRoutingRulePageResponse:
+      value:
+        pagination:
+          pageNumber: 1
+          pageSize: 3
+          total: 10
+        outboundRoutingRules:
+        - id: c8c2909d-75e9-484a-94c0-b7e8d29771fe
+          type: NUMBER_PREFIX
+          priority: 1
+          prefix: '+1'
+          minLength: 1
+          maxLength: 50
+          sipTrunkId: c8c2909d-75e9-484a-94c0-b7e8d29771fe
+          callerId: c8c2909d-75e9-484a-94c0-b7e8d29771fe
+          isoCountry: IN-MH
+          locationIds:
+          - c8c2909d-75e9-484a-94c0-b7e8d29771fe
+        - id: c8c2909d-75e9-484a-94c0-b7e8d29771ff
+          type: NUMBER_PREFIX
+          priority: 2
+          prefix: '+1'
+          minLength: 1
+          maxLength: 50
+          sipTrunkId: c8c2909d-75e9-484a-94c0-b7e8d29771ff
+          callerId: c8c2909d-75e9-484a-94c0-b7e8d29771ff
+          isoCountry: IN-MH
+          locationIds:
+          - c8c2909d-75e9-484a-94c0-b7e8d29771fe
+        - id: c8c2909d-75e9-484a-94c0-b7e8d29771fg
+          type: NUMBER_PREFIX
+          priority: 3
+          prefix: '+1'
+          minLength: 1
+          maxLength: 50
+          sipTrunkId: c8c2909d-75e9-484a-94c0-b7e8d29771fg
+          callerId: c8c2909d-75e9-484a-94c0-b7e8d29771fg
+          isoCountry: IN-MH
+          locationIds:
+          - c8c2909d-75e9-484a-94c0-b7e8d29771fe
+        links:
+          prev: /api/admin/v1/accounts/ASDJGE/outbound-routing-rules?pageNumber=1&pageSize=3
+          next: /api/admin/v1/accounts/ASDJGE/outbound-routing-rules?pageNumber=3&pageSize=3
+    ErrorInternalServerError:
+      description: Server Error
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#server-error
+        title: Server Error
+        status: 500
+        detail: An internal server error was encountered.
+  responses:
+    NotFound:
+      description: Not Found
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorNotFound'
+    ErrorOutboundDuplicatePriorityExists:
+      description: Conflict
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            priority:
+              $ref: '#/components/examples/ErrorOutboundDuplicatePriorityExists'
+    InternalServerError:
+      description: All other application errors
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorInternalServerError'
+    ErrorConstraintViolation:
+      description: Constraint Violation
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorConstraintViolation'
+    Forbidden:
+      description: Forbidden
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorForbidden'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorUnauthorized'
+  parameters:
+    accountId:
+      name: accountId
+      description: The unique 6 character internal id that represents the customer account.
+      required: true
+      in: path
+      schema:
+        type: string
+        minLength: 6
+        maxLength: 6
+        pattern: ^[a-zA-Z]{6}$
+        example: ABCDEF
+    routingRuleId:
+      name: routingRuleId
+      in: path
+      description: The unique 36 character internal id (uuid) that represents the Element.
+      required: true
+      schema:
+        type: string
+        example: c8c2909d-75e9-484a-94c0-b7e8d29771fe
+        minLength: 36
+        maxLength: 36
+        pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
+    pageNumber:
+      name: pageNumber
+      in: query
+      description: The page number of the records to retrieve. Default value is 1.
+      required: false
+      schema:
+        type: integer
+        format: int32
+        example: 1
+        default: 1
+        minimum: 1
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      description: This API uses Bearer Token Authorization Flow
+      bearerFormat: JWT
+    AppKey:
+      type: apiKey
+      in: header
+      name: appkey
+      description: This API needs an appKey as header
+x-explorer-enabled: false
+x-samples-languages:
+- curl
+- node
+- java
+- javascript
+- python
+- go

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<wsdl:definitions name="route_point_address_service_service" 
+	targetNamespace="http://www.nortel.com/soa/oi/cct/RoutePointAddressService" 
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" 
+	xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" 
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns:tns="http://www.nortel.com/soa/oi/cct/RoutePointAddressService" 
+	xmlns:interface="http://www.nortel.com/soa/oi/cct/RoutePointAddressService">
+
+	<wsdl:import 
+		namespace="http://www.nortel.com/soa/oi/cct/RoutePointAddressService" 
+		location="RoutePointAddressServiceInterface.wsdl" />
+
+	<wsdl:binding name="RoutePointAddressServiceBinding" type="interface:RoutePointAddressService">
+
+		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http" />
+		
+		<wsdl:operation name="GetVersion">
+			<soap:operation soapAction="http://www.nortel.com/soa/oi/cct/RoutePointAddressService/GetVersion" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="SessionNotCreatedException">
+				<soap:fault use="literal" name="SessionNotCreatedException" />
+			</wsdl:fault>
+			<wsdl:fault name="GetVersionException">
+				<soap:fault use="literal" name="GetVersionException" />
+			</wsdl:fault>
+		</wsdl:operation>
+		
+		<wsdl:operation name="IsControlled">
+			<soap:operation soapAction="http://www.nortel.com/soa/oi/cct/RoutePointAddressService/IsControlled" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="SessionNotCreatedException">
+				<soap:fault use="literal" name="SessionNotCreatedException" />
+			</wsdl:fault>
+			<wsdl:fault name="IsControlledException">
+				<soap:fault use="literal" name="IsControlledException" />
+			</wsdl:fault>
+		</wsdl:operation>
+		
+		<wsdl:operation name="Control">
+			<soap:operation soapAction="http://www.nortel.com/soa/oi/cct/RoutePointAddressService/Control" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="SessionNotCreatedException">
+				<soap:fault use="literal" name="SessionNotCreatedException" />
+			</wsdl:fault>
+			<wsdl:fault name="ControlException">
+				<soap:fault use="literal" name="ControlException" />
+			</wsdl:fault>
+		</wsdl:operation>
+		
+		<wsdl:operation name="ReleaseControl">
+			<soap:operation soapAction="http://www.nortel.com/soa/oi/cct/RoutePointAddressService/ReleaseControl" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="SessionNotCreatedException">
+				<soap:fault use="literal" name="SessionNotCreatedException" />
+			</wsdl:fault>
+			<wsdl:fault name="ReleaseControlException">
+				<soap:fault use="literal" name="ReleaseControlException" />
+			</wsdl:fault>
+		</wsdl:operation>
+		
+	</wsdl:binding>
+
+	<wsdl:service name="SOAOICCT_RoutePointAddressService">
+		<wsdl:port name="RoutePointAddressService" binding="tns:RoutePointAddressServiceBinding">
+			<soap:address location="http://localhost:9080/SOAOICCT/services/RoutePointAddressService" />
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>

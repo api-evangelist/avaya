@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<wsdl:definitions name="route_point_address_service_interface" 
+	targetNamespace="http://www.nortel.com/soa/oi/cct/RoutePointAddressService" 
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" 
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+	xmlns:service="http://www.nortel.com/soa/oi/cct/RoutePointAddressService"
+	xmlns:types="http://www.nortel.com/soa/oi/cct/types" 
+	xmlns:exceptions="http://www.nortel.com/soa/oi/cct/faults"
+	xmlns:local="http://www.nortel.com/soa/oi/cct/types/RoutePointAddressService">
+
+	<wsdl:import 
+		namespace="http://www.nortel.com/soa/oi/cct/faults" 
+		location="SessionServiceExceptions.wsdl" />
+
+	<wsdl:types>
+
+		<xsd:schema elementFormDefault="qualified" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+			targetNamespace="http://www.nortel.com/soa/oi/cct/types/RoutePointAddressService">
+
+			<xsd:import namespace="http://www.nortel.com/soa/oi/cct/types" schemaLocation="types.xsd"></xsd:import>
+
+			<xsd:complexType name="RoutePointAddressRequest">
+				<xsd:sequence>
+					<xsd:element name="ssoToken" type="types:ssoToken" />				
+					<xsd:element name="routePointAddress" type="types:address" />		
+				</xsd:sequence>
+			</xsd:complexType>
+
+			<xsd:complexType name="BooleanResponse">
+				<xsd:sequence>
+					<xsd:element name="response" type="xsd:boolean" />
+				</xsd:sequence>
+			</xsd:complexType>
+
+			<xsd:element name="GetVersionRequest" type="types:getVersionRequest" />
+			<xsd:element name="GetVersionResponse" type="types:getVersionResponse" />
+			
+			<xsd:element name="IsControlledRequest" type="local:RoutePointAddressRequest" />
+			<xsd:element name="IsControlledResponse" type="local:BooleanResponse" />
+			
+			<xsd:element name="ControlRequest" type="local:RoutePointAddressRequest" />
+			
+			<xsd:element name="ReleaseControlRequest" type="local:RoutePointAddressRequest" />
+
+		</xsd:schema>
+	</wsdl:types>
+
+	<wsdl:message name="GetVersionRequest">
+		<wsdl:part name="parameters" element="local:GetVersionRequest" />
+	</wsdl:message>
+	
+	<wsdl:message name="GetVersionResponse">
+		<wsdl:part name="response" element="local:GetVersionResponse" />
+	</wsdl:message>
+		
+	<wsdl:message name="IsControlledRequest">
+		<wsdl:part name="parameters" element="local:IsControlledRequest" />
+	</wsdl:message>
+	
+	<wsdl:message name="IsControlledResponse">
+		<wsdl:part name="result" element="local:IsControlledResponse" />
+	</wsdl:message>
+	
+	<wsdl:message name="ControlRequest">
+		<wsdl:part name="parameters" element="local:ControlRequest" />
+	</wsdl:message>
+	
+	<wsdl:message name="ControlResponse"></wsdl:message>
+	
+	<wsdl:message name="ReleaseControlRequest">
+		<wsdl:part name="parameters" element="local:ReleaseControlRequest" />
+	</wsdl:message>
+
+	<wsdl:message name="ReleaseControlResponse"></wsdl:message>
+
+	<wsdl:portType name="RoutePointAddressService">
+
+		<wsdl:operation name="GetVersion">
+			<wsdl:input message="service:GetVersionRequest" />
+			<wsdl:output message="service:GetVersionResponse" />
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="GetVersionException" message="exceptions:GetVersionException" />
+		</wsdl:operation>
+		
+		<wsdl:operation name="IsControlled">
+			<wsdl:input message="service:IsControlledRequest" />
+			<wsdl:output message="service:IsControlledResponse" />
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="IsControlledException" message="exceptions:IsControlledException" />
+		</wsdl:operation>
+
+		<wsdl:operation name="Control">
+			<wsdl:input message="service:ControlRequest" />
+			<wsdl:output message="service:ControlResponse" />
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="ControlException" message="exceptions:ControlException" />
+		</wsdl:operation>
+
+
+		<wsdl:operation name="ReleaseControl">
+			<wsdl:input message="service:ReleaseControlRequest" />
+			<wsdl:output message="service:ReleaseControlResponse" />
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="ReleaseControlException" message="exceptions:ReleaseControlException" />
+		</wsdl:operation>
+
+	</wsdl:portType>
+
+
+
+</wsdl:definitions>

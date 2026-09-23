@@ -1,0 +1,465 @@
+openapi: 3.2.0
+info:
+  title: Outbound Users API
+  description: 'Outbound API allows you to manage outbound call campaigns, records, agents, skills, and Do Not Call lists.
+
+
+    ## Authentication
+
+    All requests require an Bearer Token.
+
+
+    ## Pagination
+
+    Many list endpoints return paginated results with a limit of 200 records per page. When more records are available, the response includes `"more_records": "1"`. To retrieve subsequent pages, include a `page` parameter in your request.'
+  version: 1.0.0
+servers:
+- url: '{protocol}://{server}{basePath}'
+  description: Open API
+  variables:
+    protocol:
+      enum:
+      - https
+      default: https
+    server:
+      default: HOST-REGION.api.avayacloud.com
+    basePath:
+      default: /api/outbound
+- url: '{protocol}://{server}:{port}'
+  description: Internal API
+  variables:
+    protocol:
+      enum:
+      - http
+      - https
+      default: https
+    server:
+      default: outbound-service
+    port:
+      enum:
+      - '80'
+      - '443'
+      default: '443'
+security:
+- {}
+- BearerAuth: []
+tags:
+- name: Users
+  description: Manage system users
+paths:
+  /GetUsers:
+    post:
+      tags:
+      - Users
+      summary: Get all users
+      description: 'This function retrieves a list of all users configured in the system.
+
+
+        **Pagination:** Results are paginated with a limit of 200 records per page.
+
+
+        | Response Code | Description |
+
+        | --- | --- |
+
+        | 200 | Success |
+
+        | 400 | Bad Request |
+
+        | 401 | Unauthorized |
+
+        | 404 | Not Found |
+
+        | 405 | Method Not Allowed |
+
+        | 429 | Too Many Requests |'
+      operationId: getUsers
+      requestBody:
+        required: false
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                page:
+                  type: integer
+                  default: 1
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  info:
+                    $ref: '#/components/schemas/PaginationInfo'
+                  users:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        CRM_ID:
+                          type: string
+                        Email:
+                          type: string
+                        FirstName:
+                          type: string
+                        Id:
+                          type: string
+                        Surname:
+                          type: string
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+        '405':
+          description: Method Not Allowed
+        '429':
+          description: Too Many Requests
+  /CreateApiUser:
+    post:
+      tags:
+      - Users
+      summary: Create an API-only user
+      description: 'This function creates an API-only user in the platform (cannot log into the outbound interface directly).
+
+
+        | Response Code | Description |
+
+        | --- | --- |
+
+        | 200 | Success |
+
+        | 400 | Bad Request |
+
+        | 401 | Unauthorized |
+
+        | 404 | Not Found |
+
+        | 405 | Method Not Allowed |
+
+        | 429 | Too Many Requests |'
+      operationId: createApiUser
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+              - username
+              - firstname
+              - surname
+              properties:
+                username:
+                  type: string
+                  description: The username in the form of an email address.
+                firstname:
+                  type: string
+                  description: The first name of the user.
+                surname:
+                  type: string
+                  description: The surname of the user.
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: string
+                    example: API User Has Been Created
+                  info:
+                    type: object
+                    properties:
+                      FirstName:
+                        type: string
+                      Surname:
+                        type: string
+                      UserId:
+                        type: string
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+        '405':
+          description: Method Not Allowed
+        '429':
+          description: Too Many Requests
+  /DeleteUsers:
+    put:
+      tags:
+      - Users
+      summary: Delete a user
+      description: 'This function deletes a specified user from the system.
+
+
+        | Response Code | Description |
+
+        | --- | --- |
+
+        | 200 | Success |
+
+        | 400 | Bad Request |
+
+        | 401 | Unauthorized |
+
+        | 405 | Method Not Allowed |
+
+        | 429 | Too Many Requests |'
+      operationId: deleteUsers
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+              - userid
+              properties:
+                userid:
+                  type: string
+                  description: The User ID to delete.
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: string
+                    example: Users Have Been Trashed
+                  info:
+                    type: object
+                    properties:
+                      UserId:
+                        type: string
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '405':
+          description: Method Not Allowed
+        '429':
+          description: Too Many Requests
+  /SetCRMID:
+    put:
+      tags:
+      - Users
+      summary: Set CRM ID for a user
+      description: 'This function sets the CRM ID of a specified user for integrations and callback URL purposes.
+
+
+        | Response Code | Description |
+
+        | --- | --- |
+
+        | 200 | Success |
+
+        | 400 | Bad Request |
+
+        | 401 | Unauthorized |
+
+        | 405 | Method Not Allowed |
+
+        | 429 | Too Many Requests |'
+      operationId: setCRMID
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+              - userid
+              - crmid
+              properties:
+                userid:
+                  type: string
+                  description: The User ID to update the CRM ID for.
+                crmid:
+                  type: string
+                  description: The CRM ID to set for the user.
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: string
+                    example: CRM Id has been set up
+                  info:
+                    type: object
+                    properties:
+                      CRMID:
+                        type: string
+                      UserId:
+                        type: string
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '405':
+          description: Method Not Allowed
+        '429':
+          description: Too Many Requests
+  /SetExtension:
+    put:
+      tags:
+      - Users
+      summary: Set agent extension
+      description: 'This function sets the extension of an agent for connecting calls via an external voice platform.
+
+
+        | Response Code | Description |
+
+        | --- | --- |
+
+        | 200 | Success |
+
+        | 400 | Bad Request |
+
+        | 401 | Unauthorized |
+
+        | 405 | Method Not Allowed |
+
+        | 429 | Too Many Requests |'
+      operationId: setExtension
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+              - userid
+              - extension
+              properties:
+                userid:
+                  type: string
+                  description: The User ID to set the extension for.
+                extension:
+                  type: string
+                  description: The SIP extension number, dial-in phone number, or WebRTC endpoint.
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: string
+                    example: Extension has been set up
+                  info:
+                    type: object
+                    properties:
+                      UserId:
+                        type: string
+                      Extension:
+                        type: string
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '405':
+          description: Method Not Allowed
+        '429':
+          description: Too Many Requests
+  /GetUserId:
+    post:
+      tags:
+      - Users
+      summary: Get user ID by key-value pair
+      description: 'This function retrieves a User ID based on a key-value pair stored in the user''s CRM ID field.
+
+
+        | Response Code | Description |
+
+        | --- | --- |
+
+        | 200 | Success |
+
+        | 400 | Bad Request |
+
+        | 401 | Unauthorized |
+
+        | 404 | Not Found |
+
+        | 405 | Method Not Allowed |
+
+        | 429 | Too Many Requests |'
+      operationId: getUserId
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+              - searchkey
+              - searchval
+              properties:
+                searchkey:
+                  type: string
+                  description: The key of the pair to search for.
+                searchval:
+                  type: string
+                  description: The value of the pair to search for.
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  UserId:
+                    type: string
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+        '405':
+          description: Method Not Allowed
+        '429':
+          description: Too Many Requests
+components:
+  schemas:
+    PaginationInfo:
+      type: object
+      properties:
+        per_page:
+          type: string
+          example: '200'
+        count:
+          type: string
+          example: '10'
+        page:
+          type: string
+          example: '1'
+        more_records:
+          type: string
+          example: '0'
+          description: Set to '1' if more records are available. Increment the `page` parameter to retrieve the next page.
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      description: This API uses Bearer Token Authorization Flow
+      bearerFormat: JWT

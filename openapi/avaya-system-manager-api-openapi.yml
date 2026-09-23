@@ -1,0 +1,791 @@
+openapi: 3.2.0
+info:
+  title: Admin - Voice System Manager API
+  description: 'The Voice provider APIs are used to manage information about voice specific elements and different voice related entities e.g. Phone numbers.
+
+
+    Voice Services will support multiple ways to provision voice providers
+
+    1. Programmatic Interface (Rest APIs)
+
+    2. User Interface'
+  contact:
+    name: Avaya API Team
+    url: https://developers.avayacloud.com/onecloud-ccaas
+    email: apiteam@avaya.com
+  license:
+    name: Avaya Software Development Kit (SDK) Software License Terms
+    url: http://support.avaya.com/css/P8/documents/101038288
+  version: 1.0.2
+servers:
+- url: '{protocol}://{server}{basePath}'
+  description: Open API
+  variables:
+    protocol:
+      enum:
+      - https
+      default: https
+    server:
+      default: HOST-REGION.api.avayacloud.com
+    basePath:
+      default: /api/admin/voice/v1
+security:
+- {}
+- BearerAuth: []
+  AppKey: []
+tags:
+- name: System Manager
+  description: Administration of System Manager. These API are expected to be called by an account administrator.
+paths:
+  /accounts/{accountId}/system-managers:
+    post:
+      tags:
+      - System Manager
+      summary: Creates an System Manager
+      description: '**This API requires the Account Administrator role.**
+
+
+        Creates an System Manager for specified account'
+      operationId: createSystemManager
+      parameters:
+      - $ref: '#/components/parameters/accountId'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SystemManager'
+            examples:
+              default:
+                $ref: '#/components/examples/SystemManagerRequest'
+        required: true
+      responses:
+        '202':
+          description: Accepted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AsynchronousOperationResponse'
+              examples:
+                default:
+                  $ref: '#/components/examples/SystemManagerAsyncResponse'
+        '400':
+          $ref: '#/components/responses/ErrorConstraintViolation'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    get:
+      tags:
+      - System Manager
+      summary: List all System Managers
+      description: '**This API requires the Account Administrator role.**
+
+
+        Returns the list of all available System Managers by account Id'
+      operationId: getAllSystemManagers
+      parameters:
+      - $ref: '#/components/parameters/accountId'
+      - name: filter
+        in: query
+        required: false
+        description: "Specifies details of a row filter.\n\n The possible fields that can be filtered on are:\n  * name\n\nThe allowed format:\n  - Begins with the column name to be filtered, followed by a colon, then:\n    - Either an exact string to match, or\n    - A string expression including the * wildcard character\n      - :{PREFIX}* will be used to find out word start with.\n      - :*{POSTFIX} will be used to find out word end with\n      - : will be used to match exact word\n  - Begin with column name to be filtered, followed by a = operator. (this will be used to match exact string)\n"
+        schema:
+          type: string
+          maxLength: 255
+        examples:
+          exact:
+            description: Example of filtering based on an exact string.
+            value: name=SMGR123
+          prefix:
+            description: Example of filtering based on a prefix string.
+            value: name:SMGR1*
+          postfix:
+            description: Example of filtering based on a postfix string.
+            value: name:*SMGR
+      - name: orderBy
+        in: query
+        required: false
+        description: 'Field name on which ordering needs to be performed. The default order is ascending.
+
+
+          The possible fields that can be ordered on are:
+
+          * name
+
+
+          Field Names are case-senstive (should be written as it is in description).
+
+
+          To specify descending order, a suffix " desc" should be added. For example, "name" for ascending or "name desc" for descending".
+
+          '
+        schema:
+          type: string
+          default: name
+          maxLength: 255
+        examples:
+          ascending:
+            value: name
+          descending:
+            value: name desc
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SystemManagers'
+              examples:
+                default:
+                  $ref: '#/components/examples/SystemManagers'
+        '400':
+          $ref: '#/components/responses/ErrorConstraintViolation'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /accounts/{accountId}/system-managers/{systemManagerId}:
+    put:
+      tags:
+      - System Manager
+      summary: Updates a System Manager
+      description: '**This API requires the Account Administrator role.**
+
+
+        Updates an existing System Manager with System Manager id by account id'
+      operationId: updateSystemManager
+      parameters:
+      - $ref: '#/components/parameters/accountId'
+      - $ref: '#/components/parameters/systemManagerId'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateSystemManager'
+            examples:
+              default:
+                $ref: '#/components/examples/UpdateSystemManagerRequest'
+        required: true
+      responses:
+        '202':
+          description: Accepted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AsynchronousOperationResponse'
+              examples:
+                default:
+                  $ref: '#/components/examples/SystemManagerAsyncResponse'
+        '400':
+          $ref: '#/components/responses/ErrorConstraintViolation'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    get:
+      tags:
+      - System Manager
+      summary: Details of a System Manager
+      description: '**This API requires the Account Administrator role.**
+
+
+        Returns the details of an System Manager, based on System Manager id and account id'
+      operationId: getSystemManager
+      parameters:
+      - $ref: '#/components/parameters/accountId'
+      - $ref: '#/components/parameters/systemManagerId'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SystemManagerResponse'
+              examples:
+                default:
+                  $ref: '#/components/examples/SystemManagerResponse'
+        '400':
+          $ref: '#/components/responses/ErrorConstraintViolation'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    delete:
+      tags:
+      - System Manager
+      summary: Deletes a System Manager
+      description: '**This API requires the Account Administrator role.**
+
+
+        Deletes an existing System Manager identified by System Manager id.'
+      operationId: deleteSystemManager
+      parameters:
+      - $ref: '#/components/parameters/accountId'
+      - $ref: '#/components/parameters/systemManagerId'
+      responses:
+        '202':
+          description: Accepted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AsynchronousOperationResponse'
+              examples:
+                default:
+                  $ref: '#/components/examples/SystemManagerAsyncResponse'
+        '400':
+          $ref: '#/components/responses/ErrorConstraintViolation'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '405':
+          $ref: '#/components/responses/MethodNotAllowed'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+components:
+  examples:
+    ErrorForbidden:
+      description: Forbidden
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#forbidden
+        title: Forbidden
+        status: 403
+        detail: According to the access control policy the current user does not have permission to access this resource.
+    SystemManagers:
+      description: Lists all System Managers
+      value:
+        resources:
+        - id: 7700d655-5807-4738-a868-712740a18199
+          name: SMGR123
+          description: Description of the System Manager
+          primaryHostname: dc1-smgr96.avayacloud.stage
+          username: dummyUser
+          password: dummypassword
+          enrollmentPassword: testpassword
+          secondaryHostname: dc2-smgr97.avayacloud.stage
+          activeSystemManager: PRIMARY
+          useForCerts: true
+          status: IN_PROGRESS
+        - id: 8b2ae74d-61e5-48df-8b32-81a7bc726495
+          name: SmgrTest
+          description: Description of the System Manager
+          primaryHostname: dc2-smgr105.avayacloud.stage
+          username: dummyUser
+          password: dummypassword
+          enrollmentPassword: testpassword
+          secondaryHostname: dc1-smgr98.avayacloud.stage
+          activeSystemManager: PRIMARY
+          useForCerts: true
+          status: SUCCESS
+    ErrorConstraintViolation:
+      description: Constraint Violation
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#constraint-violation
+        title: Constraint Violation
+        status: 400
+        detail: A problem that indicates a syntactically correct, yet semantically illegal request. The Server can not process this request until the client resolves the semantic errors described in the violations section.
+        violations:
+        - field: accountId
+          message: must match "^[a-zA-Z]{6}$"
+          code: 20006
+    UpdateSystemManagerRequest:
+      description: Request model for updating a System Manager.
+      value:
+        name: SMGR123
+        description: Description of the System Manager
+        primaryHostname: dc1-smgr96.avayacloud.stage
+        username: dummyUser
+        password: dummypassword
+        enrollmentPassword: testpassword
+        secondaryHostname: dc2-smgr97.avayacloud.stage
+        activeSystemManager: PRIMARY
+    ErrorMethodNotAllowed:
+      description: Method not allowed
+      value:
+        title: Method not allowed
+        status: 405
+        detail: The request calls an HTTP method that is not supported at the resource.
+    SystemManagerResponse:
+      description: Details of single System Manager
+      value:
+        id: 7700d655-5807-4738-a868-712740a18199
+        name: SmgrTest
+        description: Description of the System Manager
+        primaryHostname: dc2-smgr105.avayacloud.stage
+        username: dummyUser
+        password: dummypassword
+        enrollmentPassword: testpassword
+        secondaryHostname: dc1-smgr98.avayacloud.stage
+        activeSystemManager: PRIMARY
+        useForCerts: true
+        status: SUCCESS
+    ErrorNotFound:
+      description: Not Found
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#resource-not-found
+        title: Resource Not Found
+        status: 404
+        detail: Either there is no API method associated with the URL path of the request, or the request refers to one or more resources that were not found.
+    SystemManagerAsyncResponse:
+      description: A HATEOAS url response that is a reference to the System Manager under operation.
+      value:
+        url: /api/admin/voice/v1/accounts/NCWBNY/system-managers/5e9be49a-32d3-4927-83c7-7b0952798028
+    ErrorUnauthorized:
+      description: Unauthorized
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#unauthorized
+        title: Unauthorized
+        status: 401
+        detail: This operation requires authentication. See https://developers.avayacloud.com/onecloud-ccaas/docs/how-to-authenticate-with-ccaas-apis
+    SystemManagerRequest:
+      description: Request model for creating a System Manager.
+      value:
+        name: SMGR123
+        description: Description of the System Manager
+        primaryHostname: dc1-smgr96.avayacloud.stage
+        username: dummyUser
+        password: dummypassword
+        enrollmentPassword: testpassword
+        secondaryHostname: dc2-smgr97.avayacloud.stage
+        activeSystemManager: PRIMARY
+        useForCerts: true
+    ErrorConflict:
+      description: Conflict
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#conflict
+        title: Conflict
+        status: 409
+        detail: A resource with the same unique constraint values already exists.
+        violations:
+        - field: name
+          message: Communication Manager with same name already exists.
+        - field: hostname
+          message: Communication Manager with same hostname already exists.
+    ErrorInternalServerError:
+      description: Server Error
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#server-error
+        title: Server Error
+        status: 500
+        detail: An internal server error was encountered.
+  schemas:
+    UpdateSystemManager:
+      title: UpdateSystemManager
+      type: object
+      description: System Manager schema for update
+      properties:
+        name:
+          type: string
+          example: SMGR123
+          minLength: 3
+          maxLength: 255
+          pattern: ^[a-zA-Z0-9\p{L}\-\_\.\ ]+$
+        description:
+          type: string
+          example: Description of the System Manager
+          maxLength: 1024
+          pattern: (^$|^[a-zA-Z0-9\p{L}\(\)\-\_\.\ \n]+$)
+        primaryHostname:
+          type: string
+          description: This is the Fully Qualified Domain Name (FQDN)
+          example: dc1-smgr96.avayacloud.stage
+          minLength: 1
+          maxLength: 255
+          pattern: (^(([a-zA-Z]|[a-zA-Z][a-zA-Z0-9\-]*[a-zA-Z0-9])\.){1,}([A-Za-z]|[A-Za-z][A-Za-z0-9\-]*[A-Za-z0-9]){1,}$)|((^\s*((([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]))\s*$)|(^\s*((([0-9A-Fa-f]{1,4}:){7}([0-9A-Fa-f]{1,4}|:))|(([0-9A-Fa-f]{1,4}:){6}(:[0-9A-Fa-f]{1,4}|((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3})|:))|(([0-9A-Fa-f]{1,4}:){5}(((:[0-9A-Fa-f]{1,4}){1,2})|:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3})|:))|(([0-9A-Fa-f]{1,4}:){4}(((:[0-9A-Fa-f]{1,4}){1,3})|((:[0-9A-Fa-f]{1,4})?:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){3}(((:[0-9A-Fa-f]{1,4}){1,4})|((:[0-9A-Fa-f]{1,4}){0,2}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){2}(((:[0-9A-Fa-f]{1,4}){1,5})|((:[0-9A-Fa-f]{1,4}){0,3}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){1}(((:[0-9A-Fa-f]{1,4}){1,6})|((:[0-9A-Fa-f]{1,4}){0,4}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(:(((:[0-9A-Fa-f]{1,4}){1,7})|((:[0-9A-Fa-f]{1,4}){0,5}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:)))(%.+)?\s*$))
+        username:
+          type: string
+          example: dummyUser
+          maxLength: 255
+        password:
+          type: string
+          example: dummypassword
+          maxLength: 255
+        enrollmentPassword:
+          type: string
+          example: testpassword
+          maxLength: 255
+        secondaryHostname:
+          type: string
+          description: This is the Fully Qualified Domain Name (FQDN)
+          example: dc2-smgr97.avayacloud.stage
+          minLength: 1
+          maxLength: 255
+          pattern: (^(([a-zA-Z]|[a-zA-Z][a-zA-Z0-9\-]*[a-zA-Z0-9])\.){1,}([A-Za-z]|[A-Za-z][A-Za-z0-9\-]*[A-Za-z0-9]){1,}$)|((^\s*((([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]))\s*$)|(^\s*((([0-9A-Fa-f]{1,4}:){7}([0-9A-Fa-f]{1,4}|:))|(([0-9A-Fa-f]{1,4}:){6}(:[0-9A-Fa-f]{1,4}|((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3})|:))|(([0-9A-Fa-f]{1,4}:){5}(((:[0-9A-Fa-f]{1,4}){1,2})|:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3})|:))|(([0-9A-Fa-f]{1,4}:){4}(((:[0-9A-Fa-f]{1,4}){1,3})|((:[0-9A-Fa-f]{1,4})?:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){3}(((:[0-9A-Fa-f]{1,4}){1,4})|((:[0-9A-Fa-f]{1,4}){0,2}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){2}(((:[0-9A-Fa-f]{1,4}){1,5})|((:[0-9A-Fa-f]{1,4}){0,3}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){1}(((:[0-9A-Fa-f]{1,4}){1,6})|((:[0-9A-Fa-f]{1,4}){0,4}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(:(((:[0-9A-Fa-f]{1,4}){1,7})|((:[0-9A-Fa-f]{1,4}){0,5}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:)))(%.+)?\s*$))
+        activeSystemManager:
+          type: string
+          description: This field represents which System Manager is active. If SECONDARY value is selected then secondaryHostname should have some valid value assigned.
+          enum:
+          - PRIMARY
+          - SECONDARY
+          default: PRIMARY
+          example: PRIMARY
+        useForCerts:
+          type: boolean
+          description: This field represents if the System Manager will be used for certificates.
+          example: true
+      required:
+      - name
+      - primaryHostname
+      - username
+    AsynchronousOperationResponse:
+      type: object
+      description: Represents the response for an asynchronous operation that simply returns a HATEOAS url, that provides a reference to the object under operation
+      properties:
+        url:
+          type: string
+          maxLength: 2048
+    SystemManagerResponse:
+      title: SystemManagerResponse
+      type: object
+      description: Represents the model used to get details of a single System Manager.
+      properties:
+        id:
+          type: string
+          description: The unique id of System Manager
+          readOnly: true
+          format: uuid
+          example: 7700d655-5807-4738-a868-712740a18199
+        name:
+          type: string
+          example: SMGR123
+          minLength: 3
+          maxLength: 255
+          pattern: ^[a-zA-Z0-9\p{L}\-\_\.\ ]+$
+        description:
+          type: string
+          example: Description of the System Manager
+          maxLength: 1024
+          pattern: (^$|^[a-zA-Z0-9\p{L}\(\)\-\_\.\ \n]+$)
+        primaryHostname:
+          type: string
+          description: This is the Fully Qualified Domain Name (FQDN)
+          example: dc1-smgr96.avayacloud.stage
+          minLength: 1
+          maxLength: 255
+          pattern: (^(([a-zA-Z]|[a-zA-Z][a-zA-Z0-9\-]*[a-zA-Z0-9])\.){1,}([A-Za-z]|[A-Za-z][A-Za-z0-9\-]*[A-Za-z0-9]){1,}$)|((^\s*((([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]))\s*$)|(^\s*((([0-9A-Fa-f]{1,4}:){7}([0-9A-Fa-f]{1,4}|:))|(([0-9A-Fa-f]{1,4}:){6}(:[0-9A-Fa-f]{1,4}|((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3})|:))|(([0-9A-Fa-f]{1,4}:){5}(((:[0-9A-Fa-f]{1,4}){1,2})|:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3})|:))|(([0-9A-Fa-f]{1,4}:){4}(((:[0-9A-Fa-f]{1,4}){1,3})|((:[0-9A-Fa-f]{1,4})?:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){3}(((:[0-9A-Fa-f]{1,4}){1,4})|((:[0-9A-Fa-f]{1,4}){0,2}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){2}(((:[0-9A-Fa-f]{1,4}){1,5})|((:[0-9A-Fa-f]{1,4}){0,3}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){1}(((:[0-9A-Fa-f]{1,4}){1,6})|((:[0-9A-Fa-f]{1,4}){0,4}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(:(((:[0-9A-Fa-f]{1,4}){1,7})|((:[0-9A-Fa-f]{1,4}){0,5}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:)))(%.+)?\s*$))
+        username:
+          type: string
+          example: dummyUser
+          maxLength: 255
+        password:
+          type: string
+          example: dummypassword
+          maxLength: 255
+        enrollmentPassword:
+          type: string
+          example: testpassword
+          maxLength: 255
+        secondaryHostname:
+          type: string
+          description: This is the Fully Qualified Domain Name (FQDN)
+          example: dc2-smgr97.avayacloud.stage
+          minLength: 1
+          maxLength: 255
+          pattern: (^(([a-zA-Z]|[a-zA-Z][a-zA-Z0-9\-]*[a-zA-Z0-9])\.){1,}([A-Za-z]|[A-Za-z][A-Za-z0-9\-]*[A-Za-z0-9]){1,}$)|((^\s*((([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]))\s*$)|(^\s*((([0-9A-Fa-f]{1,4}:){7}([0-9A-Fa-f]{1,4}|:))|(([0-9A-Fa-f]{1,4}:){6}(:[0-9A-Fa-f]{1,4}|((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3})|:))|(([0-9A-Fa-f]{1,4}:){5}(((:[0-9A-Fa-f]{1,4}){1,2})|:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3})|:))|(([0-9A-Fa-f]{1,4}:){4}(((:[0-9A-Fa-f]{1,4}){1,3})|((:[0-9A-Fa-f]{1,4})?:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){3}(((:[0-9A-Fa-f]{1,4}){1,4})|((:[0-9A-Fa-f]{1,4}){0,2}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){2}(((:[0-9A-Fa-f]{1,4}){1,5})|((:[0-9A-Fa-f]{1,4}){0,3}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){1}(((:[0-9A-Fa-f]{1,4}){1,6})|((:[0-9A-Fa-f]{1,4}){0,4}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(:(((:[0-9A-Fa-f]{1,4}){1,7})|((:[0-9A-Fa-f]{1,4}){0,5}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:)))(%.+)?\s*$))
+        activeSystemManager:
+          type: string
+          description: This field represents which System Manager is active. If SECONDARY value is selected then secondaryHostname should have some valid value assigned.
+          enum:
+          - PRIMARY
+          - SECONDARY
+          default: PRIMARY
+          example: PRIMARY
+        useForCerts:
+          type: boolean
+          description: This field represents if the System Manager will be used for certificates.
+          example: true
+        status:
+          type: string
+          description: Status of the object under operation
+          enum:
+          - IN_PROGRESS
+          - FAILED
+          - SUCCESS
+          example: IN_PROGRESS
+    SystemManagers:
+      title: SystemManagers
+      type: object
+      description: List of System Manager
+      properties:
+        resources:
+          type: array
+          maxItems: 10
+          items:
+            $ref: '#/components/schemas/SystemManagerResponse'
+    SystemManager:
+      title: SystemManager
+      type: object
+      description: System Manager is a central management system that delivers a set of shared management services and provides a common console for the Avaya Aura applications and systems.
+      properties:
+        id:
+          type: string
+          description: The unique id of System Manager
+          readOnly: true
+          format: uuid
+          example: 7700d655-5807-4738-a868-712740a18199
+        name:
+          type: string
+          example: SMGR123
+          minLength: 3
+          maxLength: 255
+          pattern: ^[a-zA-Z0-9\p{L}\-\_\.\ ]+$
+        description:
+          type: string
+          example: Description of the System Manager
+          maxLength: 1024
+          pattern: (^$|^[a-zA-Z0-9\p{L}\(\)\-\_\.\ \n]+$)
+        primaryHostname:
+          type: string
+          description: This is the Fully Qualified Domain Name (FQDN)
+          example: dc1-smgr96.avayacloud.stage
+          minLength: 1
+          maxLength: 255
+          pattern: (^(([a-zA-Z]|[a-zA-Z][a-zA-Z0-9\-]*[a-zA-Z0-9])\.){1,}([A-Za-z]|[A-Za-z][A-Za-z0-9\-]*[A-Za-z0-9]){1,}$)|((^\s*((([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]))\s*$)|(^\s*((([0-9A-Fa-f]{1,4}:){7}([0-9A-Fa-f]{1,4}|:))|(([0-9A-Fa-f]{1,4}:){6}(:[0-9A-Fa-f]{1,4}|((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3})|:))|(([0-9A-Fa-f]{1,4}:){5}(((:[0-9A-Fa-f]{1,4}){1,2})|:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3})|:))|(([0-9A-Fa-f]{1,4}:){4}(((:[0-9A-Fa-f]{1,4}){1,3})|((:[0-9A-Fa-f]{1,4})?:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){3}(((:[0-9A-Fa-f]{1,4}){1,4})|((:[0-9A-Fa-f]{1,4}){0,2}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){2}(((:[0-9A-Fa-f]{1,4}){1,5})|((:[0-9A-Fa-f]{1,4}){0,3}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){1}(((:[0-9A-Fa-f]{1,4}){1,6})|((:[0-9A-Fa-f]{1,4}){0,4}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(:(((:[0-9A-Fa-f]{1,4}){1,7})|((:[0-9A-Fa-f]{1,4}){0,5}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:)))(%.+)?\s*$))
+        username:
+          type: string
+          example: dummyUser
+          maxLength: 255
+        password:
+          type: string
+          example: dummypassword
+          maxLength: 255
+        enrollmentPassword:
+          type: string
+          example: testpassword
+          maxLength: 255
+        secondaryHostname:
+          type: string
+          description: This is the Fully Qualified Domain Name (FQDN)
+          example: dc2-smgr97.avayacloud.stage
+          minLength: 1
+          maxLength: 255
+          pattern: (^(([a-zA-Z]|[a-zA-Z][a-zA-Z0-9\-]*[a-zA-Z0-9])\.){1,}([A-Za-z]|[A-Za-z][A-Za-z0-9\-]*[A-Za-z0-9]){1,}$)|((^\s*((([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]))\s*$)|(^\s*((([0-9A-Fa-f]{1,4}:){7}([0-9A-Fa-f]{1,4}|:))|(([0-9A-Fa-f]{1,4}:){6}(:[0-9A-Fa-f]{1,4}|((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3})|:))|(([0-9A-Fa-f]{1,4}:){5}(((:[0-9A-Fa-f]{1,4}){1,2})|:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3})|:))|(([0-9A-Fa-f]{1,4}:){4}(((:[0-9A-Fa-f]{1,4}){1,3})|((:[0-9A-Fa-f]{1,4})?:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){3}(((:[0-9A-Fa-f]{1,4}){1,4})|((:[0-9A-Fa-f]{1,4}){0,2}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){2}(((:[0-9A-Fa-f]{1,4}){1,5})|((:[0-9A-Fa-f]{1,4}){0,3}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){1}(((:[0-9A-Fa-f]{1,4}){1,6})|((:[0-9A-Fa-f]{1,4}){0,4}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(:(((:[0-9A-Fa-f]{1,4}){1,7})|((:[0-9A-Fa-f]{1,4}){0,5}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:)))(%.+)?\s*$))
+        activeSystemManager:
+          type: string
+          description: This field represents which System Manager is active. If SECONDARY value is selected then secondaryHostname should have some valid value assigned.
+          enum:
+          - PRIMARY
+          - SECONDARY
+          default: PRIMARY
+          example: PRIMARY
+        useForCerts:
+          type: boolean
+          description: This field represents if the System Manager will be used for certificates.
+          example: true
+      required:
+      - name
+      - primaryHostname
+      - username
+      - password
+      - useForCerts
+    Problem:
+      type: object
+      description: '<b>Problem Detail</b> as a way to carry machine-readable details of errors in a HTTP response to avoid the need to define new error response formats for HTTP APIs <a href="https://tools.ietf.org/html/rfc7807">RFC 7807</a>
+
+        '
+      properties:
+        type:
+          type: string
+          format: uri
+          description: 'An absolute URI that identifies the problem type. When dereferenced, it SHOULD provide human-readable documentation for the problem type (e.g., using HTML).
+
+            '
+          default: about:blank
+          example: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#constraint-violation
+        title:
+          type:
+          - string
+          - 'null'
+          description: 'A short, summary of the problem type. Written in english and readable for engineers (usually not suited for non technical stakeholders and not localized).
+
+            '
+          example: Service Unavailable
+        status:
+          type:
+          - integer
+          - 'null'
+          format: int32
+          description: 'The HTTP status code generated by the origin server for this occurrence of the problem.
+
+            '
+          minimum: 100
+          example: 503
+          exclusiveMaximum: 600
+        detail:
+          type:
+          - string
+          - 'null'
+          description: 'A human readable explanation specific to this occurrence of the problem.
+
+            '
+          example: Connection to database timed out
+        instance:
+          type:
+          - string
+          - 'null'
+          format: uri
+          description: 'An absolute URI that identifies the specific occurrence of the problem. It may or may not yield further information if dereferenced.
+
+            '
+        violations:
+          type:
+          - array
+          - 'null'
+          description: 'A list of violations that occurred as a result of invalid data provided as part of a request.
+
+            '
+          items:
+            type: object
+            properties:
+              field:
+                type: string
+                description: 'The name of the field in the request that caused the violation. This can be the name of a path parameter, query parameter, or a field within the request body.
+
+                  '
+                example: accountId
+              message:
+                type: string
+                description: 'A human readable explanation specific to this occurrence of the violation.
+
+                  '
+                example: must match "^[a-zA-Z]{6}$"
+              code:
+                type: integer
+                format: int32
+                description: 'The violation code generated by the server for this occurrence of the violation. Use this code when implementing any error handling logic instead of the message, as the message can change.
+
+                  '
+                example: 20006
+          example:
+          - field: emailAddress
+            message: must not be null
+            code: 20002
+          - field: accountId
+            message: must match "^[a-zA-Z]{6}$"
+            code: 20006
+  responses:
+    NotFound:
+      description: Not Found
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorNotFound'
+    InternalServerError:
+      description: All other application errors
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorInternalServerError'
+    ErrorConstraintViolation:
+      description: Constraint Violation
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorConstraintViolation'
+    Conflict:
+      description: Conflict
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorConflict'
+    Forbidden:
+      description: Forbidden
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorForbidden'
+    MethodNotAllowed:
+      description: Method Not Allowed
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorMethodNotAllowed'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorUnauthorized'
+  parameters:
+    accountId:
+      name: accountId
+      description: The unique 6 character internal id that represents the customer account.
+      required: true
+      in: path
+      schema:
+        type: string
+        minLength: 6
+        maxLength: 6
+        pattern: ^[a-zA-Z]{6}$
+        example: ABCDEF
+    systemManagerId:
+      name: systemManagerId
+      description: The unique id of the System Manager server
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+        example: c8c2909d-75e9-484a-94c0-b7e8d29771fe
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      description: This API uses Bearer Token Authorization Flow
+      bearerFormat: JWT
+    AppKey:
+      type: apiKey
+      in: header
+      name: appkey
+      description: This API needs an appKey as header
+x-explorer-enabled: false
+x-samples-languages:
+- curl
+- node
+- java
+- javascript
+- python
+- go

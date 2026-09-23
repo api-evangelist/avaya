@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<wsdl:definitions name="OpenQ"
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" 
+	xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" 
+	xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" 
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+	xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+	xmlns:interface="http://www.nortel.com/soa/oi/OpenQ"
+  	xmlns:tns="http://www.nortel.com/soa/oi/OpenQ"
+  	targetNamespace="http://www.nortel.com/soa/oi/OpenQ">
+    
+	<wsdl:import location="OpenQInterface.wsdl" namespace="http://www.nortel.com/soa/oi/OpenQ"/>
+     
+    <wsdl:binding name="OpenQSoapBinding" type="interface:OpenQ">
+        <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+        
+        <wsdl:operation name="GetVersion">
+			<soap:operation soapAction="http://www.nortel.com/soa/oi/cct/OpenQ/GetVersion" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="GetVersionFault">
+				<soap:fault use="literal" name="GetVersionFault" />
+			</wsdl:fault>
+		</wsdl:operation>
+        
+        <wsdl:operation name="LogIn">
+			<soap:operation soapAction="http://www.nortel.com/soa/oi/OpenQ/LogIn" />
+			<wsdl:input name="LogInRequest">
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output name="LogInResponse">
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="LogInFailedFault">
+				<soap:fault name="LogInFailedFault" use="literal"/>
+			</wsdl:fault>
+		</wsdl:operation>
+
+		<wsdl:operation name="LogOff">
+			<soap:operation soapAction="http://www.nortel.com/soa/oi/OpenQ/LogOff" />
+			<wsdl:input name="LogOffRequest">
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output name="LogOffResponse">
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="LogOffFailedFault">
+				<soap:fault name="LogOffFailedFault" use="literal"/>
+			</wsdl:fault>			
+		</wsdl:operation>
+		
+		<wsdl:operation name="LogOffSession">
+			<soap:operation soapAction="http://www.nortel.com/soa/oi/OpenQ/LogOffSession" />
+			<wsdl:input name="LogOffSessionRequest">
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output name="LogOffSessionResponse">
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="LogOffSessionFailedFault">
+				<soap:fault name="LogOffSessionFailedFault" use="literal"/>
+			</wsdl:fault>			
+		</wsdl:operation>
+
+        <wsdl:operation name="CreateOQContact">
+        	<soap:operation soapAction="http://www.nortel.com/soa/oi/OpenQ/CreateOQContact"/>
+            <wsdl:input name="CreateOQContactRequest">
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="CreateOQContactResponse">
+                <soap:body use="literal"/>
+            </wsdl:output>
+			<wsdl:fault name="CreateOQContactFailedFault">
+				<soap:fault name="CreateOQContactFailedFault" use="literal"/>
+			</wsdl:fault>            
+        </wsdl:operation>
+        
+        <wsdl:operation name="DropOQContact">
+        	<soap:operation soapAction="http://www.nortel.com/soa/oi/OpenQ/DropOQContact"/>
+            <wsdl:input name="DropOQContactRequest">
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="DropOQContactResponse">
+                <soap:body use="literal"/>
+            </wsdl:output> 
+			<wsdl:fault name="DropOQContactFailedFault">
+				<soap:fault name="DropOQContactFailedFault" use="literal"/>
+			</wsdl:fault>                       
+        </wsdl:operation>
+        
+        <wsdl:operation name="GetOQContact">
+        	<soap:operation soapAction="http://www.nortel.com/soa/oi/OpenQ/GetOQContact"/>
+            <wsdl:input name="GetOQContactRequest">
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="GetOQContactResponse">
+                <soap:body use="literal"/>
+            </wsdl:output>
+			<wsdl:fault name="GetOQContactFailedFault">
+				<soap:fault name="GetOQContactFailedFault" use="literal"/>
+			</wsdl:fault>            
+        </wsdl:operation>
+        
+        <wsdl:operation name="AddServiceProviderStatusListener">
+        	<soap:operation soapAction="http://www.nortel.com/soa/oi/OpenQ/AddServiceProviderStatusListener"/>
+            <wsdl:input name="AddServiceProviderStatusListenerRequest">
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="AddServiceProviderStatusListenerResponse">
+                <soap:body use="literal"/>
+            </wsdl:output>
+			<wsdl:fault name="AddServiceProviderStatusListenerFailedFault">
+				<soap:fault name="AddServiceProviderStatusListenerFailedFault" use="literal"/>
+			</wsdl:fault>            
+        </wsdl:operation>
+        
+        <wsdl:operation name="RemoveServiceProviderStatusListener">
+        	<soap:operation soapAction="http://www.nortel.com/soa/oi/OpenQ/RemoveServiceProviderStatusListener"/>
+            <wsdl:input name="RemoveServiceProviderStatusListenerRequest">
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="RemoveServiceProviderStatusListenerResponse">
+                <soap:body use="literal"/>
+            </wsdl:output>    
+            <wsdl:fault name="RemoveServiceProviderStatusListenerFailedFault">
+				<soap:fault name="RemoveServiceProviderStatusListenerFailedFault" use="literal"/>
+			</wsdl:fault>
+        </wsdl:operation>       
+        
+        <wsdl:operation name="AddForceDisconnectListener">
+        	<soap:operation soapAction="http://www.nortel.com/soa/oi/OpenQ/AddForceDisconnectListener"/>
+            <wsdl:input name="AddForceDisconnectListenerRequest">
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="AddForceDisconnectListenerResponse">
+                <soap:body use="literal"/>
+            </wsdl:output>
+			<wsdl:fault name="AddForceDisconnectListenerFailedFault">
+				<soap:fault name="AddForceDisconnectListenerFailedFault" use="literal"/>
+			</wsdl:fault>            
+        </wsdl:operation>
+        
+        <wsdl:operation name="RemoveForceDisconnectListener">
+        	<soap:operation soapAction="http://www.nortel.com/soa/oi/OpenQ/RemoveForceDisconnectListener"/>
+            <wsdl:input name="RemoveForceDisconnectListenerRequest">
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="RemoveForceDisconnectListenerResponse">
+                <soap:body use="literal"/>
+            </wsdl:output>   
+			<wsdl:fault name="RemoveForceDisconnectListenerFailedFault">
+				<soap:fault name="RemoveForceDisconnectListenerFailedFault" use="literal"/>
+			</wsdl:fault>                     
+        </wsdl:operation>  
+        
+        <wsdl:operation name="AddDefaultTreatmentListener">
+        	<soap:operation soapAction="http://www.nortel.com/soa/oi/OpenQ/AddDefaultTreatmentListener"/>
+            <wsdl:input name="AddDefaultTreatmentListenerRequest">
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="AddDefaultTreatmentListenerResponse">
+                <soap:body use="literal"/>
+            </wsdl:output>
+			<wsdl:fault name="AddDefaultTreatmentListenerFailedFault">
+				<soap:fault name="AddDefaultTreatmentListenerFailedFault" use="literal"/>
+			</wsdl:fault>            
+        </wsdl:operation>
+        
+        <wsdl:operation name="RemoveDefaultTreatmentListener">
+        	<soap:operation soapAction="http://www.nortel.com/soa/oi/OpenQ/RemoveDefaultTreatmentListener"/>
+            <wsdl:input name="RemoveDefaultTreatmentListenerRequest">
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="RemoveDefaultTreatmentListenerResponse">
+                <soap:body use="literal"/>
+            </wsdl:output>   
+			<wsdl:fault name="RemoveDefaultTreatmentListenerFailedFault">
+				<soap:fault name="RemoveDefaultTreatmentListenerFailedFault" use="literal"/>
+			</wsdl:fault>                     
+        </wsdl:operation>   
+        
+        <wsdl:operation name="Subscribe">
+        	<soap:operation soapAction="http://www.nortel.com/soa/oi/cct/OpenQ/Subscribe"/>
+            <wsdl:input name="SubscribeRequest">
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="SubscribeResponse">
+                <soap:body use="literal"/>
+            </wsdl:output>
+			<wsdl:fault name="SubscribeFailedFault">
+				<soap:fault use="literal" name="SubscribeFailedFault" />
+			</wsdl:fault>            
+        </wsdl:operation>
+        
+        <wsdl:operation name="Unsubscribe">
+        	<soap:operation soapAction="http://www.nortel.com/soa/oi/cct/OpenQ/Unsubscribe"/>
+            <wsdl:input name="UnsubscribeRequest">
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="UnsubscribeResponse">
+                <soap:body use="literal"/>
+            </wsdl:output>     
+			<wsdl:fault name="UnsubscribeFailedFault">
+				<soap:fault use="literal" name="UnsubscribeFailedFault" />
+			</wsdl:fault>                   
+        </wsdl:operation>                          
+    </wsdl:binding>
+
+    <wsdl:service name="SOAOI_OpenQ">
+        <wsdl:port name="OpenQ" binding="tns:OpenQSoapBinding">
+	        <soap:address location="http://localhost:9070/SOAOI/services/OpenQ"/>
+        </wsdl:port>
+    </wsdl:service> 
+</wsdl:definitions>

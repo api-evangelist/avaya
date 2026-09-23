@@ -1,12 +1,30 @@
-generated: '2026-09-14'
+generated: '2026-09-17'
 method: searched
-source: https://www.npmjs.com/search?q=%40avaya — registry metadata read from registry.npmjs.org
+source: >-
+  https://www.npmjs.com/search?q=%40avaya (metadata from registry.npmjs.org),
+  https://api.github.com/orgs/avaya/repos,
+  https://api.nuget.org/v3/registration5-semver1/avayacpaas/index.json,
+  https://proxy.golang.org/github.com/avaya/cpaas-go/@latest,
+  https://www.avaya.com/en/developer-support/sdks/
 note: >-
-  Avaya ships first-party JavaScript/TypeScript client libraries under the @avaya npm scope only.
-  PyPI (avaya, avaya-sdk, avaya-cpaas all 404), Maven Central and pkg.go.dev return no first-party
-  Avaya client library. NuGet carries AvayaCPaaS (0.8.3), which is a community/legacy CPaaS wrapper
-  and is NOT marked official here because first-party authorship could not be established.
-  Version and published date are read from registry.npmjs.org for each package.
+  REVISION 2026-09-17 — the 2026-09-14 pass saw only the npm scope and concluded Avaya ships
+  JavaScript clients "only". That was wrong in two ways, both corrected here.
+  (1) NuGet AvayaCPaaS IS first-party: api.nuget.org gives authors "Avaya Cloud Inc." and
+  projectUrl https://cloud.zang.io/, and github.com/avaya/cpaas-dotnet's own README tells you to
+  install it from nuget.org. It is now official: true.
+  (2) The github.com/avaya organization publishes SIX first-party CPaaS clients — Python, Go, .NET,
+  PHP, Java and Node — of which only the Node one (@avaya/cpaas) and the .NET one (AvayaCPaaS) ever
+  reached a registry. The other four are source-only, MIT-licensed, and carry NO git tags and NO
+  registry entry, so a consumer cannot pin a version at all.
+  (3) A whole third distribution channel was missed: Avaya's on-premises estate ships ~60 SDKs as
+  authenticated-looking but actually UNAUTHENTICATED zip downloads from
+  https://www.avaya.com/en/developer-support/sdks/ via support.avaya.com/css/public/documents/<id>.
+  These are the real SDKs for Avaya Aura, IP Office, Contact Center, Breeze and the Client SDK. They
+  have no registry, so version is read from Avaya's own published release string and published is
+  recorded from Avaya's dated "what's new" list on that page where it states one.
+  PyPI still has nothing (avaya, avaya-sdk, avaya-cpaas, zang all 404), Packagist has nothing
+  (zang/zang-php 404), Maven Central has no first-party Avaya artifact, and pkg.go.dev resolves
+  github.com/avaya/cpaas-go only as an untagged pseudo-version.
 packages:
   - language: javascript
     registry: npm
@@ -138,12 +156,165 @@ packages:
     note: >-
       Node helper for Avaya CPaaS (the former Zang Cloud; repository git+https://github.com/zang-cloud/zang-node.git).
       Last release 2020-08-27 — six years stale and never reached 1.0; treat as abandoned.
+  - language: csharp
+    registry: nuget
+    name: AvayaCPaaS
+    url: https://www.nuget.org/packages/AvayaCPaaS
+    install: dotnet add package AvayaCPaaS
+    official: true
+    version: 0.8.3
+    published: '2020-08-28'
+    source: https://github.com/avaya/cpaas-dotnet
+    note: >-
+      CORRECTED 2026-09-17. Previously recorded as community/unestablished. api.nuget.org names the
+      authors as "Avaya Cloud Inc." with projectUrl https://cloud.zang.io/, and the README at
+      github.com/avaya/cpaas-dotnet instructs "search for AvayaCPaaS" on nuget.org — first-party on
+      both the registry's evidence and Avaya's own repository. Three versions ever published
+      (0.8.1, 0.8.2 2020-01-14, 0.8.3 2020-08-28); abandoned for six years.
+  - language: python
+    registry: github
+    name: avaya/cpaas-python
+    url: https://github.com/avaya/cpaas-python
+    install: git clone https://github.com/avaya/cpaas-python
+    official: true
+    version: null
+    published: null
+    note: >-
+      Avaya CPaaS Python Client, MIT, in the avaya GitHub org. NOT ON PYPI — avaya, avaya-sdk,
+      avaya-cpaas and zang all return HTTP 404 — and the repo carries no git tags, so there is no
+      version a consumer can pin and no release date to read. version: null is checked-and-absent,
+      not unchecked. Last commit 2023-07-09, which makes it the only CPaaS client touched since 2020.
+  - language: go
+    registry: github
+    name: github.com/avaya/cpaas-go
+    url: https://github.com/avaya/cpaas-go
+    install: go get github.com/avaya/cpaas-go
+    official: true
+    version: v0.0.0-20200529191825-a5614b4cba4c
+    published: '2020-05-29'
+    note: >-
+      Avaya CPaaS Go Client, MIT. proxy.golang.org resolves it, but only to an untagged
+      pseudo-version — the repo has never cut a release. Six years without a commit.
+  - language: php
+    registry: github
+    name: avaya/cpaas-php
+    url: https://github.com/avaya/cpaas-php
+    install: 'composer require from source — the package is not on Packagist'
+    official: true
+    version: null
+    published: null
+    note: >-
+      Avaya CPaaS PHP Client, MIT. Its composer.json still declares the pre-acquisition package name
+      "zang/zang-php" and requires php ^7.0 — a runtime that reached end of security support in 2022.
+      repo.packagist.org/p2/zang/zang-php.json returns 404, so it was never published. No tags.
+  - language: java
+    registry: github
+    name: avaya/cpaas-java
+    url: https://github.com/avaya/cpaas-java
+    install: 'git clone && mvn install — not on Maven Central'
+    official: true
+    version: null
+    published: null
+    note: >-
+      Avaya CPaaS Java Client, MIT. The README's only install path is "Clone the repo, and install via
+      maven" — Maven Central carries no first-party Avaya artifact. No tags.
+vendor_download_sdks:
+  note: >-
+    Avaya's on-premises SDK estate, published at https://www.avaya.com/en/developer-support/sdks/.
+    No registry exists for any of these, so there is no metadata endpoint to query — the version below
+    is the release string Avaya itself prints next to the download, and published is taken from the
+    dated change list at the bottom of that same page where it names the item. Every link resolves to
+    support.avaya.com/css/public/documents/<id> and serves application/zip with NO login, NO SSO and
+    NO DevConnect membership — verified by direct fetch on 2026-09-17. This channel is where Avaya's
+    SOAP contracts live (see wsdl/avaya-wsdl.yml, 56 WSDLs / 307 operations) and its one Protobuf
+    schema (see grpc/avaya-protobuf.yml).
+  sdks:
+    - family: Avaya Client SDK
+      platforms: [Android, iOS, JavaScript, macOS, Windows]
+      version: 4.38.1.0
+      published: '2026-07-01'
+      published_precision: month
+      url: https://www.avaya.com/en/developer-support/sdks/
+      note: >-
+        The most actively maintained SDK family Avaya ships — the page's change log records
+        "July 2026 – Avaya Client SDK Release 4.38.1 SDKs and Release Notes added". Release notes at
+        https://support.avaya.com/css/public/documents/101095983.
+    - family: Avaya WebRTC Connect SDK
+      platforms: [Android, iOS, JavaScript]
+      version: 4.0.9
+      published: '2026-06-17'
+      url: https://support.avaya.com/css/public/documents/101095493
+    - family: Avaya Aura Application Enablement Services (AES)
+      components: [DMCC Java SDK, DMCC XML SDK, DMCC .NET SDK, System Management Service (SMS) SDK, JTAPI SDK and Client, TSAPI Client, CVLAN Client]
+      version: '10.2'
+      published: '2023-12-01'
+      published_precision: month
+      url: https://support.avaya.com/css/public/documents/101090582
+      note: >-
+        The SMS and Telephony Services SDK archives each contain a single Windows .exe installer
+        rather than loose WSDL files, so their contracts could not be extracted — recorded honestly in
+        wsdl/avaya-wsdl.yml under not_found. The Web Service Telephony Services SDK is still on
+        release 8.1.3 (October 2020), three major releases behind the rest of AES.
+    - family: Avaya Aura System Manager Web Services
+      components: [User Management Web Services Sample Client SDK, Routing Web Services SDK, Element Manager Web Service SDK]
+      version: '10.2'
+      published: '2023-12-01'
+      published_precision: month
+      url: https://support.avaya.com/css/public/documents/101090622
+    - family: Avaya Aura Contact Center Open Interfaces
+      components: [CCMS Open Networking Web Services SDK, CCMS Open Queue Web Services SDK, CCMM Agent Web Services SDK, CCMM Outbound Web Services SDK, CCMA Open Interfaces SDK, Communication Control Toolkit Open Interfaces SOAP SDK, Communication Control Toolkit Open Interfaces REST SDK, CCT .Net SDK, Enterprise Web Chat SDK, Real-time Data SDK]
+      version: 7.0 / 7.1.x
+      published: null
+      url: https://support.avaya.com/css/public/documents/101090645
+      note: >-
+        The SOAP contracts harvested into wsdl/ came from these archives. The WSDL files inside are
+        dated 2009-2010 (Open Interfaces) and 2015 (CCMM) and still carry nortel.com namespaces —
+        Avaya acquired Nortel Enterprise Solutions in December 2009. published is null because Avaya
+        prints no date for this family on the SDK page.
+    - family: Avaya IP Office Platform
+      components: [MTCTI-3 Web Services API SDK, CTI Web Services, Service Monitoring Web Services SDK, WebRTC SDK, Location API SDK, SSL VPN Onboarding SDK]
+      version: '12.3'
+      published: '2026-04-17'
+      url: https://support.avaya.com/css/public/documents/101095743
+      note: >-
+        MTCTI-3 SDK version 1.2 ships bundle/ipo_mtcti3.proto, file-dated 2025-10-06 — saved to
+        grpc/. The Service Monitoring SDK's SSIReference.xsd is dated 2026-04-17, the freshest
+        machine-readable artifact in the whole on-premises estate.
+    - family: Avaya Breeze
+      version: '3.9'
+      published: '2024-08-16'
+      url: https://support.avaya.com/css/public/documents/101091182
+    - family: Avaya Session Border Controller
+      component: API Development Kit and Quick Start Guide
+      version: 10.2.1.0
+      published: '2024-12-17'
+      url: https://www.avaya.com/en/developer-support/sdks/
+    - family: Avaya Oceana
+      component: Digital Connector (Messaging) SDK
+      version: '3.10'
+      published: '2024-05-01'
+      published_precision: month
+      url: https://support.avaya.com/css/public/documents/101091621
+    - family: Proactive Outreach Manager
+      components: [Event SDK, Agent Desktop API (.NET and Java), Call Recorder API Sample Client, Pluggable Data Connector Installer]
+      version: 4.0.2
+      published: null
+      url: https://support.avaya.com/css/public/documents/101090697
 registries_checked:
   - {registry: npm, result: '14 first-party @avaya packages found'}
-  - {registry: pypi, result: 'no first-party package (avaya, avaya-sdk, avaya-cpaas all HTTP 404)'}
-  - {registry: nuget, result: 'AvayaCPaaS 0.8.3 present; first-party authorship not established, not marked official'}
-  - {registry: maven-central, result: 'no first-party Avaya client library returned'}
-  - {registry: pkg.go.dev, result: 'no first-party Avaya client library'}
+  - {registry: github, result: '6 first-party client libraries in github.com/avaya (cpaas-python, -go, -dotnet, -php, -java, -node); none carries a git tag'}
+  - {registry: pypi, result: 'no first-party package (avaya, avaya-sdk, avaya-cpaas, zang all HTTP 404) — cpaas-python is source-only'}
+  - {registry: nuget, result: 'AvayaCPaaS 0.8.3 (2020-08-28), authors "Avaya Cloud Inc." — FIRST-PARTY, corrected 2026-09-17'}
+  - {registry: maven-central, result: 'no first-party Avaya artifact; cpaas-java installs from source via mvn install'}
+  - {registry: pkg.go.dev, result: 'github.com/avaya/cpaas-go resolves as pseudo-version v0.0.0-20200529191825-a5614b4cba4c only — never tagged'}
   - {registry: rubygems, result: 'no first-party Avaya client library'}
   - {registry: crates.io, result: 'no first-party Avaya client library'}
-  - {registry: packagist, result: 'no first-party Avaya client library'}
+  - {registry: packagist, result: 'no first-party Avaya client library; cpaas-php declares zang/zang-php, which returns 404'}
+  - {registry: 'avaya.com SDK downloads', result: '~60 first-party SDKs, unauthenticated application/zip; no registry, versions read from Avaya release strings'}
+currency_finding: >-
+  Two clocks run at different speeds. The cloud/UI packages move — @avaya/infinity-elements-api 1.3.2
+  published 2026-08-26, Avaya Client SDK 4.38.1.0 in July 2026 — while every CPaaS client stopped in
+  2020 (only cpaas-python saw a 2023 commit) and the Avaya Aura Contact Center SOAP SDKs have not
+  been re-cut since 2015. A consumer integrating Avaya CPaaS today is pinning a six-year-old,
+  never-1.0 library in whichever of the six languages they picked, and in four of those six there is
+  no version to pin at all.

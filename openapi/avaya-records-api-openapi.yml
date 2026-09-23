@@ -1,0 +1,1187 @@
+openapi: 3.2.0
+info:
+  title: Outbound Records API
+  description: 'Outbound API allows you to manage outbound call campaigns, records, agents, skills, and Do Not Call lists.
+
+
+    ## Authentication
+
+    All requests require an Bearer Token.
+
+
+    ## Pagination
+
+    Many list endpoints return paginated results with a limit of 200 records per page. When more records are available, the response includes `"more_records": "1"`. To retrieve subsequent pages, include a `page` parameter in your request.'
+  version: 1.0.0
+servers:
+- url: '{protocol}://{server}{basePath}'
+  description: Open API
+  variables:
+    protocol:
+      enum:
+      - https
+      default: https
+    server:
+      default: HOST-REGION.api.avayacloud.com
+    basePath:
+      default: /api/outbound
+- url: '{protocol}://{server}:{port}'
+  description: Internal API
+  variables:
+    protocol:
+      enum:
+      - http
+      - https
+      default: https
+    server:
+      default: outbound-service
+    port:
+      enum:
+      - '80'
+      - '443'
+      default: '443'
+security:
+- {}
+- BearerAuth: []
+tags:
+- name: Records
+  description: Manage outbound campaign records
+paths:
+  /SetValue:
+    put:
+      tags:
+      - Records
+      summary: Set a field value
+      description: 'This function allows you to set the value of a field using the Call ID as an identifier.
+
+
+        | Response Code | Description |
+
+        | --- | --- |
+
+        | 200 | Success |
+
+        | 400 | Bad Request |
+
+        | 401 | Unauthorized |
+
+        | 405 | Method Not Allowed |
+
+        | 429 | Too Many Requests |'
+      operationId: setValue
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+              - callid
+              - modulefieldupdate
+              properties:
+                module:
+                  type: string
+                  default: data
+                  description: Set the update target as master data. Default is 'data'
+                callid:
+                  type: string
+                  description: The ID of a call associated with that record
+                  example: '22078'
+                modulefieldupdate:
+                  type: string
+                  description: The field name and value to update e.g. {"fieldname":"value"}
+                  example: '{"Surname":"Jackie"}'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: string
+                    example: Value Has Been Set
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '405':
+          description: Method Not Allowed
+        '429':
+          description: Too Many Requests
+  /GetData:
+    post:
+      tags:
+      - Records
+      summary: Extract initiative data
+      description: 'This function allows you to extract data from an initiative, where the data is the current state of the records as per the date range supplied.
+
+
+        **IMPORTANT:** There is a request restriction of once every 5 minutes. If you are designing a polling system, use the `GetCallIDs` and `GetRecord` functions together instead.
+
+
+        **Pagination:** Results are paginated with a limit of 200 records per page. If more records are available, the response includes `"more_records": "1"`. Send a `page` parameter incremented by 1 in subsequent requests.
+
+
+        | Response Code | Description |
+
+        | --- | --- |
+
+        | 200 | Success |
+
+        | 400 | Bad Request |
+
+        | 401 | Unauthorized |
+
+        | 404 | Not Found |
+
+        | 405 | Method Not Allowed |
+
+        | 429 | Too Many Requests |'
+      operationId: getData
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                module:
+                  type: string
+                  default: data
+                  description: Set the request target as master data. Default is 'data'
+                moduleid:
+                  type: string
+                  description: The Initiative ID for the initiative you would like to extract data from
+                fromdate:
+                  type: string
+                  description: 'The start date for the extract. Format: ''yyyy-mm-dd'' or ''yyyy-mm-dd hh:mm:ss'''
+                  example: '2021-03-23 00:00:00'
+                todate:
+                  type: string
+                  description: 'The end date for the extract. Format: ''yyyy-mm-dd'' or ''yyyy-mm-dd hh:mm:ss'''
+                  example: '2021-03-24 23:59:59'
+                page:
+                  type: integer
+                  description: Page number for pagination
+                  default: 1
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  info:
+                    $ref: '#/components/schemas/PaginationInfo'
+                  records:
+                    type: array
+                    items:
+                      type: object
+                      additionalProperties:
+                        type: string
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+        '405':
+          description: Method Not Allowed
+        '429':
+          description: Too Many Requests
+  /GetDataWithAgent:
+    post:
+      tags:
+      - Records
+      summary: Extract initiative data with agent names
+      description: 'This function allows you to extract all the attempted record information, together with agent names, from the initiative using the specified date range.
+
+
+        **IMPORTANT:** There is a request restriction of once every 5 minutes. If you are designing a polling system, use the `GetCLIs` and `GetRecord` functions together instead.
+
+
+        **Pagination:** Results are paginated with a limit of 200 records per page.
+
+
+        | Response Code | Description |
+
+        | --- | --- |
+
+        | 200 | Success |
+
+        | 400 | Bad Request |
+
+        | 401 | Unauthorized |
+
+        | 404 | Not Found |
+
+        | 405 | Method Not Allowed |
+
+        | 429 | Too Many Requests |'
+      operationId: getDataWithAgent
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                module:
+                  type: string
+                  default: data
+                moduleid:
+                  type: string
+                  description: The Initiative ID
+                fromdate:
+                  type: string
+                  description: 'Start date. Format: ''yyyy-mm-dd'' or ''yyyy-mm-dd hh:mm:ss'''
+                todate:
+                  type: string
+                  description: 'End date. Format: ''yyyy-mm-dd'' or ''yyyy-mm-dd hh:mm:ss'''
+                page:
+                  type: integer
+                  default: 1
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  info:
+                    $ref: '#/components/schemas/PaginationInfo'
+                  records:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        AgentId:
+                          type: string
+                        AgentName:
+                          type: string
+                        Attempts:
+                          type: string
+                        EmailId:
+                          type: string
+                        Id:
+                          type: string
+                        IsAgentCallback:
+                          type: string
+                        IsComplete:
+                          type: string
+                        IsContact:
+                          type: string
+                        Outcome:
+                          type: string
+                        OutcomeId:
+                          type: string
+                        OutcomeUpdateDateTime:
+                          type: string
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+        '405':
+          description: Method Not Allowed
+        '429':
+          description: Too Many Requests
+  /GetRecord:
+    post:
+      tags:
+      - Records
+      summary: Get a record by Call ID
+      description: 'This function retrieves a single record from the system using the Call ID as an identifier.
+
+
+        | Response Code | Description |
+
+        | --- | --- |
+
+        | 200 | Success |
+
+        | 400 | Bad Request |
+
+        | 401 | Unauthorized |
+
+        | 404 | Not Found |
+
+        | 405 | Method Not Allowed |
+
+        | 429 | Too Many Requests |'
+      operationId: getRecord
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+              - callid
+              properties:
+                module:
+                  type: string
+                  default: data
+                callid:
+                  type: string
+                  description: The Call ID associated with the specific record.
+                  example: '22078'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  info:
+                    $ref: '#/components/schemas/PaginationInfo'
+                  records:
+                    type: array
+                    items:
+                      type: object
+                      additionalProperties:
+                        type: string
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+        '405':
+          description: Method Not Allowed
+        '429':
+          description: Too Many Requests
+  /SearchRecord:
+    post:
+      tags:
+      - Records
+      summary: Search for records
+      description: 'This function searches for a record within an Initiative and returns the records that match the search criteria.
+
+
+        | Response Code | Description |
+
+        | --- | --- |
+
+        | 200 | Success |
+
+        | 400 | Bad Request |
+
+        | 401 | Unauthorized |
+
+        | 404 | Not Found |
+
+        | 405 | Method Not Allowed |
+
+        | 429 | Too Many Requests |'
+      operationId: searchRecord
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+              - initiativeid
+              - jsondata
+              properties:
+                datasetid:
+                  type: string
+                  description: 'Optional: The Data Set ID you would like to search.'
+                initiativeid:
+                  type: string
+                  description: The Initiative ID you would like to search.
+                jsondata:
+                  type: string
+                  description: The Field Name and Value you wish to search for e.g. {"fieldname":"value"}
+                  example: '{"Home Phone":"61435398744"}'
+                activeonly:
+                  type: string
+                  enum:
+                  - '0'
+                  - '1'
+                  description: 'Optional: Set to 1 to return only active records.'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  info:
+                    $ref: '#/components/schemas/PaginationInfo'
+                  records:
+                    type: array
+                    items:
+                      type: object
+                      additionalProperties:
+                        type: string
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+        '405':
+          description: Method Not Allowed
+        '429':
+          description: Too Many Requests
+  /InsertRecord:
+    post:
+      tags:
+      - Records
+      summary: Insert a record into a data set
+      description: 'This function allows you to insert data into an existing data set.
+
+
+        | Response Code | Description |
+
+        | --- | --- |
+
+        | 200 | Success |
+
+        | 400 | Bad Request |
+
+        | 401 | Unauthorized |
+
+        | 405 | Method Not Allowed |
+
+        | 429 | Too Many Requests |'
+      operationId: insertRecord
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+              - datasetid
+              - jsondata
+              properties:
+                datasetid:
+                  type: string
+                  description: The Data Set ID to insert the record into.
+                jsondata:
+                  type: string
+                  description: The data for the record e.g. {"fieldname1":"value1","fieldname2":"value2"}
+                  example: '{"Home Phone":"61435398744","First Name":"John","Surname":"Smith"}'
+                initiativetype:
+                  type: string
+                  description: Optional. e.g. zoho, hubspot
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: string
+                    example: New Record Has Been Inserted
+                  info:
+                    type: object
+                    properties:
+                      RecordId:
+                        type: string
+                      DatasetId:
+                        type: string
+                      InitiativeId:
+                        type: string
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '405':
+          description: Method Not Allowed
+        '429':
+          description: Too Many Requests
+  /InsertNextRecord:
+    post:
+      tags:
+      - Records
+      summary: Insert a record as the next record for an agent
+      description: 'This function allows you to insert data into an existing data set and make that record the next record for an agent.
+
+
+        | Response Code | Description |
+
+        | --- | --- |
+
+        | 200 | Success |
+
+        | 400 | Bad Request |
+
+        | 401 | Unauthorized |
+
+        | 405 | Method Not Allowed |
+
+        | 429 | Too Many Requests |'
+      operationId: insertNextRecord
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+              - datasetid
+              - jsondata
+              - userid
+              properties:
+                datasetid:
+                  type: string
+                  description: The Data Set ID to insert the record into.
+                jsondata:
+                  type: string
+                  description: The data for the record e.g. {"fieldname1":"value1"}
+                userid:
+                  type: string
+                  description: The User ID to assign the record to.
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: string
+                    example: New Record Has Been Inserted
+                  info:
+                    type: object
+                    properties:
+                      RecordId:
+                        type: string
+                      DatasetId:
+                        type: string
+                      InitiativeId:
+                        type: string
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '405':
+          description: Method Not Allowed
+        '429':
+          description: Too Many Requests
+  /InsertRecordWithCallback:
+    post:
+      tags:
+      - Records
+      summary: Insert a record with an agent callback
+      description: 'This function allows you to insert data into an existing data set and set that record as an agent callback for a specific date and time.
+
+
+        | Response Code | Description |
+
+        | --- | --- |
+
+        | 200 | Success |
+
+        | 400 | Bad Request |
+
+        | 401 | Unauthorized |
+
+        | 405 | Method Not Allowed |
+
+        | 429 | Too Many Requests |'
+      operationId: insertRecordWithCallback
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+              - datasetid
+              - jsondata
+              - userid
+              - callbackdatetime
+              properties:
+                datasetid:
+                  type: string
+                  description: The Data Set ID to insert the record into.
+                jsondata:
+                  type: string
+                  description: The data for the record e.g. {"fieldname1":"value1"}
+                userid:
+                  type: string
+                  description: The User ID to assign the record to.
+                callbackdatetime:
+                  type: string
+                  description: 'The callback date and time. Format: ''yyyy-mm-dd hh:mm:ss'''
+                  example: '2023-10-25 13:45:00'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: string
+                    example: New Record Has Been Inserted
+                  info:
+                    type: object
+                    properties:
+                      RecordId:
+                        type: string
+                      DatasetId:
+                        type: string
+                      InitiativeId:
+                        type: string
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '405':
+          description: Method Not Allowed
+        '429':
+          description: Too Many Requests
+  /UpdateRecord:
+    put:
+      tags:
+      - Records
+      summary: Update fields of a record
+      description: 'This function updates specified fields of a specified record in a specified initiative.
+
+
+        | Response Code | Description |
+
+        | --- | --- |
+
+        | 200 | Success |
+
+        | 400 | Bad Request |
+
+        | 401 | Unauthorized |
+
+        | 405 | Method Not Allowed |
+
+        | 429 | Too Many Requests |'
+      operationId: updateRecord
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+              - initiativeid
+              - jsondata
+              - recordid
+              properties:
+                initiativeid:
+                  type: string
+                  description: The Initiative ID of the record you are going to update.
+                jsondata:
+                  type: string
+                  description: The fields you wish to update e.g. {"fieldname1":"value1","fieldname2":"value2"}
+                recordid:
+                  type: string
+                  description: The Record ID of the record you would like to update.
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: string
+                    example: Record Has Been Updated
+                  info:
+                    type: object
+                    properties:
+                      RecordId:
+                        type: string
+                      InitiativeId:
+                        type: string
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '405':
+          description: Method Not Allowed
+        '429':
+          description: Too Many Requests
+  /UpdateOutcome:
+    put:
+      tags:
+      - Records
+      summary: Update the outcome for a record
+      description: 'This function updates the outcome for a specified record inside a specified Initiative.
+
+
+        **IMPORTANT:** This function will log a Call Record against the Initiative and will clear out any Callbacks associated with the record.
+
+
+        | Response Code | Description |
+
+        | --- | --- |
+
+        | 200 | Success |
+
+        | 400 | Bad Request |
+
+        | 401 | Unauthorized |
+
+        | 405 | Method Not Allowed |
+
+        | 429 | Too Many Requests |'
+      operationId: updateOutcome
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+              - initiativeid
+              - recordid
+              - outcomeid
+              properties:
+                initiativeid:
+                  type: string
+                  description: The Initiative ID for the initiative you would like to update the record in.
+                recordid:
+                  type: string
+                  description: The Record ID of the record you wish to change the outcome for.
+                outcomeid:
+                  type: string
+                  description: The Outcome ID. A list of Outcome IDs can be derived from the `GetOutcome` function.
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: string
+                    example: Outcome Has Been Updated
+                  info:
+                    type: object
+                    properties:
+                      RecordId:
+                        type: string
+                      InitiativeId:
+                        type: string
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '405':
+          description: Method Not Allowed
+        '429':
+          description: Too Many Requests
+  /GetOutcome:
+    post:
+      tags:
+      - Records
+      summary: Get outcome list for an initiative
+      description: 'This function retrieves a list of outcome details, including ID, outcome name, outcome group name, and outcome group ID for a specified initiative.
+
+
+        | Response Code | Description |
+
+        | --- | --- |
+
+        | 200 | Success |
+
+        | 400 | Bad Request |
+
+        | 401 | Unauthorized |
+
+        | 404 | Not Found |
+
+        | 405 | Method Not Allowed |
+
+        | 429 | Too Many Requests |'
+      operationId: getOutcome
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+              - initiativeid
+              properties:
+                module:
+                  type: string
+                  default: data
+                initiativeid:
+                  type: string
+                  description: The Initiative ID you wish to extract the Outcome List for.
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  info:
+                    $ref: '#/components/schemas/PaginationInfo'
+                  outcomes:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        Id:
+                          type: string
+                        Name:
+                          type: string
+                        OutcomeGroupId:
+                          type: string
+                        OutcomeGroupName:
+                          type: string
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+        '405':
+          description: Method Not Allowed
+        '429':
+          description: Too Many Requests
+  /GetCallIDs:
+    post:
+      tags:
+      - Records
+      summary: Get Call IDs for an initiative
+      description: 'This function extracts the Call IDs for a specific, or all, initiatives for a specific date and time range. Recommended polling timeframe is every 5 minutes.
+
+
+        **Pagination:** Results are paginated with a limit of 200 records per page.
+
+
+        | Response Code | Description |
+
+        | --- | --- |
+
+        | 200 | Success |
+
+        | 400 | Bad Request |
+
+        | 401 | Unauthorized |
+
+        | 404 | Not Found |
+
+        | 405 | Method Not Allowed |
+
+        | 429 | Too Many Requests |'
+      operationId: getCallIDs
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+              - initiativeid
+              - fromdate
+              - todate
+              properties:
+                initiativeid:
+                  type: string
+                  description: The Initiative ID to extract the calls for. Set to 0 for all initiatives.
+                fromdate:
+                  type: string
+                  description: 'Start date and time. Format: ''yyyy-mm-dd hh:mm:ss'''
+                todate:
+                  type: string
+                  description: 'End date and time. Format: ''yyyy-mm-dd hh:mm:ss'''
+                predictive:
+                  type: string
+                  enum:
+                  - '0'
+                  - '1'
+                  description: 'Optional: Include predictive dialer Call IDs (1) or only Agent Call IDs (0).'
+                page:
+                  type: integer
+                  default: 1
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  info:
+                    $ref: '#/components/schemas/PaginationInfo'
+                  records:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        Id:
+                          type: string
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+        '405':
+          description: Method Not Allowed
+        '429':
+          description: Too Many Requests
+  /GetLastCall:
+    post:
+      tags:
+      - Records
+      summary: Get the last call for a record
+      description: 'This function returns the last Call Outcome ID, User ID, Call ID, and Date/Time for a specific record.
+
+
+        | Response Code | Description |
+
+        | --- | --- |
+
+        | 200 | Success |
+
+        | 400 | Bad Request |
+
+        | 401 | Unauthorized |
+
+        | 404 | Not Found |
+
+        | 405 | Method Not Allowed |
+
+        | 429 | Too Many Requests |'
+      operationId: getLastCall
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+              - initiativeid
+              - recordid
+              properties:
+                module:
+                  type: string
+                  default: data
+                initiativeid:
+                  type: string
+                  description: The Initiative ID to search.
+                recordid:
+                  type: string
+                  description: The Record ID of the record to search.
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  info:
+                    $ref: '#/components/schemas/PaginationInfo'
+                  calls:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        CallId:
+                          type: string
+                        CompletedDateTime:
+                          type: string
+                        OutcomeId:
+                          type: string
+                        UserId:
+                          type: string
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+        '405':
+          description: Method Not Allowed
+        '429':
+          description: Too Many Requests
+  /GetAvailableRecords:
+    post:
+      tags:
+      - Records
+      summary: Get available records for a data set or initiative
+      description: 'Retrieve the records available for a specified data set or initiative.
+
+
+        | Response Code | Description |
+
+        | --- | --- |
+
+        | 200 | Success |
+
+        | 400 | Bad Request |
+
+        | 401 | Unauthorized |
+
+        | 404 | Not Found |
+
+        | 405 | Method Not Allowed |
+
+        | 429 | Too Many Requests |'
+      operationId: getAvailableRecords
+      requestBody:
+        required: false
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                datasetid:
+                  type: string
+                  description: 'Optional: The Data Set ID to check.'
+                initiativeid:
+                  type: string
+                  description: 'Optional: The Initiative ID to check. Set to 0 for all initiatives.'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  info:
+                    type: object
+                    properties:
+                      count:
+                        type: string
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        datasetid:
+                          type: string
+                        available:
+                          type: string
+                        today:
+                          type: string
+                        now:
+                          type: string
+                        fresh:
+                          type: string
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+        '405':
+          description: Method Not Allowed
+        '429':
+          description: Too Many Requests
+  /Updatemasterbyfieldname:
+    post:
+      tags:
+      - Records
+      summary: Update master data by field name
+      description: 'This function updates master data records by a specific field name and condition.
+
+
+        | Response Code | Description |
+
+        | --- | --- |
+
+        | 200 | Success |
+
+        | 400 | Bad Request |
+
+        | 401 | Unauthorized |
+
+        | 404 | Not Found |
+
+        | 405 | Method Not Allowed |
+
+        | 429 | Too Many Requests |'
+      operationId: updateMasterByFieldName
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+              - initiativeid
+              - updatefieldname
+              - updatefieldvalue
+              - whereconditionField
+              - whereconditionValue
+              properties:
+                initiativeid:
+                  type: string
+                  description: The Initiative ID.
+                updatefieldname:
+                  type: string
+                  description: Field name to update.
+                updatefieldvalue:
+                  type: string
+                  description: New value for the field.
+                fieldtypeisnumeric:
+                  type: string
+                  description: Set to 1 if the field is a numeric value.
+                whereconditionField:
+                  type: string
+                  description: Field name for the WHERE condition.
+                whereconditionValue:
+                  type: string
+                  description: Field value for the WHERE condition.
+      responses:
+        '200':
+          description: Success
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+        '405':
+          description: Method Not Allowed
+        '429':
+          description: Too Many Requests
+components:
+  schemas:
+    PaginationInfo:
+      type: object
+      properties:
+        per_page:
+          type: string
+          example: '200'
+        count:
+          type: string
+          example: '10'
+        page:
+          type: string
+          example: '1'
+        more_records:
+          type: string
+          example: '0'
+          description: Set to '1' if more records are available. Increment the `page` parameter to retrieve the next page.
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      description: This API uses Bearer Token Authorization Flow
+      bearerFormat: JWT

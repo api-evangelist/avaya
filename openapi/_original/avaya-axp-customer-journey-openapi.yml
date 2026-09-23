@@ -1,0 +1,2951 @@
+# x-archived-from: avaya-axp-customer-journey-openapi.yml
+# x-archived-on: 2026-09-16
+openapi: 3.0.2
+x-explorer-enabled: false
+x-samples-languages:
+- curl
+- node
+- java
+- javascript
+- python
+- go
+info:
+  title: Customer Journey
+  description: 'Customer Journey is used to retrieve information about Engagements and Conversations that have occurred in
+    a Customer''s Journey and to configure what Identifiers should be collected as part of a Customer''s Journey.
+
+    '
+  version: 1.1.1
+  contact:
+    name: Avaya API Team
+    url: https://developers.avayacloud.com/onecloud-ccaas
+    email: apiteam@avaya.com
+  license:
+    name: Avaya Software Development Kit (SDK) Software License Terms
+    url: http://support.avaya.com/css/P8/documents/101038288
+servers:
+- url: '{protocol}://{server}{basePath}'
+  description: Open API
+  variables:
+    protocol:
+      enum:
+      - https
+      default: https
+    server:
+      default: HOST-REGION.api.avayacloud.com
+    basePath:
+      default: /api/journey/v1
+- url: '{protocol}://{server}:{port}'
+  description: Internal API
+  variables:
+    protocol:
+      enum:
+      - http
+      - https
+      default: http
+    server:
+      default: journey-service
+    port:
+      enum:
+      - '80'
+      - '443'
+      default: '80'
+tags:
+- name: Engagement
+  description: Represents a resource of the Contact Center being allocated. Engagements can be assigned to one or many Conversations,
+    although this is not mandatory.
+- name: Identifiers
+  description: Represents the criteria with which a customer may be identified (Phone numbers, e-mail addresses, social media
+    handles).
+- name: Journey
+  description: Represents the history of Conversations and Engagements that a Customer has had with the business.
+security:
+- {}
+- BearerAuth: []
+  AppKey: []
+paths:
+  /accounts/{accountId}/engagements:
+    parameters:
+    - $ref: '#/components/parameters/accountId'
+    get:
+      tags:
+      - Engagement
+      summary: List Engagements
+      description: '**This API requires the Agent role.**
+
+
+        Gets a list of Engagements by querying by their Engagement ids. The Engagements are returned in the same order as
+        the ids are supplied.
+
+
+        Only Engagements that can be found will be included in the resulting response. If none of the Engagements can be found,
+        then a 404 Not Found response will be returned instead.
+
+        '
+      operationId: getEngagements
+      parameters:
+      - $ref: '#/components/parameters/pageSize'
+      - $ref: '#/components/parameters/pageNumber'
+      - in: query
+        name: engagementIds
+        required: true
+        description: A comma-separated list of Engagement id's.
+        schema:
+          type: array
+          items:
+            type: string
+            minLength: 36
+            maxLength: 36
+            pattern: ^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}$
+          minItems: 1
+          maxItems: 50
+          uniqueItems: true
+        examples:
+          oneId:
+            summary: Example of a single id.
+            value:
+            - b9da2450-415c-46ff-af58-0c3f39aee204
+          multipleIds:
+            summary: Example of multiple ids
+            value:
+            - b9da2450-415c-46ff-af58-0c3f39aee204
+            - 9a8575cb-344f-4435-88b0-233455323a52
+            - db158d0e-3926-45b5-a353-35d1e8b82705
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListEngagementsResponse'
+              examples:
+                Example-1:
+                  $ref: '#/components/examples/multi-engagement-response'
+        '400':
+          description: "Bad Request. \n\n* accountId must be exactly 6 characters\n\n* pageNumber must be greater than 0\n\
+            \n* pageSize must be between 1 and 50\n\n* engagementIds size must be between 1 and 50\n\n* engagementIds must\
+            \ be 36 character UUIDs\n"
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                default:
+                  $ref: '#/components/examples/ErrorConstraintViolation'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServer'
+      deprecated: false
+    post:
+      tags:
+      - Engagement
+      summary: Create Engagement
+      description: 'Creates a new Engagement or Customer Journey''s touchpoint in a Customer''s Journey .
+
+        Note: Engagements created this way **WILL NOT** be routed to an Agent or not affect **AXP''s Digital workflow** and
+        exist solely within a Customer Journey for historical purposes.
+
+        '
+      operationId: createEngagement
+      requestBody:
+        description: Create a new Engagement in a Customer's Journey
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Engagement'
+            examples:
+              Example-1:
+                $ref: '#/components/examples/engagement-create-1'
+              Example-2:
+                $ref: '#/components/examples/engagement-create-2'
+      responses:
+        '202':
+          description: Accepted
+        '400':
+          description: "Bad Request. \n\n* accountId must be exactly 6 characters\n\n* id must not be empty\n\n* startDate\
+            \ must not be empty\n\n* identifiers size must be between 1 and 20\n"
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                default:
+                  $ref: '#/components/examples/ErrorConstraintViolation'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServer'
+  /accounts/{accountId}/engagements/{engagementId}:
+    parameters:
+    - $ref: '#/components/parameters/accountId'
+    - $ref: '#/components/parameters/engagementId'
+    get:
+      tags:
+      - Engagement
+      summary: Get Engagement
+      description: '**This API requires the Agent role.**
+
+
+        Gets a single Engagement in a Customer''s Journey by its Engagement id.
+
+        '
+      operationId: getEngagement
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EngagementResponse'
+              examples:
+                Example-1:
+                  $ref: '#/components/examples/engagement-response'
+        '400':
+          description: "Bad Request. \n\n* accountId must be exactly 6 characters\n\n* engagementId must be a 36 character\
+            \ UUID\n"
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                default:
+                  $ref: '#/components/examples/ErrorConstraintViolation'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServer'
+  /accounts/{accountId}/engagements/{engagementId}:update:
+    parameters:
+    - $ref: '#/components/parameters/accountId'
+    - $ref: '#/components/parameters/engagementId'
+    post:
+      tags:
+      - Engagement
+      summary: Update Engagement
+      description: 'Updates an existing Engagement or Customer Journey''s touchpoint in a Customer''s Journey.
+
+        Note: Engagement updated this way **WILL NOT** be routed to an Agent or not affect **AXP''s digital workflow** and
+        exist solely within a Customer Journey.
+
+        '
+      operationId: updateEngagement
+      requestBody:
+        description: Update an existing Engagement in a Customer's Journey
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EngagementUpdate'
+            examples:
+              Example-1:
+                $ref: '#/components/examples/engagement-update-1'
+      responses:
+        '202':
+          description: Accepted
+        '400':
+          description: "Bad Request. \n\n* accountId must be exactly 6 characters\n\n* engagementId must be a 36 character\
+            \ UUID\n\n* No valid identifiers configured for account\n\n* Invalid customerIds type in the request [*]\n"
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                default:
+                  $ref: '#/components/examples/ErrorConstraintViolation'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServer'
+  /accounts/{accountId}/engagements/{engagementId}:appendIdentifiers:
+    parameters:
+    - $ref: '#/components/parameters/accountId'
+    - $ref: '#/components/parameters/engagementId'
+    post:
+      tags:
+      - Engagement
+      summary: Append Identifiers
+      description: 'Appends identifiers to an Engagement or Customer Journey''s touchpoint.
+
+        Note: This way appending Identifier to an Engagement **WILL NOT** be routed to an Agent or not affect **AXP''s digital
+        workflow** and exist solely within a Customer Journey.
+
+        '
+      operationId: appendIdentifiers
+      requestBody:
+        description: Append identifiers to an Engagement
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Identifiers'
+            examples:
+              Example-1:
+                $ref: '#/components/examples/appendIdentifiers'
+      responses:
+        '202':
+          description: Accepted
+        '400':
+          description: "Bad Request. \n\n* accountId must be exactly 6 characters\n\n* engagementId must be a 36 character\
+            \ UUID\n"
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                default:
+                  $ref: '#/components/examples/ErrorConstraintViolation'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServer'
+  /accounts/{accountId}/journeys:search:
+    parameters:
+    - $ref: '#/components/parameters/accountId'
+    - $ref: '#/components/parameters/pageSize'
+    - $ref: '#/components/parameters/pageNumber'
+    post:
+      tags:
+      - Journey
+      summary: Search Journeys
+      deprecated: false
+      description: "**This API requires the Agent role.**\n\nSearches for Customer Journeys optionally using different specific\
+        \ filters. \n\nIt makes it possible to narrow the search down to a particular conversation and only return the parts\
+        \ of the Customer's Journey that satisfies the given filter criteria. \n\nThe filter can include fields such as:\n\
+        \  * identifiers\n  * channelIds\n  * agentId\n  * conversation\n  * startDate & endDate\n\nIf found, the Customer's\
+        \ Journey will include a list of all the Engagements a Customer has had with the Contact Center, ordered by the `startDate`\
+        \ in descending order.\n"
+      operationId: getJourneys
+      requestBody:
+        description: Search for Journeys
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/JourneyQuery'
+            examples:
+              advanced-search-all-fields:
+                $ref: '#/components/examples/journey-query-advanced'
+              simple-search-minimum-fields:
+                $ref: '#/components/examples/journey-query-with-identifiers'
+              everything-within-a-date-time-range:
+                $ref: '#/components/examples/journey-query-within-date-time'
+              everything-after-a-date-time-range:
+                $ref: '#/components/examples/journey-query-after-date-time'
+              everything-before-a-date-time-range:
+                $ref: '#/components/examples/journey-query-before-date-time'
+              filtering-by-a-particular-conversation:
+                $ref: '#/components/examples/journey-query-with-conversation'
+              filtering-by-an-agent:
+                $ref: '#/components/examples/journey-query-with-agent'
+              filtering-by-channels:
+                $ref: '#/components/examples/journey-query-with-channels'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JourneyQueryResponse'
+              examples:
+                Example-1:
+                  $ref: '#/components/examples/journey-search-response'
+        '400':
+          description: 'Bad Request.
+
+
+            * accountId must be exactly 6 characters
+
+
+            * pageNumber must be greater than 0
+
+
+            * pageSize must be between 1 and 50
+
+
+            * Invalid input, ''Identifiers'' must not be empty
+
+            '
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                default:
+                  $ref: '#/components/examples/ErrorConstraintViolation'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServer'
+  /accounts/{accountId}/journeys:
+    parameters:
+    - $ref: '#/components/parameters/accountId'
+    post:
+      tags:
+      - Journey
+      summary: Create Journey
+      description: 'Creates a new Customer Journey Identity grouping, the supplied "identifiers" will be linked together to
+        form a single Customer Journey Identity. If any of the identifiers already exist, then any links they have will also
+        be included.
+
+        Note: This can be used to link previously unassociated identifiers together improving the accuracy of any searches
+        involving them. Creating Journey this way **will not affect AXP''s Digital Workflow** , its only internal to Customer
+        Journey.
+
+        '
+      operationId: createJourney
+      requestBody:
+        description: Create a new Customer Journey
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Journey'
+            examples:
+              Example-1:
+                $ref: '#/components/examples/journey-create-1'
+      responses:
+        '202':
+          description: Accepted
+        '400':
+          description: "Bad Request. \n\n* accountId must be exactly 6 characters\n\n* Request has invalid input\n"
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                default:
+                  $ref: '#/components/examples/ErrorConstraintViolation'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServer'
+  /accounts/{accountId}/journeys:unlinkIdentifier:
+    parameters:
+    - $ref: '#/components/parameters/accountId'
+    post:
+      tags:
+      - Journey
+      summary: Unlink Identifier
+      description: 'Unlinks an identifier from a Customer Journey, the supplied **unlinkIdentifier** will be unlinked from
+        the rest of the provided identifiers. The updated state of identifiers will be returned in the response.
+
+        This can be used to unlink previously associated identifiers to improve the accuracy of any searches involving them.
+
+        Note: This does not delete the identifier, instead it simply "unlinks" it from any other associated identifiers. It
+        can still be used as part of a search.
+
+        And this way unlinking identifier from Customer Journey **will not affect AXP''s Digital Workflow** , its only internal
+        to Customer Journey.
+
+        '
+      operationId: unlinkIdentifier
+      requestBody:
+        description: Unlink an identifier from a Customer Journey.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UnlinkJourney'
+            examples:
+              unlink-account-id:
+                $ref: '#/components/examples/unlink-account-id-request'
+              unlink-email-address:
+                $ref: '#/components/examples/unlink-email-address-request'
+              unlink-phone-number:
+                $ref: '#/components/examples/unlink-phone-number-request'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Journey'
+              examples:
+                unlink-account-id:
+                  $ref: '#/components/examples/unlink-account-id-response'
+                unlink-email-address:
+                  $ref: '#/components/examples/unlink-email-address-response'
+                unlink-phone-number:
+                  $ref: '#/components/examples/unlink-phone-number-response'
+        '400':
+          description: "Bad Request. \n\n* accountId must be exactly 6 characters\n\n* Request has invalid input\n"
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                default:
+                  $ref: '#/components/examples/ErrorConstraintViolation'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServer'
+  /accounts/{accountId}/journeys:listAgents:
+    parameters:
+    - $ref: '#/components/parameters/accountId'
+    - name: pageSize
+      description: The maximum number of results per page
+      required: false
+      in: query
+      schema:
+        type: integer
+        format: int32
+        minimum: 1
+        maximum: 10
+        default: 1
+        example: 10
+    - name: orderBy
+      description: 'Ordering is performed on the "leftAt" field, the default order is descending.
+
+
+        To specify ascending order, "asc" should be used.
+
+        '
+      required: false
+      in: query
+      schema:
+        type: string
+        minLength: 3
+        maxLength: 4
+        default: desc
+      example: asc
+    post:
+      tags:
+      - Journey
+      summary: List Agents
+      description: 'Lists the Agents to have participated on a Customer''s Journey for the required Channel within a timeframe.
+        By default this is limited to the last 30 days unless a "startDate" for the search is provided.
+
+
+        The Agents are listed in descending order based on the "leftAt" timefield, this can be changed to ascending with the
+        optional "orderBy" parameter.
+
+
+        This does not include any Agents that are currently active on the Customer''s Journey that have yet to leave.
+
+        '
+      operationId: listAgents
+      requestBody:
+        description: Search criteria.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ListAgentsQuery'
+            examples:
+              Example-1:
+                $ref: '#/components/examples/list-agents-query-1'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                description: A list containing Agents from a Customer's Journey that match the search criteria.
+                items:
+                  $ref: '#/components/schemas/ListAgentResponse'
+              examples:
+                Example-1:
+                  $ref: '#/components/examples/list-agents-response'
+        '400':
+          description: "Bad Request. \n\n* accountId must be exactly 6 characters\n\n* pageSize must be between 1 and 10\n\
+            \n* orderBy must have value 'asc' or 'desc'\n"
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                default:
+                  $ref: '#/components/examples/ErrorConstraintViolation'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServer'
+  /accounts/{accountId}/identifiers:
+    parameters:
+    - $ref: '#/components/parameters/accountId'
+    post:
+      tags:
+      - Identifiers
+      summary: Create Identifier
+      description: "**This API requires the Account Administrator role.**\n\nCreates a new identifier that can then be used\
+        \ to uniquely identify a Customer's Journey. \n\nThis will instruct Customer Journey to collect and store identifier\
+        \ values that match the configured name on Customer Journeys that contain it. Unless configured to, Customer Journey\
+        \ will not collect identifiers for names it does not recognise.\n\nIdentifiers can be classified as WEAK, STRONG,\
+        \ or VERY STRONG. For example, a phone number is considered a WEAK identifier while an email is considered a STRONG\
+        \ identifier.\n\nThe name of the identifier must be unique for the Account, attempts to create duplicate identifiers\
+        \ will be rejected. A maximum of 1000 identifiers can be configured for an Account.\n"
+      operationId: createIdentifier
+      requestBody:
+        description: Create Identifier
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IdentifierType'
+            examples:
+              create-a-new-identifier:
+                $ref: '#/components/examples/createIdentifier'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IdentifierType'
+              examples:
+                Example-1:
+                  $ref: '#/components/examples/createIdentifierResponse'
+        '400':
+          description: "Bad Request. \n\n* accountId must be exactly 6 characters\n\n* name must not be empty\n\n* displayName\
+            \ must not be empty\n\n* identifierStrength must be WEAK, STRONG, or VERY STRONG\n\n* identifier 'NAME' already\
+            \ exists for account 'ACCOUNT_NAME'\n"
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                default:
+                  $ref: '#/components/examples/ErrorConstraintViolation'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServer'
+      deprecated: false
+    get:
+      tags:
+      - Identifiers
+      summary: List Identifiers
+      description: '**This API requires the Account Administrator role.**
+
+
+        Gets the list of configured identifiers.
+
+        '
+      operationId: getIdentifiers
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/IdentifierType'
+              examples:
+                Example-1:
+                  $ref: '#/components/examples/getIdentifiers'
+        '400':
+          description: "Bad Request. \n\n* accountId must be exactly 6 characters\n"
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                default:
+                  $ref: '#/components/examples/ErrorConstraintViolation'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServer'
+      deprecated: false
+  /accounts/{accountId}/identifiers/{identifierId}:
+    parameters:
+    - $ref: '#/components/parameters/accountId'
+    - $ref: '#/components/parameters/identifierId'
+    get:
+      tags:
+      - Identifiers
+      summary: Get Identifier
+      description: '**This API requires the Account Administrator role.**
+
+
+        Gets a single identifier by its Identifier id.
+
+        '
+      operationId: getIdentifier
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IdentifierType'
+              examples:
+                Example-1:
+                  $ref: '#/components/examples/getIdentifierResponse'
+        '400':
+          description: "Bad Request. \n\n* accountId must be exactly 6 characters\n\n* identifierId must exist for the account\n"
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                default:
+                  $ref: '#/components/examples/ErrorConstraintViolation'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServer'
+      deprecated: false
+    put:
+      tags:
+      - Identifiers
+      summary: Update Identifier
+      description: "**This API requires the Account Administrator role.**\n\nUpdates an existing identifier. \n\nThe name\
+        \ of the identifier must be unique for the Account, attempts to create duplicate identifiers will be rejected.\n"
+      operationId: updateIdentifier
+      requestBody:
+        description: Update Identifier
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IdentifierType'
+            examples:
+              update-an-identifier:
+                $ref: '#/components/examples/updateIdentifier'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IdentifierType'
+              examples:
+                Example-1:
+                  $ref: '#/components/examples/updateIdentifierResponse'
+        '400':
+          description: "Bad Request. \n\n* accountId must be exactly 6 characters\n\n* identifierId must exist for the account\n\
+            \n* name must not be empty\n\n* displayName must not be empty\n\n* identifierStrength must be WEAK, STRONG, or\
+            \ VERY STRONG\n\n* identifier 'NAME' already exists for account 'ACCOUNT_NAME'\n"
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                default:
+                  $ref: '#/components/examples/ErrorConstraintViolation'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServer'
+      deprecated: false
+  /accounts/{accountId}/identifiers:delete:
+    parameters:
+    - $ref: '#/components/parameters/accountId'
+    post:
+      tags:
+      - Identifiers
+      summary: Delete Identifier(s)
+      description: "**This API requires the Account Administrator role.**\n\nDeletes the specified identifier(s), meaning\
+        \ they will no longer be collected and stored against Customer Journeys. \n\nThis has no effect for Customer Journeys\
+        \ that already contain the identifier(s).\n"
+      operationId: deleteIdentifiers
+      requestBody:
+        description: Delete Identifier(s)
+        content:
+          application/json:
+            schema:
+              type: array
+              minItems: 1
+              maxItems: 50
+              items:
+                type: string
+                description: A list of identifier(s) to be deleted by their name.
+                minLength: 3
+                maxLength: 50
+              example:
+              - e53e8dfc-a716-4f53-9647-ca4f712e1c88
+              - a2bbccea-3699-4434-94d1-07903799c8ad
+            examples:
+              delete-multiple-identifiers:
+                value:
+                - e53e8dfc-a716-4f53-9647-ca4f712e1c88
+                - 4a5d9d7f-0a91-4ed0-bc33-35875831567e
+                - 5faf5619-746e-4a30-8eb3-263b7c2a5598
+              delete-a-single-identifier:
+                value:
+                - e53e8dfc-a716-4f53-9647-ca4f712e1c88
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: "Bad Request. \n\n* accountId must be exactly 6 characters\n"
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                default:
+                  $ref: '#/components/examples/ErrorConstraintViolation'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServer'
+      deprecated: false
+  /accounts/{accountId}/engagements/{engagementId}/participants/{participantId}:add:
+    parameters:
+    - $ref: '#/components/parameters/accountId'
+    - $ref: '#/components/parameters/engagementId'
+    - $ref: '#/components/parameters/participantId'
+    post:
+      tags:
+      - Participant
+      summary: Add Participant
+      operationId: addParticipant
+      description: Adds a new Participant to an Engagement or CJ's touchpoint.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Participant'
+            examples:
+              Example-1:
+                $ref: '#/components/examples/participant-create-external'
+              Example-2:
+                $ref: '#/components/examples/participant-create-treatment'
+              Example-3:
+                $ref: '#/components/examples/participant-create-agent'
+        description: Participant details
+      responses:
+        '202':
+          description: Accepted
+        '400':
+          description: "Bad Request. \n\n* accountId must be exactly 6 characters\n\n* engagementId must be a 36 character\
+            \ UUID\n\n* participantId must be a 36 character UUID\n"
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                default:
+                  $ref: '#/components/examples/ErrorConstraintViolation'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServer'
+  /accounts/{accountId}/engagements/{engagementId}/participants/{participantId}:remove:
+    parameters:
+    - $ref: '#/components/parameters/accountId'
+    - $ref: '#/components/parameters/engagementId'
+    - $ref: '#/components/parameters/participantId'
+    post:
+      tags:
+      - Participant
+      summary: Remove Participant
+      operationId: removeParticipant
+      description: Removes an existing Participant from an Engagement or CJ's touchpoint.
+      responses:
+        '202':
+          description: Accepted
+        '400':
+          description: "Bad Request. \n\n* accountId must be exactly 6 characters\n\n* engagementId must be a 36 character\
+            \ UUID\n\n* participantId must be a 36 character UUID\n\n* type must EXTERNAL, AGENT or TREATMENT\n"
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                default:
+                  $ref: '#/components/examples/ErrorConstraintViolation'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServer'
+  /accounts/{accountId}/engagements/{engagementId}/agent-notes:
+    parameters:
+    - $ref: '#/components/parameters/accountId'
+    - $ref: '#/components/parameters/engagementId'
+    get:
+      tags:
+      - Agent Notes
+      summary: Get the list of Agent Notes for an Engagement.
+      description: '
+
+        Get the list of Agent Notes for an Engagement.
+
+        '
+      operationId: getAgentNotes
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgentNotesListResponse'
+              examples:
+                Agent-Notes-Response:
+                  $ref: '#/components/examples/agent-note-get-response-1'
+        '400':
+          description: "Bad Request. \n"
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                default:
+                  $ref: '#/components/examples/ErrorConstraintViolation'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServer'
+  /accounts/{accountId}/engagements/{engagementId}/agent-note:
+    parameters:
+    - $ref: '#/components/parameters/accountId'
+    - $ref: '#/components/parameters/engagementId'
+    post:
+      tags:
+      - Agent Notes
+      summary: Add Agent Note
+      description: 'Creates a new Agent Note for given Engagement.
+
+        '
+      operationId: createAgentNote
+      requestBody:
+        description: Creates a new Agent Note for given Engagement.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AgentNoteInput'
+            examples:
+              Agent-note-request-body:
+                $ref: '#/components/examples/agent-note-create-1'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgentNoteResponse'
+              examples:
+                Add-Note-Response:
+                  $ref: '#/components/examples/agent-note-create-response-1'
+        '400':
+          description: "Bad Request. \n\n* All fields must be populated \n"
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                default:
+                  $ref: '#/components/examples/ErrorConstraintViolation'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '422':
+          $ref: '#/components/responses/AgentNoteExists'
+        '500':
+          $ref: '#/components/responses/InternalServer'
+  /accounts/{accountId}/engagements/{engagementId}/agent-note/{noteId}:
+    parameters:
+    - $ref: '#/components/parameters/accountId'
+    - $ref: '#/components/parameters/engagementId'
+    - $ref: '#/components/parameters/noteId'
+    put:
+      tags:
+      - Agent Notes
+      summary: Update Agent Note
+      description: 'Updates a new agent note for given engagement.
+
+        '
+      operationId: updateAgentNote
+      requestBody:
+        description: Updates agent note for given Engagement.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AgentNoteInput'
+            examples:
+              Agent-note-request-body:
+                $ref: '#/components/examples/agent-note-update-1'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgentNoteResponse'
+              examples:
+                Example-1:
+                  $ref: '#/components/examples/agent-note-update-response-1'
+        '400':
+          description: "Bad Request. \n\n* All fields must be populated \n"
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                default:
+                  $ref: '#/components/examples/ErrorConstraintViolation'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServer'
+  /accounts/{accountId}/engagements/{engagementId}/agent-note/{agentNoteId}:
+    parameters:
+    - $ref: '#/components/parameters/accountId'
+    - $ref: '#/components/parameters/engagementId'
+    - $ref: '#/components/parameters/agentNoteId'
+    delete:
+      tags:
+      - Agent Notes
+      summary: Delete Agent Note.
+      description: 'Delete an Agent Note for given Engagement.
+
+        '
+      operationId: deleteAgentNote
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: "Bad Request. \n\n* All fields must be populated \n"
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                default:
+                  $ref: '#/components/examples/ErrorConstraintViolation'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServer'
+components:
+  parameters:
+    accountId:
+      name: accountId
+      description: The unique 6 character internal id that represents the customer account.
+      required: true
+      in: path
+      schema:
+        type: string
+        minLength: 6
+        maxLength: 6
+        pattern: ^[a-zA-Z]{6}$
+        example: ABCDEF
+    engagementId:
+      name: engagementId
+      description: The unique 36 character internal id that represents the engagement.
+      required: true
+      in: path
+      schema:
+        type: string
+        minLength: 36
+        maxLength: 36
+        pattern: ^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}$
+        example: dfd117d7-73e3-4436-8bd7-3ce8f1a008ed
+    identifierId:
+      name: identifierId
+      description: The unique 36 character internal id that represents the identifier.
+      required: true
+      in: path
+      schema:
+        type: string
+        minLength: 36
+        maxLength: 36
+        pattern: ^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}$
+        example: 9b07057b-1e15-4436-a605-280d9f030149
+    participantId:
+      name: participantId
+      description: The unique id that represents the participant.
+      required: true
+      in: path
+      schema:
+        type: string
+        minLength: 1
+        maxLength: 36
+        example: 1b3232rerew343432432432
+    pageSize:
+      name: pageSize
+      description: The maximum number of results per page.
+      required: false
+      in: query
+      example: 10
+      schema:
+        type: integer
+        format: int32
+        default: 50
+        minimum: 1
+        maximum: 50
+    pageNumber:
+      name: pageNumber
+      description: The target page of results.
+      required: false
+      in: query
+      example: 34
+      schema:
+        type: integer
+        format: int32
+        default: 1
+        minimum: 1
+    noteId:
+      name: noteId
+      description: The unique id that represents the note.
+      required: true
+      in: path
+      schema:
+        type: string
+        minLength: 20
+        maxLength: 20
+        example: Isfgy40BJ8Ew1LrQxUJy
+    agentNoteId:
+      name: agentNoteId
+      description: reresents agent note id.
+      required: true
+      in: path
+      schema:
+        type: string
+        minLength: 20
+        maxLength: 20
+        example: g8fmy40BJ8Ew1LrQW0Js
+  schemas:
+    Problem:
+      type: object
+      description: '<b>Problem Detail</b> as a way to carry machine-readable details of errors in a HTTP response to avoid
+        the need to define new error response formats for HTTP APIs <a href="https://tools.ietf.org/html/rfc7807">RFC 7807</a>
+
+        '
+      properties:
+        type:
+          type: string
+          format: uri
+          description: 'An absolute URI that identifies the problem type. When dereferenced, it SHOULD provide human-readable
+            documentation for the problem type (e.g., using HTML).
+
+            '
+          default: about:blank
+          example: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#constraint-violation
+        title:
+          type: string
+          description: 'A short, summary of the problem type. Written in english and readable for engineers (usually not suited
+            for non technical stakeholders and not localized).
+
+            '
+          example: Service Unavailable
+          nullable: true
+        status:
+          type: integer
+          format: int32
+          description: 'The HTTP status code generated by the origin server for this occurrence of the problem.
+
+            '
+          minimum: 100
+          maximum: 600
+          exclusiveMaximum: true
+          example: 503
+          nullable: true
+        detail:
+          type: string
+          description: 'A human readable explanation specific to this occurrence of the problem.
+
+            '
+          example: Connection to database timed out
+          nullable: true
+        instance:
+          type: string
+          format: uri
+          description: 'An absolute URI that identifies the specific occurrence of the problem. It may or may not yield further
+            information if dereferenced.
+
+            '
+          nullable: true
+        violations:
+          type: array
+          description: 'A list of violations that occurred as a result of invalid data provided as part of a request.
+
+            '
+          nullable: true
+          items:
+            type: object
+            properties:
+              field:
+                type: string
+                description: 'The name of the field in the request that caused the violation. This can be the name of a path
+                  parameter, query parameter, or a field within the request body.
+
+                  '
+                example: accountId
+              message:
+                type: string
+                description: 'A human readable explanation specific to this occurrence of the violation.
+
+                  '
+                example: must match "^[a-zA-Z]{6}$"
+              code:
+                type: integer
+                format: int32
+                description: 'The violation code generated by the server for this occurrence of the violation. Use this code
+                  when implementing any error handling logic instead of the message, as the message can change.
+
+                  '
+                example: 20006
+          example:
+          - field: emailAddress
+            message: must not be null
+            code: 20002
+          - field: accountId
+            message: must match "^[a-zA-Z]{6}$"
+            code: 20006
+    EngagementResponse:
+      title: EngagementResponse
+      description: A Customer Engagement with the Contact Center
+      allOf:
+      - $ref: '#/components/schemas/Identifiers'
+      - type: object
+        additionalProperties: true
+        properties:
+          id:
+            type: string
+            description: The unique 36 character internal id that represents the engagement.
+          status:
+            type: string
+            readOnly: true
+            description: The current internal status of the engagement such as CREATED, ACTIVE or COMPLETED.
+            enum:
+            - CREATED
+            - ACTIVE
+            - COMPLETED
+          direction:
+            type: string
+            readOnly: true
+            description: 'The internal direction which signifies if the engagement was initiated by an external user (INBOUND)
+              or from within the contact center, e.g. an agent driven ad-hoc email (OUTBOUND).
+
+              '
+            enum:
+            - INBOUND
+            - OUTBOUND
+            example: INBOUND
+          channels:
+            type: array
+            items:
+              $ref: '#/components/schemas/Channel'
+            description: List of channels associated with the Engagement.
+          agentNotes:
+            type: array
+            items:
+              $ref: '#/components/schemas/AgentNoteResponse'
+            description: List of agent notes associated with the Engagement.
+          startDate:
+            type: string
+            format: date-time
+            description: The start datetime of the Engagement in ISO 8601 format, for example 2018-11-13T20:20:39+00:00
+            example: '2018-11-13T20:20:39+00:00'
+          updateDate:
+            type: string
+            format: date-time
+            description: The last updated datetime of the Engagement in ISO 8601 format, for example 2018-11-13T20:25:39+00:00
+            example: '2018-11-13T20:25:39+00:00'
+          endDate:
+            type: string
+            format: date-time
+            description: The end datetime of the Engagement in ISO 8601 format, for example 2018-11-13T20:27:12+00:00
+            example: '2018-11-13T20:27:12+00:00'
+          conversations:
+            type: array
+            minItems: 0
+            maxItems: 50
+            items:
+              type: string
+            description: The conversation (or purpose) of the Engagement.
+          participants:
+            type: array
+            minItems: 0
+            maxItems: 50
+            items:
+              $ref: '#/components/schemas/ParticipantResponse'
+            description: List of participants on the Engagement
+          accountId:
+            type: string
+            description: The unique 6 character internal id that represents the customer account
+            readOnly: true
+          data:
+            type: object
+            description: 'Optional, generic key-value pair data stored with the Engagement.
+
+              This is useful for storing custom information that a client
+
+              can then interpret.
+
+              '
+            minProperties: 0
+            maxProperties: 50
+            additionalProperties:
+              type: string
+          attributes:
+            type: array
+            items:
+              type: string
+            description: List of last set of attributes per category on the Engagement
+          queues:
+            type: array
+            items:
+              $ref: '#/components/schemas/Queue'
+            description: List of queues on the Engagement
+          sourceType:
+            type: string
+            description: This value defines the external system that was the source of the engagement that is being generated
+              into Avaya Experience Platform
+            readOnly: true
+            example: Facebook
+          sourceAddress:
+            type: string
+            description: 'the source address is intended to represent the address from which the Avaya Experience Platform
+              engagement was created. It might represent a mailbox, a twitter account, a Facebook account, a chat integration
+              will be the same as the (To) address '
+            readOnly: true
+            example: '@someSocialMediaAccount'
+          transfers:
+            type: array
+            items:
+              $ref: '#/components/schemas/Transfer'
+            description: List of Transfer on the Engagement
+    ListEngagementsResponse:
+      type: object
+      description: A paginated list of Engagements with the Contact Center
+      properties:
+        engagements:
+          type: array
+          description: The engagements returned as the result
+          items:
+            $ref: '#/components/schemas/EngagementResponse'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+    Engagement:
+      title: Engagement
+      description: A Customer Engagement with the Contact Center
+      allOf:
+      - $ref: '#/components/schemas/Identifiers'
+      - type: object
+        additionalProperties: true
+        required:
+        - id
+        - identifiers
+        - startDate
+        properties:
+          id:
+            type: string
+            description: The unique 36 character internal id that represents the engagement.
+            minLength: 36
+            maxLength: 36
+            pattern: ^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}$
+            example: dfd117d7-73e3-4436-8bd7-3ce8f1a008ed
+          status:
+            type: string
+            readOnly: true
+            description: The current internal status of the engagement such as CREATED, ACTIVE or COMPLETED.
+            enum:
+            - CREATED
+            - ACTIVE
+            - COMPLETED
+          startDate:
+            type: string
+            format: date-time
+            description: The start datetime of the Engagement in ISO 8601 format, for example 2018-11-13T20:20:39+00:00
+            example: '2018-11-13T20:20:39+00:00'
+          updateDate:
+            type: string
+            format: date-time
+            readOnly: true
+            description: The last updated datetime of the Engagement in ISO 8601 format, for example 2018-11-13T20:25:39+00:00
+            example: '2018-11-13T20:25:39+00:00'
+          endDate:
+            type: string
+            format: date-time
+            readOnly: true
+            description: The end datetime of the Engagement in ISO 8601 format, for example 2018-11-13T20:27:12+00:00
+            example: '2018-11-13T20:27:12+00:00'
+          conversations:
+            type: array
+            minItems: 0
+            maxItems: 10
+            items:
+              type: string
+              minLength: 3
+              maxLength: 256
+            description: The conversation (or purpose) of the Engagement.
+          data:
+            type: object
+            description: 'Optional, generic key-value pair data stored with the Engagement. The maximum length of a key is
+              64 characters and the maximum length of a value is 1024 characters.
+
+
+              This is useful for storing custom information against an Engagement, Customer Journey itself does not take any
+              action beyond basic validation on this data.
+
+
+              If the key already exists the value will be replaced by the new value provided.
+
+              '
+            minProperties: 0
+            maxProperties: 20
+            additionalProperties:
+              type: string
+              minLength: 3
+              maxLength: 1024
+            example:
+              ticketId: ticket-4652f066-39f2-43e1-a5ae-d8f8d210fe66
+              applicationStatus: In Review
+    EngagementUpdate:
+      title: EngagementUpdate
+      description: A Customer Engagement with the Contact Center
+      allOf:
+      - $ref: '#/components/schemas/Identifiers'
+      - type: object
+        additionalProperties: true
+        description: A Customer Engagement with the Contact Center
+        required:
+        - timestamp
+        properties:
+          timestamp:
+            type: string
+            format: date-time
+            description: The datetime of the Engagement being updated in ISO 8601 format, for example 2018-11-13T20:20:39+00:00
+            example: '2018-11-13T20:20:39+00:00'
+          conversations:
+            type: array
+            minItems: 0
+            maxItems: 10
+            items:
+              type: string
+              minLength: 3
+              maxLength: 256
+            description: The conversation (or purpose) of the Engagement.
+          data:
+            type: object
+            description: 'Optional, generic key-value pair data stored with the Engagement. The maximum length of a key is
+              64 characters and the maximum length of a value is 1024 characters.
+
+
+              This is useful for storing custom information against an Engagement, Customer Journey itself does not take any
+              action beyond basic validation on this data.
+
+
+              If the key already exists the value will be replaced by the new value provided.
+
+              '
+            minProperties: 0
+            maxProperties: 20
+            additionalProperties:
+              type: string
+              minLength: 3
+              maxLength: 1024
+            example:
+              ticketId: ticket-4652f066-39f2-43e1-a5ae-d8f8d210fe66
+              applicationStatus: In Review
+    ParticipantResponse:
+      type: object
+      description: Any External, Agent or Treatment participant as returned by a query for a customer journey
+      properties:
+        type:
+          type: string
+          description: The type of Participant, for example EXTERNAL, AGENT or TREATMENT.
+          enum:
+          - EXTERNAL
+          - AGENT
+          - TREATMENT
+        id:
+          type: string
+          description: The unique id that represents the participant.
+        agentDisplayName:
+          type: string
+          description: This value defines the internal participants name as it will be displayed to Avaya Experience Platform
+            user.
+          readOnly: true
+          example: John Smith
+        dialogId:
+          type: string
+          description: The unique 36 character internal id that represents the Dialog.
+        channelId:
+          type: string
+          description: The unique id representing the Contact Center Channel. Only valid Contact Center Channel Ids are accepted.
+            See Contact Center Channel list in Developers guide for further details.
+          example: Voice
+        channelType:
+          type: string
+          description: The Contact Center Channel Type. Only valid Contact Center Channel Types are accepted. See Contact
+            Center Channel list in Developers guide for further details.
+          example: VOICE
+        joinedAt:
+          type: string
+          description: The datetime of when the Participant was added to the Engagement in ISO 8601 format, for example 2018-11-13T20:27:12+00:00
+          format: date-time
+        leftAt:
+          type: string
+          description: The datetime of when the Participant was removed from the Engagement in ISO 8601 format, for example
+            2018-11-13T20:27:12+00:00
+          format: date-time
+        callingNumber:
+          type: string
+          description: The calling number of the Participant.
+        dialledNumber:
+          type: string
+          description: The original dialled number for the Engagement.
+        extension:
+          type: string
+          description: The agents extension.
+        automationType:
+          type: string
+          enum:
+          - SELF_SERVICE
+          - TREATMENT
+          - CHATBOT
+          description: The automation type, such as SELF_SERVICE, TREATMENT, or CHATBOT.
+        sourceType:
+          type: string
+          description: This value defines the external system that was the source of the engagement that is being generated
+            into Avaya Experience Platform
+          readOnly: true
+          example: Facebook
+        sourceAddress:
+          type: string
+          description: 'the source address is intended to represent the address from which the Avaya Experience Platform engagement
+            was created. It might represent a mailbox, a twitter account, a Facebook account, a chat integration will be the
+            same as the (To) address '
+          readOnly: true
+          example: '@someSocialMediaAccount'
+    Channel:
+      title: Channel
+      description: Identifies the specific type of channel such as VOICE, WEBCHAT, EMAIL, SMS, or SOCIAL.
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique identifier for the channel.
+          example: Voice
+        type:
+          type: string
+          description: The type of channel, such as VOICE, or VIDEO.
+          example: VOICE
+    ListAgentsQuery:
+      allOf:
+      - $ref: '#/components/schemas/Identifiers'
+      - type: object
+        additionalProperties: true
+        required:
+        - identifiers
+        - channelId
+        properties:
+          startDate:
+            description: The start date in ISO 8601 format, for example 2018-11-13T20:20:39+00:00. The returned results will
+              be inclusive of this datetime. If omitted, defaults to the last 30 days.
+            example: '2018-11-13T20:20:39+00:00'
+            type: string
+            format: date-time
+            nullable: true
+          channelId:
+            type: string
+            description: The unique identifier for the Agent's channel.
+            minLength: 3
+            maxLength: 50
+            example: Voice
+      title: ListAgentsQuery
+      description: The list Agents search criteria.
+    ListAgentResponse:
+      type: object
+      title: ListAgentResponse
+      description: An Agent from a Customer's Journey that matches the search criteria.
+      properties:
+        agentId:
+          type: string
+          description: The unique 36 character internal id that represents the Agent.
+        channelProviderId:
+          type: string
+          description: The unique internal id that represents the Channel Provider.
+        leftAt:
+          type: string
+          description: The datetime of when the Agent was removed from the Customer's Journey in ISO 8601 format, for example
+            2018-11-13T20:27:12+00:00
+          format: date-time
+    Participant:
+      type: object
+      description: Any External, Agent or Treatment participant
+      discriminator:
+        propertyName: type
+        mapping:
+          EXTERNAL: '#/components/schemas/External'
+          AGENT: '#/components/schemas/Agent'
+          TREATMENT: '#/components/schemas/Treatment'
+      properties:
+        type:
+          type: string
+          description: The type of Participant, for example EXTERNAL, AGENT or TREATMENT.
+          enum:
+          - EXTERNAL
+          - AGENT
+          - TREATMENT
+        id:
+          type: string
+          description: The unique 36 character internal id that represents the Participant.
+          maxLength: 36
+        dialogId:
+          type: string
+          description: The unique 36 character internal id that represents the Dialog.
+          minLength: 36
+          maxLength: 36
+          pattern: ^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}$
+          example: bb4f5cf8-5bfc-4bf3-ac43-153c43671f0e
+        timestamp:
+          type: string
+          description: The datetime of when the Participant was added to the Engagement in ISO 8601 format, for example 2018-11-13T20:27:12+00:00
+          format: date-time
+        channelId:
+          type: string
+          description: The unique id representing the Contact Center Channel. Only valid Contact Center Channel Ids are accepted.
+            See Contact Center Channel list in Developers guide for further details.
+          minLength: 3
+          maxLength: 50
+          example: Voice
+        channelType:
+          type: string
+          description: The Contact Center Channel Type. Only valid Contact Center Channel Types are accepted. See Contact
+            Center Channel list in Developers guide for further details.
+          minLength: 3
+          maxLength: 50
+          example: VOICE
+      required:
+      - type
+      - dialogId
+      - channelId
+      - channelType
+      - timestamp
+    External:
+      description: An external participant type used to represent a customer.
+      allOf:
+      - $ref: '#/components/schemas/Participant'
+      - type: object
+        additionalProperties: true
+        properties:
+          callingNumber:
+            type: string
+            description: The calling number of the Participant.
+            minLength: 3
+            maxLength: 256
+          dialledNumber:
+            type: string
+            description: The original dialled number for the Engagement.
+            minLength: 3
+            maxLength: 256
+          sourceType:
+            type: string
+            description: This value defines the external system that was the source of the engagement that is being generated
+              into CCaaS
+            readOnly: true
+            example: Facebook
+          sourceAddress:
+            type: string
+            description: 'the source address is intended to represent the address from which the CCaaS engagement was created.
+              It might represent a mailbox, a twitter account, a Facebook account, a chat integration will be the same as
+              the (To) address '
+            readOnly: true
+            example: '@someSocialMediaAccount'
+        required:
+        - type
+        - id
+        - channelId
+        - channelType
+        - timestamp
+        - callingNumber
+        - dialledNumber
+    Agent:
+      description: An agent participant type used to represent an agent of the contact center.
+      allOf:
+      - $ref: '#/components/schemas/Participant'
+      - type: object
+        additionalProperties: true
+        properties:
+          extension:
+            type: string
+            description: The agents extension.
+            minLength: 3
+            maxLength: 256
+          sourceType:
+            type: string
+            description: This value defines the external system that was the source of the engagement that is being generated
+              into CCaaS
+            readOnly: true
+            example: Facebook
+          sourceAddress:
+            type: string
+            description: 'the source address is intended to represent the address from which the CCaaS engagement was created.
+              It might represent a mailbox, a twitter account, a Facebook account, a chat integration will be the same as
+              the (To) address '
+            readOnly: true
+            example: '@someSocialMediaAccount'
+        required:
+        - type
+        - id
+        - channelId
+        - channelType
+        - timestamp
+        - extension
+    Treatment:
+      description: A treatment participant type used to represent forms of automation, e.g. a chatbot.
+      allOf:
+      - $ref: '#/components/schemas/Participant'
+      - type: object
+        additionalProperties: true
+        properties:
+          automationType:
+            type: string
+            enum:
+            - SELF_SERVICE
+            - TREATMENT
+            - CHATBOT
+            description: The automation type, such as SELF_SERVICE, TREATMENT, or CHATBOT.
+        required:
+        - type
+        - id
+        - channelId
+        - channelType
+        - timestamp
+        - automationType
+    JourneyQuery:
+      title: JourneyQuery
+      description: Customer Journey query criteria.
+      allOf:
+      - $ref: '#/components/schemas/Identifiers'
+      - type: object
+        additionalProperties: true
+        properties:
+          startDate:
+            description: The start date in ISO 8601 format, for example 2018-11-13T20:20:39+00:00. The returned results will
+              be inclusive of this datetime.
+            example: '2018-11-13T20:20:39+00:00'
+            type: string
+            format: date-time
+            nullable: true
+          endDate:
+            description: The end date in ISO 8601 format, for example 2018-11-13T20:20:39+00:00. The returned results will
+              be inclusive of this datetime.
+            example: '2018-11-13T20:20:39+00:00'
+            type: string
+            format: date-time
+            nullable: true
+          conversation:
+            type: string
+            description: The conversation to filter by.
+            nullable: true
+            minLength: 3
+            maxLength: 256
+            example: Mortgage Application
+          agentId:
+            type: string
+            description: The agent id to filter by.
+            minLength: 3
+            maxLength: 36
+            example: 4dd8a4a4-09f4-4dab-a503-91cefc4604e0
+          channelIds:
+            type: array
+            description: The list of channel Ids to filter by.
+            items:
+              type: string
+              minLength: 3
+              maxLength: 20
+            minItems: 1
+            maxItems: 10
+            uniqueItems: true
+            example:
+            - Voice
+            - Chat
+    Identifiers:
+      type: object
+      description: Unique Customer ids used during an Engagement.
+      properties:
+        identifiers:
+          type: object
+          minProperties: 1
+          maxProperties: 10
+          description: Unique identifiers for identifying the customer during an Engagement such as phoneNumbers or emailAddresses.
+          additionalProperties:
+            type: array
+            description: 'Additional identifiers related to the Customer. The maximum length of an identifer key is 50 characters
+              and must be a valid "name" of a pre-configured identifier in Customer Journey.
+
+              '
+            minItems: 0
+            maxItems: 5
+            items:
+              type: string
+              minLength: 1
+              maxLength: 256
+          properties:
+            phoneNumbers:
+              type: array
+              description: List of phone numbers.
+              minItems: 0
+              maxItems: 5
+              items:
+                type: string
+                minLength: 3
+                maxLength: 256
+            emailAddresses:
+              type: array
+              description: List of email addresses.
+              minItems: 0
+              maxItems: 5
+              items:
+                type: string
+                minLength: 3
+                maxLength: 256
+            accountIds:
+              type: array
+              description: List of customer account id's.
+              minItems: 0
+              maxItems: 5
+              items:
+                type: string
+                minLength: 3
+                maxLength: 256
+    Queue:
+      type: object
+      title: Queue
+      description: The queue details part of an engagement.
+      required:
+      - queueId
+      - channelId
+      - priority
+      properties:
+        queueId:
+          description: The unique case sensitive id of the queue. Only valid Contact Center Queue Id's are accepted. See Queue
+            Admin List API.
+          type: string
+          minLength: 36
+          maxLength: 36
+          pattern: ^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}$
+        queueName:
+          type: string
+          description: The Queue name for the queue.
+          example: Default
+        channelId:
+          description: The id representing the Contact Center Channel. Only valid Contact Center Channel Id's are accepted.
+            See Channel page in Avaya Experience Platform Fundamentals section of Developer Guides for a list of supported
+            Channel Id's.
+          type: string
+          minLength: 3
+          maxLength: 256
+        priority:
+          description: The priority of this queue request. The smaller the number meaning the higher the priority.
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 10
+        rank:
+          description: This is the rank of this queue in the context of a match request, when the match request contains multiple
+            queues.
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 2147483647
+        proficiencyRangeMin:
+          description: Agents who have a proficiency equal or greater than this for the required queue will be preferred.
+            The smaller the number meaning the highest ranked or best agent. The larger the number meaning the lower the agent
+            ranking.
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 16
+        proficiencyRangeMax:
+          description: Agents who have a proficiency equal or less than this for the required queue will be preferred. The
+            smaller the number meaning the highest ranked or best agent. The larger the number meaning the lower the agent
+            ranking.
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 16
+        queuedAt:
+          type: string
+          format: date-time
+          readOnly: true
+          description: The datetime of when the engagement offered into a queue in ISO 8601 format, for example 2018-11-13T20:27:12+00:00
+          example: '2018-11-13T20:27:12+00:00'
+        agentId:
+          type: string
+          description: The unique 36 character internal id that represents the agent that accepted the queued engagement.
+          minLength: 36
+          maxLength: 36
+          pattern: ^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}$
+          example: bb4f5cf8-5bfc-4bf3-ac43-153c43671f0e
+        acceptedAt:
+          type: string
+          format: date-time
+          readOnly: true
+          description: The datetime of when the agent accepted the queued engagement in ISO 8601 format, for example 2018-11-13T20:27:12+00:00
+          example: '2018-11-13T20:27:12+00:00'
+    Transfer:
+      type: object
+      title: Transfer
+      description: The Transfer details part of an engagement.
+      required:
+      - channelProviderId
+      - transferType
+      properties:
+        initiatingAgentId:
+          description: The unique case sensitive id of the initiating Agent Id. Only valid Contact Center Agent Id's are accepted.
+            See Agent Admin List API.
+          type: string
+          minLength: 36
+          maxLength: 36
+          pattern: ^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}$
+        queueId:
+          description: The unique case sensitive id of the queue. Only valid Contact Center Queue Id's are accepted. See Queue
+            Admin List API.
+          type: string
+          minLength: 36
+          maxLength: 36
+          pattern: ^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}$
+        queueName:
+          type: string
+          description: The Queue name for the queue.
+          example: Default
+        channelProviderId:
+          description: The unique case sensitive id of the channel provider. Only valid Contact Center provider Id's are accepted.
+            See Admin channel List API.
+          type: string
+          minLength: 36
+          maxLength: 36
+          pattern: ^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}$
+        channelId:
+          type: string
+          description: The unique id representing the Contact Center Channel. Only valid Contact Center Channel Ids are accepted.
+            See Contact Center Channel list in Developers guide for further details.
+          example: Voice
+        connectionId:
+          description: The unique case sensitive id of the connection. Only valid Contact Center connection Id's are accepted.
+            See Queue Admin connection List API.
+          type: string
+          minLength: 36
+          maxLength: 36
+          pattern: ^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}$
+        dialogId:
+          description: The unique case sensitive id of the dialog. Only valid Contact Center dialog Id's are accepted. See
+            Dialog Admin List API.
+          type: string
+          minLength: 36
+          maxLength: 36
+          pattern: ^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}$
+        providerDialogId:
+          description: The unique case sensitive id of the dialog. Only valid Contact Center dialog provider Id's are accepted.
+            See Dialog Admin List API.
+          type: string
+          minLength: 36
+          maxLength: 36
+          pattern: ^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}$
+        correlationId:
+          description: The unique case sensitive id of the Correlation. Only valid Contact Center Queue Id's are accepted.
+            See Queue Admin List API.
+          type: string
+          minLength: 36
+          maxLength: 36
+          pattern: ^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}$
+        fallbackQueueId:
+          description: The unique case sensitive id of the queue. Only valid Contact Center Fall back Queue Id's are accepted.
+            See Queue Admin List API.
+          type: string
+          minLength: 36
+          maxLength: 36
+          pattern: ^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}$
+        timestamp:
+          type: string
+          format: date-time
+          readOnly: true
+          description: The datetime of when the engagement transfer offered into a queue in ISO 8601 format, for example 2018-11-13T20:27:12+00:00
+          example: '2018-11-13T20:27:12+00:00'
+        destinationAgentId:
+          description: The unique case sensitive id of the Agent. Only valid Contact Center Agent Id's are accepted. See Agent
+            Admin List API.
+          type: string
+          minLength: 36
+          maxLength: 36
+          pattern: ^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}$
+        destinationAgentName:
+          type: string
+          description: The engagement transfer agent name for the Agents.
+          example: Jone Smith
+        destinationExternalNumber:
+          type: string
+          description: When the engagement is transferred to external numbers.
+          example: +1 123 123 1234
+        destinationAgentJoinedAt:
+          type: string
+          format: date-time
+          readOnly: true
+          description: The datetime of when the engagement offered into a Agent in ISO 8601 format, for example 2018-11-13T20:27:12+00:00
+          example: '2018-11-13T20:27:12+00:00'
+        description:
+          type: string
+          description: The dialog description incase of any.
+          example: New Car inquiry
+        transferType:
+          type: string
+          description: The type of Transfers, for example TRANSFER_TO_AGENT, TRANSFER_TO_QUEUE or CONSULT_TRANSFER_TO_QUEUE.
+          enum:
+          - TRANSFER_TO_AGENT
+          - TRANSFER_TO_QUEUE
+          - TRANSFER_TO_EXTERNAL
+          - CONSULT_TRANSFER_TO_QUEUE
+    JourneyQueryResponse:
+      title: JourneyQueryResponse
+      description: Customer Journey query response.
+      required:
+      - identifiers
+      allOf:
+      - $ref: '#/components/schemas/Identifiers'
+      - type: object
+        additionalProperties: true
+        properties:
+          engagements:
+            type: array
+            description: The engagements returned as the result of a query
+            items:
+              $ref: '#/components/schemas/EngagementResponse'
+          pagination:
+            $ref: '#/components/schemas/Pagination'
+    Pagination:
+      type: object
+      properties:
+        pageNumber:
+          type: integer
+          description: The current page number.
+        pageSize:
+          type: integer
+          description: The max number of records that can be retrieved on this page.
+        total:
+          type: integer
+          description: The total number of records.
+    Journey:
+      description: Customer Journey.
+      type: object
+      required:
+      - identifiers
+      allOf:
+      - $ref: '#/components/schemas/Identifiers'
+    UnlinkJourney:
+      description: Unlinks an identifier from a customer journey.
+      type: object
+      required:
+      - identifiers
+      - unlinkIdentifier
+      properties:
+        identifiers:
+          $ref: '#/components/schemas/Identifiers'
+        unlinkIdentifier:
+          type: object
+          minProperties: 1
+          maxProperties: 1
+          description: Identifier to be unlinked from the Customer Journey.
+          additionalProperties:
+            type: string
+            minLength: 1
+            maxLength: 256
+            description: 'Identifiers related to the Customer. The maximum length of an identifer key is 50 characters and
+              must be a valid "name" of a pre-configured identifier in Customer Journey.
+
+              '
+    IdentifierType:
+      type: object
+      description: Captures the criteria with which we identify a customer
+      required:
+      - name
+      - identifierStrength
+      properties:
+        identifierId:
+          type: string
+          description: The unique 36 character internal id that represents the identifier type.
+          readOnly: true
+        displayName:
+          type: string
+          description: A unique human readable name for an identifier, for example 'Phone Numbers'.
+          minLength: 3
+          maxLength: 50
+          example: Phone Numbers
+        name:
+          type: string
+          description: The name of the identifier, for example 'phoneNumbers'. This is how the identifier is represented in
+            the engagement and the name it will be validated against.
+          minLength: 3
+          maxLength: 50
+          pattern: ^[a-zA-Z0-9_\.]+$
+          example: phoneNumbers
+        identifierStrength:
+          deprecated: true
+          type: string
+          description: This field is deprecated and will be removed in a future release.
+          enum:
+          - STRONG
+          - VERY_STRONG
+          - WEAK
+        url:
+          type: string
+          readOnly: true
+          description: The url for the identifier resource.
+    AgentNotesListResponse:
+      type: object
+      description: A list of Agent Notes
+      properties:
+        agentNotes:
+          type: array
+          description: The agent returned as the result
+          items:
+            $ref: '#/components/schemas/AgentNoteResponse'
+    AgentNoteInput:
+      title: AgentNoteInput
+      description: Request body for add or update operation
+      type: object
+      properties:
+        note:
+          type: string
+          description: Text of the current Agent Note.
+          minLength: 1
+          maxLength: 512
+      required:
+      - note
+    AgentNoteResponse:
+      title: AgentNoteResponse
+      description: Response for Get Agent Note.
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique 36 character internal id that represents the Agent Note Id.
+        engagementId:
+          type: string
+          description: The unique 36 character internal id that represents the Engagement Id.
+        createdBy:
+          $ref: '#/components/schemas/AgentDetails'
+        updatedBy:
+          $ref: '#/components/schemas/AgentDetails'
+        note:
+          type: string
+          description: Text of the current Agent Note.
+        readOnly:
+          type: boolean
+          description: Indicates if the note is read only.
+        createdAt:
+          type: string
+          format: date-time
+          description: The creation datetime of the Engagement in ISO 8601 format, for example 2018-11-13T20:20:39+00:00
+          example: '2018-11-13T20:20:39+00:00'
+        updatedAt:
+          type: string
+          format: date-time
+          description: The creation datetime of the Engagement in ISO 8601 format, for example 2018-11-13T20:20:39+00:00
+          example: '2018-11-13T20:20:39+00:00'
+    AgentDetails:
+      title: AgentDetails
+      description: Agent Details.
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique 36 character internal id that represents the Agent Id.
+          minLength: 3
+          maxLength: 100
+        name:
+          type: string
+          description: The Agent/Supervisor Name.
+          minLength: 3
+          maxLength: 100
+  examples:
+    ErrorConstraintViolation:
+      description: Constraint Violation
+      value:
+        type: https://developers.avayacloud.com/avaya-experience-platform/docs/error-handling#constraint-violation
+        title: Constraint Violation
+        status: 400
+        detail: A problem that indicates a syntactically correct, yet semantically illegal request. The Server can not process
+          this request until the client resolves the semantic errors described in the violations section.
+        violations:
+        - field: accountId
+          message: must match "^[a-zA-Z]{6}$"
+          code: 20006
+    ErrorUnauthorized:
+      description: Unauthorized
+      value:
+        type: https://developers.avayacloud.com/avaya-experience-platform/docs/error-handling#unauthorized
+        title: Unauthorized
+        status: 401
+        detail: This operation requires authentication. See https://developers.avayacloud.com/avaya-experience-platform/docs/how-to-authenticate-with-ccaas-apis
+    ErrorForbidden:
+      description: Forbidden
+      value:
+        type: https://developers.avayacloud.com/avaya-experience-platform/docs/error-handling#forbidden
+        title: Forbidden
+        status: 403
+        detail: According to the access control policy the current user and/or accountId does not have permission to access
+          this resource.
+    ErrorNotFound:
+      description: Not Found
+      value:
+        type: https://developers.avayacloud.com/avaya-experience-platform/docs/error-handling#resource-not-found
+        title: Resource Not Found
+        status: 404
+        detail: Resource not found.
+    ErrorInternalServerError:
+      description: Server Error
+      value:
+        type: https://developers.avayacloud.com/avaya-experience-platform/docs/error-handling#server-error
+        title: Server Error
+        status: 500
+        detail: An internal server error was encountered.
+    AgentNoteAlreadyExists:
+      description: Constraint Violation
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#constraint-violation
+        title: Constraint Violation
+        status: 422
+        detail: A problem that indicates a syntactically correct, yet semantically illegal request. The Server can not process
+          this request until the client resolves the semantic errors described in the violations section.
+        violations:
+        - field: Engagement
+          message: You cannot create second note for accountId = ABCXYZ and engagementId = 0f5d4e8f-2f73-439b-a8f7-af973291cfba
+    engagement-response:
+      summary: Engagement response
+      value:
+        id: 8e557fd6-580a-43b3-8cf9-db8169f4af5a
+        status: COMPLETED
+        direction: INBOUND
+        startDate: '2019-07-23T17:45:21.002Z'
+        updateDate: '2019-07-23T17:47:21.002Z'
+        endDate: '2019-07-23T17:50:21.002Z'
+        channels:
+        - id: Voice
+          type: VOICE
+        identifiers:
+          phoneNumbers:
+          - 019 718 0171
+          - 188-115-7717
+          - +353 628 9848
+          emailAddresses:
+          - melinda14@example.org
+          - cmartin@example.org
+        participants:
+        - id: 443f413f-75f4-4ee4-a261-275e2c4a4c6f
+          joinedAt: '2019-07-23T17:45:21.002Z'
+          leftAt: '2019-07-23T17:58:32.002Z'
+          type: EXTERNAL
+          channelId: Voice
+          channelType: VOICE
+          callingNumber: 087 12345
+          dialledNumber: 1590 12345
+          dialogId: 67ec5131-259c-4924-bb08-d87cf315e5e3
+        - id: e5e8b989-c0d3-493e-9c6c-a1e482c42946
+          agentDisplayName: John Smith
+          joinedAt: '2019-07-23T17:46:42.002Z'
+          leftAt: '2019-07-23T18:00:32.002Z'
+          type: AGENT
+          channelId: Voice
+          channelType: VOICE
+          extension: ext/1234
+          dialogId: 67ec5131-259c-4924-bb08-d87cf315e5e3
+        conversations:
+        - Mortgage Application
+        - First-time Buyer
+        data:
+          referenceNumber: ref-4bf68d57-c189-4ad9-986f-e56ede9cdc32
+          currentStatus: Under review
+        attributes:
+        - Broadband.billing
+        queues:
+        - queueId: a12d14a2-99ad-4aed-8f55-5e87d18e9b9c
+          channelId: Voice
+          queueName: Default
+          priority: 1
+          rank: 2147483647
+          proficiencyRangeMin: 4
+          proficiencyRangeMax: 10
+          queuedAt: '2021-04-09T17:00:00.1Z'
+          agentId: 93649e2e-f576-44b6-b002-fe61379cc4e5
+          acceptedAt: '2021-04-09T17:00:00.1Z'
+        transfers:
+        - initiatingAgentId: 3228e28c-e992-4933-943e-6681b7bfe934
+          queueId: 3fb467ed-9136-4542-898d-988a0c3028af
+          queueName: Default
+          channelProviderId: 4db6bf64-1684-4841-9446-a5fa2d186e6d
+          connectionId: 9a42578a-b883-4b9d-9da0-9e4096334503
+          dialogId: cb127356-134f-49ad-b5e0-37baaa400bfc
+          providerDialogId: caa30030-89f1-4b0c-a8f0-93230f92a96c
+          channelId: Chat
+          correlationId: 2d721d22-d020-4297-8180-fe86c0848cbd
+          fallbackQueueId: 3fb467ed-9136-4542-898d-988a0c3028af
+          timestamp: '2023-08-25T06:53:15.743Z'
+          destinationAgentId: 3228e28c-e992-4933-943e-6681b7bfe934
+          destinationAgentName: John Smith
+          destinationAgentJoinedAt: '2023-08-25T07:07:49.652Z'
+          description: New Car inquiry
+          transferType: TRANSFER_TO_AGENT
+    multi-engagement-response:
+      summary: Engagement list response
+      value:
+        pagination:
+          pageNumber: 1
+          pageSize: 50
+          total: 2
+        engagements:
+        - id: 8e557fd6-580a-43b3-8cf9-db8169f4af5a
+          status: COMPLETED
+          direction: INBOUND
+          startDate: '2019-07-23T17:45:21.002Z'
+          updateDate: '2019-07-23T17:47:21.002Z'
+          endDate: '2019-07-23T17:50:21.002Z'
+          channels:
+          - id: Voice
+            type: VOICE
+          identifiers:
+            phoneNumbers:
+            - 019 718 0171
+            - 188-115-7717
+            - +353 628 9848
+            emailAddresses:
+            - melinda14@example.org
+            - cmartin@example.org
+          participants:
+          - id: 443f413f-75f4-4ee4-a261-275e2c4a4c6f
+            joinedAt: '2019-07-23T17:45:21.002Z'
+            leftAt: '2019-07-23T17:58:32.002Z'
+            type: EXTERNAL
+            channelId: Voice
+            channelType: VOICE
+            callingNumber: 087 12345
+            dialledNumber: 1590 12345
+            dialogId: 67ec5131-259c-4924-bb08-d87cf315e5e3
+          - id: e5e8b989-c0d3-493e-9c6c-a1e482c42946
+            agentDisplayName: John Smith
+            joinedAt: '2019-07-23T17:46:42.002Z'
+            leftAt: '2019-07-23T18:00:32.002Z'
+            type: AGENT
+            channelId: Voice
+            channelType: VOICE
+            extension: ext/1234
+            dialogId: 67ec5131-259c-4924-bb08-d87cf315e5e3
+          conversations:
+          - Mortgage Application
+          - First-time Buyer
+          data:
+            referenceNumber: ref-4bf68d57-c189-4ad9-986f-e56ede9cdc32
+            currentStatus: Under review
+          attributes:
+          - Language.English
+          - Support.Sales
+          queues:
+          - queueId: a12d14a2-99ad-4aed-8f55-5e87d18e9b9c
+            channelId: Voice
+            queueName: Default
+            priority: 1
+            rank: 2147483647
+            proficiencyRangeMin: 4
+            proficiencyRangeMax: 10
+            queuedAt: '2021-04-09T17:00:00.1Z'
+            agentId: 93649e2e-f576-44b6-b002-fe61379cc4e5
+            acceptedAt: '2021-04-09T17:00:00.1Z'
+          transfers:
+          - initiatingAgentId: 3228e28c-e992-4933-943e-6681b7bfe934
+            queueId: 3fb467ed-9136-4542-898d-988a0c3028af
+            queueName: Default
+            channelProviderId: 4db6bf64-1684-4841-9446-a5fa2d186e6d
+            connectionId: 9a42578a-b883-4b9d-9da0-9e4096334503
+            dialogId: cb127356-134f-49ad-b5e0-37baaa400bfc
+            providerDialogId: caa30030-89f1-4b0c-a8f0-93230f92a96c
+            channelId: Chat
+            correlationId: 2d721d22-d020-4297-8180-fe86c0848cbd
+            fallbackQueueId: 3fb467ed-9136-4542-898d-988a0c3028af
+            timestamp: '2023-08-25T06:53:15.743Z'
+            destinationAgentId: 3228e28c-e992-4933-943e-6681b7bfe934
+            destinationAgentName: John Smith
+            destinationAgentJoinedAt: '2023-08-25T07:07:49.652Z'
+            description: New Car inquiry
+            transferType: TRANSFER_TO_AGENT
+        - id: 94594028-5559-4efb-8263-9698e3ffe61d
+          status: ACTIVE
+          direction: OUTBOUND
+          startDate: '2019-07-23T17:45:21.002Z'
+          channels:
+          - id: Voice
+            type: VOICE
+          identifiers:
+            emailAddresses:
+            - melinda14@example.org
+            phoneNumbers:
+            - 019 718 0171
+          participants:
+          - id: 443f413f-75f4-4ee4-a261-275e2c4a4c6f
+            joinedAt: '2019-07-23T17:45:21.002Z'
+            leftAt: '2019-07-23T17:58:32.002Z'
+            type: EXTERNAL
+            channelId: Voice
+            channelType: VOICE
+            callingNumber: 087 12345
+            dialledNumber: 1590 12345
+            dialogId: 67ec5131-259c-4924-bb08-d87cf315e5e3
+          conversations:
+          - Car Loan
+          data:
+            referenceNumber: ref-2a6470e5-40b2-44fa-986d-31afa512dcd8
+    engagement-create-1:
+      value:
+        id: dbf2aca9-b905-4ef1-a181-fa85133ae441
+        startDate: '2019-07-23T17:45:21.002Z'
+        identifiers:
+          phoneNumbers:
+          - 019 718 0171
+          - 188-115-7717
+          - +353 628 9848
+          emailAddresses:
+          - melinda14@example.org
+          - cmartin@example.org
+        conversations:
+        - Mortgage Application
+        - First-time Buyer
+        data:
+          referenceNumber: ref-4bf68d57-c189-4ad9-986f-e56ede9cdc32
+          currentStatus: Under review
+    engagement-create-2:
+      value:
+        id: 8b23981b-69b4-446f-ace7-b4ad22715979
+        startDate: '2019-07-23T17:45:21.002Z'
+        identifiers:
+          universalIds:
+          - 7fdf89aa-70e6-4de9-8d7a-e1bbc4edcbaf
+        data:
+          referenceNumber: ref-4bf68d57-c189-4ad9-986f-e56ede9cdc32
+    engagement-update-1:
+      value:
+        timestamp: '2019-07-23T17:48:21.002Z'
+        identifiers:
+          accountIds:
+          - d1482af8-d865-4df0-932d-f9559f25086d
+        conversations:
+        - Mortgage Application
+        - First-time Buyer
+        data:
+          referenceNumber: ref-4bf68d57-c189-4ad9-986f-e56ede9cdc32
+          currentStatus: Under review
+    journey-query-with-identifiers:
+      value:
+        identifiers:
+          emailAddresses:
+          - melinda14@example.org
+    journey-query-advanced:
+      value:
+        conversation: Mortgage Application
+        startDate: '2019-07-23T17:45:21.001Z'
+        endDate: '2020-07-23T17:45:21.001Z'
+        identifiers:
+          emailAddresses:
+          - melinda14@example.org
+          phoneNumbers:
+          - 019 718 0171
+          - +353 019 718 9999
+        agentId: 4dd8a4a4-09f4-4dab-a503-91cefc4604e0
+        channelIds:
+        - Voice
+        - Email
+    journey-query-within-date-time:
+      value:
+        startDate: '2019-07-23T17:45:21.001Z'
+        endDate: '2020-07-23T17:45:21.001Z'
+        identifiers:
+          emailAddresses:
+          - melinda14@example.org
+    journey-query-after-date-time:
+      value:
+        startDate: '2019-07-23T17:45:21.001Z'
+        identifiers:
+          emailAddresses:
+          - melinda14@example.org
+    journey-query-before-date-time:
+      value:
+        endDate: '2020-07-23T17:45:21.001Z'
+        identifiers:
+          emailAddresses:
+          - melinda14@example.org
+    journey-query-with-conversation:
+      value:
+        conversation: Mortgage Application
+        identifiers:
+          emailAddresses:
+          - melinda14@example.org
+    journey-query-with-agent:
+      value:
+        agentId: 4dd8a4a4-09f4-4dab-a503-91cefc4604e0
+    journey-query-with-channels:
+      value:
+        channelIds:
+        - Voice
+        - Chat
+        - Email
+    journey-search-response:
+      summary: Journey search response
+      value:
+        pagination:
+          pageNumber: 1
+          pageSize: 50
+          total: 2
+        engagements:
+        - id: 8e557fd6-580a-43b3-8cf9-db8169f4af5a
+          status: COMPLETED
+          direction: INBOUND
+          startDate: '2019-07-23T17:45:21.002Z'
+          updateDate: '2019-07-23T17:47:21.002Z'
+          endDate: '2019-07-23T17:50:21.002Z'
+          channels:
+          - id: Voice
+            type: VOICE
+          identifiers:
+            emailAddresses:
+            - cmartin@example.org
+            phoneNumbers:
+            - 188-115-7717
+            - +353 628 9848
+          agentNotes:
+          - id: 0f5d4e8f-2f73-439b-a8f7-af973291cfba
+            engagementId: 0f5d4e8f-2f73-439b-a8f7-af973291cfba
+            createdBy:
+              id: 0f5d4e8f-2f73-439b-a8f7-af973291cfba
+              name: Agent Name / Supervisor Name
+            updatedBy:
+              id: 0f5d4e8f-2f73-439b-a8f7-af973291cfba
+              name: Agent Name / Supervisor Name
+            text: The Agent Note Text
+            createdAt: '2020-07-23T17:45:21.001Z'
+            updatedAt: '2020-07-23T17:45:21.001Z'
+          participants:
+          - id: 443f413f-75f4-4ee4-a261-275e2c4a4c6f
+            joinedAt: '2019-07-23T17:45:21.002Z'
+            leftAt: '2019-07-23T17:58:32.002Z'
+            type: EXTERNAL
+            channelId: Voice
+            channelType: VOICE
+            callingNumber: 087 12345
+            dialledNumber: 1590 12345
+            dialogId: 67ec5131-259c-4924-bb08-d87cf315e5e3
+          - id: e5e8b989-c0d3-493e-9c6c-a1e482c42946
+            agentDisplayName: John Smith
+            joinedAt: '2019-07-23T17:46:42.002Z'
+            leftAt: '2019-07-23T18:00:32.002Z'
+            type: AGENT
+            channelId: Voice
+            channelType: VOICE
+            extension: ext/1234
+            dialogId: 67ec5131-259c-4924-bb08-d87cf315e5e3
+          conversations:
+          - Mortgage Application
+          - First-time Buyer
+          data:
+            referenceNumber: ref-4bf68d57-c189-4ad9-986f-e56ede9cdc32
+            currentStatus: Under review
+          attributes:
+          - Language.English
+          - Support.Technical
+          queues:
+          - queueId: a12d14a2-99ad-4aed-8f55-5e87d18e9b9c
+            queueName: Default
+            channelId: Voice
+            priority: 1
+            rank: 2147483647
+            proficiencyRangeMin: 4
+            proficiencyRangeMax: 10
+            queuedAt: '2021-04-09T17:00:00.1Z'
+            agentId: 93649e2e-f576-44b6-b002-fe61379cc4e5
+            acceptedAt: '2021-04-09T17:00:00.1Z'
+          - queueId: eae856cc-c4ff-4f44-a05a-b31ac0ed3278
+            queueName: Default
+            channelId: Voice
+            priority: 1
+            rank: 2147483647
+            proficiencyRangeMin: 4
+            proficiencyRangeMax: 10
+            queuedAt: '2021-04-09T17:00:00.1Z'
+            agentId: bef38a45-c61a-4abb-8106-f992ec4b4f22
+          transfers:
+          - initiatingAgentId: 3228e28c-e992-4933-943e-6681b7bfe934
+            queueId: 3fb467ed-9136-4542-898d-988a0c3028af
+            queueName: Default
+            channelProviderId: 4db6bf64-1684-4841-9446-a5fa2d186e6d
+            connectionId: 9a42578a-b883-4b9d-9da0-9e4096334503
+            dialogId: cb127356-134f-49ad-b5e0-37baaa400bfc
+            providerDialogId: caa30030-89f1-4b0c-a8f0-93230f92a96c
+            channelId: Chat
+            correlationId: 2d721d22-d020-4297-8180-fe86c0848cbd
+            fallbackQueueId: 3fb467ed-9136-4542-898d-988a0c3028af
+            timestamp: '2023-08-25T06:53:15.743Z'
+            destinationAgentId: 3228e28c-e992-4933-943e-6681b7bfe934
+            destinationAgentName: John Smith
+            destinationAgentJoinedAt: '2023-08-25T07:07:49.652Z'
+            description: New Car inquiry
+            transferType: TRANSFER_TO_AGENT
+          - initiatingAgentId: 3228e28c-e992-4933-943e-6681b7bfe934
+            queueId: 3fb467ed-9136-4542-898d-988a0c3028af
+            queueName: Default
+            channelProviderId: 4db6bf64-1684-4841-9446-a5fa2d186e6d
+            connectionId: 9a42578a-b883-4b9d-9da0-9e4096334503
+            dialogId: cb127356-134f-49ad-b5e0-37baaa400bfc
+            providerDialogId: caa30030-89f1-4b0c-a8f0-93230f92a96c
+            channelId: Chat
+            correlationId: 2d721d22-d020-4297-8180-fe86c0848cbd
+            fallbackQueueId: 3fb467ed-9136-4542-898d-988a0c3028af
+            timestamp: '2023-08-25T06:53:15.743Z'
+            destinationAgentId: 3228e28c-e992-4933-943e-6681b7bfe934
+            destinationAgentName: John Smith
+            destinationAgentJoinedAt: '2023-08-25T07:07:49.652Z'
+            description: New Car inquiry
+            transferType: TRANSFER_TO_QUEUE
+        - id: 94594028-5559-4efb-8263-9698e3ffe61d
+          status: ACTIVE
+          direction: OUTBOUND
+          startDate: '2019-07-23T17:45:21.002Z'
+          channels:
+          - id: Voice
+            type: VOICE
+          identifiers:
+            emailAddresses:
+            - melinda14@example.org
+            phoneNumbers:
+            - 019 718 0171
+          agentNotes:
+          - id: 0f5d4e8f-2f73-439b-a8f7-af973291cfba
+            engagementId: 0f5d4e8f-2f73-439b-a8f7-af973291cfba
+            createdBy:
+              id: 0f5d4e8f-2f73-439b-a8f7-af973291cfba
+              name: Agent Name / Supervisor Name
+            updatedBy:
+              id: 0f5d4e8f-2f73-439b-a8f7-af973291cfba
+              name: Agent Name / Supervisor Name
+            text: The Agent Note Text
+            createdAt: '2020-07-23T17:45:21.001Z'
+            updatedAt: '2020-07-23T17:45:21.001Z'
+          participants:
+          - id: 443f413f-75f4-4ee4-a261-275e2c4a4c6f
+            joinedAt: '2019-07-23T17:45:21.002Z'
+            leftAt: '2019-07-23T17:58:32.002Z'
+            type: EXTERNAL
+            channelId: Voice
+            channelType: VOICE
+            callingNumber: 087 12345
+            dialledNumber: 1590 12345
+            dialogId: 67ec5131-259c-4924-bb08-d87cf315e5e3
+          conversations:
+          - Mortgage Application
+          data:
+            referenceNumber: ref-4bf68d57-c189-4ad9-986f-e56ede9cdc32
+        identifiers:
+          phoneNumbers:
+          - 019 718 0171
+          - 188-115-7717
+          - +353 628 9848
+          emailAddresses:
+          - melinda14@example.org
+          - cmartin@example.org
+          universalIds:
+          - 7fdf89aa-70e6-4de9-8d7a-e1bbc4edcbaf
+    createIdentifier:
+      value:
+        name: phoneNumbers
+        displayName: Phone Numbers
+        identifierStrength: WEAK
+    createIdentifierResponse:
+      value:
+        identifierId: 09c03db4-1015-42a7-b776-9527b80bfbb0
+        displayName: Phone Numbers
+        name: phoneNumbers
+        identifierStrength: WEAK
+        url: /api/journey/v1/accounts/JDBUTC/identifiers/09c03db4-1015-42a7-b776-9527b80bfbb0
+    updateIdentifier:
+      value:
+        identifierStrength: STRONG
+        name: emailAddresses
+        displayName: E-Mail addresses
+    updateIdentifierResponse:
+      value:
+        identifierId: feb2cc8d-696f-409e-97ce-4d122a685a42
+        identifierStrength: STRONG
+        name: emailAddresses
+        displayName: E-Mail addresses
+        url: /api/journey/v1/accounts/JDBUTC/identifiers/feb2cc8d-696f-409e-97ce-4d122a685a42
+    getIdentifierResponse:
+      value:
+        identifierId: 23aafae6-5d7e-40cd-8825-27313a5af3e8
+        identifierStrength: STRONG
+        name: universalIds
+        displayName: Universal ids
+        url: /api/journey/v1/accounts/JDBUTC/identifiers/23aafae6-5d7e-40cd-8825-27313a5af3e8
+    getIdentifiers:
+      value:
+      - identifierId: 09c03db4-1015-42a7-b776-9527b80bfbb0
+        displayName: Phone Numbers
+        name: phoneNumbers
+        identifierStrength: WEAK
+        url: /api/journey/v1/accounts/JDBUTC/identifiers/09c03db4-1015-42a7-b776-9527b80bfbb0
+      - identifierId: feb2cc8d-696f-409e-97ce-4d122a685a42
+        displayName: Twitter Handles
+        name: twitterHandles
+        identifierStrength: STRONG
+        url: /api/journey/v1/accounts/JDBUTC/identifiers/feb2cc8d-696f-409e-97ce-4d122a685a42
+    appendIdentifiers:
+      value:
+        identifiers:
+          phoneNumbers:
+          - 019 718 0171
+          emailAddresses:
+          - melinda14@example.org
+    journey-create-1:
+      value:
+        identifiers:
+          accountIds:
+          - d1482af8-d865-4df0-932d-f9559f25086d
+          emailAddresses:
+          - melinda14@example.org
+    unlink-account-id-request:
+      value:
+        identifiers:
+          accountIds:
+          - d1482af8-d865-4df0-932d-f9559f25086d
+          emailAddresses:
+          - melinda14@example.org
+          phoneNumbers:
+          - 087 12345
+        unlinkIdentifier:
+          accountIds: d1482af8-d865-4df0-932d-f9559f25086d
+    unlink-account-id-response:
+      value:
+        identifiers:
+          emailAddresses:
+          - melinda14@example.org
+          phoneNumbers:
+          - 087 12345
+    unlink-email-address-request:
+      value:
+        identifiers:
+          accountIds:
+          - d1482af8-d865-4df0-932d-f9559f25086d
+          emailAddresses:
+          - melinda14@example.org
+          phoneNumbers:
+          - 087 12345
+        unlinkIdentifier:
+          emailAddresses: melinda14@example.org
+    unlink-email-address-response:
+      value:
+        identifiers:
+          accountIds:
+          - d1482af8-d865-4df0-932d-f9559f25086d
+          phoneNumbers:
+          - 087 12345
+    unlink-phone-number-request:
+      value:
+        identifiers:
+          accountIds:
+          - d1482af8-d865-4df0-932d-f9559f25086d
+          emailAddresses:
+          - melinda14@example.org
+          phoneNumbers:
+          - 087 12345
+        unlinkIdentifier:
+          phoneNumbers: 087 12345
+    unlink-phone-number-response:
+      value:
+        identifiers:
+          accountIds:
+          - d1482af8-d865-4df0-932d-f9559f25086d
+          emailAddresses:
+          - melinda14@example.org
+    list-agents-query-1:
+      value:
+        identifiers:
+          phoneNumbers:
+          - '+35387643526236'
+        startDate: '2019-07-23T17:45:21.001Z'
+        channelId: VOICE
+    list-agents-response:
+      value:
+      - agentId: 0f28895a-2855-4e02-b00c-52fe93d671f2
+        channelProviderId: aba84546-1ac2-478e-b225-cadc7e8a2862
+        leftAt: '2020-07-26T13:24:52.130Z'
+      - agentId: c5e92685-921e-4dd3-b856-66b9fdadaca1
+        channelProviderId: aba84546-1ac2-478e-b225-cadc7e8a2862
+        leftAt: '2020-07-23T18:12:34.246Z'
+      - agentId: faa542cb-1611-4ba5-a3db-1b6b1f560325
+        channelProviderId: aba84546-1ac2-478e-b225-cadc7e8a2862
+        leftAt: '2020-07-19T10:45:22.589Z'
+    participant-create-external:
+      value:
+        type: EXTERNAL
+        channelId: Voice
+        channelType: VOICE
+        callingNumber: 087 12345
+        dialledNumber: 1590 12345
+        timestamp: '2019-07-23T17:45:21.001Z'
+        dialogId: 67ec5131-259c-4924-bb08-d87cf315e5e3
+    participant-create-treatment:
+      value:
+        type: TREATMENT
+        channelId: Voice
+        channelType: VOICE
+        automationType: SELF_SERVICE
+        timestamp: '2019-07-23T17:45:21.002Z'
+        dialogId: 67ec5131-259c-4924-bb08-d87cf315e5e3
+    participant-create-agent:
+      value:
+        type: AGENT
+        channelId: Voice
+        channelType: VOICE
+        extension: ext/1234
+        timestamp: '2019-07-23T17:45:21.003Z'
+        dialogId: 57f78d8e-5579-47de-b3d0-8aee161039c0
+    agent-note-create-1:
+      value:
+        note: The agent Note text.
+    agent-note-update-1:
+      value:
+        note: The agent Note text.
+    agent-note-create-response-1:
+      value:
+        id: 0f5d4e8f-2f73-439b-a8f7-af973291cfba
+        engagementId: 0f5d4e8f-2f73-439b-a8f7-af973291cfba
+        createdBy:
+          id: 0f5d4e8f-2f73-439b-a8f7-af973291cfba
+          name: Agent Name / Supervisor Name
+        note: The Agent Note Text
+        createdAt: '2020-07-23T17:45:21.001Z'
+    agent-note-update-response-1:
+      value:
+        id: 0f5d4e8f-2f73-439b-a8f7-af973291cfba
+        engagementId: 0f5d4e8f-2f73-439b-a8f7-af973291cfba
+        createdBy:
+          id: 0f5d4e8f-2f73-439b-a8f7-af973291cfba
+          name: Agent Name / Supervisor Name
+        updatedBy:
+          id: 0f5d4e8f-2f73-439b-a8f7-af973291cfba
+          name: Agent Name / Supervisor Name
+        note: The Agent Note Text
+        createdAt: '2020-07-23T17:45:21.001Z'
+        updatedAt: '2020-07-23T17:45:21.001Z'
+    agent-note-get-response-1:
+      value:
+        agentNotes:
+        - id: 0f5d4e8f-2f73-439b-a8f7-af973291cfba
+          engagementId: 0f5d4e8f-2f73-439b-a8f7-af973291cfba
+          createdBy:
+            id: 0f5d4e8f-2f73-439b-a8f7-af973291cfba
+            name: Agent Name / Supervisor Name
+          updatedBy:
+            id: 0f5d4e8f-2f73-439b-a8f7-af973291cfba
+            name: Agent Name / Supervisor Name
+          note: The Agent Note Text
+          createdAt: '2020-07-23T17:45:21.001Z'
+          updatedAt: '2020-07-23T17:45:21.001Z'
+  responses:
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorUnauthorized'
+    InternalServer:
+      description: Internal Server Error
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorInternalServerError'
+    Forbidden:
+      description: Forbidden
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorForbidden'
+    NotFound:
+      description: Not Found
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorNotFound'
+    AgentNoteExists:
+      description: AgentNoteExists
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/AgentNoteAlreadyExists'
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      description: This API uses Bearer Token Authorization Flow
+      bearerFormat: JWT
+    AppKey:
+      type: apiKey
+      in: header
+      name: appkey
+      description: This API needs an appKey as header.

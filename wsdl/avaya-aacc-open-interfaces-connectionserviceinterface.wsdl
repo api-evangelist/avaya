@@ -1,0 +1,386 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<wsdl:definitions name="connection_service_interface" 
+	targetNamespace="http://www.nortel.com/soa/oi/cct/ConnectionService" 
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" 
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+	xmlns:service="http://www.nortel.com/soa/oi/cct/ConnectionService"
+	xmlns:types="http://www.nortel.com/soa/oi/cct/types"
+	xmlns:exceptions="http://www.nortel.com/soa/oi/cct/faults"
+	xmlns:local="http://www.nortel.com/soa/oi/cct/types/ConnectionService">
+
+	<wsdl:import namespace="http://www.nortel.com/soa/oi/cct/faults" location="SessionServiceExceptions.wsdl" />
+
+	<wsdl:types>
+
+		<xsd:schema elementFormDefault="qualified" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+			targetNamespace="http://www.nortel.com/soa/oi/cct/types/ConnectionService">
+
+			<xsd:import namespace="http://www.nortel.com/soa/oi/cct/types" schemaLocation="types.xsd" />
+			
+			<xsd:simpleType name="TransportType">
+				<xsd:restriction base="xsd:string">
+					<xsd:enumeration value="TCP" /> 
+					<xsd:enumeration value="UDP" /> 
+					<xsd:enumeration value="TLS" /> 			
+				</xsd:restriction>
+			</xsd:simpleType>
+
+			<xsd:simpleType name="RecordingState">
+				<xsd:restriction base="xsd:string">
+					<xsd:enumeration value="UNKNOWN" />
+					<xsd:enumeration value="NOT_RECORDING" />
+					<xsd:enumeration value="RECORDING" />
+					<xsd:enumeration value="REQUESTED" />
+					<xsd:enumeration value="CANCELREQUESTED" />
+				</xsd:restriction>
+			</xsd:simpleType>
+						
+			<xsd:complexType name="ConnectionRequest">
+				<xsd:sequence>
+					<xsd:element name="ssoToken" type="types:ssoToken" />
+					<xsd:element name="connection" type="types:connection" />
+				</xsd:sequence>
+			</xsd:complexType>
+
+			<xsd:complexType name="RedirectRequest">
+				<xsd:sequence>
+					<xsd:element name="ssoToken" type="types:ssoToken" />
+					<xsd:element name="connection" type="types:connection" />
+					<xsd:element name="destinationAddress" type="types:address" />
+				</xsd:sequence>
+			</xsd:complexType>
+			
+			<xsd:complexType name="ParkRequest">
+				<xsd:sequence>
+					<xsd:element name="ssoToken" type="types:ssoToken" />
+					<xsd:element name="connection" type="types:connection" />
+					<xsd:element name="destinationAddress" type="types:address" />
+				</xsd:sequence>
+			</xsd:complexType>
+
+			<xsd:complexType name="AddressResponse">
+				<xsd:sequence>
+					<xsd:element name="address" type="types:address" />
+				</xsd:sequence>
+			</xsd:complexType>
+
+			<xsd:complexType name="ConnectionCapabilitiesResponse">
+				<xsd:sequence>
+					<xsd:element name="connectionCapabilities" type="types:connectionCapabilities" />
+				</xsd:sequence>
+			</xsd:complexType>
+
+			<xsd:complexType name="ContactResponse">
+				<xsd:sequence>
+					<xsd:element name="contact" type="types:contact" />
+				</xsd:sequence>
+			</xsd:complexType>
+
+			<xsd:complexType name="RedirectResponse">
+				<xsd:sequence>
+					<xsd:element name="connection" type="types:connection" />
+				</xsd:sequence>
+			</xsd:complexType>
+			
+			<xsd:complexType name="ParkResponse">
+				<xsd:sequence>
+					<xsd:element name="connection" type="types:connection" />
+				</xsd:sequence>
+			</xsd:complexType>
+
+			<xsd:complexType name="StateResponse">
+				<xsd:sequence>
+					<xsd:element name="stateInfo" type="types:stateInfo" />
+				</xsd:sequence>
+			</xsd:complexType>
+			
+			<xsd:complexType name="ConnectionStateResponse">
+				<xsd:sequence>
+					<xsd:element name="connectionStateInfo" type="types:connectionStateInfo" />
+				</xsd:sequence>
+			</xsd:complexType>
+
+			<xsd:complexType name="TerminalConnectionsResponse">
+				<xsd:sequence>
+					<xsd:element name="terminalConnections" type="types:terminalConnection" minOccurs="0" maxOccurs="unbounded" />
+				</xsd:sequence>
+			</xsd:complexType>
+			
+			<xsd:complexType name="RecordingRequest">
+				<xsd:sequence>
+					<xsd:element name="ssoToken" type="types:ssoToken" />
+					<xsd:element name="connection" type="types:connection" />
+					<xsd:element name="recordingUri" type="xsd:string" />
+					<xsd:element name="ipAddress" type="xsd:string" />
+					<xsd:element name="port" type="xsd:int" />
+					<xsd:element name="transportType" type="local:TransportType" />
+					<xsd:element name="recordingId" type="xsd:string" />
+					<xsd:element name="reasonCode" type="types:reason" />
+				</xsd:sequence>
+			</xsd:complexType>
+			
+			
+			<xsd:element name="GetStateRequest" type="local:ConnectionRequest" />
+			<xsd:element name="GetStateResponse" type="local:ConnectionStateResponse" />
+
+			<xsd:element name="GetVersionRequest" type="types:getVersionRequest" />
+			<xsd:element name="GetVersionResponse" type="types:getVersionResponse" />
+			
+			<xsd:element name="GetAddressRequest" type="local:ConnectionRequest" />
+			<xsd:element name="GetAddressResponse" type="local:AddressResponse" />
+
+			<xsd:element name="GetConnectionCapabilitiesRequest" type="local:ConnectionRequest" />
+			<xsd:element name="GetConnectionCapabilitiesResponse" type="local:ConnectionCapabilitiesResponse" />
+
+			<xsd:element name="GetContactRequest" type="local:ConnectionRequest" />
+			<xsd:element name="GetContactResponse" type="local:ContactResponse" />
+
+			<xsd:element name="GetTerminalConnectionsRequest" type="local:ConnectionRequest" />
+			<xsd:element name="GetTerminalConnectionsResponse" type="local:TerminalConnectionsResponse" />
+			
+			<xsd:element name="AcceptRequest" type="local:ConnectionRequest" />
+
+			<xsd:element name="RejectRequest" type="local:ConnectionRequest" />
+
+			<xsd:element name="DisconnectRequest" type="local:ConnectionRequest" />
+
+			<xsd:element name="AlertRequest" type="local:ConnectionRequest" />
+
+			<xsd:element name="RedirectRequest" type="local:RedirectRequest" />
+			<xsd:element name="RedirectResponse" type="local:RedirectResponse" />
+			
+			<xsd:element name="ParkRequest" type="local:ParkRequest" />
+			<xsd:element name="ParkResponse" type="local:ParkResponse" />
+			
+			<xsd:element name="StartRecordingRequest" type="local:RecordingRequest" />
+			
+			<xsd:element name="StopRecordingRequest" type="local:RecordingRequest" />
+			
+			<xsd:element name="GetRecordingStateRequest" type="local:ConnectionRequest" />
+			<xsd:element name="GetRecordingStateResponse" type="local:RecordingState" />
+			
+			<xsd:element name="GetRecordingStateReasonRequest" type="local:ConnectionRequest" />
+			<xsd:element name="GetRecordingStateReasonResponse" type="types:reason" />
+			
+		</xsd:schema>
+	</wsdl:types>
+
+	<wsdl:message name="GetVersionRequest">
+		<wsdl:part name="parameters" element="local:GetVersionRequest" />
+	</wsdl:message>
+	<wsdl:message name="GetVersionResponse">
+		<wsdl:part name="response" element="local:GetVersionResponse" />
+	</wsdl:message>
+	
+	<wsdl:message name="GetAddressRequest">
+		<wsdl:part name="parameters" element="local:GetAddressRequest" />
+	</wsdl:message>
+	<wsdl:message name="GetAddressResponse">
+		<wsdl:part name="response" element="local:GetAddressResponse" />
+	</wsdl:message>
+
+	<wsdl:message name="GetConnectionCapabilitiesRequest">
+		<wsdl:part name="parameters" element="local:GetConnectionCapabilitiesRequest" />
+	</wsdl:message>
+	<wsdl:message name="GetConnectionCapabilitiesResponse">
+		<wsdl:part name="response" element="local:GetConnectionCapabilitiesResponse" />
+	</wsdl:message>
+
+	<wsdl:message name="GetContactRequest">
+		<wsdl:part name="parameters" element="local:GetContactRequest" />
+	</wsdl:message>
+	<wsdl:message name="GetContactResponse">
+		<wsdl:part name="response" element="local:GetContactResponse" />
+	</wsdl:message>
+
+	<wsdl:message name="GetTerminalConnectionsRequest">
+		<wsdl:part name="parameters" element="local:GetTerminalConnectionsRequest" />
+	</wsdl:message>
+	<wsdl:message name="GetTerminalConnectionsResponse">
+		<wsdl:part name="response" element="local:GetTerminalConnectionsResponse" />
+	</wsdl:message>
+
+	<wsdl:message name="GetStateRequest">
+		<wsdl:part name="parameters" element="local:GetStateRequest" />
+	</wsdl:message>
+	<wsdl:message name="GetStateResponse">
+		<wsdl:part name="response" element="local:GetStateResponse" />
+	</wsdl:message>
+
+	<wsdl:message name="AcceptRequest">
+		<wsdl:part name="parameters" element="local:AcceptRequest" />
+	</wsdl:message>
+	<wsdl:message name="AcceptResponse"></wsdl:message>
+
+	<wsdl:message name="RejectRequest">
+		<wsdl:part name="parameters" element="local:RejectRequest" />
+	</wsdl:message>
+	<wsdl:message name="RejectResponse"></wsdl:message>
+
+	<wsdl:message name="DisconnectRequest">
+		<wsdl:part name="parameters" element="local:DisconnectRequest" />
+	</wsdl:message>
+	<wsdl:message name="DisconnectResponse"></wsdl:message>
+
+	<wsdl:message name="AlertRequest">
+		<wsdl:part name="parameters" element="local:AlertRequest" />
+	</wsdl:message>
+	<wsdl:message name="AlertResponse" />
+
+	<wsdl:message name="RedirectRequest">
+		<wsdl:part name="parameters" element="local:RedirectRequest" />
+	</wsdl:message>
+	<wsdl:message name="RedirectResponse">
+		<wsdl:part name="response" element="local:RedirectResponse" />
+	</wsdl:message>
+	
+	<wsdl:message name="ParkRequest">
+		<wsdl:part name="parameters" element="local:ParkRequest" />
+	</wsdl:message>
+	<wsdl:message name="ParkResponse">
+		<wsdl:part name="response" element="local:ParkResponse" />
+	</wsdl:message>
+
+	<wsdl:message name="StartRecordingRequest">
+		<wsdl:part name="parameters" element="local:StartRecordingRequest" />
+	</wsdl:message>	
+	<wsdl:message name="StartRecordingResponse" />
+	
+	<wsdl:message name="StopRecordingRequest">
+		<wsdl:part name="parameters" element="local:StopRecordingRequest" />
+	</wsdl:message>	
+	<wsdl:message name="StopRecordingResponse" />
+	
+	<wsdl:message name="GetRecordingStateRequest">
+		<wsdl:part name="parameters" element="local:GetRecordingStateRequest" />
+	</wsdl:message>
+	<wsdl:message name="GetRecordingStateResponse">
+		<wsdl:part name="response" element="local:GetRecordingStateResponse" />
+	</wsdl:message>
+	
+	<wsdl:message name="GetRecordingStateReasonRequest">
+		<wsdl:part name="parameters" element="local:GetRecordingStateReasonRequest" />
+	</wsdl:message>	
+	<wsdl:message name="GetRecordingStateReasonResponse">
+		<wsdl:part name="response" element="local:GetRecordingStateReasonResponse" />
+	</wsdl:message>
+	
+
+	<wsdl:portType name="ConnectionService">
+
+		<wsdl:operation name="GetVersion">
+			<wsdl:input message="service:GetVersionRequest" />
+			<wsdl:output message="service:GetVersionResponse" />
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="GetVersionException" message="exceptions:GetVersionException" />
+		</wsdl:operation>
+		
+		<wsdl:operation name="GetAddress">
+			<wsdl:input message="service:GetAddressRequest" />
+			<wsdl:output message="service:GetAddressResponse" />
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="GetAddressException" message="exceptions:GetAddressException" />
+		</wsdl:operation>
+
+		<wsdl:operation name="GetConnectionCapabilities">
+			<wsdl:input message="service:GetConnectionCapabilitiesRequest" />
+			<wsdl:output message="service:GetConnectionCapabilitiesResponse" />
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="GetConnectionCapabilitiesException" message="exceptions:GetConnectionCapabilitiesException" />
+		</wsdl:operation>
+
+		<wsdl:operation name="GetContact">
+			<wsdl:input message="service:GetContactRequest" />
+			<wsdl:output message="service:GetContactResponse" />
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="GetContactException" message="exceptions:GetContactException" />
+		</wsdl:operation>
+
+		<wsdl:operation name="GetTerminalConnections">
+			<wsdl:input message="service:GetTerminalConnectionsRequest" />
+			<wsdl:output message="service:GetTerminalConnectionsResponse" />
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="GetTerminalConnectionsException" message="exceptions:GetTerminalConnectionsException" />
+		</wsdl:operation>
+
+		<wsdl:operation name="GetState">
+			<wsdl:input message="service:GetStateRequest" />
+			<wsdl:output message="service:GetStateResponse" />
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="GetStateException" message="exceptions:GetStateException" />
+		</wsdl:operation>
+
+		<wsdl:operation name="Accept">
+			<wsdl:input message="service:AcceptRequest" />
+			<wsdl:output message="service:AcceptResponse" />
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="AcceptException" message="exceptions:AcceptException" />
+		</wsdl:operation>
+
+		<wsdl:operation name="Reject">
+			<wsdl:input message="service:RejectRequest" />
+			<wsdl:output message="service:RejectResponse" />
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="RejectException" message="exceptions:RejectException" />
+		</wsdl:operation>
+
+		<wsdl:operation name="Disconnect">
+			<wsdl:input message="service:DisconnectRequest" />
+			<wsdl:output message="service:DisconnectResponse" />
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="DisconnectException" message="exceptions:DisconnectException" />
+		</wsdl:operation>
+
+		<wsdl:operation name="Alert">
+			<wsdl:input message="service:AlertRequest" />
+			<wsdl:output message="service:AlertResponse" />
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="AlertException" message="exceptions:AlertException" />
+		</wsdl:operation>
+
+		<wsdl:operation name="Redirect">
+			<wsdl:input message="service:RedirectRequest" />
+			<wsdl:output message="service:RedirectResponse" />
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="RedirectException" message="exceptions:RedirectException" />
+		</wsdl:operation>
+		
+		<wsdl:operation name="Park">
+			<wsdl:input message="service:ParkRequest" />
+			<wsdl:output message="service:ParkResponse" />
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="ParkException" message="exceptions:ParkException" />
+		</wsdl:operation>
+
+		<wsdl:operation name="StartRecording">
+			<wsdl:input message="service:StartRecordingRequest" />
+			<wsdl:output message="service:StartRecordingResponse" />
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="StartRecordingException" message="exceptions:StartRecordingException" />
+		</wsdl:operation>
+		
+		<wsdl:operation name="StopRecording">
+			<wsdl:input message="service:StopRecordingRequest" />
+			<wsdl:output message="service:StopRecordingResponse" />
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="StopRecordingException" message="exceptions:StopRecordingException" />
+		</wsdl:operation>
+		
+		<wsdl:operation name="GetRecordingState">
+			<wsdl:input message="service:GetRecordingStateRequest" />
+			<wsdl:output message="service:GetRecordingStateResponse" />
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="GetRecordingStateException" message="exceptions:GetRecordingStateException" />
+		</wsdl:operation>
+		
+		<wsdl:operation name="GetRecordingStateReason">
+			<wsdl:input message="service:GetRecordingStateReasonRequest" />
+			<wsdl:output message="service:GetRecordingStateReasonResponse" />
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="GetRecordingStateReasonException" message="exceptions:GetRecordingStateReasonException" />
+		</wsdl:operation>
+		
+	</wsdl:portType>
+
+</wsdl:definitions>

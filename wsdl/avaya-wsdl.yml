@@ -1,0 +1,200 @@
+generated: '2026-09-17'
+method: searched
+source: >-
+  https://www.avaya.com/en/developer-support/sdks/ — Avaya's own public "APIs and SDKs" page. Each SDK
+  link resolves to https://support.avaya.com/css/public/documents/<id>, which serves the SDK archive
+  directly as application/zip with no login, no SSO and no DevConnect membership. The WSDLs saved here
+  were extracted verbatim from four of those archives.
+note: >-
+  Avaya's machine-readable contract surface is NOT limited to the 84 REST OpenAPIs harvested into
+  openapi/. A second, older and much larger SOAP surface ships inside Avaya's own downloadable SDKs and
+  had never been captured by this pipeline, because nothing on the cloud developer hub
+  (developers.avayacloud.com) references it and no `?wsdl` endpoint is reachable on any public host —
+  these servers are customer-premises appliances. The SDK download page is the only public door, and it
+  is unauthenticated.
+ownership:
+  verdict: avaya
+  justification: >-
+    Every WSDL here carries a nortel.com targetNamespace (http://www.nortel.com/soa/oi/... and
+    http://nortel.com/CCMMAgentWebservices/). That is NOT a different company's contract: Avaya acquired
+    Nortel's Enterprise Solutions business in December 2009, and these SDKs ship today from avaya.com's
+    own developer-support page under Avaya product names — "Avaya Aura CC Release 7.0 & 7.1.x CCMS Open
+    Networking Web Services SDK", "... CCMM Agent Web Services SDK", "... CCMM Outbound Web Services
+    SDK". The nortel.com namespaces are the pre-acquisition package names Avaya kept for wire
+    compatibility with deployed clients; renaming them would have broken every integration in the field.
+    Avaya Aura Contact Center IS the former Nortel Contact Center product line.
+  checked: '2026-09-17'
+summary:
+  wsdl_files: 56
+  distinct_services: 25
+  distinct_operations: 307
+  protocol: SOAP 1.1 / WS-Notification (WS-BaseNotification + WS-ResourceProperties)
+  transport: customer-premises appliance — no Avaya-hosted endpoint exists for this surface
+sources:
+  - product: Avaya Aura Contact Center — Open Interfaces (CCMS Open Networking + Open Queue)
+    sdk: Avaya Aura CC Release 7.0 & 7.1.x CCMS Open Networking Web Services SDK
+    url: https://support.avaya.com/css/public/documents/101090645
+    status: 200
+    content_type: application/zip
+    archive: 5,576,383 bytes
+    extracted_from: >-
+      Open Interfaces Open Networking SDK 7.0/docs/javadoc.resources/com/nortel/soa/oi/opennetworking/
+    files: 49
+    note: >-
+      The sibling .../com/nortel/soa/oi/cct/ directory in the same archive is a byte-identical copy
+      (verified by md5) and was not duplicated here. The CCMS Open Queue SDK
+      (https://support.avaya.com/css/public/documents/101090647, 200, 26,989,760 bytes) carries a
+      45-file subset of the same WSDLs and added nothing new.
+    excluded:
+      - file: WS-ResourceProperties-1.2-draft-01.wsdl
+        reason: >-
+          OASIS WSRF standard WSDL bundled as a dependency, not an Avaya contract. Deliberately NOT
+          saved — attributing a standards body's contract to a vendor is the same class of error as
+          saving a sibling product's spec.
+  - product: Avaya Aura Contact Center — CCMM Agent Web Services
+    sdk: Avaya Aura CC Release 7.0 & 7.1.x CCMM Agent Web Services SDK
+    url: https://support.avaya.com/css/public/documents/101090651
+    status: 200
+    content_type: application/zip
+    archive: 2,000,205 bytes
+    files: 4
+  - product: Avaya Aura Contact Center — CCMM Outbound Web Services
+    sdk: Avaya Aura CC Release 7.0 & 7.1.x CCMM Outbound Web Services SDK
+    url: https://support.avaya.com/css/public/documents/101090653
+    status: 200
+    content_type: application/zip
+    archive: 791,149 bytes
+    files: 3
+services:
+  - name: SessionService
+    count: 43
+    namespace: http://www.nortel.com/soa/oi/cct/SessionService
+    file: avaya-aacc-open-interfaces-sessionserviceinterface.wsdl
+    binding: avaya-aacc-open-interfaces-sessionservice.wsdl
+  - name: CCMM Agent Web Services
+    count: 27
+    namespace: http://nortel.com/CCMMAgentWebservices/
+    files:
+      - avaya-aacc-ccmm-agent-agentemailws.wsdl
+      - avaya-aacc-ccmm-agent-agentwebcommws.wsdl
+      - avaya-aacc-ccmm-agent-agentcontactws.wsdl
+      - avaya-aacc-ccmm-agent-agentutilityws.wsdl
+  - name: ContactService
+    count: 25
+    namespace: http://www.nortel.com/soa/oi/cct/ContactService
+    file: avaya-aacc-open-interfaces-contactserviceinterface.wsdl
+  - name: AddressService
+    count: 22
+    namespace: http://www.nortel.com/soa/oi/cct/AddressService
+    file: avaya-aacc-open-interfaces-addressserviceinterface.wsdl
+  - name: TerminalConnectionService
+    count: 20
+    namespace: http://www.nortel.com/soa/oi/cct/TerminalConnectionService
+    file: avaya-aacc-open-interfaces-terminalconnectionserviceinterface.wsdl
+  - name: AgentService
+    count: 18
+    namespace: http://www.nortel.com/soa/oi/cct/AgentService
+    file: avaya-aacc-open-interfaces-agentserviceinterface.wsdl
+  - name: TerminalService
+    count: 17
+    namespace: http://www.nortel.com/soa/oi/cct/TerminalService
+    file: avaya-aacc-open-interfaces-terminalserviceinterface.wsdl
+  - name: AgentTerminalService
+    count: 16
+    namespace: http://www.nortel.com/soa/oi/cct/AgentTerminalService
+    file: avaya-aacc-open-interfaces-agentterminalserviceinterface.wsdl
+  - name: ConnectionService
+    count: 16
+    namespace: http://www.nortel.com/soa/oi/cct/ConnectionService
+    file: avaya-aacc-open-interfaces-connectionserviceinterface.wsdl
+  - name: ContactManagerService
+    count: 15
+    namespace: http://www.nortel.com/soa/oi/cct/ContactManagerService
+    file: avaya-aacc-open-interfaces-contactmanagerserviceinterface.wsdl
+  - name: OpenQ
+    count: 15
+    namespace: http://www.nortel.com/soa/oi/OpenQ
+    file: avaya-aacc-open-interfaces-openqinterface.wsdl
+  - name: DALCallbackService
+    count: 13
+    namespace: http://www.nortel.com/soa/oi/cct/DALCallbackService
+    file: avaya-aacc-open-interfaces-dalcallbackserviceinterface.wsdl
+  - name: AgentTerminalConnectionService
+    count: 12
+    namespace: http://www.nortel.com/soa/oi/cct/AgentTerminalConnectionService
+    file: avaya-aacc-open-interfaces-agentterminalconnectionserviceinterface.wsdl
+  - name: CCMM Outbound Web Services
+    count: 10
+    namespace: http://nortel.com/CCMMOutboundWebservices/
+    files:
+      - avaya-aacc-ccmm-outbound-outboundcontactws.wsdl
+      - avaya-aacc-ccmm-outbound-outboundcampaignws.wsdl
+      - avaya-aacc-ccmm-outbound-outboundutilityws.wsdl
+  - name: UserService
+    count: 10
+    namespace: http://www.nortel.com/soa/oi/cct/UserService
+    file: avaya-aacc-open-interfaces-userserviceinterface.wsdl
+  - name: MetricsService
+    count: 5
+    namespace: http://www.nortel.com/soa/oi/cct/MetricsService
+    file: avaya-aacc-open-interfaces-metricsserviceinterface.wsdl
+  - name: RoutePointConnectionService
+    count: 5
+    namespace: http://www.nortel.com/soa/oi/cct/RoutePointConnectionService
+    file: avaya-aacc-open-interfaces-routepointconnectionserviceinterface.wsdl
+  - name: NotificationProducer
+    count: 4
+    namespace: http://www.nortel.com/soa/oi/cct/NotificationProducer
+    file: avaya-aacc-open-interfaces-notificationproducerinterface.wsdl
+  - name: RoutePointAddressService
+    count: 4
+    namespace: http://www.nortel.com/soa/oi/cct/RoutePointAddressService
+    file: avaya-aacc-open-interfaces-routepointaddressserviceinterface.wsdl
+  - name: OpenNetworking
+    count: 3
+    namespace: http://www.nortel.com/soa/oi/OpenNetworking
+    file: avaya-aacc-open-interfaces-opennetworkinginterface.wsdl
+  - name: StatsNotificationProducer
+    count: 3
+    namespace: http://www.nortel.com/soa/oi/cct/StatsNotificationProducer
+    file: avaya-aacc-open-interfaces-statsnotificationproducerinterface.wsdl
+  - name: Event + notification consumers (AgentEventConsumer, CallEventConsumer, NotificationConsumer, StatsNotificationConsumer)
+    count: 4
+    note: One callback operation each — the client-side WS-Notification contracts a subscriber implements.
+currency:
+  finding: >-
+    This surface is old and Avaya has not refreshed it. The Open Interfaces WSDLs are dated 2009-2010
+    inside the archive, the CCMM WSDLs 2015, and the products they describe are Avaya Aura Contact
+    Center 7.0/7.1.x. They are still the current published download on avaya.com in September 2026.
+    Read them as the contract for a deployed on-premises estate, not as a surface under active
+    development — that is Avaya Infinity, which is REST and lives in openapi/.
+not_found:
+  - product: Avaya Aura Application Enablement Services — System Management Service (SMS)
+    url: https://support.avaya.com/css/public/documents/101090582
+    status: 200
+    note: >-
+      Downloads (13,372,068 bytes) but the archive contains a single Windows installer,
+      smssvc-sdk-10.2.0.0.0.198.exe. The WSDL is inside the installer payload, not extractable without
+      running it. Nothing authored in its place.
+  - product: Avaya Aura Application Enablement Services — Web Service Telephony Services
+    url: https://support.avaya.com/css/public/documents/101090586
+    status: 200
+    note: >-
+      Same shape — a single telsvc-sdk-8.1.3.0.0.25.exe installer (11,362,173 bytes). Not extracted.
+  - product: Avaya Aura System Manager — Routing Web Services
+    url: https://support.avaya.com/css/public/documents/101090622
+    status: 200
+    note: >-
+      SessionManagerRouting.zip carries Java samples and a PDF/DOCX API reference, no .wsdl. The live
+      WSDL is served by the customer's own System Manager appliance.
+  - product: Avaya Aura System Manager — User Management Web Services
+    url: https://support.avaya.com/css/public/documents/101090620
+    status: 200
+    note: >-
+      Ships 15 XSD schemas under JavaSampleClient/xsd/ but no WSDL; the service contract is retrieved
+      from the deployed appliance.
+  - probe: '?wsdl / ?singleWsdl on every public Avaya host'
+    result: >-
+      No public Avaya host serves a WSDL. These are on-premises products — the contract is published in
+      the SDK and re-served by each customer's own appliance. That is the reason this surface reads as
+      "no contract" from the outside, and it is why the SDK download page had to be the probe.

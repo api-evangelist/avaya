@@ -1,0 +1,1013 @@
+openapi: 3.2.0
+info:
+  title: Admin - User Bulk Job API
+  description: 'The User APIs are use to create, update and retrieve information about User and Profiles.
+
+
+    The Bulk User APIs are use to perform operations on users and jobs in bulk.
+
+    User Services support add, update, delete users in bulk and delete multiple jobs.
+
+
+    User Services will support multiple ways to provision Users/Agents
+
+    1. Programmatic Interface (Rest APIs)
+
+    2. User Interface'
+  contact:
+    name: Avaya API Team
+    url: https://developers.avayacloud.com/onecloud-ccaas
+    email: apiteam@avaya.com
+  license:
+    name: Avaya Software Development Kit (SDK) Software License Terms
+    url: http://support.avaya.com/css/P8/documents/101038288
+  version: 1.0.2
+servers:
+- url: '{protocol}://{server}:{port}{basePath}'
+  description: Open API
+  variables:
+    protocol:
+      enum:
+      - https
+      default: https
+    server:
+      default: HOST-REGION.api.avayacloud.com
+    port:
+      enum:
+      - '443'
+      default: '443'
+    basePath:
+      default: /api/admin/user/v1
+security:
+- {}
+- BearerAuth: []
+  AppKey: []
+tags:
+- name: Bulk Job
+  description: Bulk operations related to the Jobs responsible for creating users.
+paths:
+  /accounts/{accountId}/jobs:
+    get:
+      tags:
+      - Bulk Job
+      summary: List Jobs
+      description: '**This API requires the Account Administrator role.**
+
+
+        Lists all of the jobs for an account based on the criteria provided.'
+      operationId: listJobs
+      parameters:
+      - $ref: '#/components/parameters/accountId'
+      - $ref: '#/components/parameters/pageNumber'
+      - name: pageSize
+        in: query
+        description: 'The max number of records to retrieve per page. Default value is 10.
+
+
+          Any value like 5, 10, 15, 20, 25, 30 is allowed.
+
+
+          Values that exceed the maximum will result in a 400 Bad Request being returned.
+
+          '
+        required: false
+        schema:
+          type: integer
+          format: int32
+          example: 5
+          default: 5
+          minimum: 5
+          maximum: 50
+      - name: filter
+        in: query
+        required: false
+        description: "Specifies details of a row filter.\n\nThe possible fields that can be filtered on are:\n* name\n* operation\n* startTime\n* endTime\n\nThe allowed format:\n- Begins with the column name to be filtered, followed by a colon, then:\n  - Either an exact string to match, or\n  - A string expression including the * wildcard character\n      - :{PREFIX}* will be used to find out word start with.\n      - :*{POSTFIX} will be used to find out word end with\n      - : will be used to match exact word\n  - Begin with column name to be filtered, followed by a = operator. (this will be used to match exact string)\n"
+        schema:
+          type: string
+          maxLength: 255
+        examples:
+          exact:
+            description: Example of filtering based on an exact string.
+            value: name=AddUsers
+          prefix:
+            description: Example of filtering based on a prefix string.
+            value: name:AddUsers*
+          postfix:
+            description: Example of filtering based on a postfix string.
+            value: name:*AddUsers
+      - name: orderBy
+        in: query
+        required: false
+        description: 'Field name on which sorting needs to be performed. The default sorting order is startTime descending.
+
+
+          The possible fields that can be ordered on are:
+
+          * name
+
+          * operation
+
+          * startTime
+
+          * endTime
+
+
+          Field Names are case-sensitive (should be written as it is in description).
+
+
+          To specify descending order, a suffix " desc" should be added. For example, "name" for ascending or "name desc" for descending".
+
+          '
+        schema:
+          type: string
+          maxLength: 255
+        examples:
+          ascending:
+            value: name
+          descending:
+            value: name desc
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JobImportDetailsPage'
+              examples:
+                User jobs:
+                  $ref: '#/components/examples/JobImportDetailsPage'
+        '400':
+          $ref: '#/components/responses/ErrorConstraintViolation'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServer'
+  /accounts/{accountId}/jobs/{jobId}:
+    get:
+      tags:
+      - Bulk Job
+      summary: Get Job
+      description: '**This API requires the Account Administrator role.**
+
+
+        Gets all the details of job along with the processed user count.'
+      operationId: getJob
+      parameters:
+      - $ref: '#/components/parameters/accountId'
+      - $ref: '#/components/parameters/jobId'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserImportJobStatus'
+              examples:
+                User import job:
+                  $ref: '#/components/examples/UserImportJobResponse'
+                User import failed job:
+                  $ref: '#/components/examples/UserImportFailedJobResponse'
+                User import aborted job:
+                  $ref: '#/components/examples/UserImportAbortedJobResponse'
+        '400':
+          $ref: '#/components/responses/ErrorConstraintViolation'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServer'
+  /accounts/{accountId}/jobs/{jobId}/users:
+    get:
+      tags:
+      - Bulk Job
+      summary: List Users
+      description: '**This API requires the Account Administrator role.**
+
+
+        Lists the Users added, updated, or deleted by a job based on the criteria provided.
+
+
+        This includes basic details of each user and current status.
+
+
+        Default ordering is by `loginId`, unless specified otherwise via `orderBy`.'
+      operationId: listUsersByJob
+      parameters:
+      - $ref: '#/components/parameters/accountId'
+      - $ref: '#/components/parameters/jobId'
+      - $ref: '#/components/parameters/pageNumber'
+      - name: pageSize
+        in: query
+        description: 'The max number of records to retrieve per page. Default value is 10.
+
+
+          Any value like 5, 10, 15, 20, 25, 30 is allowed.
+
+
+          Values that exceed the maximum will result in a 400 Bad Request being returned.
+
+          '
+        required: false
+        schema:
+          type: integer
+          format: int32
+          example: 5
+          default: 5
+          minimum: 5
+          maximum: 1000
+      - name: filter
+        in: query
+        required: false
+        description: "Specifies details of a row filter.\n\nThe possible fields you can filter on are:\n* firstName\n* lastName\n* loginId\n* status\n\nThe allowed format:\n- Begins with the column name to be filtered, followed by a colon, then:\n  - Either an exact string to match, or\n  - A string expression including the * wildcard character\n      - :{PREFIX}* will be used to find out word start with.\n      - :*{POSTFIX} will be used to find out word end with\n      - : will be used to match exact word\n  - Begin with column name to be filtered, followed by a = operator. (this will be used to match exact string)\n"
+        schema:
+          type: string
+          maxLength: 255
+        examples:
+          exact:
+            description: Example of filtering based on an exact string.
+            value: firstName:VoiceUser*
+          prefix:
+            description: Example of filtering based on a prefix string.
+            value: firstName:VoiceUser*
+          postfix:
+            description: Example of filtering based on a postfix string.
+            value: firstName:VoiceUser*
+      - name: orderBy
+        in: query
+        required: false
+        description: 'Field name on which sorting needs to be performed. The default sorting order is ascending.
+
+
+          The possible fields that can be ordered on are:
+
+          * firstName
+
+          * lastName
+
+          * loginId
+
+
+          Field Names are case-sensitive (should be written as it is in description).
+
+
+          To specify descending order, a suffix " desc" should be added. For example, "firstName" for ascending or "firstName desc" for descending".
+
+          '
+        schema:
+          type: string
+          maxLength: 255
+        examples:
+          ascending:
+            value: firstName
+          descending:
+            value: firstName desc
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserDetailsPage'
+              examples:
+                User import details:
+                  $ref: '#/components/examples/UserDetailsPage'
+        '400':
+          $ref: '#/components/responses/ErrorConstraintViolation'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServer'
+  /accounts/{accountId}/jobs/{jobId}:stop:
+    post:
+      tags:
+      - Bulk Job
+      summary: Stop Job
+      description: '**This API requires the Account Administrator role.**
+
+
+        Stops the job as soon as possible. The job status will enter `ABORT_IN_PROGRESS` and finally `ABORTED`.
+
+
+        Note, this **DOES NOT** rollback any modifications to Users that have already been processed.'
+      operationId: stopJob
+      parameters:
+      - $ref: '#/components/parameters/accountId'
+      - $ref: '#/components/parameters/jobId'
+      responses:
+        '202':
+          description: Accepted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JobStopResponse'
+              examples:
+                Job stop response:
+                  $ref: '#/components/examples/JobStopResponse'
+        '400':
+          $ref: '#/components/responses/ErrorConstraintViolation'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServer'
+  /accounts/{accountId}/jobs:bulkDelete:
+    post:
+      tags:
+      - Bulk Job
+      summary: Bulk Delete Jobs
+      description: '**This API requires the Account Administrator role.**
+
+
+        Bulk deletes jobs using the IDs provided.
+
+
+        Only jobs with the following `status` can be deleted:
+
+        * `COMPLETED`
+
+        * `FAILED`
+
+        * `ABORTED`'
+      operationId: bulkDeleteJobs
+      parameters:
+      - $ref: '#/components/parameters/accountId'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserImportJobsId'
+            examples:
+              Job Ids to delete:
+                $ref: '#/components/examples/UserJobsIdsToDelete'
+      responses:
+        '202':
+          description: Accepted
+        '400':
+          $ref: '#/components/responses/ErrorConstraintViolation'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServer'
+  /accounts/{accountId}/jobs/{jobId}:exportFailedUsers:
+    get:
+      tags:
+      - Bulk Job
+      summary: Export Failed Users
+      description: '**This API requires the Account Administrator role.**
+
+
+        Exports the list of failed Users from the bulk operation. The following file formats are supported:
+
+
+        * `.xlsx`
+
+
+        The `.xlsx` file will be contained within in a `.zip` archive.'
+      operationId: exportFailedUsers
+      parameters:
+      - $ref: '#/components/parameters/accountId'
+      - $ref: '#/components/parameters/jobId'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+              example: 'Login Id, Account Hierarchy, Last Name, First Name, Password, Profile, Display Name, Roles, Email, Member Of, Owned Groups, Description
+
+                username@default.com, Default, lastname, firstName,  Avaya1234@,  profileName,lastname firstname, [Agent],username@default.com, [group1], [group2], Password policy not met
+
+                '
+        '400':
+          $ref: '#/components/responses/ErrorConstraintViolation'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/JobNameExists'
+        '500':
+          $ref: '#/components/responses/InternalServer'
+  /accounts/{accountId}/jobs/{jobId}:downloadExportedUsers:
+    get:
+      tags:
+      - Bulk Job
+      summary: Download Exported Users
+      description: '**This API requires the Account Administrator role.**
+
+
+        Downloads the exported users in one or more `.xlsx` files contained within in a `.zip` archive. Each `.xlsx` file can contain up to 1,000 users.'
+      operationId: downloadExportedUsers
+      parameters:
+      - $ref: '#/components/parameters/accountId'
+      - $ref: '#/components/parameters/jobId'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/zip:
+              schema:
+                type: string
+                format: binary
+              example: 'Login Id, Account Hierarchy, Last Name, First Name, Password, Profile, Display Name, Roles, Email, Member Of, Owned Groups
+
+                username@default.com, Default, lastname, firstName,  Avaya1234@,  profileName,lastname firstname, [Agent],username@default.com, [group1], [group2]
+
+                '
+        '400':
+          $ref: '#/components/responses/ErrorConstraintViolation'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServer'
+components:
+  examples:
+    ErrorForbidden:
+      description: Forbidden
+      value:
+        type: https://developers.avayacloud.com/avaya-experience-platform/docs/error-handling#forbidden
+        title: Forbidden
+        status: 403
+        detail: According to the access control policy the current user and/or accountId does not have permission to access this resource.
+    ErrorConstraintViolation:
+      description: Constraint Violation
+      value:
+        type: https://developers.avayacloud.com/avaya-experience-platform/docs/error-handling#constraint-violation
+        title: Constraint Violation
+        status: 400
+        detail: A problem that indicates a syntactically correct, yet semantically illegal request. The Server can not process this request until the client resolves the semantic errors described in the violations section.
+        violations:
+        - field: accountId
+          message: must match "^[a-zA-Z]{6}$"
+          code: 20006
+    UserImportFailedJobResponse:
+      description: User Failed Job
+      value:
+        operation: ADD
+        status: FAILED
+        message: Import failed
+        details:
+        - count: 500
+          status: COMPLETED
+        - count: 300
+          status: FAILED
+        url: /api/admin/user/v1/accounts/ABCDEF/jobs/c8c2909d-75e9-484a-94c0-b7e8d30771fe/users
+        totalCount: 800
+        startTime: 2020-04-21T17:32:28z
+        endTime: 2020-04-21T17:40:28z
+    JobStopResponse:
+      description: Job stop response
+      value:
+        url: /api/admin/user/v1/accounts/ABCDEF/jobs/c8c2909d-75e9-484a-94c0-b7e8d30771fe
+    UserJobsIdsToDelete:
+      description: User Job ids to delete
+      value:
+        jobIds:
+        - 04703a3a-3dfb-4606-ae79-fd0fe0be3e64
+        - 03703a3a-3dfb-4606-ae79-fd0fe0be3e53
+    ErrorJobNameExists:
+      description: Constraint Violation
+      value:
+        type: https://developers.avayacloud.com/avaya-experience-platform/docs/error-handling#conflict
+        title: Conflict
+        status: 409
+        detail: A resource with the same unique constraint values already exists.
+        violations:
+        - field: jobName
+          message: A job with this name already exists
+    ErrorNotFound:
+      description: Not Found
+      value:
+        type: https://developers.avayacloud.com/avaya-experience-platform/docs/error-handling#resource-not-found
+        title: Resource Not Found
+        status: 404
+        detail: Either there is no API method associated with the URL path of the request, or the request refers to one or more resources that were not found.
+    UserImportAbortedJobResponse:
+      description: User Aborted Job
+      value:
+        operation: ADD
+        status: ABORTED
+        message: Import aborted
+        details:
+        - count: 100
+          status: ABORTED
+        - count: 300
+          status: COMPLETED
+        url: /api/admin/user/v1/accounts/ABCDEF/jobs/c8c2909d-75e9-484a-94c0-b7e8d30771fe/users
+        totalCount: 400
+        startTime: 2020-04-21T17:32:28z
+        endTime: 2020-04-21T17:40:28z
+    ErrorUnauthorized:
+      description: Unauthorized
+      value:
+        type: https://developers.avayacloud.com/avaya-experience-platform/docs/error-handling#unauthorized
+        title: Unauthorized
+        status: 401
+        detail: This operation requires authentication. See https://developers.avayacloud.com/avaya-experience-platform/docs/how-to-authenticate-with-ccaas-apis
+    UserImportJobResponse:
+      description: User Job
+      value:
+        operation: ADD
+        status: COMPLETED
+        message: import completed
+        details:
+        - count: 1300
+          status: COMPLETED
+        url: /api/admin/user/v1/accounts/ABCDEF/jobs/c8c2909d-75e9-484a-94c0-b7e8d30771fe/users
+        totalCount: 1300
+        startTime: 2020-04-21T17:32:28z
+        endTime: 2020-04-21T17:40:28z
+    UserDetailsPage:
+      description: User import details
+      value:
+        pagination:
+          pageNumber: 2
+          pageSize: 10
+          total: 45
+        users:
+        - loginId: something@domain.com
+          userId: c8c2909d-75e9-484a-94c0-b7e8d30771ee
+          operation: ADD
+          status: COMPLETED
+          message: User successfully added
+        - loginId: steves@domain.com
+          userId: c7c2909d-75e9-484a-94c0-b7e8d30772dd
+          operation: ADD
+          status: IN_PROGRESS
+          message: Operation is in progress
+        - loginId: steven@domain.com
+          userId: b7c2909d-75e9-484a-94c0-b7e8d30771cc
+          operation: ADD
+          status: FAILED
+          message: Invalid member of group provided
+        links:
+          prev: /api/admin/user/v1/accounts/ABCDEF/jobs/importUserList1/users?pageNumber=1&pageSize=10
+          next: /api/admin/user/v1/accounts/ABCDEF/jobs/importUserList1/users?pageNumber=3&pageSize=10
+    JobImportDetailsPage:
+      description: User Jobs
+      value:
+        pagination:
+          pageNumber: 2
+          pageSize: 10
+          total: 45
+        jobs:
+        - jobId: c8c2909d-75e9-484a-94c0-b7e8d30771ee
+          status: COMPLETED
+          name: deleteJobForOrganization
+          operation: DELETE
+          startTime: 2020-04-21T17:32:28z
+          endTime: 2020-04-21T17:40:28z
+        links:
+          prev: /api/admin/user/v1/accounts/ASDJGE/jobs?pageNumber=1&pageSize=10
+          next: /api/admin/user/v1/accounts/ASDJGE/jobs?pageNumber=3&pageSize=10
+    ErrorInternalServerError:
+      description: Server Error
+      value:
+        type: https://developers.avayacloud.com/avaya-experience-platform/docs/error-handling#server-error
+        title: Server Error
+        status: 500
+        detail: An internal server error was encountered.
+  responses:
+    NotFound:
+      description: Not Found
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorNotFound'
+    InternalServer:
+      description: Request processing failed
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorInternalServerError'
+    JobNameExists:
+      description: Conflict
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorJobNameExists'
+    ErrorConstraintViolation:
+      description: Constraint Violation
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorConstraintViolation'
+    Forbidden:
+      description: Forbidden
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorForbidden'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorUnauthorized'
+  parameters:
+    accountId:
+      name: accountId
+      description: The unique 6 character internal id that represents the customer account.
+      required: true
+      in: path
+      schema:
+        type: string
+        minLength: 6
+        maxLength: 6
+        pattern: ^[a-zA-Z]{6}$
+        example: ABCDEF
+    jobId:
+      name: jobId
+      in: path
+      description: The unique 36 character internal id that represents the job.
+      required: true
+      schema:
+        type: string
+        minLength: 36
+        maxLength: 36
+        pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
+        example: 1235a3aa-3dfb-4606-ae79-fd0fe0be3e64
+    pageNumber:
+      name: pageNumber
+      in: query
+      description: The page number of the records to retrieve. Default value is 1.
+      schema:
+        type: integer
+        format: int32
+        default: 1
+        minimum: 1
+        example: 2
+  schemas:
+    JobImportDetails:
+      description: User import jobs detail
+      type: object
+      properties:
+        jobId:
+          description: JobId an unique id mapped with each user import job.
+          type: string
+          example: c8c2909d-75e9-484a-94c0-b7e8d30771ee
+          minLength: 36
+          maxLength: 36
+          pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
+        status:
+          $ref: '#/components/schemas/status'
+        name:
+          description: Name of job
+          type: string
+          example: deleteJobForOrganization
+        operation:
+          $ref: '#/components/schemas/operation'
+        startTime:
+          description: Start time of job
+          type: string
+          format: date-time
+          example: 2020-04-21T17:32:28z
+        endTime:
+          description: End time of job
+          type: string
+          format: date-time
+          example: 2020-04-21T17:40:28z
+      title: JobImportDetails
+    Links:
+      type: object
+      properties:
+        prev:
+          type: string
+          default: ''
+          description: URL of the previous page. Blank if currently on the first page.
+        next:
+          type: string
+          default: ''
+          description: URL of the next page. Blank if currently on the last page.
+    JobImportDetailsPage:
+      description: List of all imported jobs
+      type: object
+      properties:
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+        jobs:
+          type: array
+          items:
+            $ref: '#/components/schemas/JobImportDetails'
+        links:
+          allOf:
+          - $ref: '#/components/schemas/Links'
+          example:
+            prev: /api/admin/user/v1/accounts/ASDJGE/jobs?pageNumber=1&pageSize=10
+            next: /api/admin/user/v1/accounts/ASDJGE/jobs?pageNumber=3&pageSize=10
+      title: JobImportDetailsPage
+    JobStopResponse:
+      type: object
+      description: Job stop response
+      properties:
+        url:
+          type: string
+          example: /api/admin/user/v1/accounts/ABCDEF/jobs/{jobId}
+    UserImportDetails:
+      description: User import job details.
+      type: object
+      properties:
+        count:
+          type: integer
+          format: int64
+          description: Total number of entities per element is imported
+          example: 1300
+        status:
+          $ref: '#/components/schemas/statusAndOperations'
+    operation:
+      type: string
+      description: Operation performed during import
+      enum:
+      - ADD
+      - UPDATE
+      - DELETE
+      - NO_CHANGE
+      - EXPORT
+      example: ADD
+    status:
+      description: Operation result
+      type: string
+      enum:
+      - IN_PROGRESS
+      - FAILED
+      - COMPLETED
+      - PENDING
+      - ABORT_IN_PROGRESS
+      - ABORTED
+      - NO_CHANGE
+      example: COMPLETED
+    UserImportJobsId:
+      description: List of all imported job Ids to delete the jobs.
+      type: object
+      properties:
+        jobIds:
+          type: array
+          maxItems: 50
+          items:
+            type: string
+            minLength: 36
+            maxLength: 36
+            pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
+          example:
+          - 04703a3a-3dfb-4606-ae79-fd0fe0be3e64
+          - 04803a3a-3dfb-4606-ae79-fd0fe0be3e64
+          description: List of job Ids to delete the jobs
+      title: UserImportJobsId
+    Pagination:
+      type: object
+      properties:
+        pageNumber:
+          type: integer
+          description: The current page number.
+          example: 2
+        pageSize:
+          type: integer
+          description: The max number of records that can be retrieved on this page.
+          example: 10
+        total:
+          type: integer
+          description: The total number of records.
+          example: 100
+    UserDetails:
+      description: User details of each imported user
+      type: object
+      properties:
+        loginId:
+          description: User login Id
+          type: string
+          maxLength: 255
+          pattern: ^[a-zA-Z\p{L}0-9+-_.]+(?:\.[a-zA-Z\p{L}0-9+-_.]+)*@(?:[a-zA-Z\p{L}0-9-]+\.)+[a-zA-Z\p{L}]{2,6}$
+          example: something@domain.com
+        userId:
+          description: User unique Id
+          type: string
+          example: c8c2909d-75e9-484a-94c0-b7e8d30771ee
+          minLength: 36
+          maxLength: 36
+          pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
+        status:
+          $ref: '#/components/schemas/status'
+        operation:
+          $ref: '#/components/schemas/operation'
+        message:
+          description: Message explaining operation result
+          type: string
+          example: User successfully added
+      title: UserDetails
+    UserImportJobStatus:
+      description: User import job status response to know number of user imported with status.
+      type: object
+      properties:
+        operation:
+          $ref: '#/components/schemas/operation'
+        status:
+          $ref: '#/components/schemas/status'
+        message:
+          type: string
+          description: Success or failure message of import
+          example: import completed
+        details:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserImportDetails'
+        url:
+          description: URL to get the details of user import job
+          type: string
+          example: /api/admin/user/v1/accounts/ABCDEF/jobs/c8c2909d-75e9-484a-94c0-b7e8d30771fe/users
+          maxLength: 2048
+        totalCount:
+          description: Total number of users
+          type: integer
+          format: int64
+          example: 40
+        startTime:
+          description: Start time of job
+          type: string
+          format: date-time
+          example: 2020-04-21T17:32:28z
+        endTime:
+          description: End time of job
+          type: string
+          format: date-time
+          example: 2020-04-21T17:40:28z
+      title: UserImportJobStatus
+    statusAndOperations:
+      description: Operation result
+      type: string
+      enum:
+      - ADD
+      - UPDATE
+      - DELETE
+      - NO_CHANGE
+      - IN_PROGRESS
+      - FAILED
+      - COMPLETED
+      - ABORT_IN_PROGRESS
+      - ABORTED
+      - PENDING
+      example: COMPLETED
+    UserDetailsPage:
+      description: User import details to know each user status
+      type: object
+      properties:
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+        users:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserDetails'
+        links:
+          allOf:
+          - $ref: '#/components/schemas/Links'
+          example:
+            prev: /api/admin/user/v1/accounts/ABCDEF/jobs/importUserList1/users?pageNumber=1&pageSize=10
+            next: /api/admin/user/v1/accounts/ABCDEF/jobs/importUserList1/users?pageNumber=3&pageSize=10
+      title: UserDetailsPage
+    Problem:
+      type: object
+      description: '<b>Problem Detail</b> as a way to carry machine-readable details of errors in a HTTP response to avoid the need to define new error response formats for HTTP APIs <a href="https://tools.ietf.org/html/rfc7807">RFC 7807</a>
+
+        '
+      properties:
+        type:
+          type: string
+          format: uri
+          description: 'An absolute URI that identifies the problem type. When dereferenced, it SHOULD provide human-readable documentation for the problem type (e.g., using HTML).
+
+            '
+          default: about:blank
+          example: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#constraint-violation
+        title:
+          type:
+          - string
+          - 'null'
+          description: 'A short, summary of the problem type. Written in english and readable for engineers (usually not suited for non technical stakeholders and not localized).
+
+            '
+          example: Service Unavailable
+        status:
+          type:
+          - integer
+          - 'null'
+          format: int32
+          description: 'The HTTP status code generated by the origin server for this occurrence of the problem.
+
+            '
+          minimum: 100
+          example: 503
+          exclusiveMaximum: 600
+        detail:
+          type:
+          - string
+          - 'null'
+          description: 'A human readable explanation specific to this occurrence of the problem.
+
+            '
+          example: Connection to database timed out
+        instance:
+          type:
+          - string
+          - 'null'
+          format: uri
+          description: 'An absolute URI that identifies the specific occurrence of the problem. It may or may not yield further information if dereferenced.
+
+            '
+        violations:
+          type:
+          - array
+          - 'null'
+          description: 'A list of violations that occurred as a result of invalid data provided as part of a request.
+
+            '
+          items:
+            type: object
+            properties:
+              field:
+                type: string
+                description: 'The name of the field in the request that caused the violation. This can be the name of a path parameter, query parameter, or a field within the request body.
+
+                  '
+                example: accountId
+              message:
+                type: string
+                description: 'A human readable explanation specific to this occurrence of the violation.
+
+                  '
+                example: must match "^[a-zA-Z]{6}$"
+              code:
+                type: integer
+                format: int32
+                description: 'The violation code generated by the server for this occurrence of the violation. Use this code when implementing any error handling logic instead of the message, as the message can change.
+
+                  '
+                example: 20006
+          example:
+          - field: emailAddress
+            message: must not be null
+            code: 20002
+          - field: accountId
+            message: must match "^[a-zA-Z]{6}$"
+            code: 20006
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      description: This API uses Bearer Token Authorization Flow
+      bearerFormat: JWT
+    AppKey:
+      type: apiKey
+      in: header
+      name: appkey
+      description: This API needs an appKey as header
+x-explorer-enabled: false
+x-samples-languages:
+- curl
+- node
+- java
+- javascript
+- python
+- go

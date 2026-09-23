@@ -1,0 +1,564 @@
+openapi: 3.2.0
+info:
+  title: Admin - Voice SIP Trunks API
+  description: 'The Voice provider APIs are used to manage information about voice specific elements and different voice related entities e.g. Phone numbers.
+
+
+    Voice Services will support multiple ways to provision voice providers
+
+    1. Programmatic Interface (Rest APIs)
+
+    2. User Interface'
+  contact:
+    name: Avaya API Team
+    url: https://developers.avayacloud.com/onecloud-ccaas
+    email: apiteam@avaya.com
+  license:
+    name: Avaya Software Development Kit (SDK) Software License Terms
+    url: http://support.avaya.com/css/P8/documents/101038288
+  version: 1.0.2
+servers:
+- url: '{protocol}://{server}{basePath}'
+  description: Open API
+  variables:
+    protocol:
+      enum:
+      - https
+      default: https
+    server:
+      default: HOST-REGION.api.avayacloud.com
+    basePath:
+      default: /api/admin/voice/v1
+security:
+- {}
+- BearerAuth: []
+  AppKey: []
+tags:
+- name: SIP Trunks
+  description: This API is used to get list of all SIP trunk elements and update caller id for an account administrator.
+paths:
+  /accounts/{accountId}/sip-trunks:
+    get:
+      tags:
+      - SIP Trunks
+      summary: Get List Of SIP Trunks
+      description: '**This API requires the Account Administrator role.**
+
+
+        Get an All SIP Trunks associated with Account Administrator.'
+      operationId: getSipTrunks
+      parameters:
+      - $ref: '#/components/parameters/accountId'
+      - $ref: '#/components/parameters/pageNumber'
+      - $ref: '#/components/parameters/pageSize'
+      - $ref: '#/components/parameters/filter'
+      - $ref: '#/components/parameters/orderBy'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SipTrunkPage'
+              examples:
+                SipTrunkPageResponse:
+                  $ref: '#/components/examples/SipTrunkPageResponse'
+        '400':
+          $ref: '#/components/responses/ErrorConstraintViolation'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /accounts/{accountId}/sip-trunks/{sipTrunkId}:
+    put:
+      tags:
+      - SIP Trunks
+      summary: Update SIP Trunk Caller ID
+      description: '**This API requires the Account Administrator role.**
+
+
+        Update an SIP Trunks Caller ID associated with Account Administrator.'
+      operationId: UpdateSipTrunk
+      parameters:
+      - $ref: '#/components/parameters/accountId'
+      - $ref: '#/components/parameters/sipTrunkId'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SipTrunk'
+            examples:
+              SipTrunkUpdateRequest:
+                $ref: '#/components/examples/SipTrunkUpdateRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SipTrunk'
+              examples:
+                SipTrunkUpdateResponse:
+                  $ref: '#/components/examples/SipTrunkUpdateResponse'
+        '400':
+          $ref: '#/components/responses/ErrorConstraintViolation'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+components:
+  examples:
+    ErrorForbidden:
+      description: Forbidden
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#forbidden
+        title: Forbidden
+        status: 403
+        detail: According to the access control policy the current user does not have permission to access this resource.
+    ErrorConstraintViolation:
+      description: Constraint Violation
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#constraint-violation
+        title: Constraint Violation
+        status: 400
+        detail: A problem that indicates a syntactically correct, yet semantically illegal request. The Server can not process this request until the client resolves the semantic errors described in the violations section.
+        violations:
+        - field: accountId
+          message: must match "^[a-zA-Z]{6}$"
+          code: 20006
+    SipTrunkPageResponse:
+      value:
+        pagination:
+          pageNumber: 1
+          pageSize: 3
+          total: 10
+        sipTrunks:
+        - id: c8c2909d-75e9-484a-94c0-b7e8d29771fe
+          type: BYOC
+          seqNumber: 1
+          provider: umhgjt.eu.cc.avayacloud.com
+          providerDomain: ringcentral.eu.cc.avayacloud.com
+          trunkName: trunk1.umhgjt.eu.cc.avayacloud.com
+          outboundDomain: trunk1.umhgjt.eu.cc.avayacloud.com
+          inboundDomain: trunk1.umhgjt.eu.cc.avayacloud.com
+          releaseMediaAnchorDuringTransfer: false
+          preferredMediaLocation: AL-01
+          callerId: c8c2909d-75e9-484a-94c0-b7e8d297735f
+        - id: c8c2909d-75e9-484a-94c0-b7e8d29771fe
+          type: BYOC
+          seqNumber: 1
+          provider: umhgjt.eu.cc.avayacloud.com
+          providerDomain: ringcentral.eu.cc.avayacloud.com
+          trunkName: trunk1.umhgjt.eu.cc.avayacloud.com
+          outboundDomain: trunk1.umhgjt.eu.cc.avayacloud.com
+          inboundDomain: trunk1.umhgjt.eu.cc.avayacloud.com
+          releaseMediaAnchorDuringTransfer: false
+          preferredMediaLocation: AL-01
+          callerId: c8c2909d-75e9-484a-94c0-b7e8d29771f8
+        - id: c8c2909d-75e9-484a-94c0-b7e8d29771fe
+          type: MSTEAMS_SIP_TRUNK
+          provider: umhgjt.eu.cc.avayacloud.com
+          providerDomain: ringcentral.eu.cc.avayacloud.com
+          trunkName: trunk1.umhgjt.eu.cc.avayacloud.com
+          outboundDomain: trunk1.umhgjt.eu.cc.avayacloud.com
+          inboundDomain: trunk1.umhgjt.eu.cc.avayacloud.com
+          preferredMediaLocation: AL-01
+          callerId: c8c2909d-75e9-484a-94c0-b7e8d29771fg
+        links:
+          prev: /api/admin/v1/accounts/ASDJGE/location-profiles?pageNumber=1&pageSize=3
+          next: /api/admin/v1/accounts/ASDJGE/location-profiles?pageNumber=3&pageSize=3
+    ErrorNotFound:
+      description: Not Found
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#resource-not-found
+        title: Resource Not Found
+        status: 404
+        detail: Either there is no API method associated with the URL path of the request, or the request refers to one or more resources that were not found.
+    ErrorUnauthorized:
+      description: Unauthorized
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#unauthorized
+        title: Unauthorized
+        status: 401
+        detail: This operation requires authentication. See https://developers.avayacloud.com/onecloud-ccaas/docs/how-to-authenticate-with-ccaas-apis
+    SipTrunkUpdateResponse:
+      value:
+        id: c8c2909d-75e9-484a-94c0-b7e8d29771fe
+        type: BYOC
+        seqNumber: 1
+        provider: umhgjt.eu.cc.avayacloud.com
+        providerDomain: ringcentral.eu.cc.avayacloud.com
+        trunkName: trunk1.umhgjt.eu.cc.avayacloud.com
+        outboundDomain: trunk1.umhgjt.eu.cc.avayacloud.com
+        inboundDomain: trunk1.umhgjt.eu.cc.avayacloud.com
+        releaseMediaAnchorDuringTransfer: false
+        preferredMediaLocation: AL-01
+        callerId: c8c2909d-75e9-484a-94c0-b7e8d297735f
+        isDefault: true
+    SipTrunkUpdateRequest:
+      value:
+        callerId: c8c2909d-75e9-484a-94c0-b7e8d297735f
+        isDefault: true
+    ErrorInternalServerError:
+      description: Server Error
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#server-error
+        title: Server Error
+        status: 500
+        detail: An internal server error was encountered.
+  responses:
+    NotFound:
+      description: Not Found
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorNotFound'
+    InternalServerError:
+      description: All other application errors
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorInternalServerError'
+    ErrorConstraintViolation:
+      description: Constraint Violation
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorConstraintViolation'
+    Forbidden:
+      description: Forbidden
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorForbidden'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorUnauthorized'
+  parameters:
+    accountId:
+      name: accountId
+      description: The unique 6 character internal id that represents the customer account.
+      required: true
+      in: path
+      schema:
+        type: string
+        minLength: 6
+        maxLength: 6
+        pattern: ^[a-zA-Z]{6}$
+        example: ABCDEF
+    pageSize:
+      name: pageSize
+      in: query
+      description: The max number of records to retrieve per page. Default value is 5, Any value like 5,10,15,20,25,30 is allowed. If value comes more than 1000 then max 1000 records will be returned.
+      required: false
+      schema:
+        type: integer
+        format: int32
+        example: 5
+        default: 5
+        minimum: 1
+        maximum: 50
+    orderBy:
+      name: orderBy
+      in: query
+      required: false
+      description: "Field name on which ordering needs to be performed. The default order is ascending.\n\nThe possible fields that can be ordered on are:\n  * name\n\nField Names are case-senstive (should be written as it is in description).\n\nTo specify descending order, a suffix \" desc\" should be added. For example, \"name\" for ascending or \"name desc\" for descending\".\n"
+      schema:
+        type: string
+        maxLength: 255
+      examples:
+        ascending:
+          value: name
+        descending:
+          value: name desc
+    pageNumber:
+      name: pageNumber
+      in: query
+      description: The page number of the records to retrieve. Default value is 1.
+      required: false
+      schema:
+        type: integer
+        format: int32
+        example: 1
+        default: 1
+        minimum: 1
+    sipTrunkId:
+      name: sipTrunkId
+      in: path
+      description: The unique 36 character internal id (uuid) that represents the Element.
+      required: true
+      schema:
+        type: string
+        example: c8c2909d-75e9-484a-94c0-b7e8d29771fe
+        minLength: 36
+        maxLength: 36
+        pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
+    filter:
+      name: filter
+      in: query
+      required: false
+      description: "Specifies details of a row filter.\n\n The possible fields that can be filtered on are:\n  * name\n\nThe allowed format:\n  - Begins with the column name to be filtered, followed by a colon, then:\n    - Either an exact string to match, or\n    - A string expression including the * wildcard character\n      - :{PREFIX}* will be used to find out word start with.\n      - :*{POSTFIX} will be used to find out word end with\n      - : will be used to match exact word\n  - Begin with column name to be filtered, followed by a = operator. (this will be used to match exact string)\n"
+      schema:
+        type: string
+        maxLength: 255
+      examples:
+        exact:
+          description: Example of filtering based on an exact string.
+          value: name=Abc123
+        prefix:
+          description: Example of filtering based on a prefix string.
+          value: name:AB*
+        postfix:
+          description: Example of filtering based on a postfix string.
+          value: name:*C123
+  schemas:
+    Links:
+      type: object
+      properties:
+        prev:
+          type: string
+          description: URL of the previous page. Blank if currently on the first page.
+        next:
+          type: string
+          description: URL of the next page. Blank if currently on the last page.
+    SipTrunkPage:
+      title: SipTrunkPage
+      type: object
+      description: Sip Trunk filtered response
+      properties:
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+        sipTrunks:
+          type: array
+          maxItems: 50
+          items:
+            $ref: '#/components/schemas/SipTrunk'
+        links:
+          allOf:
+          - $ref: '#/components/schemas/Links'
+          example:
+            prev: /api/admin/voice/v1/accounts/{accountId}/sip-trunks?pageNumber=1&pageSize=10
+            next: /api/admin/voice/v1/accounts/{accountId}/sip-trunks?pageNumber=3&pageSize=10
+    SipTrunk:
+      title: SipTrunk
+      type: object
+      description: SIP Trunks Element Model
+      properties:
+        id:
+          description: Unique UUID for SIP Trunk
+          type: string
+          readOnly: true
+          example: fa703a3a-3dfb-4606-ae79-fd0fe0be3e64
+        type:
+          description: Type of SIP Trunk
+          type: string
+          readOnly: true
+          example: ACOSIPTrunk
+        seqNumber:
+          description: Incremental sequence number of domain name
+          type: integer
+          readOnly: true
+          example: 1
+        provider:
+          description: Provider name of SIP Trunk
+          type: string
+          readOnly: true
+          example: RingCentral
+        providerDomain:
+          description: Provider Domain name configured for the SIP Trunk
+          type: string
+          readOnly: true
+          minLength: 3
+          maxLength: 255
+          pattern: ^((?!-)[A-Za-z0-9\p{L}-]{1,63}(?<!-)\.)+[A-Za-z\p{L}]{2,63}$
+          example: exchange.com
+        trunkName:
+          description: Name of the SIP Trunk
+          type: string
+          readOnly: true
+          minLength: 1
+          maxLength: 255
+          pattern: ^[a-zA-Z0-9\p{L}\-\_\.\ ]+$
+          example: ACO-Trunk-US
+        inboundDomain:
+          description: Inbound Domain name configured for the ACO SIP Trunk
+          type: string
+          readOnly: true
+          minLength: 3
+          maxLength: 255
+          pattern: ^((?!-)[A-Za-z0-9\p{L}-]{1,63}(?<!-)\.)+[A-Za-z\p{L}]{2,63}$
+          example: exchange.com
+        outboundDomain:
+          description: Outbound Domain name configured for the ACO SIP Trunk Element
+          type: string
+          readOnly: true
+          minLength: 3
+          maxLength: 255
+          pattern: ^((?!-)[A-Za-z0-9\p{L}-]{1,63}(?<!-)\.)+[A-Za-z\p{L}]{2,63}$
+          example: exchange.com
+        releaseMediaAnchorDuringTransfer:
+          type: boolean
+          readOnly: true
+          description: Release media anchor during transfer.
+          example: true
+        preferredMediaLocation:
+          type: string
+          readOnly: true
+          description: Preferred Media Processing Location set by tenant.
+          example: US-LA
+          minLength: 1
+          maxLength: 7
+        callerId:
+          description: Unique id of DNIS Details fetched from CPaas Server
+          type: string
+          readOnly: false
+          example: fa703a3a-3dfb-4606-ae79-fd0fe0be3e64
+        isDefault:
+          description: Default SIP trunk
+          type: boolean
+          readOnly: false
+          default: false
+          example: true
+    Pagination:
+      type: object
+      properties:
+        pageNumber:
+          type: integer
+          description: The current page number.
+        pageSize:
+          type: integer
+          description: The max number of records that can be retrieved on this page.
+        total:
+          type: integer
+          description: The total number of records.
+    Problem:
+      type: object
+      description: '<b>Problem Detail</b> as a way to carry machine-readable details of errors in a HTTP response to avoid the need to define new error response formats for HTTP APIs <a href="https://tools.ietf.org/html/rfc7807">RFC 7807</a>
+
+        '
+      properties:
+        type:
+          type: string
+          format: uri
+          description: 'An absolute URI that identifies the problem type. When dereferenced, it SHOULD provide human-readable documentation for the problem type (e.g., using HTML).
+
+            '
+          default: about:blank
+          example: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#constraint-violation
+        title:
+          type:
+          - string
+          - 'null'
+          description: 'A short, summary of the problem type. Written in english and readable for engineers (usually not suited for non technical stakeholders and not localized).
+
+            '
+          example: Service Unavailable
+        status:
+          type:
+          - integer
+          - 'null'
+          format: int32
+          description: 'The HTTP status code generated by the origin server for this occurrence of the problem.
+
+            '
+          minimum: 100
+          example: 503
+          exclusiveMaximum: 600
+        detail:
+          type:
+          - string
+          - 'null'
+          description: 'A human readable explanation specific to this occurrence of the problem.
+
+            '
+          example: Connection to database timed out
+        instance:
+          type:
+          - string
+          - 'null'
+          format: uri
+          description: 'An absolute URI that identifies the specific occurrence of the problem. It may or may not yield further information if dereferenced.
+
+            '
+        violations:
+          type:
+          - array
+          - 'null'
+          description: 'A list of violations that occurred as a result of invalid data provided as part of a request.
+
+            '
+          items:
+            type: object
+            properties:
+              field:
+                type: string
+                description: 'The name of the field in the request that caused the violation. This can be the name of a path parameter, query parameter, or a field within the request body.
+
+                  '
+                example: accountId
+              message:
+                type: string
+                description: 'A human readable explanation specific to this occurrence of the violation.
+
+                  '
+                example: must match "^[a-zA-Z]{6}$"
+              code:
+                type: integer
+                format: int32
+                description: 'The violation code generated by the server for this occurrence of the violation. Use this code when implementing any error handling logic instead of the message, as the message can change.
+
+                  '
+                example: 20006
+          example:
+          - field: emailAddress
+            message: must not be null
+            code: 20002
+          - field: accountId
+            message: must match "^[a-zA-Z]{6}$"
+            code: 20006
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      description: This API uses Bearer Token Authorization Flow
+      bearerFormat: JWT
+    AppKey:
+      type: apiKey
+      in: header
+      name: appkey
+      description: This API needs an appKey as header
+x-explorer-enabled: false
+x-samples-languages:
+- curl
+- node
+- java
+- javascript
+- python
+- go

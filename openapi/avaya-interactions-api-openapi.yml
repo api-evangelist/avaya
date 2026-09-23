@@ -1,0 +1,389 @@
+openapi: 3.2.0
+info:
+  title: Transcription Interactions API
+  version: 1.0.0
+  description: '## Overview
+
+
+    These APIs allow you to programmatically manage conversation transcripts and create interactions in Avaya Infinity.'
+  contact:
+    name: Avaya API Team
+    url: https://developers.avayacloud.com/onecloud-ccaas
+    email: apiteam@avaya.com
+  license:
+    name: Avaya Software Development Kit (SDK) Software License Terms
+    url: http://support.avaya.com/css/P8/documents/101038288
+servers:
+- url: https://core.{customer-subdomain}.ec.avayacloud.com
+  description: Avaya Infinity Platform
+  variables:
+    customer-subdomain:
+      default: avaya1234
+      description: Your Infinity instance subdomain (e.g., avaya1234, acme-corp-prod)
+security:
+- BearerAuth: []
+tags:
+- name: Interactions
+paths:
+  /api/core/v4/interactions:
+    post:
+      summary: Create a new interaction
+      description: '## Overview
+
+
+        Creates a new interaction in Avaya Infinity. An interaction represents a single customer engagement across any communication channel (voice, email, chat, task, messaging). Use this API to programmatically initiate customer interactions.
+
+
+        ## Finding Your Queue ID
+
+
+        Queue IDs identify where interactions should be routed. You can find queue IDs:
+
+        - In the Infinity admin portal under Queue Management
+
+        - Through the Infinity Configuration API
+
+        - From your contact center administrator
+
+
+        **Queue ID Format:**
+
+        - Typically 26 characters starting with `003`
+
+        - Example: `003d011106e6b86d9559363043`
+
+
+        **To use this API:**
+
+
+        1. **Find your subdomain** from your Infinity portal URL
+
+        2. **Get your Bearer token** by following the Access Token API guide
+
+        3. **In the API explorer on the right:**
+
+        - Paste your Bearer token in the Credentials section
+
+        - Fill out the Body Parameters with your queue ID and communication type
+
+
+        ## Communication Types
+
+
+        **Supported commType values:**
+
+        - `voice` - Voice/phone interactions
+
+        - `email` - Email communications
+
+        - `chat` - Web chat conversations
+
+        - `task` - Task-based work items
+
+        - `messaging` - SMS, WhatsApp, etc.
+
+
+        **subCommType** provides additional classification:
+
+        - For `voice`: inbound, outbound, callback
+
+        - For `email`: inbound, outbound
+
+        - For `task`: other, case, work_item
+
+        - For `chat`: web, mobile
+
+        - For `messaging`: sms, whatsapp, facebook
+
+
+        ## Response Details
+
+
+        The API returns the created interaction with:
+
+        - **interactionId**: Unique identifier for this interaction
+
+        - **queueId**: Queue where the interaction was created
+
+        - **commType**: Communication type
+
+        - **status**: Current interaction status
+
+        - **createdAt**: Timestamp of creation
+
+
+        Use the returned `interactionId` for:
+
+        - Adding transcript messages
+
+        - Updating interaction data
+
+        - Tracking interaction status
+
+        - Retrieving interaction history
+
+
+        ## Common Use Cases
+
+
+        - Create callback requests from web forms
+
+        - Initiate outbound campaign interactions
+
+        - Generate task interactions from external systems
+
+        - Create email interactions from custom applications
+
+        - Start messaging conversations programmatically
+
+
+        ## Workflow Integration
+
+
+        After creating an interaction, you can:
+
+        1. Use the `interactionId` in workflow execution to associate workflows with this interaction
+
+        2. Add transcript messages to record conversation history
+
+        3. Update interaction variables with custom data
+
+        4. Route the interaction to agents based on skills
+
+
+        ## Additional Information
+
+
+        - Interactions are created in a pending state
+
+        - Authentication is required for all interaction operations
+
+        - Queue must exist and be active
+
+        - Rate limiting applies to prevent abuse'
+      operationId: createInteraction
+      tags:
+      - Interactions
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InteractionCreateRequest'
+            examples:
+              task_interaction:
+                summary: Create Task Interaction
+                description: 'Create a task-type interaction for work item processing.
+
+
+                  // queueId: The queue where this interaction will be created
+
+                  // commType: Communication channel type
+
+                  // subCommType: Additional classification of the communication
+
+                  '
+                value:
+                  queueId: 003d011106e6b86d9559363043
+                  commType: task
+                  subCommType: other
+              callback_request:
+                summary: Create Callback Request
+                description: Customer requests callback from web form
+                value:
+                  queueId: 003d011106e6b86d9559363043
+                  commType: voice
+                  subCommType: callback
+              email_interaction:
+                summary: Create Email Interaction
+                description: Initiate an email interaction for customer inquiry
+                value:
+                  queueId: 003d011106e6b86d9559363043
+                  commType: email
+                  subCommType: inbound
+              chat_interaction:
+                summary: Create Chat Interaction
+                description: Start a web chat conversation
+                value:
+                  queueId: 003d011106e6b86d9559363043
+                  commType: chat
+                  subCommType: web
+              messaging_interaction:
+                summary: Create Messaging Interaction
+                description: Initiate an SMS messaging interaction
+                value:
+                  queueId: 003d011106e6b86d9559363043
+                  commType: messaging
+                  subCommType: sms
+      responses:
+        '201':
+          description: Interaction created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  interactionId:
+                    type: string
+                    description: Unique identifier for the created interaction
+                    example: 004d011108a7f2b3c8e1d4f6a9
+                  queueId:
+                    type: string
+                    example: 003d011106e6b86d9559363043
+                  commType:
+                    type: string
+                    example: task
+                  subCommType:
+                    type: string
+                    example: other
+                  status:
+                    type: string
+                    example: pending
+                  createdAt:
+                    type: string
+                    format: date-time
+                    example: '2024-10-17T15:30:00.000Z'
+              examples:
+                success:
+                  summary: Successfully created interaction
+                  description: '**Response Fields:**
+
+
+                    - `interactionId` - Save this ID to reference the interaction later
+
+                    - `queueId` - Confirms the queue where interaction was created
+
+                    - `commType` - Communication type of the interaction
+
+                    - `status` - Current state (pending, active, completed)
+
+                    - `createdAt` - When the interaction was created
+
+
+                    **Next Steps:**
+
+
+                    Use the `interactionId` to:
+
+                    - Add transcript messages
+
+                    - Execute workflows with this interaction context
+
+                    - Update interaction variables
+
+                    - Query interaction status
+
+                    '
+                  value:
+                    interactionId: 004d011108a7f2b3c8e1d4f6a9
+                    queueId: 003d011106e6b86d9559363043
+                    commType: task
+                    subCommType: other
+                    status: pending
+                    createdAt: '2024-10-17T15:30:00.000Z'
+        '400':
+          description: Bad Request - Invalid parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                missing_queue:
+                  summary: Missing queue ID
+                  value:
+                    error: queueId is required
+                    message: Queue ID must be provided in the request body
+                invalid_commtype:
+                  summary: Invalid communication type
+                  value:
+                    error: Invalid commType
+                    message: 'commType must be one of: voice, email, chat, task, messaging'
+        '401':
+          description: Unauthorized - Invalid or missing authentication
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                unauthorized:
+                  summary: Authentication required
+                  value:
+                    error: Unauthorized
+                    message: Valid authentication credentials required
+        '404':
+          description: Not Found - Queue not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                queue_not_found:
+                  summary: Queue doesn't exist
+                  value:
+                    error: Queue not found
+                    message: No queue found with the specified ID
+        '500':
+          description: Internal Server Error - Unexpected server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                internal_error:
+                  summary: Server error
+                  value:
+                    error: Internal server error
+                    message: An unexpected error occurred while creating the interaction
+components:
+  schemas:
+    InteractionCreateRequest:
+      type: object
+      required:
+      - queueId
+      - commType
+      properties:
+        queueId:
+          type: string
+          description: Unique identifier of the queue where the interaction should be created
+          example: 003d011106e6b86d9559363043
+        commType:
+          type: string
+          enum:
+          - voice
+          - email
+          - chat
+          - task
+          - messaging
+          description: Communication type for the interaction
+          example: task
+        subCommType:
+          type: string
+          description: Sub-classification of the communication type
+          example: other
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+          description: A brief description of the error
+          example: Invalid interaction ID
+        message:
+          type: string
+          description: Detailed error message
+          example: The specified interaction ID does not exist or is invalid
+      required:
+      - error
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: 'JWT Bearer token authentication. Obtain your token from the authentication endpoint:
+
+        ```
+
+        POST https://core.{customer-subdomain}.ec.avayacloud.com/auth/realms/avaya/protocol/openid-connect/token
+
+        ```
+
+        '

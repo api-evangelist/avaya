@@ -1,7 +1,9 @@
 ---
 title: Avaya to support Model Context Protocol, collaborate with ...
 url: https://www.linkedin.com/posts/avaya_avaya-is-thrilled-to-share-that-the-avaya-activity-7353409534989635584-MN14
-date: '2026-05-25'
+published: ''
+date_basis: harvested
+harvested: '2026-05-25'
 query: '"Avaya" press release artificial intelligence'
 position: 5
 source: serpapi-google

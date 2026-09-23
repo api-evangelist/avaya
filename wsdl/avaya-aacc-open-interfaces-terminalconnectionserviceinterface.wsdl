@@ -1,0 +1,439 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<wsdl:definitions name="terminal_connection_service_interface" 
+	targetNamespace="http://www.nortel.com/soa/oi/cct/TerminalConnectionService"
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" 
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns:service="http://www.nortel.com/soa/oi/cct/TerminalConnectionService" 
+	xmlns:types="http://www.nortel.com/soa/oi/cct/types"
+	xmlns:exceptions="http://www.nortel.com/soa/oi/cct/faults" 
+	xmlns:local="http://www.nortel.com/soa/oi/cct/types/TerminalConnectionService">
+
+	<wsdl:import namespace="http://www.nortel.com/soa/oi/cct/faults" location="SessionServiceExceptions.wsdl" />
+
+	<wsdl:types>
+
+		<xsd:schema elementFormDefault="qualified" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+			targetNamespace="http://www.nortel.com/soa/oi/cct/types/TerminalConnectionService">
+
+			<xsd:import namespace="http://www.nortel.com/soa/oi/cct/types" schemaLocation="types.xsd"></xsd:import>
+
+			<xsd:complexType name="GenerateDTMFRequest">
+				<xsd:sequence>
+					<xsd:element name="ssoToken" type="types:ssoToken" />
+					<xsd:element name="terminalConnection" type="types:terminalConnection" />
+					<xsd:element name="digits" type="xsd:string" />
+				</xsd:sequence>
+			</xsd:complexType>
+
+			<xsd:complexType name="TerminalConnectionRequest">
+				<xsd:sequence>
+					<xsd:element name="ssoToken" type="types:ssoToken" />
+					<xsd:element name="terminalConnection" type="types:terminalConnection" />
+				</xsd:sequence>
+			</xsd:complexType>
+
+			<xsd:complexType name="TerminalResponse">
+				<xsd:sequence>
+					<xsd:element name="terminal" type="types:terminal" />
+				</xsd:sequence>
+			</xsd:complexType>
+
+			<xsd:complexType name="ContactResponse">
+				<xsd:sequence>
+					<xsd:element name="contact" type="types:contact" />
+				</xsd:sequence>
+			</xsd:complexType>
+
+			<xsd:complexType name="GetTerminalConnectionCapabilitiesResponse">
+				<xsd:sequence>
+					<xsd:element name="terminalConnectionCapabilities" type="types:terminalConnectionCapabilities" />
+				</xsd:sequence>
+			</xsd:complexType>
+
+			<xsd:complexType name="ConnectionResponse">
+				<xsd:sequence>
+					<xsd:element name="connection" type="types:connection" />
+				</xsd:sequence>
+			</xsd:complexType>
+
+			<xsd:complexType name="StateResponse">
+				<xsd:sequence>
+					<xsd:element name="stateInfo" type="types:stateInfo" />
+				</xsd:sequence>
+			</xsd:complexType>
+			
+			<xsd:complexType name="TerminalConnectionStateResponse">
+				<xsd:sequence>
+					<xsd:element name="terminalConnectionStateInfo" type="types:terminalConnectionStateInfo" />
+				</xsd:sequence>
+			</xsd:complexType>
+
+			<xsd:complexType name="GetContactTypeResponse">
+				<xsd:sequence>
+					<xsd:element name="contactType" type="xsd:string" />
+				</xsd:sequence>
+			</xsd:complexType>
+			
+			<!--  EoinMc TerminalConnectioncontact, for conference and transfer -->
+			<xsd:complexType name="TerminalConnectionAddressRequest">
+				<xsd:sequence>
+					<xsd:element name="ssoToken" type="types:ssoToken" />
+					<xsd:element name="terminalConnection" type="types:terminalConnection" />
+					<xsd:element name="destinationAddress" type="xsd:string"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			
+			<xsd:complexType name="TerminalConnectionContactRequest">
+				<xsd:sequence>
+					<xsd:element name="ssoToken" type="types:ssoToken" />
+					<xsd:element name="terminalConnection" type="types:terminalConnection" />
+					<xsd:element name="consultedContact"
+						type="types:contact" />
+				</xsd:sequence>
+			</xsd:complexType>
+			
+			<xsd:complexType name="ConsultRequest">
+				<xsd:sequence>
+					<xsd:element name="ssoToken" type="types:ssoToken" />
+					<xsd:element name="terminalConnection" type="types:terminalConnection" />
+					<xsd:element name="destinationAddress" type="xsd:string" />
+				</xsd:sequence>
+			</xsd:complexType>
+
+			<xsd:element name="GetVersionRequest" type="types:getVersionRequest" />
+			<xsd:element name="GetVersionResponse" type="types:getVersionResponse" />
+			
+			<xsd:element name="GenerateDTMFRequest" type="local:GenerateDTMFRequest" />
+
+			<xsd:element name="GetTerminalRequest" type="local:TerminalConnectionRequest" />
+			<xsd:element name="GetTerminalResponse" type="local:TerminalResponse" />
+
+			<xsd:element name="GetTerminalConnectionCapabilitiesRequest" type="local:TerminalConnectionRequest" />
+			<xsd:element name="GetTerminalConnectionCapabilitiesResponse" type="local:GetTerminalConnectionCapabilitiesResponse" />
+
+			<xsd:element name="GetContactRequest" type="local:TerminalConnectionRequest" />
+			<xsd:element name="GetContactResponse" type="local:ContactResponse" />
+
+			<xsd:element name="GetConferenceConsultContactRequest" type="local:TerminalConnectionRequest" />
+			<xsd:element name="GetConferenceConsultContactResponse" type="local:ContactResponse" />
+
+			<xsd:element name="GetConnectionRequest" type="local:TerminalConnectionRequest" />
+			<xsd:element name="GetConnectionResponse" type="local:ConnectionResponse" />
+
+			<xsd:element name="GetStateRequest" type="local:TerminalConnectionRequest" />
+			<xsd:element name="GetStateResponse" type="local:TerminalConnectionStateResponse" />
+
+			<xsd:element name="GetTransferConsultContactRequest" type="local:TerminalConnectionRequest" />
+			<xsd:element name="GetTransferConsultContactResponse" type="local:ContactResponse" />
+
+			<xsd:element name="GetConsultContactRequest" type="local:TerminalConnectionRequest" />
+			<xsd:element name="GetConsultContactResponse" type="local:ContactResponse" />
+
+			<xsd:element name="AnswerRequest" type="local:TerminalConnectionRequest" />
+			<xsd:element name="HoldRequest" type="local:TerminalConnectionRequest" />
+			<xsd:element name="UnholdRequest" type="local:TerminalConnectionRequest" />
+			<xsd:element name="GetContactTypeRequest" type="local:TerminalConnectionRequest" />
+
+			<xsd:element name="GetContactTypeResponse" type="local:GetContactTypeResponse" />
+			
+			<xsd:element name="InitiateConferenceRequest" type="local:TerminalConnectionAddressRequest"/>
+			<xsd:element name="InitiateSupervisedTransferRequest" type="local:TerminalConnectionAddressRequest"/>
+			<xsd:element name="CompleteSupervisedTransferRequest" type="local:TerminalConnectionContactRequest"/>
+			<xsd:element name="CompleteConferenceRequest" type="local:TerminalConnectionContactRequest"/>
+			<xsd:element name="InitiateConferenceResponse" type="local:ContactResponse"/>
+			<xsd:element name="InitiateSupervisedTransferResponse" type="local:ContactResponse"/>
+			<xsd:element name="BlindTransferRequest" type="local:TerminalConnectionAddressRequest"/>
+			<xsd:element name="ConsultRequest" type="local:ConsultRequest"/>
+			<xsd:element name="ConsultResponse" type="local:ContactResponse"/>
+			
+		</xsd:schema>
+	</wsdl:types>
+	
+	<wsdl:message name="GetVersionRequest">
+		<wsdl:part name="parameters" element="local:GetVersionRequest" />
+	</wsdl:message>
+	
+	<wsdl:message name="GetVersionResponse">
+		<wsdl:part name="response" element="local:GetVersionResponse" />
+	</wsdl:message>
+	
+	<wsdl:message name="GetTerminalRequest">
+		<wsdl:part name="parameters" element="local:GetTerminalRequest" />
+	</wsdl:message>
+	<wsdl:message name="GetTerminalResponse">
+		<wsdl:part name="response" element="local:GetTerminalResponse" />
+	</wsdl:message>
+
+	<wsdl:message name="GetConferenceConsultContactRequest">
+		<wsdl:part name="parameters" element="local:GetConferenceConsultContactRequest" />
+	</wsdl:message>
+	
+	<wsdl:message name="GetConferenceConsultContactResponse">
+		<wsdl:part name="response" element="local:GetConferenceConsultContactResponse" />
+	</wsdl:message>
+
+	<wsdl:message name="GetConsultContactRequest">
+		<wsdl:part name="parameters" element="local:GetConsultContactRequest" />
+	</wsdl:message>
+	<wsdl:message name="GetConsultContactResponse">
+		<wsdl:part name="response" element="local:GetConsultContactResponse" />
+	</wsdl:message>
+
+
+	<wsdl:message name="GetTerminalConnectionCapabilitiesRequest">
+		<wsdl:part name="parameters" element="local:GetTerminalConnectionCapabilitiesRequest" />
+	</wsdl:message>
+	<wsdl:message name="GetTerminalConnectionCapabilitiesResponse">
+		<wsdl:part name="response" element="local:GetTerminalConnectionCapabilitiesResponse" />
+	</wsdl:message>
+
+	<wsdl:message name="GetContactRequest">
+		<wsdl:part name="parameters" element="local:GetContactRequest" />
+	</wsdl:message>
+	<wsdl:message name="GetContactResponse">
+		<wsdl:part name="response" element="local:GetContactResponse" />
+	</wsdl:message>
+
+	<wsdl:message name="GetStateRequest">
+		<wsdl:part name="parameters" element="local:GetStateRequest" />
+	</wsdl:message>
+	<wsdl:message name="GetStateResponse">
+		<wsdl:part name="response" element="local:GetStateResponse" />
+	</wsdl:message>
+
+	<wsdl:message name="GetConnectionRequest">
+		<wsdl:part name="parameters" element="local:GetConnectionRequest" />
+	</wsdl:message>
+	<wsdl:message name="GetConnectionResponse">
+		<wsdl:part name="response" element="local:GetConnectionResponse" />
+	</wsdl:message>
+
+	<wsdl:message name="GetTransferConsultContactRequest">
+		<wsdl:part name="parameters" element="local:GetTransferConsultContactRequest" />
+	</wsdl:message>
+	<wsdl:message name="GetTransferConsultContactResponse">
+		<wsdl:part name="response" element="local:GetTransferConsultContactResponse" />
+	</wsdl:message>
+
+	<wsdl:message name="GenerateDTMFRequest">
+		<wsdl:part name="parameters" element="local:GenerateDTMFRequest" />
+	</wsdl:message>
+	<wsdl:message name="GenerateDTMFResponse" />
+
+	<wsdl:message name="AnswerRequest">
+		<wsdl:part name="parameters" element="local:AnswerRequest" />
+	</wsdl:message>
+	<wsdl:message name="AnswerResponse" />
+
+	<wsdl:message name="HoldRequest">
+		<wsdl:part name="parameters" element="local:HoldRequest" />
+	</wsdl:message>
+	<wsdl:message name="HoldResponse" />
+
+	<wsdl:message name="UnholdRequest">
+		<wsdl:part name="parameters" element="local:UnholdRequest" />
+	</wsdl:message>
+
+	<wsdl:message name="UnholdResponse" />
+
+	<wsdl:message name="GetContactTypeRequest">
+		<wsdl:part name="parameters" element="local:GetContactTypeRequest" />
+	</wsdl:message>
+
+	<wsdl:message name="GetContactTypeResponse">
+		<wsdl:part name="response" element="local:GetContactTypeResponse" />
+	</wsdl:message>
+	
+	<wsdl:message name="CompleteSupervisedTransferRequest">
+		<wsdl:part name="parameters" element="local:CompleteSupervisedTransferRequest" />
+	</wsdl:message>
+
+	<wsdl:message name="CompleteSupervisedTransferResponse" />
+
+	<wsdl:message name="InitiateSupervisedTransferRequest">
+		<wsdl:part name="parameters" element="local:InitiateSupervisedTransferRequest" />
+	</wsdl:message>
+
+	<wsdl:message name="InitiateSupervisedTransferResponse">
+		<wsdl:part name="result" element="local:InitiateSupervisedTransferResponse" />
+	</wsdl:message>
+	
+	<wsdl:message name="CompleteConferenceRequest">
+		<wsdl:part name="parameters" element="local:CompleteConferenceRequest" />
+	</wsdl:message>
+
+	<wsdl:message name="CompleteConferenceResponse" />
+
+	<wsdl:message name="InitiateConferenceRequest">
+		<wsdl:part name="parameters" element="local:InitiateConferenceRequest" />
+	</wsdl:message>
+
+	<wsdl:message name="InitiateConferenceResponse">
+		<wsdl:part name="result" element="local:InitiateConferenceResponse" />
+	</wsdl:message>
+	
+	<wsdl:message name="BlindTransferRequest">
+		<wsdl:part name="parameters" element="local:BlindTransferRequest" />
+	</wsdl:message>
+
+	<wsdl:message name="BlindTransferResponse">
+	</wsdl:message>
+	
+	<wsdl:message name="ConsultRequest">
+		<wsdl:part name="parameters" element="local:ConsultRequest" />
+	</wsdl:message>
+
+	<wsdl:message name="ConsultResponse">
+		<wsdl:part name="result" element="local:ConsultResponse" />
+	</wsdl:message>
+ 	
+ 
+	<wsdl:portType name="TerminalConnectionService">
+
+		<wsdl:operation name="GetVersion">
+			<wsdl:input message="service:GetVersionRequest" />
+			<wsdl:output message="service:GetVersionResponse" />
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="GetVersionException" message="exceptions:GetVersionException" />
+		</wsdl:operation>
+		
+		<wsdl:operation name="GetConferenceConsultContact">
+			<wsdl:input name="GetConferenceConsultContactRequest" message="service:GetConferenceConsultContactRequest" />
+			<wsdl:output name="GetConferenceConsultContactResponse" message="service:GetConferenceConsultContactResponse" />
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="GetConferenceConsultContactException" message="exceptions:GetConferenceConsultContactException" />
+		</wsdl:operation>
+
+		<wsdl:operation name="GetConsultContact">
+			<wsdl:input name="GetConsultContactRequest" message="service:GetConsultContactRequest" />
+			<wsdl:output name="GetConsultContactResponse" message="service:GetConsultContactResponse" />
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="GetConsultContactException" message="exceptions:GetConsultContactException" />
+		</wsdl:operation>
+
+		<wsdl:operation name="GetTerminalConnectionCapabilities">
+			<wsdl:input name="GetTerminalConnectionCapabilitiesRequest" message="service:GetTerminalConnectionCapabilitiesRequest" />
+			<wsdl:output name="GetTerminalConnectionCapabilitiesResponse" message="service:GetTerminalConnectionCapabilitiesResponse" />
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="GetTerminalConnectionCapabilitiesException" message="exceptions:GetTerminalConnectionCapabilitiesException" />
+		</wsdl:operation>
+
+		<wsdl:operation name="GetContact">
+			<wsdl:input name="GetContactRequest" message="service:GetContactRequest" />
+			<wsdl:output name="GetContactResponse" message="service:GetContactResponse" />
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="GetContactException" message="exceptions:GetContactException" />
+		</wsdl:operation>
+
+		<wsdl:operation name="GetState">
+			<wsdl:input name="GetStateRequest" message="service:GetStateRequest" />
+			<wsdl:output name="GetStateResponse" message="service:GetStateResponse" />
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="GetStateException" message="exceptions:GetStateException" />
+		</wsdl:operation>
+
+		<wsdl:operation name="GetConnection">
+			<wsdl:input name="GetConnectionRequest" message="service:GetConnectionRequest" />
+			<wsdl:output name="GetConnectionResponse" message="service:GetConnectionResponse" />
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="GetConnectionException" message="exceptions:GetConnectionException" />
+		</wsdl:operation>
+
+		<wsdl:operation name="GetTerminal">
+			<wsdl:input name="GetTerminalRequest" message="service:GetTerminalRequest" />
+			<wsdl:output name="GetTerminalResponse" message="service:GetTerminalResponse" />
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="GetTerminalException" message="exceptions:GetTerminalException" />
+		</wsdl:operation>
+
+		<wsdl:operation name="GetTransferConsultContact">
+			<wsdl:input name="GetTransferConsultContactRequest" message="service:GetTransferConsultContactRequest" />
+			<wsdl:output name="GetTransferConsultContactResponse" message="service:GetTransferConsultContactResponse" />
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="GetTransferConsultContactException" message="exceptions:GetTransferConsultContactException" />
+		</wsdl:operation>
+
+		<wsdl:operation name="Answer">
+			<wsdl:input name="AnswerRequest" message="service:AnswerRequest" />
+			<wsdl:output name="AnswerResponse" message="service:AnswerResponse" />
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="AnswerException" message="exceptions:AnswerException" />
+		</wsdl:operation>
+
+		<wsdl:operation name="Hold">
+			<wsdl:input name="HoldRequest" message="service:HoldRequest" />
+			<wsdl:output name="HoldResponse" message="service:HoldResponse" />
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="HoldException" message="exceptions:HoldException" />
+		</wsdl:operation>
+
+		<wsdl:operation name="Unhold">
+			<wsdl:input name="UnholdRequest" message="service:UnholdRequest" />
+			<wsdl:output name="UnholdResponse" message="service:UnholdResponse" />
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="UnholdException" message="exceptions:UnholdException" />
+		</wsdl:operation>
+
+		<wsdl:operation name="GenerateDTMF">
+			<wsdl:input name="GenerateDTMFRequest" message="service:GenerateDTMFRequest" />
+			<wsdl:output name="GenerateDTMFResponse" message="service:GenerateDTMFResponse" />
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="GenerateDTMFException" message="exceptions:GenerateDTMFException" />
+		</wsdl:operation>
+
+		<wsdl:operation name="GetContactType">
+			<wsdl:input name="GetContactTypeRequest" message="service:GetContactTypeRequest" />
+			<wsdl:output name="GetContactTypeResponse" message="service:GetContactTypeResponse" />
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="GetContactTypeException" message="exceptions:GetContactTypeException" />
+		</wsdl:operation>
+		
+		<!-- EoinMc added missing methods ,Transfer,SupervisedTransfer,Conference and Consult -->
+		<wsdl:operation name="BlindTransfer">
+			<wsdl:input name="BlindTransferRequest" message="service:BlindTransferRequest" />
+			<wsdl:output name="BlindTransferResponse" message="service:BlindTransferResponse" />
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="TransferException" message="exceptions:TransferException" />
+		</wsdl:operation>
+		
+		
+		<wsdl:operation name="Consult">
+			<wsdl:input name="ConsultRequest" message="service:ConsultRequest" />
+			<wsdl:output name="ConsultResponse" message="service:ConsultResponse" />
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="ConsultException" message="exceptions:ConsultException" />
+		</wsdl:operation>
+		
+		 
+		<wsdl:operation name="InitiateConference">
+			<wsdl:input name="InitiateConferenceRequest" message="service:InitiateConferenceRequest"></wsdl:input>
+			<wsdl:output name="InitiateConferenceResponse" message="service:InitiateConferenceResponse"></wsdl:output>
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="InitiateConferenceException" message="exceptions:InitiateConferenceException" />
+		</wsdl:operation>
+
+		<wsdl:operation name="CompleteConference">
+			<wsdl:input name="CompleteConferenceRequest" message="service:CompleteConferenceRequest"></wsdl:input>
+			<wsdl:output name="CompleteConferenceResponse" message="service:CompleteConferenceResponse"></wsdl:output>
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="CompleteConferenceException" message="exceptions:CompleteConferenceException" />
+		</wsdl:operation>
+
+		<wsdl:operation name="InitiateSupervisedTransfer">
+			<wsdl:input name="InitiateSupervisedTransferRequest" message="service:InitiateSupervisedTransferRequest"></wsdl:input>
+			<wsdl:output name="InitiateSupervisedTransferResponse" message="service:InitiateSupervisedTransferResponse"></wsdl:output>
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="InitiateSupervisedTransferException" message="exceptions:InitiateSupervisedTransferException" />
+		</wsdl:operation>
+
+		<wsdl:operation name="CompleteSupervisedTransfer">
+			<wsdl:input name="CompleteSupervisedTransferRequest" message="service:CompleteSupervisedTransferRequest"></wsdl:input>
+			<wsdl:output name="CompleteSupervisedTransferResponse" message="service:CompleteSupervisedTransferResponse"></wsdl:output>
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="CompleteSupervisedTransferException" message="exceptions:CompleteSupervisedTransferException" />
+		</wsdl:operation>
+
+	</wsdl:portType>
+
+</wsdl:definitions>

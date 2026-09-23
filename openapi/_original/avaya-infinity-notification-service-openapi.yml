@@ -1,0 +1,830 @@
+# x-archived-from: avaya-infinity-notification-service-openapi.yml
+# x-archived-on: 2026-09-16
+openapi: 3.0.3
+x-explorer-enabled: false
+x-samples-languages:
+- curl
+- node
+- java
+- javascript
+- python
+- go
+info:
+  title: Notification Service
+  description: The Notification API is used to manage subscriptions for the real-time notification of Agent & Interaction
+    events.
+  version: 1.0.0
+tags:
+- name: Subscriptions
+  description: 'Subscriptions can be created to register for streams of real-time event notifications.
+
+    '
+security:
+- {}
+- BearerAuth: []
+servers:
+- url: '{protocol}://{server}{basePath}'
+  description: Open API
+  variables:
+    protocol:
+      enum:
+      - https
+      default: https
+    server:
+      default: CHANGEME.avayacloud.com
+    basePath:
+      default: /api/notification-service/v1
+- url: '{protocol}://{server}:{port}'
+  description: Internal API
+  variables:
+    protocol:
+      enum:
+      - http
+      - https
+      default: https
+    server:
+      default: notification-service
+    port:
+      enum:
+      - '80'
+      - '443'
+      default: '443'
+paths:
+  /accounts/{accountId}/subscriptions:
+    parameters:
+    - $ref: '#/components/parameters/accountId'
+    post:
+      tags:
+      - Subscriptions
+      summary: Create Subscription
+      description: Create a new subscription for notification events
+      operationId: createSubscription
+      parameters:
+      - in: header
+        name: Authorization
+        schema:
+          type: string
+        required: false
+      requestBody:
+        description: Create a new Subscription
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateSubscription'
+            examples:
+              Create Agent & Interaction Webhook Subscription:
+                $ref: '#/components/examples/CreateAgentAndInteractionWebhookSubscription'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Subscription'
+              examples:
+                Agent & Interaction Webhook Subscription Response:
+                  $ref: '#/components/examples/AgentAndInteractionWebhookSubscriptionResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServer'
+      deprecated: false
+    get:
+      tags:
+      - Subscriptions
+      summary: List Subscriptions
+      description: Return a list of existing notification subscriptions
+      operationId: listSubscriptions
+      parameters:
+      - name: pageNumber
+        in: query
+        description: The page number of the records to retrieve. Default value is 1
+        required: false
+        schema:
+          type: integer
+          format: int32
+          example: 1
+          default: 1
+          minimum: 1
+      - name: pageSize
+        in: query
+        description: The max number of records to retrieve per page. Default value is 10, max value is 25.
+        required: false
+        schema:
+          type: integer
+          format: int32
+          example: 10
+          default: 10
+          minimum: 1
+          maximum: 25
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubscriptionPage'
+              examples:
+                default:
+                  $ref: '#/components/examples/SubscriptionPage'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServer'
+      deprecated: false
+  /accounts/{accountId}/subscriptions/{subscriptionId}:
+    parameters:
+    - $ref: '#/components/parameters/accountId'
+    - $ref: '#/components/parameters/subscriptionId'
+    get:
+      tags:
+      - Subscriptions
+      summary: Get Subscription
+      description: Returns a single notification subscription by it's subscriptionId
+      operationId: getSubscription
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Subscription'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServer'
+      deprecated: false
+    delete:
+      tags:
+      - Subscriptions
+      summary: Delete Subscription
+      description: Delete an existing subscription by subscriptionId
+      operationId: deleteSubscription
+      responses:
+        '204':
+          description: No Content
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServer'
+      deprecated: false
+    patch:
+      tags:
+      - Subscriptions
+      summary: Update Subscription
+      description: Partially updates a subscription's properties such as plan, status, or metadata
+      operationId: updateSubscription
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchSubscription'
+      responses:
+        '200':
+          description: Subscription updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Subscription'
+              examples:
+                Agent & Interaction Webhook Subscription Response:
+                  $ref: '#/components/examples/AgentAndInteractionWebhookSubscriptionResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServer'
+      deprecated: false
+  /accounts/{accountId}/subscriptions/{subscriptionId}:renew:
+    parameters:
+    - $ref: '#/components/parameters/accountId'
+    - $ref: '#/components/parameters/subscriptionId'
+    post:
+      tags:
+      - Subscriptions
+      summary: Renew Subscription
+      description: 'Renew an existing subscription by subscriptionId before it has expired. A subscription can be kept ACTIVE
+        indefinitely or this can be leveraged to change an INACTIVE subscription back to ACTIVE. The subscription expiration
+        is tied to the access token used to create it. You must renew the subscription via this API before the expiresIn time
+        has passed, otherwise the subscription will be set to INACTIVE.
+
+
+        For a ''WEBHOOK'' subscription, the authToken can also be updated at this time in case the token you verify has expired.'
+      operationId: renewSubscription
+      parameters:
+      - in: header
+        name: Authorization
+        schema:
+          type: string
+        required: false
+      requestBody:
+        description: Renew an existing subscription and update the authToken
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RenewSubscription'
+            examples:
+              Renew Susbscription & Update authToken:
+                $ref: '#/components/examples/RenewSubscriptionAndAuthToken'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Subscription'
+              examples:
+                default:
+                  $ref: '#/components/examples/AgentAndInteractionWebhookSubscriptionResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServer'
+      deprecated: false
+components:
+  parameters:
+    accountId:
+      name: accountId
+      description: The unique 26 character internal id that represents the customer account.
+      required: true
+      in: path
+      schema:
+        type: string
+        minLength: 26
+        maxLength: 26
+        pattern: ^[0-9a-zA-Z]{26}$
+        example: 001d01022054849399088a81ad
+    subscriptionId:
+      name: subscriptionId
+      description: The unique 36 character internal id that represents the subscription.
+      required: true
+      in: path
+      schema:
+        type: string
+        minLength: 36
+        maxLength: 36
+        pattern: ^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}$
+        example: fdbec917-e76e-4645-8120-4eac46f29487
+  responses:
+    BadRequest:
+      description: Constraint Violation
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorConstraintViolation'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorUnauthorized'
+    Forbidden:
+      description: Forbidden
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorForbidden'
+    NotFound:
+      description: Not Found
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorNotFound'
+    InternalServer:
+      description: Internal Server Error
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorInternalServerError'
+  schemas:
+    CreateSubscription:
+      type: object
+      description: Request payload for creating a subscription
+      required:
+      - family
+      - events
+      - transport
+      properties:
+        family:
+          $ref: '#/components/schemas/Family'
+        events:
+          type: array
+          minItems: 1
+          maxItems: 25
+          description: The collection of events to filter on within the chosen family. To receive all events associated with
+            a family then specify 'ALL' here. Event types vary depending on family selected, see developers guide for more
+            details on the events for each family.
+          example:
+          - ALL
+          items:
+            type: string
+            minLength: 1
+            maxLength: 256
+        transport:
+          $ref: '#/components/schemas/Transport'
+    SubscriptionResponse:
+      type: object
+      description: Request payload for creating a subscription
+      required:
+      - family
+      - events
+      - transport
+      properties:
+        family:
+          $ref: '#/components/schemas/Family'
+        events:
+          type: array
+          minItems: 1
+          maxItems: 25
+          description: The collection of events to filter on within the chosen family. To receive all events associated with
+            a family then specify 'ALL' here. Event types vary depending on family selected, see developers guide for more
+            details on the events for each family.
+          example:
+          - ALL
+          items:
+            type: string
+            minLength: 1
+            maxLength: 256
+        transport:
+          $ref: '#/components/schemas/TransportResponse'
+    RenewSubscription:
+      type: object
+      description: Request payload for renewing a subscription
+      required:
+      - transport
+      properties:
+        transport:
+          $ref: '#/components/schemas/RenewTransport'
+    Family:
+      type: array
+      description: The families of events the subscription applies to. Maximum of 3.
+      maxItems: 3
+      items:
+        type: string
+        enum:
+        - AGENT
+        - INTERACTION
+        - QUEUE
+        - ALL
+        minLength: 1
+      oneOf:
+      - items:
+          enum:
+          - ALL
+        minItems: 1
+        maxItems: 1
+      - items:
+          not:
+            enum:
+            - ALL
+    Transport:
+      type: object
+      description: Transport settings for the subscription.
+      required:
+      - type
+      - method
+      - endpoint
+      - authToken
+      - authTokenHeader
+      properties:
+        type:
+          type: string
+          description: The transport type for which notifications should be received.
+          enum:
+          - WEBHOOK
+          default: WEBHOOK
+          minLength: 1
+        method:
+          type: string
+          description: HTTP method used for the transport.
+          enum:
+          - POST
+          - PUT
+          default: POST
+        endpoint:
+          type: string
+          maxLength: 2048
+          description: The endpoint (URL) for the subscription. *Required* for 'WEBHOOK' subscription.
+        authToken:
+          type: string
+          minLength: 1
+          maxLength: 256
+          description: Optional authentication token for verification of an incoming 'WEBHOOK'. Must be used in conjunction
+            with the authTokenHeader field in order for the server to provide this in a 'WEBHOOK'.
+        authTokenHeader:
+          type: string
+          minLength: 1
+          maxLength: 256
+          description: Optional authentication token header name. Must be used in conjunction with the authToken field in
+            order for the server to provide this in a 'WEBHOOK'.
+          default: auth-token
+      oneOf:
+      - required:
+        - endpoint
+        properties:
+          type:
+            enum:
+            - WEBHOOK
+          endpoint:
+            format: uri
+    TransportResponse:
+      type: object
+      description: Transport settings for the subscription.
+      required:
+      - type
+      properties:
+        type:
+          type: string
+          description: The transport type for which notifications should be received.
+          enum:
+          - WEBHOOK
+          default: WEBHOOK
+        method:
+          type: string
+          description: HTTP method used for the transport.
+          enum:
+          - POST
+          - PUT
+        endpoint:
+          type: string
+          maxLength: 2048
+          description: The endpoint (URL) for the subscription. *Required* for 'WEBHOOK' subscription.
+        authToken:
+          type: string
+          minLength: 0
+          maxLength: 256
+          description: Optional authentication token for verification of an incoming 'WEBHOOK'. Must be used in conjunction
+            with the authTokenHeader field in order for the server to provide this in a 'WEBHOOK'.
+        authTokenHeader:
+          type: string
+          minLength: 0
+          maxLength: 256
+          description: Optional authentication token header name. Must be used in conjunction with the authToken field in
+            order for the server to provide this in a 'WEBHOOK'.
+          default: auth-token
+    RenewTransport:
+      type: object
+      description: Transport settings for the subscription renew.
+      required:
+      - authToken
+      properties:
+        authToken:
+          type: string
+          minLength: 0
+          maxLength: 256
+          description: Optional authentication token for verification of an incoming 'WEBHOOK'. Must be used in conjunction
+            with the authTokenHeader field in order for the server to provide this in a 'WEBHOOK'.
+    Subscription:
+      allOf:
+      - type: object
+        description: Subscription details of a successful response
+        properties:
+          subscriptionId:
+            type: string
+            minLength: 36
+            maxLength: 36
+            pattern: ^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}$
+            description: The unique 36 character internal id that represents the subscription.
+            example: fdbec917-e76e-4645-8120-4eac46f29487
+          createdAt:
+            type: string
+            description: The datetime in ISO 8601 format that the subscription was created.
+            format: date-time
+            example: '2020-08-01T14:25:23.162Z'
+          expiresAt:
+            type: string
+            description: The datetime in ISO 8601 format that the subscription expires at.
+            format: date-time
+            example: '2020-08-08T14:25:23.177Z'
+          expiresIn:
+            type: integer
+            description: The number of seconds remaining before the subscription expires.
+            format: int64
+            example: 900
+          status:
+            type: string
+            enum:
+            - ACTIVE
+            - INACTIVE
+            - PENDING
+            minLength: 1
+            maxLength: 256
+            readOnly: true
+            description: Indicator for the status of the subscription whether ACTIVE, INACTIVE or PENDING.
+            example: ACTIVE
+      - $ref: '#/components/schemas/SubscriptionResponse'
+    PatchSubscription:
+      type: object
+      description: Request payload for updating a subscription
+      properties:
+        family:
+          $ref: '#/components/schemas/Family'
+        events:
+          type: array
+          minItems: 1
+          maxItems: 25
+          description: Updated list of events to filter on. Use 'ALL' to receive all events for the selected family.
+          example:
+          - ALL
+          items:
+            type: string
+            minLength: 1
+            maxLength: 256
+        transport:
+          $ref: '#/components/schemas/Transport'
+    SubscriptionPage:
+      type: object
+      description: A page containing the current list of subscriptions with links to the previous and next pages.
+      properties:
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+        subscriptions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Subscription'
+        links:
+          $ref: '#/components/schemas/Links'
+    Problem:
+      type: object
+      description: '<b>Problem Detail</b> as a way to carry machine-readable details of errors in a HTTP response to avoid
+        the need to define new error response formats for HTTP APIs <a href="https://tools.ietf.org/html/rfc7807">RFC 7807</a>
+
+        '
+      required:
+      - type
+      - title
+      - status
+      additionalProperties: false
+      properties:
+        type:
+          type: string
+          format: uri
+          description: 'An absolute URI that identifies the problem type. When dereferenced, it SHOULD provide human-readable
+            documentation for the problem type (e.g., using HTML).
+
+            '
+          default: about:blank
+          example: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#constraint-violation
+        title:
+          type: string
+          description: 'A short, summary of the problem type. Written in english and readable for engineers (usually not suited
+            for non technical stakeholders and not localized).
+
+            '
+          example: Service Unavailable
+          nullable: true
+        status:
+          type: integer
+          format: int32
+          description: 'The HTTP status code generated by the origin server for this occurrence of the problem.
+
+            '
+          minimum: 100
+          maximum: 600
+          exclusiveMaximum: true
+          example: 503
+          nullable: true
+        detail:
+          type: string
+          description: 'A human readable explanation specific to this occurrence of the problem.
+
+            '
+          example: Connection to database timed out
+          nullable: true
+        instance:
+          type: string
+          format: uri
+          description: 'An absolute URI that identifies the specific occurrence of the problem. It may or may not yield further
+            information if dereferenced.
+
+            '
+          nullable: true
+        violations:
+          type: array
+          description: 'A list of violations that occurred as a result of invalid data provided as part of a request.
+
+            '
+          nullable: true
+          items:
+            type: object
+            properties:
+              field:
+                type: string
+                description: 'The name of the field in the request that caused the violation. This can be the name of a path
+                  parameter, query parameter, or a field within the request body.
+
+                  '
+                example: accountId
+              message:
+                type: string
+                description: 'A human readable explanation specific to this occurrence of the violation.
+
+                  '
+                example: must match "^[a-zA-Z]{6}$"
+              code:
+                type: integer
+                format: int32
+                description: 'The violation code generated by the server for this occurrence of the violation. Use this code
+                  when implementing any error handling logic instead of the message, as the message can change.
+
+                  '
+                example: 20006
+          example:
+          - field: emailAddress
+            message: must not be null
+            code: 20002
+          - field: accountId
+            message: must match "^[a-zA-Z]{6}$"
+            code: 20006
+    Pagination:
+      type: object
+      properties:
+        pageNumber:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 1000
+          description: The current page number.
+        pageSize:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 25
+          description: The max number of records that can be retrieved on this page.
+        total:
+          type: integer
+          format: int32
+          description: The total number of records.
+        totalPages:
+          type: integer
+          format: int32
+          description: The total number of pages available.
+    Links:
+      type: object
+      properties:
+        prev:
+          type: string
+          description: URL of the previous page. Blank if currently on the first page.
+        next:
+          type: string
+          description: URL of the next page. Blank if currently on the last page.
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      description: This API uses Bearer Token Authorization Flow
+      bearerFormat: JWT
+  examples:
+    CreateAgentAndInteractionWebhookSubscription:
+      description: Create Agent & Interaction Webhook Subscription
+      value:
+        family:
+        - AGENT
+        - INTERACTION
+        events:
+        - Agent.LoggedIn
+        - Agent.LoggedOut
+        - Agent.Ready
+        - Agent.NotReady
+        - Interaction.Created
+        - Interaction.Completed
+        transport:
+          type: WEBHOOK
+          method: POST
+          endpoint: https://webhook.site/ccc61bd0-a607-4ba0-b891-a9d7484d6196
+          authToken: eyJ0eXAiOiJKV1QiLCJub25jZSI6Ildp...
+          authTokenHeader: my-custom-header
+    RenewSubscriptionAndAuthToken:
+      description: Renew Subscription and authToken
+      value:
+        transport:
+          authToken: eyJ0eXAiOiJKV1QiLCJub25jZSI6Ildp...
+    AgentAndInteractionWebhookSubscriptionResponse:
+      description: Subscription Response
+      value:
+        subscriptionId: fdbec917-e76e-4645-8120-4eac46f29487
+        createdAt: '2020-08-01T14:25:23.162Z'
+        expiresAt: '2020-08-08T14:25:23.177Z'
+        expiresIn: 900
+        status: ACTIVE
+        family:
+        - AGENT
+        - INTERACTION
+        events:
+        - Agent.LoggedIn
+        - Agent.LoggedOut
+        - Agent.Ready
+        - Agent.NotReady
+        - Interaction.Created
+        - Interaction.Completed
+        transport:
+          type: WEBHOOK
+          method: POST
+          endpoint: https://webhook.site/fdbec917-e76e-4645-8120-4eac46f29487
+          authToken: eyJ0eXAiOiJKV1QiLCJub25jZSI6Ildp...
+          authTokenHeader: my-custom-header
+    SubscriptionPage:
+      value:
+        pagination:
+          pageNumber: 2
+          pageSize: 20
+          total: 60
+        subscriptions:
+        - subscriptionId: fdbec917-e76e-4645-8120-4eac46f29487
+          createdAt: '2020-08-01T14:25:23.162Z'
+          expiresAt: '2020-08-08T14:25:23.177Z'
+          expiresIn: 900
+          status: ACTIVE
+          family: AGENT
+          events:
+          - ALL
+          transport:
+            type: WEBHOOK
+            method: POST
+            endpoint: https://webhook.site/ccc61bd0-a607-4ba0-b891-a9d7484d6196
+            authToken: eyJ0eXAiOiJKV1QiLCJub25jZSI6Ildp...
+            authTokenHeader: my-custom-header
+        links:
+          prev: /api/notification-service/v1/accounts/001d01022054849399088a81ad/subscriptions?pageNumber=1&pageSize=20
+          next: /api/notification-service/v1/accounts/001d01022054849399088a81ad/subscriptions?pageNumber=3&pageSize=20
+    ErrorConstraintViolation:
+      description: Constraint Violation
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#constraint-violation
+        title: Constraint Violation
+        status: 400
+        detail: A problem that indicates a syntactically correct, yet semantically illegal request. The Server can not process
+          this request until the client resolves the semantic errors described in the violations section.
+        violations:
+        - field: family
+          message: must not be null
+    ErrorUnauthorized:
+      description: Unauthorized
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#unauthorized
+        title: Unauthorized
+        status: 401
+        detail: This operation requires authentication. See https://developers.avayacloud.com/onecloud-ccaas/docs/how-to-authenticate-with-ccaas-apis
+    ErrorForbidden:
+      description: Forbidden
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#forbidden
+        title: Forbidden
+        status: 403
+        detail: According to the access control policy the current user and/or accountId does not have permission to access
+          this resource.
+    ErrorNotFound:
+      description: Not Found
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#resource-not-found
+        title: Resource Not Found
+        status: 404
+        detail: Resource not found.
+    ErrorInternalServerError:
+      description: Server Error
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#server-error
+        title: Server Error
+        status: 500
+        detail: An internal server error was encountered.

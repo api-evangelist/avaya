@@ -1,0 +1,717 @@
+openapi: 3.2.0
+info:
+  title: Admin - User Resource Partition API
+  description: 'The User APIs are use to create, update and retrieve information about User and Profiles.
+
+
+    The Bulk User APIs are use to perform operations on users and jobs in bulk.
+
+    User Services support add, update, delete users in bulk and delete multiple jobs.
+
+
+    User Services will support multiple ways to provision Users/Agents
+
+    1. Programmatic Interface (Rest APIs)
+
+    2. User Interface'
+  contact:
+    name: Avaya API Team
+    url: https://developers.avayacloud.com/onecloud-ccaas
+    email: apiteam@avaya.com
+  license:
+    name: Avaya Software Development Kit (SDK) Software License Terms
+    url: http://support.avaya.com/css/P8/documents/101038288
+  version: 1.0.2
+servers:
+- url: '{protocol}://{server}:{port}{basePath}'
+  description: Open API
+  variables:
+    protocol:
+      enum:
+      - https
+      default: https
+    server:
+      default: HOST-REGION.api.avayacloud.com
+    port:
+      enum:
+      - '443'
+      default: '443'
+    basePath:
+      default: /api/admin/user/v1
+security:
+- {}
+- BearerAuth: []
+  AppKey: []
+tags:
+- name: Resource Partition
+  description: 'Resource Partitions are grouping of any resources like CLID which are used while making outgoing communication.
+
+    These resource partitions ultimately assigned to the user. This will help to provide access of specific resources to the user.'
+paths:
+  /accounts/{accountId}/resource-partitions:
+    get:
+      tags:
+      - Resource Partition
+      summary: List Resource Partitions
+      description: '**This API requires the Account Administrator role.**
+
+
+        Lists all of the resource partitions for an account.'
+      operationId: listResourcePartitions
+      parameters:
+      - $ref: '#/components/parameters/accountId'
+      - $ref: '#/components/parameters/pageNumber'
+      - name: pageSize
+        in: query
+        description: 'The max number of records to retrieve per page. Default value is 10.
+
+
+          Any value like 10, 20, 30 .. is allowed.
+
+
+          Values that exceed the maximum will result in a 400 Bad Request being returned.
+
+          '
+        required: false
+        schema:
+          type: integer
+          format: int32
+          example: 10
+          default: 10
+          minimum: 10
+          maximum: 50
+      - name: filter
+        in: query
+        required: false
+        description: "Specifies details of a row filter.\n\nThe possible fields that can be filtered on are:\n  * name\n\nThe allowed format:\n  - Begins with the column name to be filtered, followed by a colon, (This will be used as a Contains operator.) then:\n    - Either an exact string to match, or\n    - A string expression including the * wildcard character.\n      - :{PREFIX}* will be used to find out word start with.\n      - :*{POSTFIX} will be used to find out word end with\n      - : will be used to match exact word\n  - Begin with column name to be filtered, followed by a = operator. (this will be used to match exact string)\n"
+        schema:
+          type: string
+          maxLength: 255
+        examples:
+          exact:
+            description: Example of filtering based on an exact string.
+            value: name=Sales
+          prefix:
+            description: Example of filtering based on a prefix string.
+            value: name:Sales*
+          postfix:
+            description: Example of filtering based on a postfix string.
+            value: name:*Sales
+      - name: orderBy
+        in: query
+        required: false
+        description: "Field name on which ordering needs to be performed. The default order is ascending.\n\nThe possible fields that can be ordered on are:\n  * name\n\nField Names are case-sensitive (should be written as it is in description)\n"
+        schema:
+          type: string
+          maxLength: 255
+        examples:
+          ascending:
+            value: name
+          descending:
+            value: name desc
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourcePartitionsPage'
+              examples:
+                ResourcePartitionsPage:
+                  $ref: '#/components/examples/ResourcePartitionsPage'
+        '400':
+          $ref: '#/components/responses/ErrorConstraintViolation'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServer'
+    post:
+      tags:
+      - Resource Partition
+      summary: Create Resource Partition
+      description: '**This API requires the Account Administrator role.**
+
+
+        Creates an resource partition. Resource Partition can be created with one or more type.
+
+        The following fields must be unique otherwise a `HTTP 409 Conflcit` will be returned:
+
+        * `name`'
+      operationId: createResourcePartition
+      parameters:
+      - $ref: '#/components/parameters/accountId'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ResourcePartition'
+            examples:
+              ResourcePartition:
+                $ref: '#/components/examples/ResourcePartitionWrite'
+        description: Resource Partition
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourcePartition'
+              examples:
+                ResourcePartition:
+                  $ref: '#/components/examples/ResourcePartitionRead'
+        '400':
+          $ref: '#/components/responses/ErrorConstraintViolation'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/ResourcePartitionNameExists'
+        '500':
+          $ref: '#/components/responses/InternalServer'
+  /accounts/{accountId}/resource-partitions/{resourcePartitionId}:
+    get:
+      tags:
+      - Resource Partition
+      summary: Get Resource Partition
+      description: '**This API requires the Account Administrator role.**
+
+
+        Gets an resource partition.'
+      operationId: getResourcePartition
+      parameters:
+      - $ref: '#/components/parameters/accountId'
+      - $ref: '#/components/parameters/resourcePartitionId'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourcePartition'
+              examples:
+                ResourcePartition:
+                  $ref: '#/components/examples/ResourcePartitionRead'
+        '400':
+          $ref: '#/components/responses/ErrorConstraintViolation'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServer'
+    put:
+      tags:
+      - Resource Partition
+      summary: Update Resource Partition
+      description: '**This API requires the Account Administrator role.**
+
+
+        Updates an resource partition.
+
+
+        The following fields must be unique otherwise a `HTTP 409 Conflcit` will be returned:
+
+        * `name`
+
+
+        This operation will clear the value stored for any fields not present in the request.
+
+        For example, to remove a feature such as `voice` from a user you should omit the
+
+        `voice` field in the request. The same behavior applies to every field in the request.'
+      operationId: updateResourcePartition
+      parameters:
+      - $ref: '#/components/parameters/accountId'
+      - $ref: '#/components/parameters/resourcePartitionId'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ResourcePartition'
+            examples:
+              ResourcePartition:
+                $ref: '#/components/examples/ResourcePartitionWrite'
+        description: Resource Partition
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourcePartition'
+              examples:
+                ResourcePartition:
+                  $ref: '#/components/examples/ResourcePartitionRead'
+        '400':
+          $ref: '#/components/responses/ErrorConstraintViolation'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/ResourcePartitionNameExists'
+        '500':
+          $ref: '#/components/responses/InternalServer'
+    delete:
+      tags:
+      - Resource Partition
+      summary: Delete Resource Partition
+      description: '**This API requires the Account Administrator role.**
+
+
+        Deletes a Resource partition.'
+      operationId: deleteResourcePartition
+      parameters:
+      - $ref: '#/components/parameters/accountId'
+      - $ref: '#/components/parameters/resourcePartitionId'
+      responses:
+        '204':
+          description: No Content
+        '400':
+          $ref: '#/components/responses/ErrorConstraintViolation'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServer'
+  /accounts/{accountId}/resource-partitions/{resourceType}/{resourceId}:
+    delete:
+      tags:
+      - Resource Partition
+      summary: Delete Resource Id
+      description: Deletes a resource Id
+      operationId: deleteResourceId
+      parameters:
+      - $ref: '#/components/parameters/accountId'
+      - $ref: '#/components/parameters/resourceType'
+      - $ref: '#/components/parameters/resourceId'
+      responses:
+        '204':
+          description: No Content
+        '400':
+          $ref: '#/components/responses/ErrorConstraintViolation'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServer'
+components:
+  examples:
+    ErrorForbidden:
+      description: Forbidden
+      value:
+        type: https://developers.avayacloud.com/avaya-experience-platform/docs/error-handling#forbidden
+        title: Forbidden
+        status: 403
+        detail: According to the access control policy the current user and/or accountId does not have permission to access this resource.
+    ErrorConstraintViolation:
+      description: Constraint Violation
+      value:
+        type: https://developers.avayacloud.com/avaya-experience-platform/docs/error-handling#constraint-violation
+        title: Constraint Violation
+        status: 400
+        detail: A problem that indicates a syntactically correct, yet semantically illegal request. The Server can not process this request until the client resolves the semantic errors described in the violations section.
+        violations:
+        - field: accountId
+          message: must match "^[a-zA-Z]{6}$"
+          code: 20006
+    ErrorNotFound:
+      description: Not Found
+      value:
+        type: https://developers.avayacloud.com/avaya-experience-platform/docs/error-handling#resource-not-found
+        title: Resource Not Found
+        status: 404
+        detail: Either there is no API method associated with the URL path of the request, or the request refers to one or more resources that were not found.
+    ResourcePartitionsPage:
+      description: Paginated resource partition Data
+      value:
+        pagination:
+          pageNumber: 2
+          pageSize: 10
+          total: 45
+        resourcePartitions:
+        - id: 96803a3a-3dfb-4606-ae79-fd0fe0be3e64
+          name: Sales resource partition
+          description: Sales resource partition with CLID
+          resources:
+          - type: CALLER_ID
+            resourceIds:
+            - 620bbb28-7112-433a-af59-17ee0f15a247
+            - 07d2c0a3-f05c-47e7-a86e-51148d3d4fd4
+        links:
+        - prev: /api/admin/user/v1/accounts/ASDJGE/resource-partitions?pageNumber=1&pageSize=10
+          next: /api/admin/user/v1/accounts/ASDJGE/resource-partitions?pageNumber=3&pageSize=10
+    ErrorUnauthorized:
+      description: Unauthorized
+      value:
+        type: https://developers.avayacloud.com/avaya-experience-platform/docs/error-handling#unauthorized
+        title: Unauthorized
+        status: 401
+        detail: This operation requires authentication. See https://developers.avayacloud.com/avaya-experience-platform/docs/how-to-authenticate-with-ccaas-apis
+    ResourcePartitionRead:
+      description: resource partition
+      value:
+        id: 96803a3a-3dfb-4606-ae79-fd0fe0be3e64
+        name: Sales resource partition
+        description: Sales resource partition with CLID
+        resources:
+        - type: CALLER_ID
+          resourceIds:
+          - 620bbb28-7112-433a-af59-17ee0f15a247
+          - 07d2c0a3-f05c-47e7-a86e-51148d3d4fd4
+    ErrorResourcePartitionNameExists:
+      description: Constraint Violation
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#conflict
+        title: Conflict
+        status: 409
+        detail: A resource with the same unique constraint values already exists.
+        violations:
+        - field: name
+          message: A resource partition with this name already exists
+    ResourcePartitionWrite:
+      description: resource partition
+      value:
+        name: Sales resource partition
+        description: Sales resource partition with CLID
+        resources:
+        - type: CALLER_ID
+          resourceIds:
+          - 620bbb28-7112-433a-af59-17ee0f15a247
+          - 07d2c0a3-f05c-47e7-a86e-51148d3d4fd4
+    ErrorInternalServerError:
+      description: Server Error
+      value:
+        type: https://developers.avayacloud.com/avaya-experience-platform/docs/error-handling#server-error
+        title: Server Error
+        status: 500
+        detail: An internal server error was encountered.
+  responses:
+    NotFound:
+      description: Not Found
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorNotFound'
+    ResourcePartitionNameExists:
+      description: Conflict
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorResourcePartitionNameExists'
+    InternalServer:
+      description: Request processing failed
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorInternalServerError'
+    ErrorConstraintViolation:
+      description: Constraint Violation
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorConstraintViolation'
+    Forbidden:
+      description: Forbidden
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorForbidden'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorUnauthorized'
+  schemas:
+    ResourcePartitionsPage:
+      description: Paginated resource partition Data
+      type: object
+      properties:
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+        resourcePartitions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResourcePartition'
+        links:
+          allOf:
+          - $ref: '#/components/schemas/Links'
+          example:
+            prev: /api/admin/user/v1/accounts/ASDJGE/resource-partitions?pageNumber=1&pageSize=10
+            next: /api/admin/user/v1/accounts/ASDJGE/resource-partitions?pageNumber=3&pageSize=10
+    Links:
+      type: object
+      properties:
+        prev:
+          type: string
+          default: ''
+          description: URL of the previous page. Blank if currently on the first page.
+        next:
+          type: string
+          default: ''
+          description: URL of the next page. Blank if currently on the last page.
+    ResourcePartitionResource:
+      description: Resource partition Resource information
+      type: object
+      properties:
+        resourceIds:
+          type: array
+          maxItems: 100
+          description: List of the resources Id assigned to the resource partition
+          items:
+            description: 'The unique id that represents the resource Id.It could be any unique id like UUID/number.  To get more details about resources based on type invoke following APIs  CALLER_ID : /api/admin/voice/v1/accounts/{accountId}/phone-numbers/{resourceId}'
+            type: string
+            maxLength: 100
+          example:
+          - a8b6d39c-53c5-4d94-a640-c28bee987ed7
+          - opl6d39c-78ui-4d94-qqqq-c28bee987ed7
+        type:
+          type: string
+          enum:
+          - CALLER_ID
+          description: Information about Resource
+          example: CALLER_ID
+    Pagination:
+      type: object
+      properties:
+        pageNumber:
+          type: integer
+          description: The current page number.
+          example: 2
+        pageSize:
+          type: integer
+          description: The max number of records that can be retrieved on this page.
+          example: 10
+        total:
+          type: integer
+          description: The total number of records.
+          example: 100
+    ResourcePartition:
+      description: resource partition information
+      type: object
+      required:
+      - name
+      properties:
+        id:
+          type: string
+          description: Unique Id of the resource partition
+          readOnly: true
+          example: c8c2909d-75e9-484a-94c0-b7e8d29771fe
+          minLength: 36
+          maxLength: 36
+          pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
+        name:
+          type: string
+          example: Sales resource partition
+          minLength: 2
+          maxLength: 255
+          pattern: ^[a-zA-Z\p{L}0-9]+([ ]*[a-zA-Z\p{L}0-9-\_\*\=\+\$\:\;\&\~\,\?\%\!\|\{\}\`\.\']+)*$
+          description: Name of the resource partition
+        description:
+          type: string
+          example: Sales resource partition with Caller ID
+          minLength: 5
+          maxLength: 1024
+          description: Information about resource partition
+        resources:
+          type: array
+          maxItems: 100
+          description: List of the different type of resources assigned to the resource partition
+          items:
+            $ref: '#/components/schemas/ResourcePartitionResource'
+    Problem:
+      type: object
+      description: '<b>Problem Detail</b> as a way to carry machine-readable details of errors in a HTTP response to avoid the need to define new error response formats for HTTP APIs <a href="https://tools.ietf.org/html/rfc7807">RFC 7807</a>
+
+        '
+      properties:
+        type:
+          type: string
+          format: uri
+          description: 'An absolute URI that identifies the problem type. When dereferenced, it SHOULD provide human-readable documentation for the problem type (e.g., using HTML).
+
+            '
+          default: about:blank
+          example: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#constraint-violation
+        title:
+          type:
+          - string
+          - 'null'
+          description: 'A short, summary of the problem type. Written in english and readable for engineers (usually not suited for non technical stakeholders and not localized).
+
+            '
+          example: Service Unavailable
+        status:
+          type:
+          - integer
+          - 'null'
+          format: int32
+          description: 'The HTTP status code generated by the origin server for this occurrence of the problem.
+
+            '
+          minimum: 100
+          example: 503
+          exclusiveMaximum: 600
+        detail:
+          type:
+          - string
+          - 'null'
+          description: 'A human readable explanation specific to this occurrence of the problem.
+
+            '
+          example: Connection to database timed out
+        instance:
+          type:
+          - string
+          - 'null'
+          format: uri
+          description: 'An absolute URI that identifies the specific occurrence of the problem. It may or may not yield further information if dereferenced.
+
+            '
+        violations:
+          type:
+          - array
+          - 'null'
+          description: 'A list of violations that occurred as a result of invalid data provided as part of a request.
+
+            '
+          items:
+            type: object
+            properties:
+              field:
+                type: string
+                description: 'The name of the field in the request that caused the violation. This can be the name of a path parameter, query parameter, or a field within the request body.
+
+                  '
+                example: accountId
+              message:
+                type: string
+                description: 'A human readable explanation specific to this occurrence of the violation.
+
+                  '
+                example: must match "^[a-zA-Z]{6}$"
+              code:
+                type: integer
+                format: int32
+                description: 'The violation code generated by the server for this occurrence of the violation. Use this code when implementing any error handling logic instead of the message, as the message can change.
+
+                  '
+                example: 20006
+          example:
+          - field: emailAddress
+            message: must not be null
+            code: 20002
+          - field: accountId
+            message: must match "^[a-zA-Z]{6}$"
+            code: 20006
+  parameters:
+    accountId:
+      name: accountId
+      description: The unique 6 character internal id that represents the customer account.
+      required: true
+      in: path
+      schema:
+        type: string
+        minLength: 6
+        maxLength: 6
+        pattern: ^[a-zA-Z]{6}$
+        example: ABCDEF
+    resourcePartitionId:
+      name: resourcePartitionId
+      in: path
+      description: The unique id (uuid) that represents the resource partition.
+      required: true
+      schema:
+        type: string
+        example: c8c2909d-75e9-484a-94c0-b7e8d29771fe
+        minLength: 36
+        maxLength: 36
+        pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
+    resourceType:
+      name: resourceType
+      required: true
+      in: path
+      description: Resource Type
+      example: CALLER_ID
+      schema:
+        type: string
+        enum:
+        - CALLER_ID
+        example: CALLER_ID
+    resourceId:
+      name: resourceId
+      in: path
+      description: The unique id that represents the resource.
+      required: true
+      schema:
+        type: string
+        example: 620bbb28-7112-433a-af59-17ee0f15a247
+        minLength: 3
+        maxLength: 1024
+    pageNumber:
+      name: pageNumber
+      in: query
+      description: The page number of the records to retrieve. Default value is 1.
+      schema:
+        type: integer
+        format: int32
+        default: 1
+        minimum: 1
+        example: 2
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      description: This API uses Bearer Token Authorization Flow
+      bearerFormat: JWT
+    AppKey:
+      type: apiKey
+      in: header
+      name: appkey
+      description: This API needs an appKey as header
+x-explorer-enabled: false
+x-samples-languages:
+- curl
+- node
+- java
+- javascript
+- python
+- go

@@ -1,0 +1,183 @@
+openapi: 3.2.0
+info:
+  title: Outbound Data Sets API
+  description: 'Outbound API allows you to manage outbound call campaigns, records, agents, skills, and Do Not Call lists.
+
+
+    ## Authentication
+
+    All requests require an Bearer Token.
+
+
+    ## Pagination
+
+    Many list endpoints return paginated results with a limit of 200 records per page. When more records are available, the response includes `"more_records": "1"`. To retrieve subsequent pages, include a `page` parameter in your request.'
+  version: 1.0.0
+servers:
+- url: '{protocol}://{server}{basePath}'
+  description: Open API
+  variables:
+    protocol:
+      enum:
+      - https
+      default: https
+    server:
+      default: HOST-REGION.api.avayacloud.com
+    basePath:
+      default: /api/outbound
+- url: '{protocol}://{server}:{port}'
+  description: Internal API
+  variables:
+    protocol:
+      enum:
+      - http
+      - https
+      default: https
+    server:
+      default: outbound-service
+    port:
+      enum:
+      - '80'
+      - '443'
+      default: '443'
+security:
+- {}
+- BearerAuth: []
+tags:
+- name: Datasets
+  description: Manage data sets within campaigns
+paths:
+  /CreateDataSet:
+    post:
+      tags:
+      - Datasets
+      summary: Create a data set
+      description: 'This function allows you to create a Data Set for a specified Initiative.
+
+
+        | Response Code | Description |
+
+        | --- | --- |
+
+        | 200 | Success |
+
+        | 400 | Bad Request |
+
+        | 401 | Unauthorized |
+
+        | 405 | Method Not Allowed |
+
+        | 429 | Too Many Requests |'
+      operationId: createDataSet
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+              - initiativeid
+              - datasetname
+              properties:
+                initiativeid:
+                  type: string
+                  description: The Initiative ID to create the dataset for.
+                datasetname:
+                  type: string
+                  description: The name for the data set.
+                active:
+                  type: string
+                  enum:
+                  - '0'
+                  - '1'
+                  description: 'Optional: Set the dataset to active (1) or inactive (0).'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: string
+                    example: Dataset Has Been Created
+                  info:
+                    type: object
+                    properties:
+                      DatasetName:
+                        type: string
+                      DatasetId:
+                        type: string
+                      InitiativeId:
+                        type: string
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '405':
+          description: Method Not Allowed
+        '429':
+          description: Too Many Requests
+  /UpdateDataSetStatus:
+    post:
+      tags:
+      - Datasets
+      summary: Update data set status
+      description: Update the active and hidden status of a data set.
+      operationId: updateDataSetStatus
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+              - datasetid
+              properties:
+                datasetid:
+                  type: string
+                  description: The Data Set ID to update.
+                active:
+                  type: string
+                  enum:
+                  - '0'
+                  - '1'
+                  description: Set the dataset to active (1) or inactive (0).
+                hide:
+                  type: string
+                  enum:
+                  - '0'
+                  - '1'
+                  description: Set the dataset as hidden (1) or visible (0).
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: string
+                    example: Dataset Has Been Updated
+                  info:
+                    type: object
+                    properties:
+                      DatasetId:
+                        type: string
+                      Active:
+                        type: string
+                      Hidden:
+                        type: string
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      description: This API uses Bearer Token Authorization Flow
+      bearerFormat: JWT

@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<wsdl:definitions name="metrics_service_interface" 
+	targetNamespace="http://www.nortel.com/soa/oi/cct/MetricsService" 
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" 
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+	xmlns:service="http://www.nortel.com/soa/oi/cct/MetricsService"
+	xmlns:types="http://www.nortel.com/soa/oi/cct/types" 
+	xmlns:exceptions="http://www.nortel.com/soa/oi/cct/faults"
+	xmlns:local="http://www.nortel.com/soa/oi/cct/types/MetricsService">
+
+	<wsdl:import 
+		namespace="http://www.nortel.com/soa/oi/cct/faults" 
+		location="SessionServiceExceptions.wsdl" />
+
+	<wsdl:types>
+
+		<xsd:schema elementFormDefault="qualified" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+			targetNamespace="http://www.nortel.com/soa/oi/cct/types/MetricsService">
+
+			<xsd:import namespace="http://www.nortel.com/soa/oi/cct/types" schemaLocation="types.xsd"></xsd:import>
+
+			<xsd:complexType name="MetricsRequest">
+				<xsd:sequence>
+					<xsd:element name="ssoToken" type="types:ssoToken" />
+				</xsd:sequence>
+			</xsd:complexType>
+
+			<xsd:complexType name="MetricsResponse">
+				<xsd:sequence>
+					<xsd:element name="count" type="xsd:int" />
+				</xsd:sequence>
+			</xsd:complexType>
+
+			<xsd:element name="GetVersionRequest" type="types:getVersionRequest" />
+			<xsd:element name="GetVersionResponse" type="types:getVersionResponse" />
+			<xsd:element name="GetActiveSessionCountRequest" type="local:MetricsRequest" />
+			<xsd:element name="GetActiveSessionCountResponse" type="local:MetricsResponse" />
+			<xsd:element name="GetLicenseConsumedCountRequest" type="local:MetricsRequest" />
+			<xsd:element name="GetLicenseConsumedCountResponse" type="local:MetricsResponse" />
+			<xsd:element name="GetMonitoredTerminalsRequest" type="local:MetricsRequest" />
+			<xsd:element name="GetMonitoredTerminalsResponse" type="local:MetricsResponse" />
+			<xsd:element name="GetMonitoredAddressCountRequest" type="local:MetricsRequest" />
+			<xsd:element name="GetMonitoredAddressCountResponse" type="local:MetricsResponse" />
+
+			
+		</xsd:schema>
+	</wsdl:types>
+
+	<wsdl:message name="GetVersionRequest">
+		<wsdl:part name="parameters" element="local:GetVersionRequest" />
+	</wsdl:message>
+	
+	<wsdl:message name="GetVersionResponse">
+		<wsdl:part name="result" element="local:GetVersionResponse" />
+	</wsdl:message>
+
+	<wsdl:message name="GetActiveSessionCountRequest">
+		<wsdl:part name="parameters" element="local:GetActiveSessionCountRequest" />
+	</wsdl:message>
+	
+	<wsdl:message name="GetActiveSessionCountResponse">
+		<wsdl:part name="result" element="local:GetActiveSessionCountResponse" />
+	</wsdl:message>
+	
+	<wsdl:message name="GetLicenseConsumedCountRequest">
+		<wsdl:part name="parameters" element="local:GetLicenseConsumedCountRequest" />
+	</wsdl:message>
+	
+	<wsdl:message name="GetLicenseConsumedCountResponse">
+		<wsdl:part name="result" element="local:GetLicenseConsumedCountResponse" />
+	</wsdl:message>
+	
+	<wsdl:message name="GetMonitoredTerminalsCountRequest">
+		<wsdl:part name="parameters" element="local:GetMonitoredTerminalsRequest" />
+	</wsdl:message>
+	
+	<wsdl:message name="GetMonitoredTerminalsCountResponse">
+		<wsdl:part name="result" element="local:GetMonitoredTerminalsResponse" />
+	</wsdl:message>
+	
+	<wsdl:message name="GetMonitoredAddressCountRequest">
+		<wsdl:part name="parameters" element="local:GetMonitoredAddressCountRequest" />
+	</wsdl:message>
+	
+	<wsdl:message name="GetMonitoredAddressCountResponse">
+		<wsdl:part name="result" element="local:GetMonitoredAddressCountResponse" />
+	</wsdl:message>
+
+	<wsdl:portType name="MetricsService">
+
+		<wsdl:operation name="GetVersion">
+			<wsdl:input message="service:GetVersionRequest" />
+			<wsdl:output message="service:GetVersionResponse" />
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="GetVersionException" message="exceptions:GetVersionException" />
+		</wsdl:operation>
+		
+		<wsdl:operation name="GetActiveSessionCount">
+			<wsdl:input message="service:GetActiveSessionCountRequest" />
+			<wsdl:output message="service:GetActiveSessionCountResponse" />
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="GetActiveSessionCountException" message="exceptions:MonitoredAddressesCountException" />
+		</wsdl:operation>
+
+		<wsdl:operation name="GetLicenseConsumedCount">
+			<wsdl:input message="service:GetLicenseConsumedCountRequest" />
+			<wsdl:output message="service:GetLicenseConsumedCountResponse" />
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="GetLicenseConsumedCountException" message="exceptions:MonitoredAddressesCountException" />
+		</wsdl:operation>
+		
+		<wsdl:operation name="GetMonitoredTerminalsCount">
+			<wsdl:input message="service:GetMonitoredTerminalsCountRequest" />
+			<wsdl:output message="service:GetMonitoredTerminalsCountResponse" />
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="GetMonitoredTerminalsCountException" message="exceptions:MonitoredTerminalsCountException" />
+		</wsdl:operation>
+ 
+		<wsdl:operation name="GetMonitoredAddressCount">
+			<wsdl:input message="service:GetMonitoredAddressCountRequest" />
+			<wsdl:output message="service:GetMonitoredAddressCountResponse" />
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="GetMonitoredAddressCountException" message="exceptions:MonitoredAddressesCountException" />
+		</wsdl:operation>
+
+	</wsdl:portType>
+
+
+
+</wsdl:definitions>

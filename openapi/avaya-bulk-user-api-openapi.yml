@@ -1,0 +1,1151 @@
+openapi: 3.2.0
+info:
+  title: Avaya Bulk User API
+  version: '1.0'
+  description: 'Operations tagged Bulk User across 2 of this provider''s published API definitions: avaya-axp-admin-user-openapi-original.json, avaya-infinity-user-management-openapi-original.json. Each path carries the servers of the definition it was published in.'
+servers:
+- url: '{protocol}://{server}:{port}{basePath}'
+  description: Open API
+  variables:
+    protocol:
+      enum:
+      - https
+      default: https
+    server:
+      default: HOST-REGION.api.avayacloud.com
+    port:
+      enum:
+      - '443'
+      default: '443'
+    basePath:
+      default: /api/admin/user/v1
+- url: https://core.{customerId}.ec.avayacloud.com/api/config/v1
+  description: Production
+  variables:
+    customerId:
+      description: Your organization identifier
+      default: your-org-id
+tags:
+- name: Bulk User
+  description: Bulk operations related to Users, Add, Update, Delete, Export.
+paths:
+  /accounts/{accountId}/users-bulk-template:
+    get:
+      tags:
+      - Bulk User
+      summary: Download Bulk Template
+      description: '**This API requires the Account Administrator role.**
+
+
+        Downloads the Bulk Operation Template as an `.xlsx` file.'
+      operationId: downloadBulkTemplate
+      parameters:
+      - $ref: '#/components/parameters/accountId'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+              example: 'Login Id, Account Hierarchy, Last Name, First Name, Display Name,  Password, Profile, Roles, Email, Member Of, Owned Groups
+
+                '
+        '400':
+          $ref: '#/components/responses/ErrorConstraintViolation'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServer'
+      security:
+      - {}
+      - BearerAuth: []
+        AppKey: []
+    servers:
+    - url: '{protocol}://{server}:{port}{basePath}'
+      description: Open API
+      variables:
+        protocol:
+          enum:
+          - https
+          default: https
+        server:
+          default: HOST-REGION.api.avayacloud.com
+        port:
+          enum:
+          - '443'
+          default: '443'
+        basePath:
+          default: /api/admin/user/v1
+  /accounts/{accountId}/users:bulkAdd:
+    post:
+      tags:
+      - Bulk User
+      summary: Bulk Add Users
+      description: '**This API requires the Account Administrator role.**
+
+
+        Bulk adds Users using the file provided. The following file formats are supported:
+
+
+        * `.xlsx`
+
+
+        The following fields must be unique otherwise a `HTTP 409 Conflict` will be returned:
+
+        * `jobName`
+
+
+        Will trigger an asynchronous job, the status of which should be monitored via `/jobs/{jobId}`.'
+      operationId: bulkAddUsers
+      parameters:
+      - $ref: '#/components/parameters/accountId'
+      - $ref: '#/components/parameters/jobName'
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+      responses:
+        '202':
+          description: Accepted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UsersImportResponse'
+              examples:
+                Add users:
+                  $ref: '#/components/examples/BulkAddedUsers'
+        '400':
+          $ref: '#/components/responses/ErrorConstraintViolation'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/JobNameExists'
+        '500':
+          $ref: '#/components/responses/InternalServer'
+      security:
+      - {}
+      - BearerAuth: []
+        AppKey: []
+    servers:
+    - url: '{protocol}://{server}:{port}{basePath}'
+      description: Open API
+      variables:
+        protocol:
+          enum:
+          - https
+          default: https
+        server:
+          default: HOST-REGION.api.avayacloud.com
+        port:
+          enum:
+          - '443'
+          default: '443'
+        basePath:
+          default: /api/admin/user/v1
+  /accounts/{accountId}/users:bulkUpdate:
+    post:
+      tags:
+      - Bulk User
+      summary: Bulk Update Users
+      description: '**This API requires the Account Administrator role.**
+
+
+        Bulk updates Users using the file provided. The following file formats are supported:
+
+
+        * `.xlsx`
+
+
+        The following fields must be unique otherwise a `HTTP 409 Conflict` will be returned:
+
+        * `jobName`
+
+
+        Will trigger an asynchronous job, the status of which should be monitored via `/jobs/{jobId}`.'
+      operationId: bulkUpdateUsers
+      parameters:
+      - $ref: '#/components/parameters/accountId'
+      - $ref: '#/components/parameters/jobName'
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+      responses:
+        '202':
+          description: Accepted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UsersImportResponse'
+              examples:
+                Bulk Update:
+                  $ref: '#/components/examples/BulkAddedUsers'
+        '400':
+          $ref: '#/components/responses/ErrorConstraintViolation'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/JobNameExists'
+        '500':
+          $ref: '#/components/responses/InternalServer'
+      security:
+      - {}
+      - BearerAuth: []
+        AppKey: []
+    servers:
+    - url: '{protocol}://{server}:{port}{basePath}'
+      description: Open API
+      variables:
+        protocol:
+          enum:
+          - https
+          default: https
+        server:
+          default: HOST-REGION.api.avayacloud.com
+        port:
+          enum:
+          - '443'
+          default: '443'
+        basePath:
+          default: /api/admin/user/v1
+  /accounts/{accountId}/users:bulkDelete:
+    post:
+      tags:
+      - Bulk User
+      summary: Bulk Delete Users
+      description: '**This API requires the Account Administrator role.**
+
+
+        Bulk deletes Users using the file provided. The following file formats are supported:
+
+
+        * `.xlsx`
+
+
+        The following fields must be unique otherwise a `HTTP 409 Conflict` will be returned:
+
+        * `jobName`
+
+
+        Will trigger an asynchronous job, the status of which should be monitored via `/jobs/{jobId}`.'
+      operationId: bulkDeleteUsers
+      parameters:
+      - $ref: '#/components/parameters/accountId'
+      - $ref: '#/components/parameters/jobName'
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+      responses:
+        '202':
+          description: Accepted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UsersImportResponse'
+              examples:
+                User delete:
+                  $ref: '#/components/examples/BulkAddedUsers'
+        '400':
+          $ref: '#/components/responses/ErrorConstraintViolation'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/JobNameExists'
+        '500':
+          $ref: '#/components/responses/InternalServer'
+      security:
+      - {}
+      - BearerAuth: []
+        AppKey: []
+    servers:
+    - url: '{protocol}://{server}:{port}{basePath}'
+      description: Open API
+      variables:
+        protocol:
+          enum:
+          - https
+          default: https
+        server:
+          default: HOST-REGION.api.avayacloud.com
+        port:
+          enum:
+          - '443'
+          default: '443'
+        basePath:
+          default: /api/admin/user/v1
+  /accounts/{accountId}/users:bulkExport:
+    post:
+      tags:
+      - Bulk User
+      summary: Bulk Export Users
+      description: '**This API requires the Account Administrator role.**
+
+
+        Bulk exports the list of users for an account based on the criteria provided.
+
+
+        The following fields must be unique otherwise a `HTTP 409 Conflict` will be returned:
+
+        * `jobName`
+
+
+        Will trigger an asynchronous job, the status of which should be monitored via `/jobs/{jobId}`.
+
+
+        Once the job has completed, the file can be downloaded using the API `/jobs/{jobId}:downloadExportedUsers`.'
+      operationId: bulkExportUsers
+      parameters:
+      - $ref: '#/components/parameters/accountId'
+      - $ref: '#/components/parameters/jobName'
+      - name: filter
+        in: query
+        required: false
+        description: "Specifies details of a row filter.\n\nThe possible fields you can filter on are:\n* firstName\n* lastName\n\nThe allowed format:\n- Begins with the column name to be filtered, followed by a colon, (This will be used as Contains operator.) then:\n  - Either an exact string to match, or\n  - A string expression including the * wildcard character.\n    - :{PREFIX}* will be used to find out word start with.\n    - :*{POSTFIX} will be used to find out word end with\n    - : will be used to match exact word\n- Begin with column name to be filtered, followed by a = operator. (this will be used to match exact string)\n"
+        schema:
+          type: string
+          maxLength: 255
+        examples:
+          exact:
+            description: Example of filtering based on an exact string.
+            value: firstName:VoiceUser*
+          prefix:
+            description: Example of filtering based on a prefix string.
+            value: firstName:VoiceUser*
+          postfix:
+            description: Example of filtering based on a postfix string.
+            value: firstName:VoiceUser*
+      - name: orderBy
+        in: query
+        required: false
+        description: 'Field name on which sorting needs to be performed. The default sorting order is ascending.
+
+
+          The possible fields that can be ordered on are:
+
+          * firstName
+
+          * lastName
+
+          * loginId
+
+
+          Field Names are case-sensitive (should be written as it is in description).
+
+
+          To specify descending order, a suffix " desc" should be added. For example, "loginId" for ascending or "loginId desc" for descending".
+
+          '
+        schema:
+          type: string
+          maxLength: 255
+        examples:
+          ascending:
+            value: loginId
+          descending:
+            value: loginId desc
+      responses:
+        '202':
+          description: Accepted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UsersExportResponse'
+              examples:
+                User Export:
+                  $ref: '#/components/examples/UsersExportResponse'
+        '400':
+          $ref: '#/components/responses/ErrorConstraintViolation'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/JobNameExists'
+        '500':
+          $ref: '#/components/responses/InternalServer'
+      security:
+      - {}
+      - BearerAuth: []
+        AppKey: []
+    servers:
+    - url: '{protocol}://{server}:{port}{basePath}'
+      description: Open API
+      variables:
+        protocol:
+          enum:
+          - https
+          default: https
+        server:
+          default: HOST-REGION.api.avayacloud.com
+        port:
+          enum:
+          - '443'
+          default: '443'
+        basePath:
+          default: /api/admin/user/v1
+  /users/bulk-template:
+    get:
+      tags:
+      - Bulk User
+      summary: Download Bulk Template
+      description: '**Required Role:** Admin Portal or Admin API Consumer
+
+
+        Downloads the Bulk Operation Template as an `.xlsx` file.'
+      operationId: downloadBulkTemplate
+      responses:
+        '200':
+          description: OK
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+              example: 'Email, Account Hierarchy, Last Name, First Name, Display Name, Password, Profile, Roles, Member Of, Owned Groups
+
+                '
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized_2'
+        '403':
+          $ref: '#/components/responses/Forbidden_2'
+        '404':
+          $ref: '#/components/responses/NotFound_2'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+        default:
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - BearerAuth: []
+    servers:
+    - url: https://core.{customerId}.ec.avayacloud.com/api/config/v1
+      description: Production
+      variables:
+        customerId:
+          description: Your organization identifier
+          default: your-org-id
+  /users:bulk-add:
+    post:
+      tags:
+      - Bulk User
+      summary: Bulk Add Users
+      description: '**Required Role:** Admin Portal or Admin API Consumer
+
+
+        Bulk adds Users using the file provided. The following file formats are supported:
+
+
+        * `.xlsx`
+
+
+        The following fields must be unique otherwise a `HTTP 409 Conflict` will be returned:
+
+        * `jobName`
+
+
+        Will trigger an asynchronous job, the status of which should be monitored via `/jobs/{jobId}`.'
+      operationId: bulkAddUsers
+      parameters:
+      - $ref: '#/components/parameters/jobName_2'
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+      responses:
+        '202':
+          description: Accepted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BulkOperationResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized_2'
+        '403':
+          $ref: '#/components/responses/Forbidden_2'
+        '404':
+          $ref: '#/components/responses/NotFound_2'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+        default:
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - BearerAuth: []
+    servers:
+    - url: https://core.{customerId}.ec.avayacloud.com/api/config/v1
+      description: Production
+      variables:
+        customerId:
+          description: Your organization identifier
+          default: your-org-id
+  /users:bulk-update:
+    post:
+      tags:
+      - Bulk User
+      summary: Bulk Update Users
+      description: '**Required Role:** Admin Portal or Admin API Consumer
+
+
+        Bulk updates Users using the file provided. The following file formats are supported:
+
+
+        * `.xlsx`
+
+
+        Will trigger an asynchronous job, the status of which should be monitored via `/jobs/{jobId}`.'
+      operationId: bulkUpdateUsers
+      parameters:
+      - $ref: '#/components/parameters/jobName_2'
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+      responses:
+        '202':
+          description: Accepted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BulkOperationResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized_2'
+        '403':
+          $ref: '#/components/responses/Forbidden_2'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+        default:
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - BearerAuth: []
+    servers:
+    - url: https://core.{customerId}.ec.avayacloud.com/api/config/v1
+      description: Production
+      variables:
+        customerId:
+          description: Your organization identifier
+          default: your-org-id
+  /users:bulk-export:
+    post:
+      tags:
+      - Bulk User
+      summary: Bulk Export Users
+      description: '**Required Role:** Admin Portal or Admin API Consumer
+
+
+        Bulk exports the list of users for an account based on the criteria provided.
+
+
+        If the optional `folderId` query parameter is provided, users within that folder **and all of its subfolders
+
+        (recursively)** will be exported.
+
+
+        Will trigger an asynchronous job, the status of which should be monitored via `/jobs/{jobId}`.
+
+
+        Once the job has completed, the file can be downloaded using the API `/jobs/{jobId}/exported-users`.'
+      operationId: bulkExportUsers
+      parameters:
+      - $ref: '#/components/parameters/jobName_2'
+      - name: folderId
+        in: query
+        description: '*(Optional)* Export users from a specific folder **and all its subfolders**.
+
+          Provide the unique 26-character internal id of the folder.
+
+          If omitted, all users in the account will be included.
+
+          '
+        required: false
+        schema:
+          $ref: '#/components/schemas/FolderId'
+      responses:
+        '202':
+          description: Accepted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BulkExportOperationResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized_2'
+        '403':
+          $ref: '#/components/responses/Forbidden_2'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+        default:
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - BearerAuth: []
+    servers:
+    - url: https://core.{customerId}.ec.avayacloud.com/api/config/v1
+      description: Production
+      variables:
+        customerId:
+          description: Your organization identifier
+          default: your-org-id
+components:
+  examples:
+    ErrorForbidden:
+      description: Forbidden
+      value:
+        type: https://developers.avayacloud.com/avaya-experience-platform/docs/error-handling#forbidden
+        title: Forbidden
+        status: 403
+        detail: According to the access control policy the current user and/or accountId does not have permission to access this resource.
+    ErrorConstraintViolation:
+      description: Constraint Violation
+      value:
+        type: https://developers.avayacloud.com/avaya-experience-platform/docs/error-handling#constraint-violation
+        title: Constraint Violation
+        status: 400
+        detail: A problem that indicates a syntactically correct, yet semantically illegal request. The Server can not process this request until the client resolves the semantic errors described in the violations section.
+        violations:
+        - field: accountId
+          message: must match "^[a-zA-Z]{6}$"
+          code: 20006
+    ErrorJobNameExists:
+      description: Constraint Violation
+      value:
+        type: https://developers.avayacloud.com/avaya-experience-platform/docs/error-handling#conflict
+        title: Conflict
+        status: 409
+        detail: A resource with the same unique constraint values already exists.
+        violations:
+        - field: jobName
+          message: A job with this name already exists
+    ErrorNotFound:
+      description: Not Found
+      value:
+        type: https://developers.avayacloud.com/avaya-experience-platform/docs/error-handling#resource-not-found
+        title: Resource Not Found
+        status: 404
+        detail: Either there is no API method associated with the URL path of the request, or the request refers to one or more resources that were not found.
+    UsersExportResponse:
+      description: User export
+      value:
+        jobId: c8c2909d-75e9-484a-94c0-b7e8d30771fe
+        url: /api/admin/user/v1/accounts/ABCDEF/jobs/c8c2909d-75e9-484a-94c0-b7e8d30771fe:downloadExportedUsers
+    ErrorUnauthorized:
+      description: Unauthorized
+      value:
+        type: https://developers.avayacloud.com/avaya-experience-platform/docs/error-handling#unauthorized
+        title: Unauthorized
+        status: 401
+        detail: This operation requires authentication. See https://developers.avayacloud.com/avaya-experience-platform/docs/how-to-authenticate-with-ccaas-apis
+    BulkAddedUsers:
+      description: Bulk Users Response
+      value:
+        jobId: c8c2909d-75e9-484a-94c0-b7e8d30771fe
+        url: /api/admin/user/v1/accounts/ABCDEF/jobs/c8c2909d-75e9-484a-94c0-b7e8d30771fe
+    ErrorInternalServerError:
+      description: Server Error
+      value:
+        type: https://developers.avayacloud.com/avaya-experience-platform/docs/error-handling#server-error
+        title: Server Error
+        status: 500
+        detail: An internal server error was encountered.
+  responses:
+    NotFound:
+      description: Not Found
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorNotFound'
+    InternalServer:
+      description: Request processing failed
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorInternalServerError'
+    JobNameExists:
+      description: Conflict
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorJobNameExists'
+    ErrorConstraintViolation:
+      description: Constraint Violation
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorConstraintViolation'
+    Forbidden:
+      description: Forbidden
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorForbidden'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorUnauthorized'
+    Forbidden_2:
+      description: Forbidden
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem_2'
+          example:
+            type: https://developers.avayacloud.com/errors/forbidden
+            title: Forbidden
+            status: 403
+            detail: 'Missing required scope: ''workflows:execute''. Your token has: ''workflows:read'''
+            requestId: req_xyz789
+            timestamp: '2025-12-08T10:30:05Z'
+    NotFound_2:
+      description: Not Found
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem_2'
+          example:
+            type: https://developers.avayacloud.com/errors/resource-not-found
+            title: Resource Not Found
+            status: 404
+            detail: workflowId 'wf_123abc' does not exist
+            requestId: req_xyz789
+            timestamp: '2025-12-08T10:30:05Z'
+    Unauthorized_2:
+      description: Unauthorized
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem_2'
+          example:
+            type: https://developers.avayacloud.com/errors/unauthorized
+            title: Unauthorized
+            status: 401
+            detail: Bearer token expired at 2025-12-08T10:15:00Z. Request a new token.
+            requestId: req_xyz789
+            timestamp: '2025-12-08T10:30:05Z'
+    InternalServerError:
+      description: Internal Server Error
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem_2'
+          example:
+            type: https://developers.avayacloud.com/errors/internal-error
+            title: Internal Server Error
+            status: 500
+            detail: An unexpected error occurred while processing your request
+            requestId: req_xyz789
+            timestamp: '2025-12-08T10:30:05Z'
+    BadRequest:
+      description: Bad Request
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem_2'
+          example:
+            type: https://developers.avayacloud.com/errors/constraint-violation
+            title: Constraint Violation
+            status: 400
+            detail: Request contains invalid or missing fields
+            violations:
+            - field: accountId
+              message: must match "^[a-zA-Z]{6}$"
+              code: 20006
+  parameters:
+    accountId:
+      name: accountId
+      description: The unique 6 character internal id that represents the customer account.
+      required: true
+      in: path
+      schema:
+        type: string
+        minLength: 6
+        maxLength: 6
+        pattern: ^[a-zA-Z]{6}$
+        example: ABCDEF
+    jobName:
+      name: jobName
+      in: query
+      description: Optional, job name that can be provided to uniquely identify the job.
+      required: false
+      schema:
+        type: string
+        minLength: 1
+        maxLength: 255
+        pattern: ^[\p{L}\p{M}\p{N}\p{IsKatakana}0-9]+[\s\p{L}\p{M}\p{N}\p{IsKatakana}0-9\-\[\]\\_\.\+\*\'\"\!\|\(\)\{\}\;\:\,\^\+\<\>\&\£\@\$\¥\€\`\~\?\#\%\=]*$
+        example: Bulk Job
+    jobName_2:
+      name: jobName
+      in: query
+      description: Optional name that can be provided to identify the job.
+      required: false
+      schema:
+        type: string
+        minLength: 1
+        maxLength: 255
+        example: Bulk Job
+  schemas:
+    UsersImportResponse:
+      description: User import response to notify that user import accepted.
+      type: object
+      properties:
+        jobId:
+          description: An unique id mapped to each user import job.
+          type: string
+          example: c8c2909d-75e9-484a-94c0-b7e8d30771fe
+          minLength: 36
+          maxLength: 36
+          pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
+        url:
+          description: Details of users import job
+          type: string
+          example: /api/admin/user/v1/accounts/ABCDEF/jobs/c8c2909d-75e9-484a-94c0-b7e8d30771fe
+          maxLength: 2048
+      title: UsersImportResponse
+    UsersExportResponse:
+      description: Bulk user export response to notify that user export request accepted.
+      type: object
+      properties:
+        jobId:
+          description: An unique id mapped to each user bulk export job.
+          type: string
+          example: c8c2909d-75e9-484a-94c0-b7e8d30771fe
+          minLength: 36
+          maxLength: 36
+          pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
+        url:
+          description: URL to download exported user file
+          type: string
+          example: /api/admin/user/v1/accounts/ABCDEF/jobs/c8c2909d-75e9-484a-94c0-b7e8d30771fe:downloadExportedUsers
+          maxLength: 2048
+      title: UsersExportResponse
+    Problem:
+      type: object
+      description: '<b>Problem Detail</b> as a way to carry machine-readable details of errors in a HTTP response to avoid the need to define new error response formats for HTTP APIs <a href="https://tools.ietf.org/html/rfc7807">RFC 7807</a>
+
+        '
+      properties:
+        type:
+          type: string
+          format: uri
+          description: 'An absolute URI that identifies the problem type. When dereferenced, it SHOULD provide human-readable documentation for the problem type (e.g., using HTML).
+
+            '
+          default: about:blank
+          example: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#constraint-violation
+        title:
+          type:
+          - string
+          - 'null'
+          description: 'A short, summary of the problem type. Written in english and readable for engineers (usually not suited for non technical stakeholders and not localized).
+
+            '
+          example: Service Unavailable
+        status:
+          type:
+          - integer
+          - 'null'
+          format: int32
+          description: 'The HTTP status code generated by the origin server for this occurrence of the problem.
+
+            '
+          minimum: 100
+          example: 503
+          exclusiveMaximum: 600
+        detail:
+          type:
+          - string
+          - 'null'
+          description: 'A human readable explanation specific to this occurrence of the problem.
+
+            '
+          example: Connection to database timed out
+        instance:
+          type:
+          - string
+          - 'null'
+          format: uri
+          description: 'An absolute URI that identifies the specific occurrence of the problem. It may or may not yield further information if dereferenced.
+
+            '
+        violations:
+          type:
+          - array
+          - 'null'
+          description: 'A list of violations that occurred as a result of invalid data provided as part of a request.
+
+            '
+          items:
+            type: object
+            properties:
+              field:
+                type: string
+                description: 'The name of the field in the request that caused the violation. This can be the name of a path parameter, query parameter, or a field within the request body.
+
+                  '
+                example: accountId
+              message:
+                type: string
+                description: 'A human readable explanation specific to this occurrence of the violation.
+
+                  '
+                example: must match "^[a-zA-Z]{6}$"
+              code:
+                type: integer
+                format: int32
+                description: 'The violation code generated by the server for this occurrence of the violation. Use this code when implementing any error handling logic instead of the message, as the message can change.
+
+                  '
+                example: 20006
+          example:
+          - field: emailAddress
+            message: must not be null
+            code: 20002
+          - field: accountId
+            message: must match "^[a-zA-Z]{6}$"
+            code: 20006
+    Violation:
+      type: object
+      properties:
+        field:
+          description: 'The name of the field in the request that caused the violation.
+
+
+            This can be the name of a path parameter, query parameter, or a field within the request body.
+
+            '
+          type: string
+          readOnly: true
+          example: jobName
+        message:
+          description: 'A human-readable explanation specific to this occurrence of the violation.
+
+            '
+          type: string
+          readOnly: true
+          example: must match "^[a-zA-Z]{6}$"
+        code:
+          description: 'The violation code generated by the server for this occurrence of the violation.
+
+
+            Use this code when implementing any error handling logic instead of the message, as the message can change.
+
+            '
+          type: integer
+          format: int32
+          readOnly: true
+          example: 20006
+      required:
+      - field
+      - message
+      - code
+      example:
+      - field: emailAddress
+        message: must not be null
+        code: 20002
+    BulkExportOperationResponse:
+      description: Response for a bulk export users operation request having been accepted.
+      type: object
+      required:
+      - jobId
+      - url
+      - downloadUrl
+      properties:
+        jobId:
+          allOf:
+          - $ref: '#/components/schemas/JobId'
+          readOnly: true
+        url:
+          description: URL to get details of the bulk user operation job.
+          type: string
+          example: /api/config/v1/jobs/c8c2909d-75e9-484a-94c0-b7e8d30771fe
+          readOnly: true
+        downloadUrl:
+          description: URL to download the exported users archive from, once the job has completed.
+          type: string
+          example: /api/config/v1/jobs/c8c2909d-75e9-484a-94c0-b7e8d30771fe/exported-users
+          readOnly: true
+      title: BulkExportOperationResponse
+    JobId:
+      description: Unique ID for a bulk user operation job.
+      type: string
+      format: uuid
+      example: c8c2909d-75e9-484a-94c0-b7e8d30771fe
+    BulkOperationResponse:
+      description: Response for a bulk user operation request having been accepted.
+      type: object
+      required:
+      - jobId
+      - url
+      properties:
+        jobId:
+          allOf:
+          - $ref: '#/components/schemas/JobId'
+          readOnly: true
+        url:
+          description: URL to get details of the bulk user operation job.
+          type: string
+          example: /api/config/v1/jobs/c8c2909d-75e9-484a-94c0-b7e8d30771fe
+          readOnly: true
+      title: BulkOperationResponse
+    FolderId:
+      description: Unique identifier for a folder.
+      type: string
+      pattern: ^073[0-9a-f]{23}$
+      example: 073d010813b941cf7da111d147
+    Problem_2:
+      type: object
+      description: '<b>Problem Detail</b> is a way to carry machine-readable details of errors in an HTTP
+
+        response to avoid the need to define new error response formats for HTTP APIs
+
+
+        <a href="https://tools.ietf.org/html/rfc7807">RFC 7807</a>
+
+        '
+      properties:
+        type:
+          description: 'An absolute URI that identifies the problem type.
+
+
+            When dereferenced, it SHOULD provide human-readable documentation for the problem type (e.g., using HTML).
+
+            '
+          type: string
+          format: uri
+          readOnly: true
+          example: https://developers.avayacloud.com/avaya-infinity/docs/user-management#error-reference
+        title:
+          description: 'A short, summary of the problem type.
+
+
+            Written in English and readable for engineers (usually not suited for non technical stakeholders and not localized).
+
+            '
+          type: string
+          readOnly: true
+          example: Service Unavailable
+        status:
+          description: 'The HTTP status code generated by the origin server for this occurrence of the problem.
+
+            '
+          type: integer
+          format: int32
+          minimum: 300
+          exclusiveMaximum: 600
+          readOnly: true
+          example: 503
+        detail:
+          description: 'A human-readable explanation specific to this occurrence of the problem.
+
+            '
+          type: string
+          readOnly: true
+          example: Connection to database timed out
+        instance:
+          description: 'An absolute URI that identifies the specific occurrence of the problem.
+
+
+            It may or may not yield further information if dereferenced.
+
+            '
+          type: string
+          format: uri
+          readOnly: true
+        violations:
+          description: 'A list of violations that occurred as a result of invalid data provided as part of a request.
+
+            '
+          type: array
+          items:
+            $ref: '#/components/schemas/Violation'
+          readOnly: true
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      description: This API uses Bearer Token Authorization Flow
+      bearerFormat: JWT
+    AppKey:
+      type: apiKey
+      in: header
+      name: appkey
+      description: This API needs an appKey as header
+x-refined-from:
+- avaya-axp-admin-user-openapi-original.json
+- avaya-infinity-user-management-openapi-original.json
+x-explorer-enabled: false
+x-samples-languages:
+- curl
+- node
+- java
+- javascript
+- python
+- go

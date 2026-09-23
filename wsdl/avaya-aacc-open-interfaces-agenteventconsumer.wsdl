@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<definitions name="AgentEventConsumer"
+	xmlns="http://schemas.xmlsoap.org/wsdl/"
+	xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+	xmlns:tns="http://www.nortel.com/soa/oi/cct/AgentEventConsumer"
+	targetNamespace="http://www.nortel.com/soa/oi/cct/AgentEventConsumer">
+   
+	<types>
+		<schema elementFormDefault="qualified" xmlns="http://www.w3.org/2001/XMLSchema">			
+			<import namespace="http://www.nortel.com/soa/oi/cct/AgentEventConsumer" schemaLocation="AgentEventConsumer.xsd" />
+		</schema>	
+	</types>
+      
+   <message name="AgentEvent">
+      <part name="agentEvent" type="tns:agentEvent"/>	  
+   </message>
+   
+   <portType name="AgentEventConsumer">
+      <operation name="notifyAgentEvent">
+         <input message="tns:AgentEvent" />
+      </operation>
+   </portType>
+      
+	<binding name="AgentEventConsumerPortBinding" type="tns:AgentEventConsumer">
+		<soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+		<operation name="notifyAgentEvent">
+			<soap:operation soapAction="http://www.nortel.com/soa/oi/cct/notificationconsumer/service/notifyAgentEvent"/>
+			<input>
+				<soap:body use="literal"/>
+			</input>
+		</operation>
+	</binding>
+	
+	<service name="AgentEventConsumerService">
+		<port name="AgentEventConsumerPort" binding="tns:AgentEventConsumerPortBinding">
+			<soap:address location="http://localhost:9090/SOAOICCT/services/AgentEventConsumer" />
+		</port>
+	</service>
+	
+</definitions>

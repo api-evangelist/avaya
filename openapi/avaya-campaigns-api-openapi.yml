@@ -1,0 +1,285 @@
+openapi: 3.2.0
+info:
+  title: Outbound Campaigns API
+  description: 'Outbound API allows you to manage outbound call campaigns, records, agents, skills, and Do Not Call lists.
+
+
+    ## Authentication
+
+    All requests require an Bearer Token.
+
+
+    ## Pagination
+
+    Many list endpoints return paginated results with a limit of 200 records per page. When more records are available, the response includes `"more_records": "1"`. To retrieve subsequent pages, include a `page` parameter in your request.'
+  version: 1.0.0
+servers:
+- url: '{protocol}://{server}{basePath}'
+  description: Open API
+  variables:
+    protocol:
+      enum:
+      - https
+      default: https
+    server:
+      default: HOST-REGION.api.avayacloud.com
+    basePath:
+      default: /api/outbound
+- url: '{protocol}://{server}:{port}'
+  description: Internal API
+  variables:
+    protocol:
+      enum:
+      - http
+      - https
+      default: https
+    server:
+      default: outbound-service
+    port:
+      enum:
+      - '80'
+      - '443'
+      default: '443'
+security:
+- {}
+- BearerAuth: []
+tags:
+- name: Campaigns
+  description: Manage outbound campaigns
+paths:
+  /GetInitiatives:
+    post:
+      tags:
+      - Campaigns
+      summary: Get initiatives
+      description: 'This function provides a list of the Initiatives configured in the system.
+
+
+        **Pagination:** Results are paginated with a limit of 200 records per page.
+
+
+        | Response Code | Description |
+
+        | --- | --- |
+
+        | 200 | Success |
+
+        | 400 | Bad Request |
+
+        | 401 | Unauthorized |
+
+        | 404 | Not Found |
+
+        | 405 | Method Not Allowed |
+
+        | 429 | Too Many Requests |'
+      operationId: getInitiatives
+      requestBody:
+        required: false
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                page:
+                  type: integer
+                  default: 1
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  info:
+                    $ref: '#/components/schemas/PaginationInfo'
+                  initiatives:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        ContactTypeId:
+                          type: string
+                        CreatedBy:
+                          type: string
+                        CreatedDate:
+                          type: string
+                        Description:
+                          type: string
+                        HideDisplay:
+                          type: string
+                        Id:
+                          type: string
+                        IsMasterInitiative:
+                          type: string
+                        MasterInitiativeId:
+                          type: string
+                        Name:
+                          type: string
+                        OutboundCID:
+                          type: string
+                        ShortName:
+                          type: string
+                        StatusId:
+                          type: string
+                          description: 1=Running, 2=Stopped
+                        TimeZoneId:
+                          type: string
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+        '405':
+          description: Method Not Allowed
+        '429':
+          description: Too Many Requests
+  /GetCLIs:
+    post:
+      tags:
+      - Campaigns
+      summary: Get available caller IDs
+      description: 'This function provides a list of available Caller IDs and their IDs.
+
+
+        **Pagination:** Results are paginated with a limit of 200 records per page.
+
+
+        | Response Code | Description |
+
+        | --- | --- |
+
+        | 200 | Success |
+
+        | 400 | Bad Request |
+
+        | 401 | Unauthorized |
+
+        | 404 | Not Found |
+
+        | 405 | Method Not Allowed |
+
+        | 429 | Too Many Requests |'
+      operationId: getCLIs
+      requestBody:
+        required: false
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                page:
+                  type: integer
+                  default: 1
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  info:
+                    $ref: '#/components/schemas/PaginationInfo'
+                  clis:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        CallerId:
+                          type: string
+                        Id:
+                          type: string
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+        '405':
+          description: Method Not Allowed
+        '429':
+          description: Too Many Requests
+  /UpdateCLI:
+    put:
+      tags:
+      - Campaigns
+      summary: Update caller ID for an initiative
+      description: 'This function allows the caller ID for a specific initiative to be set using the ID derived from the `GetCLIs` function.
+
+
+        | Response Code | Description |
+
+        | --- | --- |
+
+        | 200 | Success |
+
+        | 400 | Bad Request |
+
+        | 401 | Unauthorized |
+
+        | 405 | Method Not Allowed |
+
+        | 429 | Too Many Requests |'
+      operationId: updateCLI
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+              - initiativeid
+              - cliid
+              properties:
+                initiativeid:
+                  type: string
+                  description: The Initiative ID to update the CLI for.
+                cliid:
+                  type: string
+                  description: The ID of the caller ID to set. Derived from the `GetCLIs` function.
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: string
+                    example: CLI Has Been Updated
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '405':
+          description: Method Not Allowed
+        '429':
+          description: Too Many Requests
+components:
+  schemas:
+    PaginationInfo:
+      type: object
+      properties:
+        per_page:
+          type: string
+          example: '200'
+        count:
+          type: string
+          example: '10'
+        page:
+          type: string
+          example: '1'
+        more_records:
+          type: string
+          example: '0'
+          description: Set to '1' if more records are available. Increment the `page` parameter to retrieve the next page.
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      description: This API uses Bearer Token Authorization Flow
+      bearerFormat: JWT

@@ -1,7 +1,10 @@
-generated: '2026-09-14'
-method: derived
+generated: '2026-09-17'
+method: searched
 source: >-
-  derived from the 40 harvested OpenAPI documents in openapi/; compliance claims searched at
+  derived from the harvested OpenAPI documents in openapi/ and, since 2026-09-17, from the 56 WSDLs
+  and one .proto harvested verbatim out of Avaya's own public SDK downloads
+  (https://www.avaya.com/en/developer-support/sdks/ -> support.avaya.com/css/public/documents/<id>,
+  application/zip, unauthenticated); compliance claims searched at
   https://www.avaya.com/en/trust-center/compliance/ and https://www.avaya.com/en/trust-center/
 standards:
   - id: openapi-3.0
@@ -67,6 +70,60 @@ standards:
   - id: asyncapi
     conforms: false
     evidence: 'Avaya publishes webhook subscription APIs but no AsyncAPI document — see asyncapi/avaya-webhooks.yml'
+  - id: wsdl-1.1
+    conforms: true
+    added: '2026-09-17'
+    evidence: >-
+      56 WSDL 1.1 documents harvested verbatim from Avaya's own public SDK downloads, declaring 25
+      services and 307 distinct portType operations for Avaya Aura Contact Center. All carry
+      xmlns http://schemas.xmlsoap.org/wsdl/. See wsdl/avaya-wsdl.yml for provenance.
+  - id: soap-1.1
+    conforms: true
+    added: '2026-09-17'
+    evidence: '39 of the 56 WSDLs bind over http://schemas.xmlsoap.org/wsdl/soap/ (SOAP 1.1)'
+  - id: soap-1.2
+    conforms: true
+    added: '2026-09-17'
+    evidence: '9 of the 56 WSDLs additionally declare http://schemas.xmlsoap.org/wsdl/soap12/'
+  - id: ws-addressing
+    conforms: true
+    added: '2026-09-17'
+    evidence: >-
+      W3C WS-Addressing 1.0 (http://www.w3.org/2005/08/addressing) plus the 2004/08 submission
+      namespace and the 2006/05 WSDL binding appear in the notification and metadata-exchange WSDLs
+  - id: ws-basenotification
+    conforms: true
+    added: '2026-09-17'
+    evidence: >-
+      OASIS WSRF WS-BaseNotification — NotificationProducer (4 ops), NotificationConsumer,
+      StatsNotificationProducer (3 ops) and StatsNotificationConsumer implement the publish/subscribe
+      contract, with WS-BaseFaults-1.2-draft-01 for faults. This is the event surface of the
+      on-premises estate, and it is the reason asyncapi/ shows only the cloud webhook catalog.
+  - id: ws-resourceproperties
+    conforms: true
+    added: '2026-09-17'
+    evidence: >-
+      OASIS WSRF WS-ResourceProperties-1.2-draft-01 is imported by the Open Interfaces WSDLs. The
+      standard's own WSDL was deliberately NOT saved into wsdl/ — it belongs to OASIS, not Avaya.
+  - id: ws-policy
+    conforms: true
+    added: '2026-09-17'
+    evidence: 'http://schemas.xmlsoap.org/ws/2004/09/policy and the 2002/12 predecessor declared in the Open Interfaces WSDLs'
+  - id: ws-metadataexchange
+    conforms: true
+    added: '2026-09-17'
+    evidence: 'http://schemas.xmlsoap.org/ws/2004/09/mex declared on the CCMM Agent/Outbound services'
+  - id: protobuf-proto3
+    conforms: true
+    added: '2026-09-17'
+    evidence: >-
+      grpc/avaya-ip-office-mtcti3.proto — proto3, 68 messages, 12 enums, shipped in the IP Office 12.3
+      MTCTI-3 SDK. Declares NO service/rpc block, so it is a wire-format schema rather than a gRPC
+      service contract; recorded that way in grpc/avaya-protobuf.yml.
+  - id: grpc
+    conforms: false
+    added: '2026-09-17'
+    evidence: 'the one published .proto contains no service or rpc definitions; no gRPC endpoint is documented anywhere'
 domain_standards:
   note: >-
     Contact-center and enterprise-telephony APIs have no widely adopted machine-readable domain

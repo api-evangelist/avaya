@@ -1,0 +1,393 @@
+# x-archived-from: avaya-infinity-queue-metrics-openapi.yml
+# x-archived-on: 2026-09-16
+openapi: 3.0.3
+info:
+  title: Queue Metrics API
+  description: "Retrieve real-time operational metrics for queues in the Avaya Infinity contact center platform — including\
+    \ agent availability, engagement wait counts, and queue occupancy. Designed for external integrations such as routing\
+    \ systems, orchestration platforms, and wallboard/reporting tools that need live queue data.\n\n## Endpoints\n\n### Query\
+    \ Queue Metrics\n\n`POST /queue-metrics`\n\nReturns current metrics for a specific queue and communication channel.\n\n\
+    ## Getting Started\n\n### Find Your Customer Subdomain\n\nYour subdomain is found in your Avaya Infinity portal URL and\
+    \ is required for all API calls.\n\n**Example:** If your portal URL is:\n\n```\nhttps://core.avaya1234.ec.avayacloud.com/app/core-config-ui/\n\
+    ```\n\nYour subdomain is: **`avaya1234`**\n\nAll API requests use this base URL format:\n\n```\nhttps://core.{customerId}.ec.avayacloud.com/api/matching-extensions/v1/...\n\
+    ```\n\n### Authentication\n\nAll endpoints require a Bearer token obtained via the OAuth 2.0 client credentials flow.\n\
+    \n1. **Request credentials from Avaya Support** — you will need a `client_id` and `client_secret` provisioned with the\
+    \ **`QUEUE_METRICS`** scope. This is not self-serve and requires raising a request with Avaya Support.\n2. Use your `client_id`\
+    \ and `client_secret` to request a token:\n\n```\nPOST https://core.{customerId}.ec.avayacloud.com/auth/realms/avaya/protocol/openid-connect/token\n\
+    Content-Type: application/x-www-form-urlencoded\n\ngrant_type=client_credentials&client_id=<your_client_id>&client_secret=<your_client_secret>&scope=QUEUE_METRICS\n\
+    ```\n\n3. Include the returned `access_token` in all requests:\n\n```\nAuthorization: Bearer <access_token>\n```\n\nFor\
+    \ full authentication instructions, see [How to Authenticate with Avaya Infinity APIs](https://developers.avayacloud.com/avaya-infinity/docs/how-to-authenticate-with-avaya-infinitytm-apis).\n\
+    \n### Working with Queue IDs and Tags\n\nThe `queueId` field accepts the unique identifier of the queue — not its display\
+    \ name. Queue IDs can be found in the Avaya Infinity portal or retrieved via the Queue Management API.\n\nOptionally,\
+    \ filter metrics further by providing one or more tag IDs in the `tags` field. Tags are comma-separated and can be found\
+    \ in the portal alongside queue configuration. Metrics returned will reflect only engagements and agents matching both\
+    \ the queue and the specified tags.\n\n**Example with tags:**\n\n```json\n{\n  \"commType\": \"voice\",\n  \"queueId\"\
+    : \"003d010826307dd6630992437c\",\n  \"tags\": \"006d0110160d0bea955297d80e, 006d01101602a2f055c1a03dcb\"\n}\n```\n\n\
+    ### Important Notes\n\n* Metrics are real-time — each request returns the current state of the queue at the time of the\
+    \ call.\n* If no engagements are currently waiting, `oldestEngagementWaiting` returns an empty string and `queueOccupancy`\
+    \ returns `0`.\n* The `commType` field must match an active channel configured on the queue. Querying an inactive or unconfigured\
+    \ channel will return a 404.\n* This API is rate limited to **600 requests per minute** per client credential.\n* The\
+    \ account/tenant is automatically derived from your Bearer token — no separate account identifier is required in the request.\n"
+  version: 1.0.0
+  contact:
+    name: Avaya Developer Support
+    url: https://developers.avayacloud.com/avaya-infinity/
+tags:
+- name: Queue Metrics
+  description: Real-time metrics for queues, including agent availability, wait counts, and occupancy.
+servers:
+- url: https://core.{customerId}.ec.avayacloud.com/api/matching-extensions/v1
+  description: Production
+  variables:
+    customerId:
+      description: Your organization subdomain identifier (e.g., avaya1234)
+      default: your-org-id
+paths:
+  /queue-metrics:
+    post:
+      summary: Query queue metrics
+      description: "Returns real-time metrics for a specific queue and communication channel, including agent counts, engagement\
+        \ wait counts, queue occupancy, and the timestamp of the oldest waiting engagement.\n\nBoth `commType` and `queueId`\
+        \ are required. Optionally include `tags` to filter metrics to a specific tag subset within the queue.\n\n## Finding\
+        \ Your Customer Subdomain\n\nYour subdomain is found in your Avaya Infinity portal URL and is required for all API\
+        \ calls.\n\n**Example:** If your portal URL is:\n\n```\nhttps://core.avaya1234.ec.avayacloud.com/app/core-config-ui/\n\
+        ```\n\nYour subdomain is: **`avaya1234`**\n\n**To use this API:**\n\n1. **Find your subdomain** from your Infinity\
+        \ portal URL (as shown above)\n2. **Get your Bearer token** using the `QUEUE_METRICS` client credential (see Authentication\
+        \ below)\n3. **In the API explorer on the right:**\n   * Click on `{customerId}` in the URL field and replace it with\
+        \ your actual subdomain\n   * Paste your Bearer token in the Credentials section\n   * Fill out the Body Parameters\
+        \ with your `commType` and `queueId`\n\n## Authentication\n\nThis endpoint requires a valid OAuth 2.0 Bearer token.\
+        \ To use this API, you will need a `client_id` and `client_secret` provisioned with the **`QUEUE_METRICS`** scope\
+        \ — this is not self-serve and requires raising a request with Avaya Support.\n\nOnce you have your credentials, use\
+        \ the client credentials flow to obtain a token:\n\n```\nPOST https://core.{customerId}.ec.avayacloud.com/auth/realms/avaya/protocol/openid-connect/token\n\
+        Content-Type: application/x-www-form-urlencoded\n\ngrant_type=client_credentials&client_id=<your_client_id>&client_secret=<your_client_secret>&scope=QUEUE_METRICS\n\
+        ```\n\nInclude the returned token in the `Authorization: Bearer <token>` header of each request.\n\nFor full authentication\
+        \ instructions, see [How to Authenticate with Avaya Infinity APIs](https://developers.avayacloud.com/avaya-infinity/docs/how-to-authenticate-with-avaya-infinitytm-apis).\n\
+        \n## Working with Queue IDs and Tags\n\nThe `queueId` field accepts the unique identifier of the queue — not its display\
+        \ name. Queue IDs can be found in the Avaya Infinity portal or retrieved via the Queue Management API.\n\nOptionally,\
+        \ filter metrics further by providing one or more tag IDs in the `tags` field. When provided, metrics are scoped to\
+        \ only engagements and agents matching both the queue and the specified tags.\n\n**Supported tag formats:**\n\n```\n\
+        Single tag:       \"006d0110160d0bea955297d80e\"\nComma-separated:  \"006d0110160d0bea955297d80e, 006d01101602a2f055c1a03dcb\"\
+        \nArray notation:   \"[006d0110160d0bea955297d80e, 006d01101602a2f055c1a03dcb]\"\n```\n\n## Important Notes\n\n* Metrics\
+        \ are real-time — each request returns the current state of the queue at the time of the call.\n* If no engagements\
+        \ are currently waiting, `oldestEngagementWaiting` returns an empty string and `queueOccupancy` returns `0`.\n* If\
+        \ an unrecognized or non-existent `queueId` is provided, the API returns a `200` with all metrics zeroed out rather\
+        \ than a `404`.\n* The `commType` field must match an active channel configured on the queue.\n* The account/tenant\
+        \ is automatically derived from your Bearer token — no separate account identifier is required in the request.\n\n\
+        ## DOS Protection & Rate Limiting\n\n* This endpoint is rate limited to 600 requests per minute per client credential.\n\
+        \n## Security Implementation Guidelines\n\n* Never expose your `client_secret` or Bearer token to client-side applications.\n\
+        * Implement proper error handling — avoid surfacing internal error details to end users.\n"
+      operationId: queryQueueMetrics
+      tags:
+      - Queue Metrics
+      security:
+      - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/QueueMetricsQueryRequest'
+            examples:
+              basicQuery:
+                summary: Query metrics for a voice queue
+                value:
+                  commType: voice
+                  queueId: 003d010826307dd6630992437c
+              queryWithTags:
+                summary: Query metrics for a chat queue filtered by tags
+                value:
+                  commType: chat
+                  queueId: 003d010826307dd6630992437c
+                  tags: 006d0110160d0bea955297d80e, 006d01101602a2f055c1a03dcb
+      responses:
+        '200':
+          description: Real-time metrics returned successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MetricsResponse'
+              examples:
+                voiceQueueMetrics:
+                  summary: Voice queue with active agents and waiting engagements
+                  value:
+                    type: attribute
+                    channel: voice
+                    accountId: '1234567890'
+                    agentStaffedCount: 40
+                    agentReadyCount: 8
+                    agentBusyCount: 22
+                    waitingEngagementCount: 31
+                    processingEngagementCount: 16
+                    queueOccupancy: 0.0076899347
+                    oldestEngagementWaiting: '2025-11-03T13:26:24Z'
+                    timestamp: '2025-11-03T13:26:24Z'
+                    attributes:
+                    - queue:003d010826307dd6630992437c
+                emptyQueue:
+                  summary: Queue with no activity, or unrecognized queue ID — both return zeroed metrics
+                  value:
+                    type: attribute
+                    channel: voice
+                    accountId: '1234567890'
+                    agentStaffedCount: 10
+                    agentReadyCount: 10
+                    agentBusyCount: 0
+                    waitingEngagementCount: 0
+                    processingEngagementCount: 0
+                    queueOccupancy: 0
+                    oldestEngagementWaiting: ''
+                    timestamp: '2025-11-03T13:26:24Z'
+                    attributes:
+                    - queue:003d010826307dd6630992437c
+                queryWithTags:
+                  summary: Queue metrics filtered by tags
+                  value:
+                    type: attribute
+                    channel: chat
+                    accountId: '1234567890'
+                    agentStaffedCount: 15
+                    agentReadyCount: 4
+                    agentBusyCount: 8
+                    waitingEngagementCount: 5
+                    processingEngagementCount: 3
+                    queueOccupancy: 0.034
+                    oldestEngagementWaiting: '2025-11-03T13:20:10Z'
+                    timestamp: '2025-11-03T13:26:24Z'
+                    attributes:
+                    - queue:003d010826307dd6630992437c
+                    - tag:006d0110160d0bea955297d80e
+                    - tag:006d01101602a2f055c1a03dcb
+        '400':
+          description: Bad request — missing or malformed required fields.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                missingCommType:
+                  summary: commType is missing
+                  value:
+                    error: commType is required
+                missingQueueId:
+                  summary: queueId is missing
+                  value:
+                    error: queueId is required
+                malformedBody:
+                  summary: Request body could not be parsed
+                  value:
+                    error: failed to decode request body
+        '401':
+          description: 'Missing or invalid Bearer token. Note that in practice, requests made without a valid token may receive
+            a `302` redirect response at the gateway level rather than a `401` JSON error. Ensure your HTTP client does not
+            automatically follow redirects when an unexpected `302` is received — this is an indicator of a missing or expired
+            token.
+
+            '
+        '403':
+          description: Forbidden — token is valid but does not have the `QUEUE_METRICS` scope.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                error: 'RBAC: access denied'
+        '404':
+          description: 'Returned when a timeout occurs waiting for initial metrics. Note that providing an unrecognized or
+            non-existent `queueId` does **not** return a 404 — the API returns a `200` with all metrics fields zeroed out
+            in that case.
+
+            '
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                timeout:
+                  summary: Timed out waiting for initial metrics
+                  value:
+                    error: timeout waiting for initial metrics
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                error: metrics service not available
+        '503':
+          description: Service temporarily unavailable. Retry after a short delay.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                error: 'service is not ready: stream not connected'
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: 'OAuth 2.0 Bearer Token authentication using the client credentials flow.
+
+
+        To use this API, you will need a `client_id` and `client_secret` provisioned with the **`QUEUE_METRICS`** scope. This
+        is not self-serve — raise a request with Avaya Support to obtain credentials.
+
+
+        Once provisioned, request a token:
+
+
+        ```
+
+        POST https://core.{customerId}.ec.avayacloud.com/auth/realms/avaya/protocol/openid-connect/token
+
+        Content-Type: application/x-www-form-urlencoded
+
+
+        grant_type=client_credentials&client_id=<your_client_id>&client_secret=<your_client_secret>&scope=QUEUE_METRICS
+
+        ```
+
+
+        Include the returned token as: `Authorization: Bearer <access_token>`
+
+
+        For full instructions, see [How to Authenticate with Avaya Infinity APIs](https://developers.avayacloud.com/avaya-infinity/docs/how-to-authenticate-with-avaya-infinitytm-apis).
+
+        '
+  schemas:
+    MetricsType:
+      type: string
+      enum:
+      - attribute
+      - user
+      description: 'The internal type of the metrics query. For queue-based queries via this API, this will always be `attribute`.
+
+        '
+    QueueMetricsQueryRequest:
+      type: object
+      required:
+      - commType
+      - queueId
+      description: Request body for querying real-time metrics for a specific queue and channel.
+      properties:
+        commType:
+          type: string
+          description: 'The communication channel to query metrics for. Must match a channel actively configured on the target
+            queue.
+
+
+            Valid values: `voice`, `chat`, `email`
+
+            '
+          example: voice
+        queueId:
+          type: string
+          description: 'The unique identifier of the queue to query. Queue IDs can be found in the Avaya Infinity portal or
+            via the Queue Management API.
+
+            '
+          example: 003d010826307dd6630992437c
+        tags:
+          type: string
+          description: 'Optional. One or more tag IDs to filter metrics to a specific subset of agents and engagements within
+            the queue. When provided, metrics are scoped to only those matching all specified tags.
+
+
+            Supported formats:
+
+            - Single tag: `"006d0110160d0bea955297d80e"`
+
+            - Comma-separated: `"006d0110160d0bea955297d80e, 006d01101602a2f055c1a03dcb"`
+
+            - Array notation: `"[006d0110160d0bea955297d80e, 006d01101602a2f055c1a03dcb]"`
+
+            '
+          example: 006d0110160d0bea955297d80e, 006d01101602a2f055c1a03dcb
+    MetricsResponse:
+      type: object
+      description: Real-time metrics snapshot for the requested queue and channel.
+      required:
+      - type
+      - channel
+      - accountId
+      - agentStaffedCount
+      - agentReadyCount
+      - agentBusyCount
+      - waitingEngagementCount
+      - processingEngagementCount
+      - queueOccupancy
+      - oldestEngagementWaiting
+      - timestamp
+      properties:
+        type:
+          $ref: '#/components/schemas/MetricsType'
+        channel:
+          type: string
+          description: The communication channel these metrics apply to.
+          example: voice
+        accountId:
+          type: string
+          description: The account/tenant identifier derived from the Bearer token.
+          example: '1234567890'
+        agentStaffedCount:
+          type: integer
+          format: int32
+          description: Total number of agents currently logged in and assigned to this queue.
+          example: 40
+        agentReadyCount:
+          type: integer
+          format: int32
+          description: Number of agents in a Ready state and available to handle engagements.
+          example: 8
+        agentBusyCount:
+          type: integer
+          format: int32
+          description: Number of agents currently handling an active engagement.
+          example: 22
+        waitingEngagementCount:
+          type: integer
+          format: int32
+          description: Number of engagements currently waiting in queue to be assigned to an agent.
+          example: 31
+        processingEngagementCount:
+          type: integer
+          format: int32
+          description: Number of engagements currently being handled by an agent (in progress).
+          example: 16
+        queueOccupancy:
+          type: number
+          format: float
+          description: Queue occupancy rate as a decimal between 0 and 1 (e.g., `0.75` means 75% occupied). Returns `0` when
+            no engagements are waiting or in progress.
+          example: 0.0076899347
+        oldestEngagementWaiting:
+          type: string
+          format: date-time
+          description: Timestamp (ISO 8601) of the oldest engagement currently waiting in queue. Returns an empty string if
+            no engagements are waiting.
+          example: '2025-11-03T13:26:24Z'
+        timestamp:
+          type: string
+          format: date-time
+          description: Timestamp (ISO 8601) indicating when this metrics snapshot was collected.
+          example: '2025-11-03T13:26:24Z'
+        attributes:
+          type: array
+          nullable: true
+          items:
+            type: string
+          description: The attribute values used to resolve these metrics, in `queue:{queueId}` and `tag:{tagId}` format.
+          example:
+          - queue:003d010826307dd6630992437c
+    ErrorResponse:
+      type: object
+      description: Standard error response.
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          description: A message describing what went wrong.
+          example: metrics not found

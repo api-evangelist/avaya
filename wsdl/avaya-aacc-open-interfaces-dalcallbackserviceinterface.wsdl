@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<wsdl:definitions name="dal_client_service_interface" 
+	targetNamespace="http://www.nortel.com/soa/oi/cct/DALCallbackService" 
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" 
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+	xmlns:service="http://www.nortel.com/soa/oi/cct/DALCallbackService"
+	xmlns:types="http://www.nortel.com/soa/oi/cct/types" 
+	xmlns:exceptions="http://www.nortel.com/soa/oi/cct/faults"
+	xmlns:local="http://www.nortel.com/soa/oi/cct/types/DALCallbackService">
+
+	<wsdl:import 
+		namespace="http://www.nortel.com/soa/oi/cct/faults" 
+		location="SessionServiceExceptions.wsdl" />
+
+	<wsdl:types>
+
+		<xsd:schema elementFormDefault="qualified" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+			targetNamespace="http://www.nortel.com/soa/oi/cct/types/DALCallbackService">
+
+			<xsd:import namespace="http://www.nortel.com/soa/oi/cct/types" schemaLocation="types.xsd"></xsd:import>
+
+			<xsd:complexType name="AddressEventRequest">
+				<xsd:sequence>
+					<xsd:element name="addressId" type="xsd:int" />	
+					<xsd:element name="addressName" type="xsd:string" />					
+					<xsd:element name="addressTypeId" type="xsd:string" />
+					<xsd:element name="enabled" type="xsd:boolean" />
+					<xsd:element name="providerName" type="xsd:string" />		
+				</xsd:sequence>
+			</xsd:complexType>
+			
+			<xsd:complexType name="TerminalEventRequest">
+				<xsd:sequence>
+					<xsd:element name="terminalId" type="xsd:int" />	
+					<xsd:element name="terminalName" type="xsd:string" />					
+					<xsd:element name="terminalTypeId" type="xsd:string" />
+					<xsd:element name="enabled" type="xsd:boolean" />
+					<xsd:element name="providerName" type="xsd:string" />		
+				</xsd:sequence>
+			</xsd:complexType>
+			
+			<xsd:complexType name="AgentEventRequest">
+				<xsd:sequence>
+					<xsd:element name="agentId" type="xsd:int" />	
+					<xsd:element name="agentLoginId" type="xsd:string" />					
+					<xsd:element name="agentFirstName" type="xsd:string" />
+					<xsd:element name="agentLastName" type="xsd:string" />	
+					<xsd:element name="enabled" type="xsd:boolean" />					
+				</xsd:sequence>
+			</xsd:complexType>
+			
+			<xsd:complexType name="DALEventRequest">
+				<xsd:sequence>
+					<xsd:element name="message" type="xsd:string"/>
+				</xsd:sequence>
+			</xsd:complexType>
+
+			<xsd:complexType final="#all" name="UserEventRequest" >
+				<xsd:sequence>
+					<xsd:element maxOccurs="unbounded" minOccurs="0" name="item" nillable="true" type="xsd:string" />					
+				</xsd:sequence>
+			</xsd:complexType>
+
+			<xsd:element name="OnAddressAddedRequest" type="local:AddressEventRequest" />
+			<xsd:element name="OnAddressDeletedRequest" type="local:AddressEventRequest" />
+			<xsd:element name="OnAddressMapChangeRequest" type="local:AddressEventRequest" />
+			
+			<xsd:element name="OnTerminalAddedRequest" type="local:TerminalEventRequest" />
+			<xsd:element name="OnTerminalDeletedRequest" type="local:TerminalEventRequest" />
+			<xsd:element name="OnTerminalMapEventRequest" type="local:TerminalEventRequest" />
+			
+			<xsd:element name="OnAgentAddedRequest" type="local:AgentEventRequest" />
+			<xsd:element name="OnAgentDeletedRequest" type="local:AgentEventRequest" />
+			<xsd:element name="OnAgentRenameRequest" type="local:AgentEventRequest" />
+			
+			<xsd:element name="OnUserEventRequest" type="local:UserEventRequest" />
+			
+			<xsd:element name="OnEndOfGracePeriodEventRequest" type="local:DALEventRequest"/>
+			<xsd:element name="OnNormalOperationResumedEventRequest" type="local:DALEventRequest"/>
+			<xsd:element name="OnSystemShutdownEventRequest" type="local:DALEventRequest"/>
+			
+		</xsd:schema>
+	</wsdl:types>
+	
+	<!-- ADDRESS METHODS -->
+	<wsdl:message name="OnAddressAddedRequest">
+		<wsdl:part name="parameters" element="local:OnAddressAddedRequest" />
+	</wsdl:message>	
+	<wsdl:message name="OnAddressAddedResponse"></wsdl:message>
+	
+	<wsdl:message name="OnAddressDeletedRequest">
+		<wsdl:part name="parameters" element="local:OnAddressDeletedRequest" />
+	</wsdl:message>	
+	<wsdl:message name="OnAddressDeletedResponse"></wsdl:message>
+	
+	<wsdl:message name="OnAddressMapChangeRequest">
+		<wsdl:part name="parameters" element="local:OnAddressMapChangeRequest" />
+	</wsdl:message>	
+	<wsdl:message name="OnAddressMapChangeResponse"></wsdl:message>
+	
+	<!-- TERMINAL METHODS -->
+	<wsdl:message name="OnTerminalAddedRequest">
+		<wsdl:part name="parameters" element="local:OnTerminalAddedRequest" />
+	</wsdl:message>	
+	<wsdl:message name="OnTerminalAddedResponse"></wsdl:message>
+	
+	<wsdl:message name="OnTerminalDeletedRequest">
+		<wsdl:part name="parameters" element="local:OnTerminalDeletedRequest" />
+	</wsdl:message>	
+	<wsdl:message name="OnTerminalDeletedResponse"></wsdl:message>
+	
+	<wsdl:message name="OnTerminalMapEventRequest">
+		<wsdl:part name="parameters" element="local:OnTerminalMapEventRequest" />
+	</wsdl:message>	
+	<wsdl:message name="OnTerminalMapEventResponse"></wsdl:message>
+	
+	<!-- AGENT METHODS -->
+	<wsdl:message name="OnAgentAddedRequest">
+		<wsdl:part name="parameters" element="local:OnAgentAddedRequest" />
+	</wsdl:message>	
+	<wsdl:message name="OnAgentAddedResponse"></wsdl:message>
+	
+	<wsdl:message name="OnAgentDeletedRequest">
+		<wsdl:part name="parameters" element="local:OnAgentDeletedRequest" />
+	</wsdl:message>	
+	<wsdl:message name="OnAgentDeletedResponse"></wsdl:message>
+	
+	<wsdl:message name="OnAgentRenameRequest">
+		<wsdl:part name="parameters" element="local:OnAgentRenameRequest" />
+	</wsdl:message>	
+	<wsdl:message name="OnAgentRenameResponse"></wsdl:message>
+	
+	<!-- USER METHODS -->
+	<wsdl:message name="OnUserEventRequest">
+		<wsdl:part name="parameters" element="local:OnUserEventRequest" />
+	</wsdl:message>
+	<wsdl:message name="OnUserEventResponse"></wsdl:message>
+	
+	<!-- LicneseManager: EndOfGracePeriod -->
+	
+	<wsdl:message name="OnEndOfGracePeriodEventRequest">
+	<wsdl:part name="parameter" element="local:OnEndOfGracePeriodEventRequest"></wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="OnEndOfGracePeriodEventResponse"></wsdl:message>
+	
+	<wsdl:message name="OnNormalOperationResumedEventRequest">
+	<wsdl:part name="parameter" element="local:OnNormalOperationResumedEventRequest"></wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="OnNormalOperationResumedEventResponse"></wsdl:message>
+	
+	<wsdl:message name="OnSystemShutdownEventRequest">
+	<wsdl:part name="parameter" element="local:OnSystemShutdownEventRequest"></wsdl:part>
+	</wsdl:message>
+	
+	<wsdl:message name="OnSystemShutdownEventResponse"></wsdl:message>
+	
+
+	<wsdl:portType name="DALCallbackService">
+		<!-- ADDRESS METHODS -->
+		<wsdl:operation name="OnAddressAdded">
+			<wsdl:input message="service:OnAddressAddedRequest" />
+			<wsdl:output message="service:OnAddressAddedResponse" />
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+		</wsdl:operation>
+
+		<wsdl:operation name="OnAddressDeleted">
+			<wsdl:input message="service:OnAddressDeletedRequest" />
+			<wsdl:output message="service:OnAddressDeletedResponse" />
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+		</wsdl:operation>
+
+		<wsdl:operation name="OnAddressMapChange">
+			<wsdl:input message="service:OnAddressMapChangeRequest" />
+			<wsdl:output message="service:OnAddressMapChangeResponse" />
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+		</wsdl:operation>
+		
+		<!-- TERMINAL METHODS -->
+		<wsdl:operation name="OnTerminalAdded">
+			<wsdl:input message="service:OnTerminalAddedRequest" />
+			<wsdl:output message="service:OnTerminalAddedResponse" />
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+		</wsdl:operation>
+
+		<wsdl:operation name="OnTerminalDeleted">
+			<wsdl:input message="service:OnTerminalDeletedRequest" />
+			<wsdl:output message="service:OnTerminalDeletedResponse" />
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+		</wsdl:operation>
+
+		<wsdl:operation name="OnTerminalMapEvent">
+			<wsdl:input message="service:OnTerminalMapEventRequest" />
+			<wsdl:output message="service:OnTerminalMapEventResponse" />
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+		</wsdl:operation>
+		
+		<!-- AGENT METHODS -->
+		<wsdl:operation name="OnAgentAdded">
+			<wsdl:input message="service:OnAgentAddedRequest" />
+			<wsdl:output message="service:OnAgentAddedResponse" />
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+		</wsdl:operation>
+
+		<wsdl:operation name="OnAgentDeleted">
+			<wsdl:input message="service:OnAgentDeletedRequest" />
+			<wsdl:output message="service:OnAgentDeletedResponse" />
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+		</wsdl:operation>
+
+		<wsdl:operation name="OnAgentRename">
+			<wsdl:input message="service:OnAgentRenameRequest" />
+			<wsdl:output message="service:OnAgentRenameResponse" />
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+		</wsdl:operation>
+		
+		<!-- USER METHODS -->
+		<wsdl:operation name="OnUserEvent">
+			<wsdl:input message="service:OnUserEventRequest" />
+			<wsdl:output message="service:OnUserEventResponse" />
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+		</wsdl:operation>
+		
+		<!--  License Manager:Events -->
+		<wsdl:operation name="OnEndOfGracePeriodEvent">
+		<wsdl:input message="service:OnEndOfGracePeriodEventRequest"></wsdl:input>
+		<wsdl:output message="service:OnEndOfGracePeriodEventResponse"></wsdl:output>
+		<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException"></wsdl:fault>
+		</wsdl:operation>
+		
+		<wsdl:operation name="OnNormalOperationResumedEvent">
+		<wsdl:input message="service:OnNormalOperationResumedEventRequest"></wsdl:input>
+		<wsdl:output message="service:OnNormalOperationResumedEventResponse"></wsdl:output>
+		<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException"></wsdl:fault>
+		</wsdl:operation>
+		
+		<wsdl:operation name="OnSystemShutdownEvent">
+		<wsdl:input message="service:OnSystemShutdownEventRequest"></wsdl:input>
+		<wsdl:output message="service:OnSystemShutdownEventResponse"></wsdl:output>
+		<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException"></wsdl:fault>
+		</wsdl:operation>
+	
+	</wsdl:portType>
+
+
+
+</wsdl:definitions>

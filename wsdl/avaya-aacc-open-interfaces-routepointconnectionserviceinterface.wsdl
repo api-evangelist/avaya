@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<wsdl:definitions name="route_point_connection_service_interface" 
+	targetNamespace="http://www.nortel.com/soa/oi/cct/RoutePointConnectionService" 
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" 
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+	xmlns:service="http://www.nortel.com/soa/oi/cct/RoutePointConnectionService"
+	xmlns:types="http://www.nortel.com/soa/oi/cct/types" 
+	xmlns:exceptions="http://www.nortel.com/soa/oi/cct/faults"
+	xmlns:local="http://www.nortel.com/soa/oi/cct/types/RoutePointConnectionService">
+
+	<wsdl:import namespace="http://www.nortel.com/soa/oi/cct/faults" location="SessionServiceExceptions.wsdl" />
+
+	<wsdl:types>
+
+		<xsd:schema elementFormDefault="qualified" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+			targetNamespace="http://www.nortel.com/soa/oi/cct/types/RoutePointConnectionService">
+
+			<xsd:import namespace="http://www.nortel.com/soa/oi/cct/types" schemaLocation="types.xsd"></xsd:import>
+			
+			<xsd:complexType name="RouteRequest">
+				<xsd:sequence>
+					<xsd:element name="ssoToken" type="types:ssoToken" />
+					<xsd:element name="routePointConnection" type="types:connection" />				
+					<xsd:element name="destinationAddress" type="xsd:string" />		
+				</xsd:sequence>
+			</xsd:complexType>
+
+			<xsd:complexType name="RouteResponse">
+				<xsd:sequence>
+					<xsd:element name="connection" type="types:connection" />
+				</xsd:sequence>
+			</xsd:complexType>
+			
+			<xsd:complexType name="RoutePointRetrieveRequest">
+				<xsd:sequence>
+					<xsd:element name="ssoToken" type="types:ssoToken" />
+					<xsd:element name="routePointConnection" type="types:connection" />				
+					<xsd:element name="address" type="types:address" />
+				</xsd:sequence>
+			</xsd:complexType>
+			
+			<xsd:complexType name="GiveMediaTreatmentRequest">
+				<xsd:sequence>
+					<xsd:element name="ssoToken" type="types:ssoToken" />
+					<xsd:element name="connection" type="types:connection" />
+					<xsd:element name="treatment" type="types:mediaTreatment" />
+				</xsd:sequence>
+			</xsd:complexType>
+			
+			<xsd:complexType name="GiveMediaTreatmentResponse">
+				<xsd:sequence>
+					<xsd:element name="connection" type="types:connection" />
+				</xsd:sequence>
+			</xsd:complexType>
+			
+			<xsd:complexType name="ConnectionRequest">
+				<xsd:sequence>
+					<xsd:element name="ssoToken" type="types:ssoToken" />
+					<xsd:element name="connection" type="types:connection" />
+				</xsd:sequence>
+			</xsd:complexType>
+			
+			<xsd:complexType name="ConnectionCapabilitiesResponse">
+				<xsd:sequence>
+					<xsd:element name="connectionCapabilities" type="types:routePointConnectionCapabilities" />
+				</xsd:sequence>
+			</xsd:complexType>
+			
+			<xsd:element name="GetVersionRequest" type="types:getVersionRequest" />
+			<xsd:element name="GetVersionResponse" type="types:getVersionResponse" />
+			
+			<xsd:element name="RouteRequest" type="local:RouteRequest" />
+			<xsd:element name="RouteResponse" type="local:RouteResponse" />
+			
+			<xsd:element name="RoutePointRetrieveRequest" type="local:RoutePointRetrieveRequest" />
+			
+			<xsd:element name="GiveMediaTreatmentRequest" type="local:GiveMediaTreatmentRequest" />
+			<xsd:element name="GiveMediaTreatmentResponse" type="local:GiveMediaTreatmentResponse" />
+			
+			<xsd:element name="GetCapabilitiesRequest" type="local:ConnectionRequest" />
+			<xsd:element name="GetCapabilitiesResponse" type="local:ConnectionCapabilitiesResponse" />
+
+		</xsd:schema>
+	</wsdl:types>
+	
+	<wsdl:message name="GetVersionRequest">
+		<wsdl:part name="parameters" element="local:GetVersionRequest" />
+	</wsdl:message>
+	
+	<wsdl:message name="GetVersionResponse">
+		<wsdl:part name="response" element="local:GetVersionResponse" />
+	</wsdl:message>
+	
+	<wsdl:message name="RouteRequest">
+		<wsdl:part name="parameters" element="local:RouteRequest" />
+	</wsdl:message>
+	
+	<wsdl:message name="RouteResponse">
+		<wsdl:part name="result" element="local:RouteResponse" />
+	</wsdl:message>
+	
+	<wsdl:message name="RoutePointRetrieveRequest">
+		<wsdl:part name="parameters" element="local:RoutePointRetrieveRequest" />
+	</wsdl:message>
+	
+	<wsdl:message name="RoutePointRetrieveResponse"></wsdl:message>
+	
+	<wsdl:message name="GiveMediaTreatmentRequest">
+		<wsdl:part name="parameters" element="local:GiveMediaTreatmentRequest" />
+	</wsdl:message>
+	
+	<wsdl:message name="GiveMediaTreatmentResponse">
+		<wsdl:part name="response" element="local:GiveMediaTreatmentResponse" />
+	</wsdl:message>
+	
+	<wsdl:message name="GetCapabilitiesRequest">
+		<wsdl:part name="parameters" element="local:GetCapabilitiesRequest" />
+	</wsdl:message>
+	<wsdl:message name="GetCapabilitiesResponse">
+		<wsdl:part name="response" element="local:GetCapabilitiesResponse" />
+	</wsdl:message>
+
+	<wsdl:portType name="RoutePointConnectionService">
+		
+		<wsdl:operation name="GetVersion">
+			<wsdl:input message="service:GetVersionRequest" />
+			<wsdl:output message="service:GetVersionResponse" />
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="GetVersionException" message="exceptions:GetVersionException" />
+		</wsdl:operation>
+		
+		<wsdl:operation name="Route">
+			<wsdl:input message="service:RouteRequest" />
+			<wsdl:output message="service:RouteResponse" />
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="RouteException" message="exceptions:RouteException" />
+		</wsdl:operation>
+
+		<wsdl:operation name="RoutePointRetrieve">
+			<wsdl:input message="service:RoutePointRetrieveRequest" />
+			<wsdl:output message="service:RoutePointRetrieveResponse" />
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="RoutePointRetrieveException" message="exceptions:RoutePointRetrieveException" />
+		</wsdl:operation>
+		
+		<wsdl:operation name="GiveMediaTreatment">
+			<wsdl:input message="service:GiveMediaTreatmentRequest" />
+			<wsdl:output message="service:GiveMediaTreatmentResponse" />
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="GiveMediaTreatmentException" message="exceptions:GiveMediaTreatmentException" />
+		</wsdl:operation>
+
+		<wsdl:operation name="GetCapabilities">
+			<wsdl:input message="service:GetCapabilitiesRequest" />
+			<wsdl:output message="service:GetCapabilitiesResponse" />
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="GetCapabilitiesException" message="exceptions:GetCapabilitiesException" />
+		</wsdl:operation>
+	</wsdl:portType>
+
+
+
+</wsdl:definitions>

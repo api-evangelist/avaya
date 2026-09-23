@@ -1,0 +1,2646 @@
+# x-archived-from: avaya-infinity-user-management-openapi.yml
+# x-archived-on: 2026-09-16
+openapi: 3.1.1
+info:
+  title: User Management
+  description: 'APIs for creating, updating and retrieving individual users.
+
+    '
+  version: 0.0.1
+  contact:
+    name: Avaya API Team
+    url: https://developers.avayacloud.com/avaya-infinity/
+  license:
+    name: Avaya Software Development Kit (SDK) Software License Terms
+    url: https://support.avaya.com/css/P8/documents/101038288
+servers:
+- url: https://core.{customerId}.ec.avayacloud.com/api/config/v1
+  description: Production
+  variables:
+    customerId:
+      description: Your organization identifier
+      default: your-org-id
+security:
+- BearerAuth: []
+tags:
+- name: User
+  description: 'Operations related to individual users.
+
+    '
+- name: Bulk User
+  description: 'Bulk operations related to Users: Add, Update, Export.
+
+    '
+paths:
+  /users:
+    get:
+      tags:
+      - User
+      summary: Get List of Users
+      description: "**Required Role:** Admin Portal or Admin API Consumer\n\n\nRetrieves a list of users with optional filtering\
+        \ and related data.\n\nQuery parameters control which related data is included in the response (groups, location,\
+        \ CRM config)\nand whether folder information should be returned.\n\n**Status Filtering:**\n- Use the `status` query\
+        \ parameter to filter by user status: `ENABLED` (default), `DISABLED`, or `ALL`\n\n**Deleted Users:**\n- Use the `deleted`\
+        \ query parameter to control visibility of soft-deleted users:\n  `EXCLUDE` (default), `INCLUDE`, or `ONLY`\n- When\
+        \ `deleted=ONLY`, the `status` filter is ignored because deleted users are always disabled\n"
+      operationId: getUsers
+      parameters:
+      - name: status
+        in: query
+        description: 'Filter users by status.
+
+          - `ENABLED` (default): Only enabled users
+
+          - `DISABLED`: Only disabled users
+
+          - `ALL`: All users regardless of status
+
+          '
+        required: false
+        schema:
+          type: string
+          enum:
+          - ENABLED
+          - DISABLED
+          - ALL
+          default: ENABLED
+      - name: deleted
+        in: query
+        description: "Control visibility of soft-deleted users.\n- `EXCLUDE` (default): Hide deleted users\n- `INCLUDE`: Include\
+          \ deleted users alongside non-deleted users\n- `ONLY`: Return only deleted users (the `status` filter is ignored\
+          \ because\n  deleted users are always disabled)\n"
+        required: false
+        schema:
+          type: string
+          enum:
+          - EXCLUDE
+          - INCLUDE
+          - ONLY
+          default: EXCLUDE
+      - name: folders
+        in: query
+        description: Include folder hierarchy and breadcrumbs in the response
+        required: false
+        schema:
+          type: boolean
+          default: false
+      - name: folderId
+        in: query
+        description: 'Filter users by folderId (includes subfolders recursively).
+
+          - Omit parameter: Returns users from all folders
+
+          - Empty string (""): Returns users in root folder only (not in any subfolder)
+
+          - 26-character folder ID: Returns users in the specified folder AND all subfolders
+
+          '
+        required: false
+        schema:
+          oneOf:
+          - $ref: '#/components/schemas/FolderId'
+          - type: string
+            enum:
+            - ''
+            description: Empty string for root folder
+      - name: inFolder
+        in: query
+        description: Filter users that are in or not in a folder.
+        required: false
+        schema:
+          type: boolean
+      - $ref: '#/components/parameters/sort'
+      - $ref: '#/components/parameters/sortBy'
+      - name: profileId
+        in: query
+        description: Filter by profile ID
+        required: false
+        schema:
+          $ref: '#/components/schemas/ProfileId'
+      - name: hasProfile
+        in: query
+        description: Filter users that have or do not have a profile.
+        required: false
+        schema:
+          type: boolean
+      - name: licType
+        in: query
+        description: Filter by license type
+        required: false
+        schema:
+          $ref: '#/components/schemas/LicenseType'
+      - name: locationId
+        in: query
+        description: Filter by location ID
+        required: false
+        schema:
+          $ref: '#/components/schemas/LocationId'
+      - name: hasLocation
+        in: query
+        description: Filter users that have or do not have a location.
+        required: false
+        schema:
+          type: boolean
+      - name: groups
+        in: query
+        description: Include group memberships with full group details (groupId, name, type)
+        required: false
+        schema:
+          type: boolean
+          default: true
+      - name: location
+        in: query
+        description: Include E911 location details for each user
+        required: false
+        schema:
+          type: boolean
+          default: true
+      - name: crmConfigId
+        in: query
+        description: Include CRM configuration details for each user
+        required: false
+        schema:
+          type: boolean
+          default: true
+      - name: updatedSince
+        in: query
+        description: 'Filter users updated on or after this UTC timestamp.
+
+          Must be in ISO 8601 format (e.g., 2026-01-22T00:00:00Z).
+
+          When used with updatedUntil, updatedUntil must be greater than updatedSince.
+
+          Note: newly created users have lastUpdated set to their creation time.
+
+          '
+        required: false
+        schema:
+          type: string
+          format: date-time
+      - name: updatedUntil
+        in: query
+        description: 'Filter users updated on or before this UTC timestamp.
+
+          Must be in ISO 8601 format (e.g., 2026-01-22T23:59:59Z).
+
+          When used with updatedSince, must be greater than updatedSince.
+
+          '
+        required: false
+        schema:
+          type: string
+          format: date-time
+      - $ref: '#/components/parameters/pageSize'
+      - $ref: '#/components/parameters/pageNumber'
+      responses:
+        '200':
+          $ref: '#/components/responses/GetUsersResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+        default:
+          $ref: '#/components/responses/InternalServerError'
+    post:
+      tags:
+      - User
+      summary: Create a user
+      description: "**Required Role:** Admin Portal or Admin API Consumer\n\n\nCreates a user.\n\nThe type of user is controlled\
+        \ by the license type, which is typically\nan agent of some kind, but other types can be supported via the 'nonAgent'\
+        \ type.\n\nAt a minimum, creating a user requires:\n- the user's email address\n- the user's first and last names\n\
+        - the user's license type or a profile to apply to the user (the license type will be\n  taken from the profile if\
+        \ specified)\n\n**License Types and Their Defaults:**\n- `nonAgent`: Limited permissions, minimal spaces (1 task,\
+        \ 1 email, 1 messaging)\n- `voiceOnlyAgent`: Voice-focused permissions, phone space (2 task, 1 phone)\n- `digitalOnlyAgent`:\
+        \ Digital channels, no phone (3 task, 2 email, 2 messaging)\n- `omniChannelAgent`: All channels except video (3 task,\
+        \ 2 email, 1 phone, 2 messaging)\n- `omniChannelAgentEnhanced`: All channels with enhanced features and session statistics\n\
+        - `hybridVoiceAgent`: Balanced voice and digital capabilities\n\n**Validation Rules:**\n- User's email address must\
+        \ be unique within the account\n- License type must be valid for the account\n- Profile must exist (if profile ID\
+        \ is provided)\n- Folder must exist (if folder ID is provided)\n- Location must exist (if location ID is provided)\
+        \ - location IDs are system-generated\n"
+      operationId: createUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUserRequest'
+      responses:
+        '201':
+          $ref: '#/components/responses/CreateUserResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '409':
+          $ref: '#/components/responses/UserConflict'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+        default:
+          $ref: '#/components/responses/InternalServerError'
+  /users/{userIdOrEmail}:
+    get:
+      tags:
+      - User
+      summary: Get Single User Details
+      description: '**Required Role:** Admin Portal or Admin API Consumer
+
+
+
+        Retrieves detailed information about a specific user including their configuration,
+
+        permissions, queue assignments, and related data.
+
+
+        The path parameter can be either a userId (26-character internal ID starting with ''002'')
+
+        or an email address.
+
+
+        Query parameters control which related data is included in the response.
+
+        '
+      operationId: getUser
+      parameters:
+      - $ref: '#/components/parameters/userIdOrEmail'
+      - name: queues
+        in: query
+        description: Include queue assignments with names
+        required: false
+        schema:
+          type: boolean
+          default: false
+      - name: queueLogins
+        in: query
+        description: Include current queue login sessions
+        required: false
+        schema:
+          type: boolean
+          default: false
+      - name: groups
+        in: query
+        description: Include group memberships
+        required: false
+        schema:
+          type: boolean
+          default: false
+      - name: location
+        in: query
+        description: Include E911 location details
+        required: false
+        schema:
+          type: boolean
+          default: false
+      - name: crmConfigId
+        in: query
+        description: Include CRM configuration
+        required: false
+        schema:
+          type: boolean
+          default: false
+      - name: reportsTo
+        in: query
+        description: Include reports-to user details (supervisor/manager relationship)
+        required: false
+        schema:
+          type: boolean
+          default: false
+      - name: externalUCProviderConnections
+        in: query
+        description: Include external UC provider connection details
+        required: false
+        schema:
+          type: boolean
+          default: false
+      responses:
+        '200':
+          description: User details retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserDetail'
+              examples:
+                success:
+                  $ref: '#/components/examples/GetUserDetailSuccess'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+        default:
+          $ref: '#/components/responses/InternalServerError'
+    patch:
+      tags:
+      - User
+      summary: Update a user
+      description: "**Required Role:** Admin Portal or Admin API Consumer\n\nUpdate one or more properties of a user. The\
+        \ user can be identified by their user ID\nor email address.\n\n**Agent Self-Edit Restrictions**\nWhen an agent edits\
+        \ their own profile (self-edit), the server enforces the following:\n\n*Read-only identity fields:*\nThe following\
+        \ fields are always read-only for agents and cannot be modified via self-edit.\nAny attempt returns **403 Forbidden**:\n\
+        `firstName`, `lastName`, `namePrefix`, `nameSuffix`, `title`, `email`, `mobile`.\nThese fields can only be changed\
+        \ by an administrator.\n\n*Auto Answer / WebHID Edit Restrictions:*\n  * If `allowAgentEditAutoAnswer` is `false`\
+        \ on the user record and the request includes\n    a change to `attributes.webRTC.autoAnswer.interaction`, the server\
+        \ returns **403 Forbidden**.\n  * If `allowAgentEditWebHIDHeadsetControl` is `false` on the user record and the request\n\
+        \    includes a change to `attributes.webHID.status`, the server returns **403 Forbidden**.\n  * Administrators editing\
+        \ other users are never restricted by these flags.\n  * Agents can still modify unrestricted fields (language, timezone,\
+        \ app theme, queues, etc.)\n    even when identity and Auto Answer / WebHID edits are restricted.\n\n**Agent Self-Edit\
+        \ Restrictions**\nWhen an agent edits their own profile (self-edit), the server enforces the following:\n\n*Read-only\
+        \ identity fields:*\nThe following fields are always read-only for agents and cannot be modified via self-edit.\n\
+        Any attempt returns **403 Forbidden**:\n`firstName`, `lastName`, `namePrefix`, `nameSuffix`, `title`, `email`, `mobile`.\n\
+        These fields can only be changed by an administrator.\n\n*Auto Answer / WebHID Edit Restrictions:*\n  * If `allowAgentEditAutoAnswer`\
+        \ is `false` on the user record and the request includes\n    a change to `attributes.webRTC.autoAnswer.interaction`,\
+        \ the server returns **403 Forbidden**.\n  * If `allowAgentEditWebHIDHeadsetControl` is `false` on the user record\
+        \ and the request\n    includes a change to `attributes.webHID.status`, the server returns **403 Forbidden**.\n  *\
+        \ Administrators editing other users are never restricted by these flags.\n  * Agents can still modify unrestricted\
+        \ fields (language, timezone, app theme, queues, etc.)\n    even when identity and Auto Answer / WebHID edits are\
+        \ restricted.\n\n** Disabling a User **\nA user can be disabled by performing an update to set the `status` property\
+        \ to `disabled`.\nThis can normally only be done if:\n  * the user is not logged in\n  * the user has no active interactions\n\
+        \  * the user has no pending interactions in their personal queue\nand a request to do so in any of those conditions\
+        \ will fail with a 422 error. This can be\noverridden by setting the `forceDisable` query parameter.\n"
+      operationId: updateUser
+      parameters:
+      - $ref: '#/components/parameters/userIdOrEmail'
+      - $ref: '#/components/parameters/forceDisable'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateUserRequest'
+      responses:
+        '200':
+          description: The updated user.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserDetail'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/UserCanNotBeDisabled'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+        default:
+          $ref: '#/components/responses/InternalServerError'
+  /users/{userId}:
+    delete:
+      tags:
+      - User
+      summary: Delete a user
+      description: '**Required Role:** Admin Portal or Admin API Consumer
+
+
+        Delete a user.
+
+
+        Only users in the `disabled` state can be deleted. Attempting to delete an `enabled`
+
+        user will fail with a 422 response.
+
+        '
+      operationId: deleteUser
+      parameters:
+      - $ref: '#/components/parameters/userId'
+      responses:
+        '204':
+          description: Result for successfully having deleted the user.
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/UserCanNotBeDeleted'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+        default:
+          $ref: '#/components/responses/InternalServerError'
+  /users/bulk-template:
+    get:
+      tags:
+      - Bulk User
+      summary: Download Bulk Template
+      description: '**Required Role:** Admin Portal or Admin API Consumer
+
+
+
+        Downloads the Bulk Operation Template as an `.xlsx` file.
+
+        '
+      operationId: downloadBulkTemplate
+      responses:
+        '200':
+          description: OK
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+              example: 'Email, Account Hierarchy, Last Name, First Name, Display Name, Password, Profile, Roles, Member Of,
+                Owned Groups
+
+                '
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+        default:
+          $ref: '#/components/responses/InternalServerError'
+  /users:bulk-add:
+    post:
+      tags:
+      - Bulk User
+      summary: Bulk Add Users
+      description: '**Required Role:** Admin Portal or Admin API Consumer
+
+
+
+        Bulk adds Users using the file provided. The following file formats are supported:
+
+
+        * `.xlsx`
+
+
+        The following fields must be unique otherwise a `HTTP 409 Conflict` will be returned:
+
+        * `jobName`
+
+
+        Will trigger an asynchronous job, the status of which should be monitored via `/jobs/{jobId}`.
+
+        '
+      operationId: bulkAddUsers
+      parameters:
+      - $ref: '#/components/parameters/jobName'
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+      responses:
+        '202':
+          description: Accepted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BulkOperationResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+        default:
+          $ref: '#/components/responses/InternalServerError'
+  /users:bulk-update:
+    post:
+      tags:
+      - Bulk User
+      summary: Bulk Update Users
+      description: '**Required Role:** Admin Portal or Admin API Consumer
+
+
+
+        Bulk updates Users using the file provided. The following file formats are supported:
+
+
+        * `.xlsx`
+
+
+        Will trigger an asynchronous job, the status of which should be monitored via `/jobs/{jobId}`.
+
+        '
+      operationId: bulkUpdateUsers
+      parameters:
+      - $ref: '#/components/parameters/jobName'
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+      responses:
+        '202':
+          description: Accepted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BulkOperationResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+        default:
+          $ref: '#/components/responses/InternalServerError'
+  /users:bulk-export:
+    post:
+      tags:
+      - Bulk User
+      summary: Bulk Export Users
+      description: '**Required Role:** Admin Portal or Admin API Consumer
+
+
+
+        Bulk exports the list of users for an account based on the criteria provided.
+
+
+        If the optional `folderId` query parameter is provided, users within that folder **and all of its subfolders
+
+        (recursively)** will be exported.
+
+
+        Will trigger an asynchronous job, the status of which should be monitored via `/jobs/{jobId}`.
+
+
+        Once the job has completed, the file can be downloaded using the API `/jobs/{jobId}/exported-users`.
+
+        '
+      operationId: bulkExportUsers
+      parameters:
+      - $ref: '#/components/parameters/jobName'
+      - name: folderId
+        in: query
+        description: '*(Optional)* Export users from a specific folder **and all its subfolders**.
+
+          Provide the unique 26-character internal id of the folder.
+
+          If omitted, all users in the account will be included.
+
+          '
+        required: false
+        schema:
+          $ref: '#/components/schemas/FolderId'
+      responses:
+        '202':
+          description: Accepted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BulkExportOperationResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+        default:
+          $ref: '#/components/responses/InternalServerError'
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: 'OAuth 2.0 Bearer Token with scoped permissions.
+
+        Required scopes documented per endpoint.
+
+        '
+  responses:
+    CreateUserResponse:
+      description: Success response for creating a user.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CreatedUser'
+    UserConflict:
+      description: Conflict
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            email:
+              $ref: '#/components/examples/ErrorUserEmailExists'
+    UnprocessableEntity:
+      description: Validation Failed
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorUnprocessableEntity'
+    UserCanNotBeDisabled:
+      description: The user can not be disabled due to being logged in or having active interactions.
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+    UserCanNotBeDeleted:
+      description: The user must be disabled before it can be deleted.
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+    GetUsersResponse:
+      description: List of users
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UserPage'
+    InternalServerError:
+      description: Internal Server Error
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          example:
+            type: https://developers.avayacloud.com/errors/internal-error
+            title: Internal Server Error
+            status: 500
+            detail: An unexpected error occurred while processing your request
+            requestId: req_xyz789
+            timestamp: '2025-12-08T10:30:05Z'
+    BadRequest:
+      description: Bad Request
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          example:
+            type: https://developers.avayacloud.com/errors/constraint-violation
+            title: Constraint Violation
+            status: 400
+            detail: Request contains invalid or missing fields
+            violations:
+            - field: accountId
+              message: must match "^[a-zA-Z]{6}$"
+              code: 20006
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          example:
+            type: https://developers.avayacloud.com/errors/unauthorized
+            title: Unauthorized
+            status: 401
+            detail: Bearer token expired at 2025-12-08T10:15:00Z. Request a new token.
+            requestId: req_xyz789
+            timestamp: '2025-12-08T10:30:05Z'
+    Forbidden:
+      description: Forbidden
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          example:
+            type: https://developers.avayacloud.com/errors/forbidden
+            title: Forbidden
+            status: 403
+            detail: 'Missing required scope: ''workflows:execute''. Your token has: ''workflows:read'''
+            requestId: req_xyz789
+            timestamp: '2025-12-08T10:30:05Z'
+    NotFound:
+      description: Not Found
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          example:
+            type: https://developers.avayacloud.com/errors/resource-not-found
+            title: Resource Not Found
+            status: 404
+            detail: workflowId 'wf_123abc' does not exist
+            requestId: req_xyz789
+            timestamp: '2025-12-08T10:30:05Z'
+  parameters:
+    jobName:
+      name: jobName
+      in: query
+      description: Optional name that can be provided to identify the job.
+      required: false
+      schema:
+        type: string
+        minLength: 1
+        maxLength: 255
+        example: Bulk Job
+    userId:
+      name: userId
+      in: path
+      description: The unique internal ID (UUID) of a user.
+      required: true
+      schema:
+        $ref: '#/components/schemas/UserId'
+    userIdOrEmail:
+      name: userIdOrEmail
+      in: path
+      description: 'Either the user ID (26-character internal ID starting with ''002''), email address,
+
+        or the special value "me" to retrieve the current authenticated user.
+
+        '
+      required: true
+      schema:
+        oneOf:
+        - $ref: '#/components/schemas/UserId'
+        - $ref: '#/components/schemas/Email'
+        - type: string
+          enum:
+          - me
+          description: Current authenticated user
+    email:
+      name: email
+      in: path
+      description: An email address identifying a user.
+      required: true
+      schema:
+        $ref: '#/components/schemas/Email'
+    sort:
+      name: sort
+      in: query
+      description: Sort order (ascending or descending)
+      required: false
+      schema:
+        type: string
+        enum:
+        - ASC
+        - DESC
+        default: ASC
+    sortBy:
+      name: sortBy
+      in: query
+      description: 'Field to sort users by. Note that `lastUpdated` is initialized to `createdOn`
+
+        when the user is created, so users that have never been modified will have
+
+        matching values for both fields.
+
+        '
+      required: false
+      schema:
+        type: string
+        enum:
+        - CREATED_ON
+        - LAST_UPDATED
+        - FIRST_NAME
+        - LAST_NAME
+        example: CREATED_ON
+    forceDisable:
+      name: forceDisable
+      in: query
+      description: 'Force a user to be disabled even while still active.
+
+
+        In an update uesr request, this parameter has no effect if the request payload does not
+
+        include setting the `status` to `disabled`.
+
+        '
+      required: false
+      schema:
+        type: boolean
+        default: false
+    pageSize:
+      name: pageSize
+      in: query
+      description: The max number of records to retrieve per page.
+      required: false
+      schema:
+        type: integer
+        format: int32
+        default: 10
+        minimum: 1
+        maximum: 50
+    pageNumber:
+      name: pageNumber
+      in: query
+      description: The page number of the records to retrieve.
+      required: false
+      schema:
+        type: integer
+        format: int32
+        default: 1
+        minimum: 1
+  schemas:
+    UserIdList:
+      description: List of user Ids
+      type: object
+      properties:
+        userIds:
+          type: array
+          maxItems: 50
+          items:
+            $ref: '#/components/schemas/UserId'
+          example:
+          - 0024ffcec98220644b194e3e25
+          - 0024a83190db2884efeb3bf96d
+          description: List of user Ids
+    CreateUserRequest:
+      type: object
+      description: Request body for creating a new user
+      required:
+      - email
+      - firstName
+      - lastName
+      properties:
+        email:
+          $ref: '#/components/schemas/Email'
+        firstName:
+          $ref: '#/components/schemas/FirstName'
+        lastName:
+          $ref: '#/components/schemas/LastName'
+        publicAlias:
+          $ref: '#/components/schemas/PublicAlias'
+        namePrefix:
+          $ref: '#/components/schemas/NamePrefix'
+        nameSuffix:
+          $ref: '#/components/schemas/NameSuffix'
+        title:
+          $ref: '#/components/schemas/UserTitle'
+        password:
+          $ref: '#/components/schemas/TemporaryPassword'
+        licType:
+          $ref: '#/components/schemas/LicenseType'
+        profileId:
+          $ref: '#/components/schemas/ProfileId'
+        folderId:
+          $ref: '#/components/schemas/FolderId'
+        authProvider:
+          $ref: '#/components/schemas/AuthProvider'
+        scimExternalId:
+          $ref: '#/components/schemas/ScimExternalId'
+        mobile:
+          $ref: '#/components/schemas/MobilePhoneNumber'
+        fwNumber:
+          $ref: '#/components/schemas/FwNumber'
+        extension:
+          $ref: '#/components/schemas/Extension'
+        callerID:
+          $ref: '#/components/schemas/CallerID'
+        defaultOutboundCallerId:
+          $ref: '#/components/schemas/DefaultOutboundCallerId'
+        locationId:
+          $ref: '#/components/schemas/LocationId'
+        billingLocationId:
+          $ref: '#/components/schemas/BillingLocationId'
+        crmConfigId:
+          $ref: '#/components/schemas/CrmConfigId'
+        appTheme:
+          $ref: '#/components/schemas/AppTheme'
+        consoleTheme:
+          $ref: '#/components/schemas/ConsoleTheme'
+        timeZone:
+          $ref: '#/components/schemas/TimeZone'
+        interactionViewsType:
+          $ref: '#/components/schemas/InteractionViewsType'
+        modifyInteractionViews:
+          $ref: '#/components/schemas/ModifyInteractionViews'
+        commTypeChangeDefaultValue:
+          $ref: '#/components/schemas/CommTypeChangeDefaultValue'
+        attributes:
+          $ref: '#/components/schemas/Attributes'
+        permissions:
+          $ref: '#/components/schemas/Permissions'
+        spaces:
+          $ref: '#/components/schemas/Spaces'
+        tags:
+          $ref: '#/components/schemas/TagsList'
+        groups:
+          $ref: '#/components/schemas/Groups'
+        groupId:
+          $ref: '#/components/schemas/GroupId'
+        queues:
+          $ref: '#/components/schemas/UserQueues'
+        definedInteractionViews:
+          $ref: '#/components/schemas/DefinedInteractionViews'
+        isEliteVoiceEnabled:
+          $ref: '#/components/schemas/IsEliteVoiceEnabled'
+        eliteSbcGroupId:
+          $ref: '#/components/schemas/EliteSbcGroupId'
+        eliteAgentId:
+          $ref: '#/components/schemas/EliteAgentId'
+        eliteAgentIdPassword:
+          $ref: '#/components/schemas/EliteAgentIdPassword'
+        eliteCommunicationProfilePassword:
+          $ref: '#/components/schemas/EliteCommunicationProfilePassword'
+        eliteCommunicationProfilePasswordHash:
+          $ref: '#/components/schemas/EliteCommunicationProfilePasswordHash'
+        eliteSipAddress:
+          $ref: '#/components/schemas/EliteSipAddress'
+        eliteExtension:
+          $ref: '#/components/schemas/EliteExtension'
+        eliteExtensionPassword:
+          $ref: '#/components/schemas/EliteExtensionPassword'
+        eliteSipType:
+          $ref: '#/components/schemas/EliteSipType'
+        eliteCmConfigurationId:
+          $ref: '#/components/schemas/EliteCmConfigurationId'
+        isVoiceEnabled:
+          $ref: '#/components/schemas/IsVoiceEnabled'
+        isDigitalEnabled:
+          $ref: '#/components/schemas/IsDigitalEnabled'
+        previewOutbound:
+          $ref: '#/components/schemas/PreviewOutbound'
+        directoryAble:
+          $ref: '#/components/schemas/DirectoryAble'
+        rejectInteractions:
+          $ref: '#/components/schemas/RejectInteractions'
+        AIDable:
+          $ref: '#/components/schemas/AIDableField'
+        reportsTo:
+          $ref: '#/components/schemas/ReportsTo'
+        dialPlanProfileId:
+          $ref: '#/components/schemas/DialPlanProfileId'
+        enableWebHID:
+          $ref: '#/components/schemas/EnableWebHID'
+        enableErrorTones:
+          $ref: '#/components/schemas/EnableErrorTones'
+        phoneSpaces:
+          $ref: '#/components/schemas/PhoneSpaces'
+        ucPhoneSpaces:
+          $ref: '#/components/schemas/UcPhoneSpaces'
+        useUCPhoneSpaceOnCCCall:
+          $ref: '#/components/schemas/UseUCPhoneSpaceOnCCCall'
+        useCCPhoneSpaceOnUCCall:
+          $ref: '#/components/schemas/UseCCPhoneSpaceOnUCCall'
+        allowInternalCalls:
+          $ref: '#/components/schemas/AllowInternalCalls'
+        allowAgentEditAutoAnswer:
+          $ref: '#/components/schemas/AllowAgentEditAutoAnswer'
+        allowAgentEditWebHIDHeadsetControl:
+          $ref: '#/components/schemas/AllowAgentEditWebHIDHeadsetControl'
+        externalUCProviderConnections:
+          type: array
+          items:
+            type: string
+            pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+            minLength: 36
+            maxLength: 36
+          description: External UC provider connection IDs to associate with the user.
+        eliteVoicemailPassword:
+          type: string
+          description: Elite Voice voicemail password.
+        logConfiguration:
+          $ref: '#/components/schemas/LogConfiguration'
+    UcPhoneSpaces:
+      type: integer
+      minimum: 0
+      maximum: 3
+      description: 'Multiplicity Personal Queue Phone; number of UC/personal-queue phone spaces (0-3).
+
+        '
+    UseUCPhoneSpaceOnCCCall:
+      type: boolean
+      description: 'When true, use UC (personal queue) phone space for contact center/general queue calls.
+
+        '
+    UseCCPhoneSpaceOnUCCall:
+      type: boolean
+      description: 'When true, use contact center (general queue) phone space for UC/personal queue calls.
+
+        '
+    CreatedUserData:
+      type: object
+      properties:
+        userDetails:
+          type: object
+          properties:
+            userId:
+              $ref: '#/components/schemas/UserId'
+            firstName:
+              $ref: '#/components/schemas/FirstName'
+            lastName:
+              $ref: '#/components/schemas/LastName'
+            publicAlias:
+              $ref: '#/components/schemas/PublicAlias'
+            fullName:
+              $ref: '#/components/schemas/FullName'
+            extension:
+              $ref: '#/components/schemas/Extension'
+            email:
+              $ref: '#/components/schemas/Email'
+            tempPass:
+              $ref: '#/components/schemas/TemporaryPassword'
+        usersQueueId:
+          type: string
+    CreatedUser:
+      type: object
+      description: Response body for a new user having been created
+      properties:
+        status:
+          type: string
+          example: success
+        desc:
+          type: string
+          description: Human-readable description of the result.
+          example: new user created
+        data:
+          $ref: '#/components/schemas/CreatedUserData'
+        apiRequestKey:
+          $ref: '#/components/schemas/ApiRequestKey'
+    UpdateUserRequest:
+      type: object
+      description: 'Request body for updating an existing user.
+
+
+        All fields are optional, however at least one must be included.
+
+
+        **Merge Behavior:**
+
+        Fields use different update strategies. Most scalar fields are replaced with the
+
+        provided value. Complex fields have specific behaviors noted in their descriptions.
+
+        '
+      properties:
+        status:
+          $ref: '#/components/schemas/UserAccountStatus'
+        email:
+          $ref: '#/components/schemas/Email'
+        firstName:
+          $ref: '#/components/schemas/FirstName'
+        lastName:
+          $ref: '#/components/schemas/LastName'
+        publicAlias:
+          $ref: '#/components/schemas/PublicAlias'
+        namePrefix:
+          $ref: '#/components/schemas/NamePrefix'
+        nameSuffix:
+          $ref: '#/components/schemas/NameSuffix'
+        title:
+          $ref: '#/components/schemas/UserTitle'
+        password:
+          $ref: '#/components/schemas/TemporaryPassword'
+        licType:
+          $ref: '#/components/schemas/LicenseType'
+        profileId:
+          description: 'Updates the profile associated with the user. Note: changing the profile ID
+
+            updates the association only — it does not re-apply profile defaults to the user.
+
+            '
+          $ref: '#/components/schemas/ProfileId'
+        folderId:
+          anyOf:
+          - $ref: '#/components/schemas/FolderId'
+          - type: 'null'
+          description: Move user to a folder, or send null to remove from current folder.
+        authProvider:
+          $ref: '#/components/schemas/AuthProvider'
+        scimExternalId:
+          $ref: '#/components/schemas/ScimExternalId'
+        mobile:
+          anyOf:
+          - $ref: '#/components/schemas/MobilePhoneNumber'
+          - type: 'null'
+          description: Send null or empty string to clear.
+        fwNumber:
+          $ref: '#/components/schemas/FwNumber'
+        extension:
+          anyOf:
+          - $ref: '#/components/schemas/Extension'
+          - type: 'null'
+          description: Send null to clear.
+        callerID:
+          $ref: '#/components/schemas/CallerID'
+        defaultOutboundCallerId:
+          $ref: '#/components/schemas/DefaultOutboundCallerId'
+        emergencyOutboundCallerId:
+          type: string
+          minLength: 10
+          maxLength: 20
+          description: Emergency outbound caller ID number.
+        locationId:
+          anyOf:
+          - $ref: '#/components/schemas/LocationId'
+          - type: 'null'
+          description: 'Send null to clear. When setting a location, `email`, `firstName`, and `lastName`
+
+            must also be provided.
+
+            '
+        billingLocationId:
+          $ref: '#/components/schemas/BillingLocationId'
+        crmConfigId:
+          $ref: '#/components/schemas/CrmConfigId'
+        appTheme:
+          $ref: '#/components/schemas/AppTheme'
+        consoleTheme:
+          $ref: '#/components/schemas/ConsoleTheme'
+        timeZone:
+          $ref: '#/components/schemas/TimeZone'
+        interactionViewsType:
+          $ref: '#/components/schemas/InteractionViewsType'
+        modifyInteractionViews:
+          $ref: '#/components/schemas/ModifyInteractionViews'
+        commTypeChangeDefaultValue:
+          anyOf:
+          - $ref: '#/components/schemas/CommTypeChangeDefaultValue'
+          - type: 'null'
+          description: Send null to clear.
+        attributes:
+          description: 'Merged with the user''s existing attributes. Specific nested keys
+
+            (`queue`, `time`, `webRTC`, `recording`, `signatures`, `sessionStats`)
+
+            are deep-merged; all other keys are replaced.
+
+            Omit to leave unchanged.
+
+            '
+          $ref: '#/components/schemas/Attributes'
+        permissions:
+          description: 'Merged with the user''s existing permissions per section (`app`, `console`).
+
+            Keys within each section are replaced with the provided values;
+
+            keys not included are preserved. Omit to leave unchanged.
+
+            '
+          $ref: '#/components/schemas/Permissions'
+        spaces:
+          $ref: '#/components/schemas/Spaces'
+        tags:
+          description: 'Replaces the user''s entire tag list with the provided values.
+
+            Send an empty array to remove all tags. Omit to leave unchanged.
+
+            '
+          $ref: '#/components/schemas/TagsList'
+        groups:
+          description: 'Replaces the user''s entire group membership with the provided group IDs.
+
+            Send an empty array to remove all group memberships. Omit to leave unchanged.
+
+            '
+          $ref: '#/components/schemas/Groups'
+        groupId:
+          $ref: '#/components/schemas/GroupId'
+        queues:
+          description: 'Only the sub-properties included in the request are updated; omitted
+
+            sub-properties are left unchanged. For example, sending only `access`
+
+            replaces the access list but leaves `autoLogin` and `proficiency` as-is.
+
+            The user''s personal queue is always preserved in `access` and `autoLogin`.
+
+            '
+          $ref: '#/components/schemas/UserQueues'
+        definedInteractionViews:
+          description: 'Replaces the user''s entire set of defined interaction views.
+
+            Omit to leave unchanged.
+
+            '
+          $ref: '#/components/schemas/DefinedInteractionViews'
+        isEliteVoiceEnabled:
+          $ref: '#/components/schemas/IsEliteVoiceEnabled'
+        eliteSbcGroupId:
+          anyOf:
+          - $ref: '#/components/schemas/EliteSbcGroupId'
+          - type: 'null'
+          description: Send null to clear.
+        eliteAgentId:
+          anyOf:
+          - $ref: '#/components/schemas/EliteAgentId'
+          - type: 'null'
+          description: Send null to clear.
+        eliteAgentIdPassword:
+          $ref: '#/components/schemas/EliteAgentIdPassword'
+        eliteCommunicationProfilePassword:
+          $ref: '#/components/schemas/EliteCommunicationProfilePassword'
+        eliteCommunicationProfilePasswordHash:
+          $ref: '#/components/schemas/EliteCommunicationProfilePasswordHash'
+        eliteSipAddress:
+          anyOf:
+          - $ref: '#/components/schemas/EliteSipAddress'
+          - type: 'null'
+          description: Send null to clear.
+        eliteExtension:
+          anyOf:
+          - $ref: '#/components/schemas/EliteExtension'
+          - type: 'null'
+          description: Send null to clear.
+        eliteExtensionPassword:
+          $ref: '#/components/schemas/EliteExtensionPassword'
+        eliteVoicemailPassword:
+          type: string
+          description: Elite Voice voicemail password.
+        eliteSipType:
+          $ref: '#/components/schemas/EliteSipType'
+        eliteCmConfigurationId:
+          anyOf:
+          - $ref: '#/components/schemas/EliteCmConfigurationId'
+          - type: 'null'
+          description: Send null or empty string to clear.
+        sipTrunkId:
+          type: string
+          pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+          minLength: 36
+          maxLength: 36
+          description: SIP trunk ID to associate with the user.
+        isVoiceEnabled:
+          $ref: '#/components/schemas/IsVoiceEnabled'
+        isDigitalEnabled:
+          $ref: '#/components/schemas/IsDigitalEnabled'
+        previewOutbound:
+          $ref: '#/components/schemas/PreviewOutbound'
+        directoryAble:
+          $ref: '#/components/schemas/DirectoryAble'
+        rejectInteractions:
+          $ref: '#/components/schemas/RejectInteractions'
+        AIDable:
+          description: 'Manually set the AIDable flag. Note: this value may be overridden by
+
+            license enforcement rules when the license type changes.
+
+            '
+          $ref: '#/components/schemas/AIDableField'
+        sendLogsToEdify:
+          type: boolean
+          description: Whether the user should send logs to the platform.
+        reportsTo:
+          anyOf:
+          - $ref: '#/components/schemas/ReportsTo'
+          - type: 'null'
+          description: Send null or empty string to clear.
+        dialPlanProfileId:
+          anyOf:
+          - $ref: '#/components/schemas/DialPlanProfileId'
+          - type: 'null'
+          description: Send null to clear.
+        enableWebHID:
+          $ref: '#/components/schemas/EnableWebHID'
+        enableErrorTones:
+          $ref: '#/components/schemas/EnableErrorTones'
+        phoneSpaces:
+          $ref: '#/components/schemas/PhoneSpaces'
+        messagingSpaces:
+          $ref: '#/components/schemas/MessagingSpaces'
+        emailSpaces:
+          $ref: '#/components/schemas/EmailSpaces'
+        taskSpaces:
+          $ref: '#/components/schemas/TaskSpaces'
+        videoSpaces:
+          $ref: '#/components/schemas/VideoSpaces'
+        ucPhoneSpaces:
+          anyOf:
+          - $ref: '#/components/schemas/UcPhoneSpaces'
+          - type: 'null'
+          description: Send null to clear (revert to default).
+        useUCPhoneSpaceOnCCCall:
+          anyOf:
+          - $ref: '#/components/schemas/UseUCPhoneSpaceOnCCCall'
+          - type: 'null'
+          description: Send null to clear (revert to default).
+        useCCPhoneSpaceOnUCCall:
+          anyOf:
+          - $ref: '#/components/schemas/UseCCPhoneSpaceOnUCCall'
+          - type: 'null'
+          description: Send null to clear (revert to default).
+        allowInternalCalls:
+          anyOf:
+          - $ref: '#/components/schemas/AllowInternalCalls'
+          - type: 'null'
+          description: Send null to clear (revert to default).
+        allowAgentEditAutoAnswer:
+          anyOf:
+          - $ref: '#/components/schemas/AllowAgentEditAutoAnswer'
+          - type: 'null'
+          description: Send null to clear (revert to default).
+        allowAgentEditWebHIDHeadsetControl:
+          anyOf:
+          - $ref: '#/components/schemas/AllowAgentEditWebHIDHeadsetControl'
+          - type: 'null'
+          description: Send null to clear (revert to default).
+        voicemail:
+          type: object
+          additionalProperties: true
+          description: Voicemail settings.
+        infinityElements:
+          type: array
+          items:
+            type: string
+          description: 'Replaces the user''s entire set of Infinity Elements.
+
+            Omit to leave unchanged.
+
+            '
+        externalUCProviderConnections:
+          type: array
+          items:
+            type: string
+            pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+            minLength: 36
+            maxLength: 36
+          description: 'Replaces the user''s entire set of external UC provider connections.
+
+            Omit to leave unchanged. IDs must belong to the same account.
+
+            '
+        calendarEventProvider:
+          type: string
+          maxLength: 64
+          description: Calendar event provider identifier.
+        calendarEventStatusMap:
+          type: object
+          additionalProperties: true
+          description: Mapping of calendar event statuses.
+        logConfiguration:
+          anyOf:
+          - $ref: '#/components/schemas/LogConfiguration'
+          - type: 'null'
+          description: Send null to clear.
+    UserPage:
+      type: object
+      required:
+      - resources
+      - pagination
+      - links
+      properties:
+        resources:
+          $ref: '#/components/schemas/UserPageResources'
+        pagination:
+          allOf:
+          - $ref: '#/components/schemas/Pagination'
+          description: Pagination metadata.
+          readOnly: true
+        links:
+          allOf:
+          - $ref: '#/components/schemas/Links'
+          description: Navigation links for pagination.
+          readOnly: true
+    UserPageResources:
+      type: object
+      required:
+      - users
+      properties:
+        users:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserListItem'
+        folders:
+          type: array
+          description: Folder hierarchy. Only present when folders=true query parameter is provided.
+          items:
+            type: object
+            additionalProperties: true
+        breadcrumbs:
+          type: array
+          description: Breadcrumb trail. Only present when folders=true query parameter is provided.
+          items:
+            type: object
+            additionalProperties: true
+    UserListItem:
+      type: object
+      properties:
+        userId:
+          $ref: '#/components/schemas/UserId'
+        folderId:
+          anyOf:
+          - $ref: '#/components/schemas/FolderId'
+          - type: 'null'
+        title:
+          type:
+          - string
+          - 'null'
+        firstName:
+          type: string
+          example: Banke
+        lastName:
+          type: string
+          example: S
+        fullName:
+          $ref: '#/components/schemas/FullName'
+        email:
+          $ref: '#/components/schemas/Email'
+        location:
+          type:
+          - string
+          - 'null'
+        tags:
+          $ref: '#/components/schemas/TagsList'
+        tagsData:
+          type: object
+          additionalProperties: true
+        groups:
+          type:
+          - string
+          - 'null'
+        attributes:
+          type: object
+          additionalProperties: true
+        permissions:
+          type: object
+          additionalProperties: true
+        imageLastChangedAt:
+          type:
+          - string
+          - 'null'
+        queues:
+          anyOf:
+          - $ref: '#/components/schemas/UserQueues'
+          - type: 'null'
+          description: Queue assignments for this user.
+        licType:
+          type: string
+          example: omniChannelAgentEnhanced
+        extension:
+          anyOf:
+          - $ref: '#/components/schemas/Extension'
+          - type: 'null'
+        mobile:
+          type:
+          - string
+          - 'null'
+        fw:
+          type:
+          - string
+          - 'null'
+        defaultOutboundCallerId:
+          type:
+          - string
+          - 'null'
+        emergencyOutboundCallerId:
+          type:
+          - string
+          - 'null'
+        status:
+          type: string
+          example: enabled
+        createdOn:
+          type: string
+          format: date-time
+          example: '2025-09-08 14:36:49'
+        lastUpdated:
+          type: string
+          format: date-time
+          example: '2025-09-08 14:38:10'
+        createdBy:
+          type: object
+          additionalProperties: true
+        userStatus:
+          type: object
+          additionalProperties: true
+        scimExternalId:
+          type:
+          - string
+          - 'null'
+        authProvider:
+          type:
+          - string
+          - 'null'
+        directoryAble:
+          type: boolean
+        appTheme:
+          $ref: '#/components/schemas/AppTheme'
+        consoleTheme:
+          $ref: '#/components/schemas/ConsoleTheme'
+        isSupportUser:
+          type: boolean
+        calendarEventProvider:
+          type:
+          - string
+          - 'null'
+        calendarEventStatusMap:
+          type:
+          - object
+          - 'null'
+        interactionViewsType:
+          type: string
+        isDeleted:
+          type: boolean
+          description: Indicates if the user has been soft-deleted. Only present when includeDeleted query parameter is used.
+        enableWebHID:
+          $ref: '#/components/schemas/EnableWebHID'
+        enableErrorTones:
+          $ref: '#/components/schemas/EnableErrorTones'
+        allowInternalCalls:
+          $ref: '#/components/schemas/AllowInternalCalls'
+        allowAgentEditAutoAnswer:
+          $ref: '#/components/schemas/AllowAgentEditAutoAnswer'
+        allowAgentEditWebHIDHeadsetControl:
+          $ref: '#/components/schemas/AllowAgentEditWebHIDHeadsetControl'
+        publicAlias:
+          anyOf:
+          - $ref: '#/components/schemas/PublicAlias'
+          - type: 'null'
+        namePrefix:
+          anyOf:
+          - $ref: '#/components/schemas/NamePrefix'
+          - type: 'null'
+        nameSuffix:
+          anyOf:
+          - $ref: '#/components/schemas/NameSuffix'
+          - type: 'null'
+        definedInteractionViews:
+          anyOf:
+          - $ref: '#/components/schemas/DefinedInteractionViews'
+          - type: 'null'
+        modifyInteractionViews:
+          anyOf:
+          - $ref: '#/components/schemas/ModifyInteractionViews'
+          - type: 'null'
+        rejectInteractions:
+          anyOf:
+          - $ref: '#/components/schemas/RejectInteractions'
+          - type: 'null'
+        isDigitalEnabled:
+          anyOf:
+          - $ref: '#/components/schemas/IsDigitalEnabled'
+          - type: 'null'
+        isVoiceEnabled:
+          anyOf:
+          - $ref: '#/components/schemas/IsVoiceEnabled'
+          - type: 'null'
+        previewOutbound:
+          anyOf:
+          - $ref: '#/components/schemas/PreviewOutbound'
+          - type: 'null'
+        crmConfigurations:
+          anyOf:
+          - $ref: '#/components/schemas/CrmConfigId'
+          - type: object
+            additionalProperties: true
+          - type: 'null'
+          description: CRM configuration ID or object, depending on query parameters.
+        personalQueueId:
+          anyOf:
+          - $ref: '#/components/schemas/PersonalQueueId'
+          - type: 'null'
+        sendLogsToEdify:
+          $ref: '#/components/schemas/SendLogsToEdify'
+    UserDetail:
+      type: object
+      description: Detailed user object returned by the single-user GET endpoint. Extends the list item with optional enriched
+        data controlled by query parameters.
+      allOf:
+      - $ref: '#/components/schemas/UserListItem'
+      properties:
+        queues:
+          description: Queue assignments. When queues=true, returns enriched object with named queues. When false, returns
+            raw queue IDs.
+          type: object
+          additionalProperties: true
+        queueLogins:
+          description: Current queue login sessions. Only present when queueLogins=true.
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+        groups:
+          description: Group memberships. When groups=true, returns array of group objects. When false, field is omitted.
+          type: array
+          items:
+            type: object
+            properties:
+              groupId:
+                type: string
+              name:
+                type: string
+              type:
+                type: string
+        location:
+          description: E911 location details. When location=true, returns location object. When false, field is omitted.
+          type: object
+          additionalProperties: true
+        crmConfigurations:
+          description: CRM configuration details. When crmConfigId=true, returns CRM config. When false, returns raw ID string.
+          oneOf:
+          - type: object
+            additionalProperties: true
+          - type: string
+          - type: 'null'
+        reportsTo:
+          description: Reports-to user details. When reportsTo=true, returns user object. When false, returns raw userId string.
+          oneOf:
+          - type: object
+            properties:
+              userId:
+                type: string
+              firstName:
+                type: string
+              lastName:
+                type: string
+              email:
+                type: string
+          - type: string
+          - type: 'null'
+        externalUCProviderConnections:
+          description: External UC provider connections. Only present when externalUCProviderConnections=true.
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+        personalQueueId:
+          type: string
+          description: The user's personal queue ID
+        infinityElements:
+          type: array
+          items:
+            type: string
+        fwNumber:
+          anyOf:
+          - $ref: '#/components/schemas/FwNumber'
+          - type: 'null'
+        defaultOutboundCallerId:
+          anyOf:
+          - $ref: '#/components/schemas/DefaultOutboundCallerId'
+          - type: 'null'
+        billingLocationId:
+          anyOf:
+          - $ref: '#/components/schemas/BillingLocationId'
+          - type: 'null'
+        locationId:
+          anyOf:
+          - $ref: '#/components/schemas/LocationId'
+          - type: 'null'
+        dialPlanProfileId:
+          anyOf:
+          - $ref: '#/components/schemas/DialPlanProfileId'
+          - type: 'null'
+        eliteSbcGroupId:
+          anyOf:
+          - $ref: '#/components/schemas/EliteSbcGroupId'
+          - type: 'null'
+        eliteAgentId:
+          anyOf:
+          - $ref: '#/components/schemas/EliteAgentId'
+          - type: 'null'
+        eliteSipAddress:
+          anyOf:
+          - $ref: '#/components/schemas/EliteSipAddress'
+          - type: 'null'
+        eliteExtension:
+          anyOf:
+          - $ref: '#/components/schemas/EliteExtension'
+          - type: 'null'
+        eliteSipType:
+          anyOf:
+          - $ref: '#/components/schemas/EliteSipType'
+          - type: 'null'
+        eliteCmConfigurationId:
+          anyOf:
+          - $ref: '#/components/schemas/EliteCmConfigurationId'
+          - type: 'null'
+        commTypeChangeDefaultValue:
+          anyOf:
+          - $ref: '#/components/schemas/CommTypeChangeDefaultValue'
+          - type: 'null'
+        isEliteVoiceEnabled:
+          $ref: '#/components/schemas/IsEliteVoiceEnabled'
+        phoneSpaces:
+          $ref: '#/components/schemas/PhoneSpaces'
+        emailSpaces:
+          $ref: '#/components/schemas/EmailSpaces'
+        taskSpaces:
+          $ref: '#/components/schemas/TaskSpaces'
+        messagingSpaces:
+          $ref: '#/components/schemas/MessagingSpaces'
+        videoSpaces:
+          $ref: '#/components/schemas/VideoSpaces'
+        enableWebHID:
+          $ref: '#/components/schemas/EnableWebHID'
+        allowInternalCalls:
+          $ref: '#/components/schemas/AllowInternalCalls'
+        logConfiguration:
+          anyOf:
+          - $ref: '#/components/schemas/LogConfiguration'
+          - type: 'null'
+        routeTo:
+          anyOf:
+          - $ref: '#/components/schemas/RouteTo'
+          - type: 'null'
+        userRouteTo:
+          anyOf:
+          - $ref: '#/components/schemas/UserRouteTo'
+          - type: 'null'
+        queueRouteTo:
+          anyOf:
+          - $ref: '#/components/schemas/QueueRouteTo'
+          - type: 'null'
+        video:
+          type:
+          - string
+          - 'null'
+        voice:
+          type:
+          - string
+          - 'null'
+        voicemail:
+          anyOf:
+          - $ref: '#/components/schemas/Voicemail'
+          - type: 'null'
+        channels:
+          type:
+          - string
+          - 'null'
+        aidStatusTypeOverride:
+          $ref: '#/components/schemas/AidStatusTypeOverride'
+        sipTrunkId:
+          anyOf:
+          - $ref: '#/components/schemas/SipTrunkId'
+          - type: 'null'
+        sipTranslation:
+          anyOf:
+          - $ref: '#/components/schemas/SipTranslation'
+          - type: 'null'
+        tabs:
+          $ref: '#/components/schemas/Tabs'
+        defaultTab:
+          anyOf:
+          - $ref: '#/components/schemas/DefaultTab'
+          - type: 'null'
+        ucPhoneSpaces:
+          $ref: '#/components/schemas/UcPhoneSpaces-2'
+        e911Recommendations:
+          $ref: '#/components/schemas/E911Recommendations'
+        hasEliteAgentIdPassword:
+          $ref: '#/components/schemas/HasEliteAgentIdPassword'
+        hasEliteCommunicationProfilePassword:
+          $ref: '#/components/schemas/HasEliteCommunicationProfilePassword'
+        hasEliteExtensionPassword:
+          $ref: '#/components/schemas/HasEliteExtensionPassword'
+        isEliteAutoSyncEnabled:
+          $ref: '#/components/schemas/IsEliteAutoSyncEnabled'
+        useUCPhoneSpaceOnCCCall:
+          $ref: '#/components/schemas/UseUCPhoneSpaceOnCCCall-2'
+        useCCPhoneSpaceOnUCCall:
+          $ref: '#/components/schemas/UseCCPhoneSpaceOnUCCall-2'
+        sendLogsToEdify:
+          $ref: '#/components/schemas/SendLogsToEdify'
+        uc3Endpoint:
+          anyOf:
+          - $ref: '#/components/schemas/Uc3Endpoint'
+          - type: 'null'
+        userAID:
+          $ref: '#/components/schemas/UserAID'
+    FolderId:
+      description: Unique identifier for a folder.
+      type: string
+      pattern: ^073[0-9a-f]{23}$
+      example: 073d010813b941cf7da111d147
+    ProfileId:
+      type: string
+      description: The unique identifier of a profile.
+      format: uuid
+      example: 16a7490f-86a6-4a14-8ce2-11682230adb6
+    LicenseType:
+      type: string
+      description: User license type that determines available features and permissions
+      enum:
+      - nonAgent
+      - voiceOnlyAgent
+      - digitalOnlyAgent
+      - omniChannelAgent
+      - omniChannelAgentEnhanced
+      - hybridVoiceAgent
+      example: hybridVoiceAgent
+    LocationId:
+      type: string
+      description: 'Optional location ID to associate with the user or profile. Must be an existing location ID.
+
+
+        **Note:** Location IDs are system-generated 26-character identifiers with prefix "022".
+
+        '
+      maxLength: 26
+      minLength: 26
+      pattern: ^022[0-9a-f]{23}$
+      example: 022d01091776cc88fe6866b7ce
+    Violation:
+      type: object
+      properties:
+        field:
+          description: 'The name of the field in the request that caused the violation.
+
+
+            This can be the name of a path parameter, query parameter, or a field within the request body.
+
+            '
+          type: string
+          readOnly: true
+          example: jobName
+        message:
+          description: 'A human-readable explanation specific to this occurrence of the violation.
+
+            '
+          type: string
+          readOnly: true
+          example: must match "^[a-zA-Z]{6}$"
+        code:
+          description: 'The violation code generated by the server for this occurrence of the violation.
+
+
+            Use this code when implementing any error handling logic instead of the message, as the message can change.
+
+            '
+          type: integer
+          format: int32
+          readOnly: true
+          example: 20006
+      required:
+      - field
+      - message
+      - code
+      example:
+      - field: emailAddress
+        message: must not be null
+        code: 20002
+    Problem:
+      type: object
+      description: '<b>Problem Detail</b> is a way to carry machine-readable details of errors in an HTTP
+
+        response to avoid the need to define new error response formats for HTTP APIs
+
+
+        <a href="https://tools.ietf.org/html/rfc7807">RFC 7807</a>
+
+        '
+      properties:
+        type:
+          description: 'An absolute URI that identifies the problem type.
+
+
+            When dereferenced, it SHOULD provide human-readable documentation for the problem type (e.g., using HTML).
+
+            '
+          type: string
+          format: uri
+          readOnly: true
+          example: https://developers.avayacloud.com/avaya-infinity/docs/user-management#error-reference
+        title:
+          description: 'A short, summary of the problem type.
+
+
+            Written in English and readable for engineers (usually not suited for non technical stakeholders and not localized).
+
+            '
+          type: string
+          readOnly: true
+          example: Service Unavailable
+        status:
+          description: 'The HTTP status code generated by the origin server for this occurrence of the problem.
+
+            '
+          type: integer
+          format: int32
+          minimum: 300
+          exclusiveMaximum: 600
+          readOnly: true
+          example: 503
+        detail:
+          description: 'A human-readable explanation specific to this occurrence of the problem.
+
+            '
+          type: string
+          readOnly: true
+          example: Connection to database timed out
+        instance:
+          description: 'An absolute URI that identifies the specific occurrence of the problem.
+
+
+            It may or may not yield further information if dereferenced.
+
+            '
+          type: string
+          format: uri
+          readOnly: true
+        violations:
+          description: 'A list of violations that occurred as a result of invalid data provided as part of a request.
+
+            '
+          type: array
+          items:
+            $ref: '#/components/schemas/Violation'
+          readOnly: true
+    UserId:
+      description: Unique identifier for a user.
+      type: string
+      pattern: ^002[0-9a-f]{23}$
+      example: 002507f1e1c8e3e9a8b7c5d4e3f2
+    FullName:
+      description: The full name of the user (firstName + lastName).
+      type: string
+      example: John Smith
+    Email:
+      description: A user's email address
+      type: string
+      format: email
+    TagsList:
+      type: array
+      items:
+        type: string
+      description: List of tag names associated with the user or profile.
+      example:
+      - APACT
+      - English
+      - NART
+    QueueId:
+      description: Unique identifier for a queue.
+      type: string
+      minLength: 23
+      maxLength: 26
+      pattern: ^003[0-9a-f]{20,23}$
+      example: 00301090301ad8db0f0d4c370
+    UserQueues:
+      description: Queues configuration for a user or profile.
+      type: object
+      properties:
+        access:
+          type: array
+          items:
+            $ref: '#/components/schemas/QueueId'
+        performance:
+          type: array
+          items:
+            $ref: '#/components/schemas/QueueId'
+        autoLogin:
+          type: array
+          items:
+            $ref: '#/components/schemas/QueueId'
+        proficiency:
+          type: array
+          items:
+            $ref: '#/components/schemas/QueueId'
+        logins:
+          type: array
+          items:
+            $ref: '#/components/schemas/QueueId'
+        defaultOutboundQueue:
+          anyOf:
+          - $ref: '#/components/schemas/QueueId'
+          - type: 'null'
+        outboundQueueId:
+          anyOf:
+          - $ref: '#/components/schemas/QueueId'
+          - type: 'null'
+    Extension:
+      description: The extension of an agent user.
+      type: string
+      example: '1001'
+    UiTheme:
+      type: string
+      enum:
+      - light
+      - dark
+      example: light
+    AppTheme:
+      allOf:
+      - $ref: '#/components/schemas/UiTheme'
+      description: Application theme preference
+    ConsoleTheme:
+      allOf:
+      - $ref: '#/components/schemas/UiTheme'
+      description: Console theme preference
+    EnableWebHID:
+      type: boolean
+      description: Whether WebHID is enabled for the user
+    EnableErrorTones:
+      type: boolean
+      description: Whether error tones are enabled.
+    AllowInternalCalls:
+      type: boolean
+      description: Whether the user or profile can make internal calls
+    AllowAgentEditAutoAnswer:
+      type: boolean
+      description: Controls whether the agent is allowed to edit their own Auto Answer Interactions setting (attributes.webRTC.autoAnswer.interaction)
+        via the Edit Profile API. Defaults to false (agent cannot edit). When false and an agent attempts a self-edit that
+        includes an Auto Answer change, the server returns HTTP 403 Forbidden. Administrators can always modify Auto Answer
+        for any user regardless of this flag.
+      default: false
+    AllowAgentEditWebHIDHeadsetControl:
+      type: boolean
+      description: Controls whether the agent is allowed to edit their own WebHID Headset Control setting (attributes.webHID.status)
+        via the Edit Profile API. Defaults to false (agent cannot edit). When false and an agent attempts a self-edit that
+        includes a WebHID status change, the server returns HTTP 403 Forbidden. Administrators can always modify WebHID settings
+        for any user regardless of this flag.
+      default: false
+    PublicAlias:
+      description: The public alias of a user. Supports letters (including international characters), digits, spaces, hyphens,
+        and apostrophes.
+      type: string
+      minLength: 2
+      maxLength: 100
+      pattern: ^[\p{L}0-9 '\-]*$
+      example: John Smith
+    NamePrefix:
+      description: The name prefix of a user.
+      type: string
+    NameSuffix:
+      description: The name suffix of a user.
+      type: string
+      enum:
+      - Jr
+      - Sr
+      - I
+      - II
+      - III
+      - IV
+      - V
+      - CLU
+      - CO
+      - CPA
+      - DDS
+      - ESQ
+      - MD
+      - PhD
+      - RN
+    DefinedInteractionViews:
+      type: array
+      description: List of defined interaction views
+      items:
+        type: string
+    ModifyInteractionViews:
+      type: boolean
+      description: Can modify interaction views
+      example: true
+    RejectInteractions:
+      type: boolean
+    IsDigitalEnabled:
+      type: boolean
+    IsVoiceEnabled:
+      type: boolean
+    PreviewOutbound:
+      type: boolean
+    CrmConfigId:
+      type: string
+      pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
+      minLength: 36
+      maxLength: 36
+    PersonalQueueId:
+      description: The user's personal queue ID.
+      allOf:
+      - $ref: '#/components/schemas/QueueId'
+    SendLogsToEdify:
+      description: Whether to send logs to Edify.
+      type: boolean
+    Pagination:
+      description: Pagination metadata
+      type: object
+      required:
+      - pageNumber
+      - pageSize
+      - total
+      properties:
+        pageNumber:
+          description: The current page number
+          type: integer
+          minimum: 1
+          readOnly: true
+          example: 1
+        pageSize:
+          description: The maximum number of items per page
+          type: integer
+          minimum: 1
+          readOnly: true
+          example: 10
+        total:
+          description: The total number of items
+          type: integer
+          minimum: 0
+          readOnly: true
+          example: 2
+    Links:
+      description: Pagination navigation links
+      type: object
+      required:
+      - prev
+      - next
+      properties:
+        prev:
+          description: URL of the previous page. Blank if currently on the first page.
+          type: string
+          readOnly: true
+          example: ''
+        next:
+          description: URL of the next page. Blank if currently on the last page.
+          type: string
+          readOnly: true
+          example: ''
+    FirstName:
+      description: The first name of a user.
+      type: string
+      minLength: 2
+      maxLength: 255
+      pattern: ^[^<>\^@#]*$
+      example: John
+    LastName:
+      description: The last name of a user.
+      type: string
+      minLength: 2
+      maxLength: 255
+      pattern: ^[^<>\^@#]*$
+      example: Smith
+    UserTitle:
+      description: The user's job title.
+      type: string
+      minLength: 1
+      maxLength: 510
+      example: Supervisor
+    TemporaryPassword:
+      type: string
+      example: Aghtat2343$
+      pattern: ^(?=.{8,}$)(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[0-9])(?=.*?\W).*$
+      maxLength: 255
+      description: Initial password for the user
+    AuthProvider:
+      type: string
+      description: Which provider is used to authenticate the user.
+      enum:
+      - keycloak
+      - saml
+      - local
+    ScimExternalId:
+      type: string
+    MobilePhoneNumber:
+      type: string
+      description: Mobile phone number - accepts E.164 format (+[country code][number]) or plain digits. Length 5-15 characters/digits.
+      pattern: ^(\+[1-9]\d{3,13}|\d{5,15})$
+      minLength: 5
+      maxLength: 15
+      examples:
+      - 16479308804
+      - 6479308804
+      - 1234
+      - 12345
+    FwNumber:
+      type: string
+      pattern: ^[\d+\s().-]*$
+    CallerID:
+      type: string
+      minLength: 10
+    DefaultOutboundCallerId:
+      type: string
+      minLength: 10
+    BillingLocationId:
+      type: string
+    TimeZone:
+      type: string
+      description: User's timezone preference (IANA timezone)
+      maxLength: 64
+      example: America/New_York
+    InteractionViewsType:
+      type: string
+      description: Type of interaction views to display
+      enum:
+      - all
+      - defined
+      - standard
+      default: all
+      example: all
+    CommTypeChangeDefaultValue:
+      type: string
+      description: Default value for communication type changes
+      enum:
+      - callback
+      - closeResolved
+      - closeUnresolved
+      example: callback
+    Attributes:
+      type: object
+      description: Attributes of the user or profile.
+      properties:
+        time:
+          type: object
+          properties:
+            tz:
+              $ref: '#/components/schemas/TimeZone'
+        taskSpaces:
+          type: integer
+          example: 3
+        emailSpaces:
+          type: integer
+          example: 3
+        phoneSpaces:
+          type: integer
+          example: 1
+        videoSpaces:
+          type: integer
+          example: 0
+        messagingSpaces:
+          type: integer
+          example: 3
+        sessionStats:
+          type: object
+          description: Session statistics configuration (obsolete but kept for backward compatibility)
+          properties:
+            enabled:
+              type: boolean
+            frequencyScalar:
+              type: integer
+              example: 5
+            frequencyUnit:
+              type: string
+              example: minutes
+            stats:
+              type: object
+              additionalProperties:
+                type: boolean
+            pingHosts:
+              type: array
+              items:
+                type: string
+              example:
+              - test.edify.cx
+    Permissions:
+      type: object
+      description: The permissions for a user or profile.
+      properties:
+        app:
+          type: object
+        console:
+          type: object
+      example:
+        app:
+          agent:
+            read: false
+          portal:
+            app-web: false
+          homeList:
+            read: false
+          queueList:
+            read: false
+          queueToggling:
+            read: false
+        console:
+          cx:
+            read: true
+          ml:
+            read: true
+          portal:
+            console-web: true
+          queues:
+            read: true
+          account:
+            read: true
+          numbers:
+            read: true
+          integrations:
+            read: false
+    Spaces:
+      type: object
+      description: Space configuration for a user or profile.
+      properties:
+        task:
+          type: array
+          items:
+            type: string
+        email:
+          type: array
+          items:
+            type: string
+        phone:
+          type: array
+          items:
+            type: string
+        video:
+          type: array
+          items:
+            type: string
+        messaging:
+          type: array
+          items:
+            type: string
+    GroupId:
+      description: Unique identifier for a group.
+      type: string
+      pattern: ^007[0-9a-f]{23}$
+      example: 007a1b2c3d4e5f67890abcdef12
+    Groups:
+      type: array
+      description: Array of group identifiers that the user or profile belongs to. Each string is a groupId from the groups
+        table (Edify-style IDs with 007 prefix).
+      items:
+        $ref: '#/components/schemas/GroupId'
+      example:
+      - 007d01090301ad8db0f0d4c370
+      - 007d01090301ad8db0f0d4c371
+    IsEliteVoiceEnabled:
+      type: boolean
+    EliteSbcGroupId:
+      description: The ID of the default SBC Group to use for calls involving this hybrid agent.
+      type: string
+      pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
+      minLength: 36
+      maxLength: 36
+    EliteAgentId:
+      description: The hybrid agent's ID on Aura.
+      type: string
+      minLength: 1
+    EliteAgentIdPassword:
+      description: The password for the hybrid agent on Aura.
+      type: string
+    EliteCommunicationProfilePassword:
+      description: The password for the communication profile on Aura.
+      type: string
+    EliteCommunicationProfilePasswordHash:
+      description: Hash of communication profile password.
+      type: string
+      minLength: 32
+      maxLength: 32
+      pattern: ^[0-9a-f]{32}$
+    EliteSipAddress:
+      description: The SIP address for the hybrid agent.
+      type: string
+      format: email
+    EliteExtension:
+      description: The hybrid agent's extension on Aura.
+      type: string
+      minLength: 1
+    EliteExtensionPassword:
+      type: string
+    EliteSipType:
+      type: string
+      enum:
+      - UDP
+      - TCP
+      - TLS
+    EliteCmConfigurationId:
+      description: The ID of the Elite CM Configuration associated with this user
+      type: string
+      pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
+      minLength: 36
+      maxLength: 36
+    DirectoryAble:
+      type: boolean
+    AIDableField:
+      type: boolean
+    ReportsTo:
+      type: string
+    DialPlanProfileId:
+      type: string
+      pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
+      minLength: 36
+      maxLength: 36
+      description: ID of the dial plan profile to use
+    PhoneSpaces:
+      type: integer
+      minimum: 0
+    LogConfiguration:
+      type: object
+      description: 'Log configuration settings for controlling logging behavior.
+
+        Used to configure client-side logging for users and profiles.
+
+        '
+      properties:
+        logLevel:
+          type: string
+          enum:
+          - ERROR
+          - WARN
+          - INFO
+          - DEBUG
+          - TRACE
+          description: The minimum log level to capture
+          example: INFO
+        remoteLoggingEnabled:
+          type: boolean
+          description: Whether to send logs to the remote logging service
+          example: true
+        sampleRate:
+          type: number
+          minimum: 0
+          maximum: 1
+          description: Sampling rate for logs (0 to 1, where 1 means log everything)
+          example: 0.5
+        modules:
+          type: array
+          items:
+            type: string
+          description: List of module names to enable logging for
+          example:
+          - auth
+          - api
+          - websocket
+    ApiRequestKey:
+      description: Unique identifier for tracing the handling of an API request.
+      type: string
+      pattern: ^012[0-9a-f]{23}$
+      example: 012d010908d4c2bdcc95a5f63c
+    EmailSpaces:
+      type: integer
+      minimum: 0
+    TaskSpaces:
+      type: integer
+      minimum: 0
+    MessagingSpaces:
+      type: integer
+      minimum: 0
+    VideoSpaces:
+      type: integer
+      minimum: 0
+    RouteTo:
+      description: Route-to configuration for the user.
+      type: string
+    UserRouteTo:
+      description: User-level route-to setting (e.g., 'endpoints').
+      type: string
+    QueueRouteTo:
+      description: Queue-level route-to setting.
+      type: string
+    Voicemail:
+      description: Voicemail configuration object.
+      type: object
+      additionalProperties: true
+    AidStatusTypeOverride:
+      description: Whether the user has an AID status type override.
+      type: boolean
+    SipTrunkId:
+      description: SIP trunk ID.
+      type: string
+    SipTranslation:
+      description: SIP translation setting.
+      type: string
+    Tabs:
+      description: User-configured UI tabs.
+      type: array
+      items:
+        type: object
+        additionalProperties: true
+    DefaultTab:
+      description: The user's default tab.
+      type: string
+    UcPhoneSpaces-2:
+      description: Number of UC phone interaction spaces.
+      type: integer
+      minimum: 0
+    E911Recommendations:
+      description: E911 recommendation setting.
+      type: string
+    HasEliteAgentIdPassword:
+      description: Whether the user has an Elite agent ID password set.
+      type: boolean
+    HasEliteCommunicationProfilePassword:
+      description: Whether the user has an Elite communication profile password set.
+      type: boolean
+    HasEliteExtensionPassword:
+      description: Whether the user has an Elite extension password set.
+      type: boolean
+    IsEliteAutoSyncEnabled:
+      description: Whether Elite auto-sync is enabled for this user.
+      type: boolean
+    UseUCPhoneSpaceOnCCCall-2:
+      description: Use UC phone space for CC calls.
+      type: boolean
+    UseCCPhoneSpaceOnUCCall-2:
+      description: Use CC phone space for UC calls.
+      type: boolean
+    Uc3Endpoint:
+      description: UC3 endpoint session information.
+      type: object
+      properties:
+        id:
+          type: string
+        sessionToken:
+          type: string
+        sessionId:
+          type: string
+    UserAID:
+      description: Auto Interaction Distribution (AID) state for the user.
+      type: object
+      properties:
+        isAID:
+          type:
+          - string
+          - boolean
+        spaces:
+          $ref: '#/components/schemas/Spaces'
+        limits:
+          type: object
+          additionalProperties:
+            type: integer
+        lastSelected:
+          type:
+          - string
+          - 'null'
+        lastEndedInteractionTime:
+          type: string
+    UserAccountStatus:
+      description: Is the user enabled or disabled?
+      type: string
+      enum:
+      - enabled
+      - disabled
+    JobId:
+      description: Unique ID for a bulk user operation job.
+      type: string
+      format: uuid
+      example: c8c2909d-75e9-484a-94c0-b7e8d30771fe
+    BulkOperationResponse:
+      description: Response for a bulk user operation request having been accepted.
+      type: object
+      required:
+      - jobId
+      - url
+      properties:
+        jobId:
+          allOf:
+          - $ref: '#/components/schemas/JobId'
+          readOnly: true
+        url:
+          description: URL to get details of the bulk user operation job.
+          type: string
+          example: /api/config/v1/jobs/c8c2909d-75e9-484a-94c0-b7e8d30771fe
+          readOnly: true
+      title: BulkOperationResponse
+    BulkExportOperationResponse:
+      description: Response for a bulk export users operation request having been accepted.
+      type: object
+      required:
+      - jobId
+      - url
+      - downloadUrl
+      properties:
+        jobId:
+          allOf:
+          - $ref: '#/components/schemas/JobId'
+          readOnly: true
+        url:
+          description: URL to get details of the bulk user operation job.
+          type: string
+          example: /api/config/v1/jobs/c8c2909d-75e9-484a-94c0-b7e8d30771fe
+          readOnly: true
+        downloadUrl:
+          description: URL to download the exported users archive from, once the job has completed.
+          type: string
+          example: /api/config/v1/jobs/c8c2909d-75e9-484a-94c0-b7e8d30771fe/exported-users
+          readOnly: true
+      title: BulkExportOperationResponse
+  examples:
+    GetUserDetailSuccess:
+      description: Successful user retrieval
+      value:
+        userId: 002d011003cf7c9d1b469ddc7e
+        email: hitenagent@avaya113.com
+        firstName: Hiten
+        lastName: Agent
+        fullName: Hiten Agent
+        licType: omniChannelAgentEnhanced
+        status: enabled
+        createdOn: '2025-09-08T14:36:49Z'
+        lastUpdated: '2025-09-08T14:38:10Z'
+        tags: []
+        attributes: {}
+        permissions: {}
+    ErrorUserEmailExists:
+      description: Constraint Violation
+      value:
+        type: https://developers.avayacloud.com/avaya-infinity/docs/user-management#error-reference
+        title: Conflict
+        status: 409
+        detail: A resource with the same unique constraint values already exists.
+        violations:
+        - field: email
+          message: A user with this email already exists
+    ErrorUnprocessableEntity:
+      description: Validation failed
+      value:
+        type: https://developers.avayacloud.com/avaya-infinity/docs/user-management#error-reference
+        title: Validation failed
+        status: 422
+        detail: A problem that indicates a syntactically correct, yet semantically illegal request. The Server can not process
+          this request until the client resolves the semantic errors described in the violations section.
+        violations:
+          message: Invalid email format.
+          code: 20008

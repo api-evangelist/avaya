@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<wsdl:definitions name="NotificationProducer"
+  xmlns="http://schemas.xmlsoap.org/wsdl/"
+  xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"  
+  xmlns:wsnf="http://www.nortel.com/soa/oi/cct/notification/faults"
+  xmlns:wsnp="http://www.nortel.com/soa/oi/cct/types/NotificationProducer"
+  xmlns:tns="http://www.nortel.com/soa/oi/cct/NotificationProducer"
+  targetNamespace="http://www.nortel.com/soa/oi/cct/NotificationProducer">
+  
+   	<wsdl:import 
+		namespace="http://www.nortel.com/soa/oi/cct/notification/faults" 
+		location="CommonNotificationFaults.wsdl" />
+		
+	<wsdl:types>
+		<xsd:schema 
+			elementFormDefault="qualified" 
+			xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+			targetNamespace="http://www.nortel.com/soa/oi/cct/NotificationProducer">
+			<xsd:import namespace="http://www.nortel.com/soa/oi/cct/types/NotificationProducer" schemaLocation="NotificationProducer.xsd"></xsd:import>			
+		</xsd:schema>
+	</wsdl:types>
+	
+	<wsdl:message name="GetVersionRequest">
+		<wsdl:part name="parameters" element="wsnp:GetVersionRequest" />
+	</wsdl:message>
+	
+	<wsdl:message name="GetVersionResponse">
+		<wsdl:part name="result" element="wsnp:GetVersionResponse" />
+	</wsdl:message>
+	
+	<wsdl:message name="GetVersionFault">
+		<wsdl:part name="GetVersionFault" element="wsnp:GetVersionFault" />
+	</wsdl:message>
+	       
+	<wsdl:message name="SubscribeRequest" >
+		<wsdl:part name="SubscribeRequest" element="wsnp:Subscribe"/>
+	</wsdl:message>
+
+	<wsdl:message name="SubscribeResponse">
+		<wsdl:part name="SubscribeResponse" element="wsnp:SubscribeResponse"/>
+	</wsdl:message>
+
+	<wsdl:message name="RenewRequest">
+		<wsdl:part name="RenewRequest" element="wsnp:Renew"/>
+	</wsdl:message>
+
+	<wsdl:message name="RenewResponse">
+		<wsdl:part name="RenewResponse" element="wsnp:RenewResponse"/>
+	</wsdl:message>
+
+	<wsdl:message name="UnsubscribeRequest">
+		<wsdl:part name="UnsubscribeRequest" element="wsnp:Unsubscribe"/>
+	</wsdl:message>
+
+	<wsdl:message name="UnsubscribeResponse">
+		<wsdl:part name="UnsubscribeResponse" element="wsnp:UnsubscribeResponse"/>
+	</wsdl:message>
+
+	<wsdl:portType name="NotificationProducer">
+ 
+		<wsdl:operation name="GetVersion">
+			<wsdl:input 
+				name="GetVersionRequest"
+				message="tns:GetVersionRequest" />
+			<wsdl:output 
+				name = "GetVersionResponse"
+				message="tns:GetVersionResponse" />
+			<wsdl:fault 
+				name="GetVersionFault" 
+				message="tns:GetVersionFault" />
+		</wsdl:operation>
+		
+ 		<wsdl:operation name="Subscribe">
+			<wsdl:input name="SubscribeRequest" 
+				message="tns:SubscribeRequest" />
+			<wsdl:output name="SubscribeResponse"
+				message="tns:SubscribeResponse" />
+			<wsdl:fault	name="ResourceUnknownFault" 
+				message="wsnf:ResourceUnknownFault" />
+			<wsdl:fault	name="SubscribeCreationFailedFault" 
+				message="wsnf:SubscribeCreationFailedFault"/>
+			<wsdl:fault name="TopicPathDialectUnknownFault" 
+				message="wsnf:TopicPathDialectUnknownFault"/>
+		</wsdl:operation>
+		
+ 		<wsdl:operation name="Renew">
+ 			<wsdl:input name="RenewRequest"
+ 				message="tns:RenewRequest" />
+ 			<wsdl:output name="RenewResponse"
+ 				message="tns:RenewResponse" />
+ 			<wsdl:fault name="ResourceUnknownFault"
+ 				message="wsnf:ResourceUnknownFault" />
+ 			<wsdl:fault name="RenewSubscriptionFailedFault"
+ 				message="wsnf:RenewSubscriptionFailedFault" />
+ 			<wsdl:fault name="UnacceptableTerminationTimeFault"
+ 				message="wsnf:UnacceptableTerminationTimeFault" />
+ 		</wsdl:operation>
+ 		
+ 		<wsdl:operation name="Unsubscribe">
+ 			<wsdl:input name="UnsubscribeRequest"
+ 				message="tns:UnsubscribeRequest" />
+ 			<wsdl:output name="UnsubscribeResponse"
+ 				message="tns:UnsubscribeResponse" />
+ 			<wsdl:fault name="ResourceUnknownFault"
+ 				message="wsnf:ResourceUnknownFault" />
+ 			<wsdl:fault name="UnableToDestroySubscriptionFault"
+ 				message="wsnf:UnableToDestroySubscriptionFault" />
+ 		</wsdl:operation>
+
+	</wsdl:portType>
+</wsdl:definitions>

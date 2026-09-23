@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<definitions name="contact_manager_service_interface"
+	targetNamespace="http://www.nortel.com/soa/oi/cct/ContactManagerService"
+	xmlns="http://schemas.xmlsoap.org/wsdl/"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns:service="http://www.nortel.com/soa/oi/cct/ContactManagerService"
+	xmlns:exceptions="http://www.nortel.com/soa/oi/cct/faults"
+	xmlns:local="http://www.nortel.com/soa/oi/cct/types/ContactManagerService">
+
+	<import namespace="http://www.nortel.com/soa/oi/cct/faults" location="ContactManagerServiceExceptions.wsdl" />
+		
+	<types>
+		<schema elementFormDefault="qualified"
+			xmlns="http://www.w3.org/2001/XMLSchema"
+			targetNamespace="http://www.nortel.com/soa/oi/cct/ContactManagerService">
+			
+			<import namespace="http://www.nortel.com/soa/oi/cct/types/ContactManagerService" schemaLocation="ContactManagerService.xsd" />	
+		</schema>			
+	</types>
+
+	
+	<message name="GetProvidersRequest">
+		<part name="parameters" element="local:GetProvidersRequest" />
+	</message>
+	<message name="GetProvidersResponse">
+		<part name="response" element="local:GetProvidersResponse" />
+	</message>
+
+	<message name="GetAgentsRequest">
+		<part name="parameters" element="local:GetAgentsRequest" />
+	</message>
+	<message name="GetAgentsResponse">
+		<part name="response" element="local:GetAgentsResponse" />
+	</message>
+	
+	<message name="GetAgentRequest">
+		<part name="parameters" element="local:GetAgentRequest" />
+	</message>
+	<message name="GetAgentResponse">
+		<part name="response" element="local:GetAgentResponse" />
+	</message>	
+
+	<message name="GetContactTypesRequest">
+		<part name="parameters" element="local:GetContactTypesRequest" />
+	</message>
+	<message name="GetContactTypesResponse">
+		<part name="response" element="local:GetContactTypesResponse" />
+	</message>	
+	
+	<message name="GetAddressesRequest">
+		<part name="parameters" element="local:GetAddressesRequest" />
+	</message>
+	<message name="GetAddressesResponse">
+		<part name="response" element="local:GetAddressesResponse" />
+	</message>
+
+	<message name="GetAddressRequest">
+		<part name="parameters" element="local:GetAddressRequest" />
+	</message>
+	<message name="GetAddressResponse">
+		<part name="response" element="local:GetAddressResponse" />
+	</message>
+
+	<message name="GetTerminalsRequest">
+		<part name="parameters" element="local:GetTerminalsRequest" />
+	</message>
+	<message name="GetTerminalsResponse">
+		<part name="response" element="local:GetTerminalsResponse" />
+	</message>
+	
+	<message name="GetTerminalRequest">
+		<part name="parameters" element="local:GetTerminalRequest" />
+	</message>
+	<message name="GetTerminalResponse">
+		<part name="response" element="local:GetTerminalResponse" />
+	</message>	
+	
+	<message name="GetContactsRequest">
+		<part name="parameters" element="local:GetContactsRequest" />
+	</message>
+	<message name="GetContactsResponse">
+		<part name="response" element="local:GetContactsResponse" />
+	</message>	
+	
+	<message name="GetContactRequest">
+		<part name="parameters" element="local:GetContactRequest" />
+	</message>
+	<message name="GetContactResponse">
+		<part name="response" element="local:GetContactResponse" />
+	</message>
+
+	<message name="StartCallEventListenerRequest">
+		<part name="parameters" element="local:StartCallEventListenerRequest" />
+	</message>
+	<message name="StartCallEventListenerResponse" />
+			
+	<message name="StopCallEventListenerRequest">
+		<part name="parameters" element="local:StopCallEventListenerRequest" />
+	</message>
+	<message name="StopCallEventListenerResponse" />
+	
+	<message name="StartAgentEventListenerRequest">
+		<part name="parameters" element="local:StartAgentEventListenerRequest" />
+	</message>
+	<message name="StartAgentEventListenerResponse" />
+			
+	<message name="StopAgentEventListenerRequest">
+		<part name="parameters" element="local:StopAgentEventListenerRequest" />
+	</message>
+	<message name="StopAgentEventListenerResponse" />
+	
+	<message name="GetInformationRequest">
+		<part name="parameters" element="local:GetInformationRequest"/>
+	</message>
+	<message name="GetInformationResponse">
+		<part name="response" element="local:GetInformationResponse" />
+	</message>
+
+	
+	<portType name="ContactManagerService">
+
+		<operation name="GetProviders">
+			<input message="service:GetProvidersRequest" />
+			<output message="service:GetProvidersResponse" />
+			<fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<fault name="GetProvidersException" message="exceptions:GetProvidersException" />
+		</operation>
+
+		<operation name="GetAgents">
+			<input message="service:GetAgentsRequest" />
+			<output message="service:GetAgentsResponse" />
+			<fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<fault name="GetAgentsException" message="exceptions:GetAgentsException" />
+		</operation>
+		
+		<operation name="GetAgent">
+			<input message="service:GetAgentRequest" />
+			<output message="service:GetAgentResponse" />
+			<fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<fault name="GetAgentException" message="exceptions:GetAgentException" />
+		</operation>
+			
+		<operation name="GetContactTypes">
+			<input message="service:GetContactTypesRequest" />
+			<output message="service:GetContactTypesResponse" />
+			<fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<fault name="GetContactTypesException" message="exceptions:GetContactTypesException" />
+		</operation>
+		
+		<operation name="GetAddresses">
+			<input message="service:GetAddressesRequest" />
+			<output message="service:GetAddressesResponse" />
+			<fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<fault name="GetAddressesException" message="exceptions:GetAddressesException" />
+		</operation>
+
+		<operation name="GetAddress">
+			<input message="service:GetAddressRequest" />
+			<output message="service:GetAddressResponse" />
+			<fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<fault name="GetAddressException" message="exceptions:GetAddressException" />
+		</operation>
+
+		<operation name="GetTerminals">
+			<input message="service:GetTerminalsRequest" />
+			<output message="service:GetTerminalsResponse" />
+			<fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<fault name="GetTerminalsException" message="exceptions:GetTerminalsException" />
+		</operation>
+		
+		<operation name="GetTerminal">
+			<input message="service:GetTerminalRequest" />
+			<output message="service:GetTerminalResponse" />
+			<fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<fault name="GetTerminalException" message="exceptions:GetTerminalException" />
+		</operation>
+		
+		<operation name="GetContacts">
+			<input message="service:GetContactsRequest" />
+			<output message="service:GetContactsResponse" />
+			<fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<fault name="GetContactsException" message="exceptions:GetContactsException" />
+		</operation>
+		
+		<operation name="GetContact">
+			<input message="service:GetContactRequest" />
+			<output message="service:GetContactResponse" />
+			<fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<fault name="GetContactException" message="exceptions:GetContactException" />
+		</operation>
+			
+		<operation name="StartCallEventListener">
+			<input message="service:StartCallEventListenerRequest" />
+			<output message="service:StartCallEventListenerResponse" />
+			<fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<fault name="StartCallEventListenerException" message="exceptions:StartCallEventListenerException" />
+		</operation>
+
+		<operation name="StopCallEventListener">
+			<input message="service:StopCallEventListenerRequest" />
+			<output message="service:StopCallEventListenerResponse" />
+			<fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<fault name="StopCallEventListenerException" message="exceptions:StopCallEventListenerException" />
+		</operation>
+		
+		<operation name="StartAgentEventListener">
+			<input message="service:StartAgentEventListenerRequest" />
+			<output message="service:StartAgentEventListenerResponse" />
+			<fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<fault name="StartAgentEventListenerException" message="exceptions:StartAgentEventListenerException" />
+		</operation>
+
+		<operation name="StopAgentEventListener">
+			<input message="service:StopAgentEventListenerRequest" />
+			<output message="service:StopAgentEventListenerResponse" />
+			<fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<fault name="StopAgentEventListenerException" message="exceptions:StopAgentEventListenerException" />
+		</operation>
+		
+		<operation name="GetInformation">
+			<input message="service:GetInformationRequest" />
+			<output message="service:GetInformationResponse" />
+			<fault name="GetInformationException" message="exceptions:GetInformationException" />
+		</operation>
+
+	</portType>
+
+</definitions>

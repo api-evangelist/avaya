@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<wsdl:definitions name="StatsNotificationConsumer"
+	xmlns="http://schemas.xmlsoap.org/wsdl/"
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"  
+	xmlns:wsp="http://schemas.xmlsoap.org/ws/2002/12/policy"
+	xmlns:wssc="http://www.nortel.com/soa/oi/cct/types/StatsNotificationConsumer"
+	xmlns:tns="http://www.nortel.com/soa/oi/cct/StatsNotificationConsumer"
+	targetNamespace="http://www.nortel.com/soa/oi/cct/StatsNotificationConsumer">
+
+	<wsdl:types>
+		<xsd:schema 
+			elementFormDefault="qualified" 
+			xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+			targetNamespace="http://www.nortel.com/soa/oi/cct/StatsNotificationConsumer">
+			<xsd:import namespace="http://www.nortel.com/soa/oi/cct/types/StatsNotificationConsumer" schemaLocation="StatsNotificationConsumer.xsd"></xsd:import>
+		</xsd:schema>
+	</wsdl:types>
+
+	<wsdl:message name="Notify">
+		<wsdl:part name="Notify" element="wssc:Notify"/>
+	</wsdl:message>
+
+	<wsdl:portType name="StatsNotificationConsumer">
+		<wsdl:operation name="Notify">
+			<wsdl:input message="tns:Notify" />
+		</wsdl:operation>
+	</wsdl:portType>
+ 
+</wsdl:definitions>

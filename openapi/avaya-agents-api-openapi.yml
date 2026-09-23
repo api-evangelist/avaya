@@ -1,0 +1,516 @@
+openapi: 3.2.0
+info:
+  title: Outbound Agents API
+  description: 'Outbound API allows you to manage outbound call campaigns, records, agents, skills, and Do Not Call lists.
+
+
+    ## Authentication
+
+    All requests require an Bearer Token.
+
+
+    ## Pagination
+
+    Many list endpoints return paginated results with a limit of 200 records per page. When more records are available, the response includes `"more_records": "1"`. To retrieve subsequent pages, include a `page` parameter in your request.'
+  version: 1.0.0
+servers:
+- url: '{protocol}://{server}{basePath}'
+  description: Open API
+  variables:
+    protocol:
+      enum:
+      - https
+      default: https
+    server:
+      default: HOST-REGION.api.avayacloud.com
+    basePath:
+      default: /api/outbound
+- url: '{protocol}://{server}:{port}'
+  description: Internal API
+  variables:
+    protocol:
+      enum:
+      - http
+      - https
+      default: https
+    server:
+      default: outbound-service
+    port:
+      enum:
+      - '80'
+      - '443'
+      default: '443'
+security:
+- {}
+- BearerAuth: []
+tags:
+- name: Agents
+  description: Monitor and manage agent status and activity
+paths:
+  /AgentStatusHistory:
+    post:
+      tags:
+      - Agents
+      summary: Get agent status history
+      description: 'This function allows you to extract the agent status history for a specific status for an agent.
+
+
+        | Response Code | Description |
+
+        | --- | --- |
+
+        | 200 | Success |
+
+        | 400 | Bad Request |
+
+        | 401 | Unauthorized |
+
+        | 404 | Not Found |
+
+        | 405 | Method Not Allowed |
+
+        | 429 | Too Many Requests |'
+      operationId: agentStatusHistory
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+              - userid
+              - date
+              properties:
+                userid:
+                  type: string
+                  description: The User ID of the agent.
+                date:
+                  type: string
+                  description: 'The date to extract history for. Format: ''yyyy-mm-dd'''
+                  example: '2023-10-23'
+                statusid:
+                  type: string
+                  description: 'The Status ID to filter by:
+
+                    0=Never Logged In, 1=Logged In, 2=Waiting, 3=Paused, 4=On Call,
+
+                    5=Logged Out, 6=System Assigning Record, 7=Previewing Record,
+
+                    8=Preview Dialling Record, 9=Manual Dialling Record,
+
+                    10=Transferring Record, 11=In Conference, 12=Wrapping
+
+                    '
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  info:
+                    $ref: '#/components/schemas/PaginationInfo'
+                  activities:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        CallId:
+                          type: string
+                        StartTime:
+                          type: string
+                        EndTime:
+                          type: string
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+        '405':
+          description: Method Not Allowed
+        '429':
+          description: Too Many Requests
+  /AgentStatusTime:
+    post:
+      tags:
+      - Agents
+      summary: Get total time per agent status
+      description: 'This function retrieves the total time, in seconds, for each status that the agent was in for a specific date.
+
+
+        | Response Code | Description |
+
+        | --- | --- |
+
+        | 200 | Success |
+
+        | 400 | Bad Request |
+
+        | 401 | Unauthorized |
+
+        | 404 | Not Found |
+
+        | 405 | Method Not Allowed |
+
+        | 429 | Too Many Requests |'
+      operationId: agentStatusTime
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+              - date
+              - userid
+              properties:
+                date:
+                  type: string
+                  description: 'The date to extract status time for. Format: ''yyyy-mm-dd'''
+                userid:
+                  type: string
+                  description: The User ID of the agent.
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  info:
+                    $ref: '#/components/schemas/PaginationInfo'
+                  activities:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        Name:
+                          type: string
+                        UserId:
+                          type: string
+                        Waiting:
+                          type: string
+                          description: Total seconds in Waiting status
+                        Paused:
+                          type: string
+                          description: Total seconds in Paused status
+                        Previewing:
+                          type: string
+                          description: Total seconds in Previewing status
+                        PreviewDialing:
+                          type: string
+                          description: Total seconds in Preview Dialing status
+                        Talking:
+                          type: string
+                          description: Total seconds in Talking (On Call) status
+                        Wrapping:
+                          type: string
+                          description: Total seconds in Wrapping status
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+        '405':
+          description: Method Not Allowed
+        '429':
+          description: Too Many Requests
+  /GetAgentStatusIDs:
+    post:
+      tags:
+      - Agents
+      summary: Get agent status IDs
+      description: 'This function extracts the Agent Status IDs and Agent Status Names for all or a specific status.
+
+
+        | Response Code | Description |
+
+        | --- | --- |
+
+        | 200 | Success |
+
+        | 400 | Bad Request |
+
+        | 401 | Unauthorized |
+
+        | 404 | Not Found |
+
+        | 405 | Method Not Allowed |
+
+        | 429 | Too Many Requests |'
+      operationId: getAgentStatusIDs
+      requestBody:
+        required: false
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: The name of the status to search (e.g. 'Wait' returns Waiting). Send empty string to return all.
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  info:
+                    $ref: '#/components/schemas/PaginationInfo'
+                  entries:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        Id:
+                          type: string
+                        Name:
+                          type: string
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+        '405':
+          description: Method Not Allowed
+        '429':
+          description: Too Many Requests
+  /AgentFirstLastActivity:
+    post:
+      tags:
+      - Agents
+      summary: Get agent first and last activity
+      description: 'This function provides the first and last activity for an agent for a specific day.
+
+
+        | Response Code | Description |
+
+        | --- | --- |
+
+        | 200 | Success |
+
+        | 400 | Bad Request |
+
+        | 401 | Unauthorized |
+
+        | 404 | Not Found |
+
+        | 405 | Method Not Allowed |
+
+        | 429 | Too Many Requests |'
+      operationId: agentFirstLastActivity
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+              - date
+              - userid
+              properties:
+                date:
+                  type: string
+                  description: 'The date to extract. Format: ''yyyy-mm-dd'''
+                userid:
+                  type: string
+                  description: The User ID of the agent.
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  info:
+                    $ref: '#/components/schemas/PaginationInfo'
+                  activities:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        StartTime:
+                          type: string
+                        EndTime:
+                          type: string
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+        '405':
+          description: Method Not Allowed
+        '429':
+          description: Too Many Requests
+  /GetAgentStatus:
+    post:
+      tags:
+      - Agents
+      summary: Get current agent status
+      description: 'This function retrieves the current status of an agent from the system.
+
+
+        | Response Code | Description |
+
+        | --- | --- |
+
+        | 200 | Success |
+
+        | 400 | Bad Request |
+
+        | 401 | Unauthorized |
+
+        | 404 | Not Found |
+
+        | 405 | Method Not Allowed |
+
+        | 429 | Too Many Requests |'
+      operationId: getAgentStatus
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+              - userid
+              properties:
+                userid:
+                  type: string
+                  description: User ID of the agent.
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  info:
+                    $ref: '#/components/schemas/PaginationInfo'
+                  agents:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        Id:
+                          type: string
+                        Name:
+                          type: string
+                        Status:
+                          type: string
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+        '405':
+          description: Method Not Allowed
+        '429':
+          description: Too Many Requests
+  /UpdateAgentStatus:
+    put:
+      tags:
+      - Agents
+      summary: Update agent status
+      description: 'This function changes the status of a specified user. Should only be used with API Users created via `CreateApiUser`.
+
+
+        | Response Code | Description |
+
+        | --- | --- |
+
+        | 200 | Success |
+
+        | 400 | Bad Request |
+
+        | 401 | Unauthorized |
+
+        | 405 | Method Not Allowed |
+
+        | 429 | Too Many Requests |'
+      operationId: updateAgentStatus
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+              - statusid
+              - agentid
+              properties:
+                statusid:
+                  type: string
+                  description: 'The Status ID to set:
+
+                    0=Never Logged In, 1=Logged In, 2=Waiting, 3=Paused, 4=On Call,
+
+                    5=Logged Out, 6=System Assigning Record, 7=Previewing Record,
+
+                    8=Preview Dialling Record, 9=Manual Dialling Record,
+
+                    10=Transferring Record, 11=In Conference, 12=Wrapping
+
+                    '
+                agentid:
+                  type: string
+                  description: The User ID of the agent.
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: string
+                    example: Agent Status Has Been Updated
+                  info:
+                    type: object
+                    properties:
+                      AgtStatHistId:
+                        type: string
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '405':
+          description: Method Not Allowed
+        '429':
+          description: Too Many Requests
+components:
+  schemas:
+    PaginationInfo:
+      type: object
+      properties:
+        per_page:
+          type: string
+          example: '200'
+        count:
+          type: string
+          example: '10'
+        page:
+          type: string
+          example: '1'
+        more_records:
+          type: string
+          example: '0'
+          description: Set to '1' if more records are available. Increment the `page` parameter to retrieve the next page.
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      description: This API uses Bearer Token Authorization Flow
+      bearerFormat: JWT

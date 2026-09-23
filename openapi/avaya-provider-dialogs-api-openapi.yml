@@ -1,0 +1,346 @@
+openapi: 3.2.0
+info:
+  title: Digital - Custom Messaging Provider Dialogs API
+  description: Send messages related to non-session (asynchronous) based communication.
+  contact:
+    name: Avaya API Team
+    url: https://developers.avayacloud.com/onecloud-ccaas
+    email: apiteam@avaya.com
+  license:
+    name: Avaya Software Development Kit (SDK) Software License Terms
+    url: http://support.avaya.com/css/P8/documents/101038288
+  version: 1.0.4
+servers:
+- url: '{protocol}://{server}{basePath}'
+  description: Open API
+  variables:
+    protocol:
+      enum:
+      - https
+      default: https
+    server:
+      default: HOST-REGION.api.avayacloud.com
+    basePath:
+      default: /api/digital/custom-messaging/v1
+- url: '{protocol}://{server}{basePath}/async/{apiVersion}'
+  description: Internal Connector API
+  variables:
+    protocol:
+      enum:
+      - https
+      default: https
+    server:
+      default: HOST-REGION.cc.avayacloud.com
+    basePath:
+      default: /api/digital
+    apiVersion:
+      enum:
+      - v1
+      default: v1
+- url: '{protocol}://{server}:{port}'
+  description: Internal API
+  variables:
+    protocol:
+      enum:
+      - http
+      - https
+      default: http
+    server:
+      default: async-gateway
+    port:
+      enum:
+      - '80'
+      - '443'
+      default: '80'
+security:
+- {}
+- BearerAuth: []
+  AppKey: []
+tags:
+- name: Provider Dialogs
+  description: When a message for a conversation, represented by providerDialogId, is sent, a corresponding engagement and dialog is either created or existing engagement and dialog is utilized.
+paths:
+  /accounts/{accountId}/provider-dialogs/{providerDialogId}:disconnect:
+    post:
+      tags:
+      - Provider Dialogs
+      summary: Disconnect Dialog
+      description: Disconnects the customer from the live dialog within AXP associated with the conversation. This eventually terminates the dialog. For asynchronous messaging, calling this API will not be required under usual circumstances. However in scenarios where provider wants to terminate a conversation, disconnect AXP from participating in the conversation, clean up an inactive conversation or handle any erroneous situation, call this API to terminate the live dialog within AXP.
+      operationId: disconnectProviderDialog
+      parameters:
+      - $ref: '#/components/parameters/accountId'
+      - $ref: '#/components/parameters/providerDialogId'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DisconnectProviderDialog'
+            examples:
+              Disconnect-Provider-Dialog:
+                $ref: '#/components/examples/DisconnectProviderDialog'
+        description: request
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DisconnectProviderDialog'
+              examples:
+                Disconnect-Provider-Dialog:
+                  $ref: '#/components/examples/DisconnectProviderDialogResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      deprecated: false
+components:
+  responses:
+    Forbidden:
+      description: Forbidden.
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorForbidden'
+    Unauthorized:
+      description: Unauthorized.
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorUnauthorized'
+    InternalServerError:
+      description: Internal Server Error
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorInternalServerError'
+    BadRequest:
+      description: Bad Request
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorConstraintViolation'
+  examples:
+    ErrorForbidden:
+      description: Forbidden
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#forbidden
+        title: Forbidden
+        status: 403
+        detail: According to the access control policy the current user and/or accountId does not have permission to access this resource.
+    ErrorInternalServerError:
+      description: Internal Server Error
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#internal-error
+        title: Internal Server Error
+        status: 500
+        detail: An internal server error was encountered.
+    ErrorUnauthorized:
+      description: Unauthorized
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#unauthorized
+        title: Unauthorized
+        status: 401
+        detail: This operation requires authentication. See https://developers.avayacloud.com/onecloud-ccaas/docs/how-to-authenticate-with-ccaas-apis
+    DisconnectProviderDialog:
+      value:
+        channelProviderId: 591c2529-c3a3-4062-a213-b239c18f543b
+        businessAccountName: e94e278d-72e7-48cc-80fc-dba9f8dd1c36
+        reason: SYSTEM_CLOSED
+        correlationId: zc38400d-c44f-4451-8316-e75c4efbt779
+    DisconnectProviderDialogResponse:
+      value:
+        providerDialogId: ed7e49dc8458c71d1d2f1e31
+        channelProviderId: 591c2529-c3a3-4062-a213-b239c18f543b
+        businessAccountName: e94e278d-72e7-48cc-80fc-dba9f8dd1c36
+        reason: SYSTEM_CLOSED
+        correlationId: zc38400d-c44f-4451-8316-e75c4efbt779
+    ErrorConstraintViolation:
+      description: Constraint Violation
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#constraint-violation
+        title: Constraint Violation
+        status: 400
+        detail: A problem that indicates a syntactically correct, yet semantically illegal request. The Server can not process this request until the client resolves the semantic errors described in the violations section.
+        violations:
+        - field: accountId
+          message: must match "^[a-zA-Z]{6}$"
+  parameters:
+    accountId:
+      name: accountId
+      description: The unique 6 character internal id that represents the customer account.
+      required: true
+      in: path
+      schema:
+        type: string
+        minLength: 6
+        maxLength: 6
+        pattern: ^[a-zA-Z]{6}$
+        example: ABCDEF
+    providerDialogId:
+      name: providerDialogId
+      description: 'The provider side identifier for a Contact Center dialog.  Messages with same ''providerDialogId'' value are considered part of same conversation.  If no or blank value is passed while sending a message, a new individual dialog  will be created. For integrating third party providers, provide the identifier that represents an individual conversation in the third party provider.
+
+        '
+      required: true
+      in: path
+      schema:
+        type: string
+        minLength: 3
+        maxLength: 256
+        example: ed7e49dc8458c71d1d2f1e31
+  schemas:
+    DisconnectProviderDialog:
+      type: object
+      required:
+      - channelProviderId
+      - businessAccountName
+      properties:
+        providerDialogId:
+          type: string
+          readOnly: true
+          description: The provider side identifier for a Contact Center dialog.
+        channelProviderId:
+          type: string
+          description: The unique id that represents the channel provider
+          minLength: 3
+          maxLength: 256
+        businessAccountName:
+          type: string
+          minLength: 3
+          maxLength: 256
+          description: The name of the business account configured on the channel provider. For custom messaging integration, provide the unique id of the integration (integrationId) here.
+        reason:
+          type: string
+          description: Reason for termination of client session of a customer
+          enum:
+          - USER_CLOSED
+          - USER_INACTIVE
+          - SYSTEM_CLOSED
+          - UNKNOWN
+          example: SYSTEM_CLOSED
+        correlationId:
+          type: string
+          maxLength: 256
+          description: The correlation id is used to uniquely identify the client request. This is an optional field but when specified can be used to correlate the callback event with the original API request. If the client does not pass any value for the correlation id in the request, a unique value will be generated automatically and sent back in the response.
+    Problem:
+      type: object
+      description: '<b>Problem Detail</b> as a way to carry machine-readable details of errors in a HTTP response to avoid the need to define new error response formats for HTTP APIs <a href="https://tools.ietf.org/html/rfc7807">RFC 7807</a>
+
+        '
+      properties:
+        type:
+          type: string
+          format: uri
+          description: 'An absolute URI that identifies the problem type. When dereferenced, it SHOULD provide human-readable documentation for the problem type (e.g., using HTML).
+
+            '
+          default: about:blank
+          example: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#constraint-violation
+        title:
+          type:
+          - string
+          - 'null'
+          description: 'A short, summary of the problem type. Written in english and readable for engineers (usually not suited for non technical stakeholders and not localized).
+
+            '
+          example: Service Unavailable
+        status:
+          type:
+          - integer
+          - 'null'
+          format: int32
+          description: 'The HTTP status code generated by the origin server for this occurrence of the problem.
+
+            '
+          minimum: 100
+          example: 503
+          exclusiveMaximum: 600
+        detail:
+          type:
+          - string
+          - 'null'
+          description: 'A human readable explanation specific to this occurrence of the problem.
+
+            '
+          example: Connection to database timed out
+        instance:
+          type:
+          - string
+          - 'null'
+          format: uri
+          description: 'An absolute URI that identifies the specific occurrence of the problem. It may or may not yield further information if dereferenced.
+
+            '
+        violations:
+          type:
+          - array
+          - 'null'
+          description: 'A list of violations that occurred as a result of invalid data provided as part of a request.
+
+            '
+          items:
+            type: object
+            properties:
+              field:
+                type: string
+                description: 'The name of the field in the request that caused the violation. This can be the name of a path parameter, query parameter, or a field within the request body.
+
+                  '
+                example: accountId
+              message:
+                type: string
+                description: 'A human readable explanation specific to this occurrence of the violation.
+
+                  '
+                example: must match "^[a-zA-Z]{6}$"
+              code:
+                type: integer
+                format: int32
+                description: 'The violation code generated by the server for this occurrence of the violation. Use this code when implementing any error handling logic instead of the message, as the message can change.
+
+                  '
+                example: 20006
+          example:
+          - field: emailAddress
+            message: must not be null
+            code: 20002
+          - field: accountId
+            message: must match "^[a-zA-Z]{6}$"
+            code: 20006
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      description: This API uses Bearer Token Authorization Flow
+      bearerFormat: JWT
+    AppKey:
+      type: apiKey
+      in: header
+      name: appkey
+      description: This API needs an appKey as header.
+x-explorer-enabled: false
+x-samples-languages:
+- curl
+- node
+- java
+- javascript
+- python
+- go

@@ -1,0 +1,552 @@
+openapi: 3.2.0
+info:
+  title: Admin - Timetable Holiday API
+  description: 'Timetable is a configuration of working hours for a specific Contact Center account. Each account can have multiple
+
+    timetables. It is possible to configure a timetable with intervals - days of the week or specific dates with a
+
+    range of working hours, as well as holidays, which are non-working days.'
+  contact:
+    name: Avaya API Team
+    url: https://developers.avayacloud.com/onecloud-ccaas
+    email: apiteam@avaya.com
+  license:
+    name: Avaya Software Development Kit (SDK) Software License Terms
+    url: http://support.avaya.com/css/P8/documents/101038288
+  version: 1.0.1
+servers:
+- url: '{protocol}://{server}{basePath}'
+  description: Open API
+  variables:
+    protocol:
+      enum:
+      - https
+      default: https
+    server:
+      default: HOST-REGION.api.avayacloud.com
+    basePath:
+      default: /api/business-hours/v1
+- url: '{protocol}://{server}:{port}'
+  description: Internal API
+  variables:
+    protocol:
+      enum:
+      - http
+      - https
+      default: http
+    server:
+      default: timetable-service
+    port:
+      enum:
+      - '80'
+      - '443'
+      default: '80'
+security:
+- {}
+- BearerAuth: []
+  AppKey: []
+tags:
+- name: Holiday
+  description: Holidays are non-working days where the contact center is not staffed by agents and therefore fall outside of the operating business hours.
+paths:
+  /accounts/{accountId}/timetables/{timetableId}/holidays:
+    parameters:
+    - $ref: '#/components/parameters/accountId'
+    - $ref: '#/components/parameters/timetableId'
+    get:
+      tags:
+      - Holiday
+      summary: List Holidays
+      operationId: listHolidays
+      description: Gets the list of Holidays for a Timetable.
+      parameters:
+      - $ref: '#/components/parameters/pageSize'
+      - $ref: '#/components/parameters/pageNumber'
+      responses:
+        '200':
+          $ref: '#/components/responses/HolidaysPageResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServer'
+    post:
+      tags:
+      - Holiday
+      summary: Create Holiday
+      operationId: createHoliday
+      description: Creates a new Holiday.
+      requestBody:
+        $ref: '#/components/requestBodies/HolidayRequestBody'
+      responses:
+        '201':
+          $ref: '#/components/responses/HolidayResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServer'
+  /accounts/{accountId}/timetables/{timetableId}/holidays/{holidayId}:
+    parameters:
+    - $ref: '#/components/parameters/accountId'
+    - $ref: '#/components/parameters/timetableId'
+    - $ref: '#/components/parameters/holidayId'
+    get:
+      tags:
+      - Holiday
+      summary: Get Holiday
+      operationId: getHoliday
+      description: Gets a Holiday by ID.
+      responses:
+        '200':
+          $ref: '#/components/responses/HolidayResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServer'
+    put:
+      tags:
+      - Holiday
+      summary: Update Holiday
+      operationId: updateHoliday
+      description: Updates a Holiday.
+      requestBody:
+        $ref: '#/components/requestBodies/HolidayRequestBody'
+      responses:
+        '200':
+          $ref: '#/components/responses/HolidayResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServer'
+    delete:
+      tags:
+      - Holiday
+      summary: Delete Holiday
+      operationId: deleteHoliday
+      description: Deletes a Holiday.
+      responses:
+        '204':
+          description: No Content
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServer'
+components:
+  examples:
+    ErrorForbidden:
+      description: Forbidden
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#forbidden
+        title: Forbidden
+        status: 403
+        detail: According to the access control policy the current user and/or accountId does not have permission to access this resource.
+    ErrorConstraintViolation:
+      description: Constraint Violation
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#constraint-violation
+        title: Constraint Violation
+        status: 400
+        detail: A problem that indicates a syntactically correct, yet semantically illegal request. The Server can not process this request until the client resolves the semantic errors described in the violations section.
+        violations:
+        - field: accountId
+          message: must match "^[a-zA-Z]{6}$"
+          code: 20006
+    HolidayCreate:
+      value:
+        name: Christmas Holidays
+        description: Christmas holidays
+        dates:
+        - '2021-12-24'
+        - '2021-12-25'
+        - '2021-12-26'
+    HolidayPageResponse:
+      value:
+        pagination:
+          pageNumber: 2
+          pageSize: 10
+          total: 12
+        holidays:
+        - holidayId: 72f456b0-2b50-11ec-8d3d-0242ac130003
+          name: Christmas Holidays
+          description: Christmas holidays
+          dates:
+          - '2021-12-24'
+          - '2021-12-25'
+          - '2021-12-26'
+        - holidayId: fef7047e-2b72-11ec-8d3d-0242ac130003
+          name: Saint Patrick's Day
+          description: Saint Patrick's Day
+          dates:
+          - '2022-03-17'
+          - '2022-03-17'
+          - '2023-03-17'
+        links:
+          prev: /api/business-hours/v1/accounts/JDBUTC/timetables/8c872648-2b50-11ec-8d3d-0242ac130003/holidays?pageNumber=2&pageSize=10
+          next: ''
+    HolidayResponse:
+      value:
+        holidayId: 72f456b0-2b50-11ec-8d3d-0242ac130003
+        name: Christmas Holidays
+        description: Christmas holidays
+        dates:
+        - '2021-12-24'
+        - '2021-12-25'
+        - '2021-12-26'
+    ErrorNotFound:
+      description: Not Found
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#resource-not-found
+        title: Resource Not Found
+        status: 404
+        detail: Resource not found.
+    ErrorUnauthorized:
+      description: Unauthorized
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#unauthorized
+        title: Unauthorized
+        status: 401
+        detail: This operation requires authentication. See https://developers.avayacloud.com/onecloud-ccaas/docs/how-to-authenticate-with-ccaas-apis
+    ErrorInternalServerError:
+      description: Server Error
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#server-error
+        title: Server Error
+        status: 500
+        detail: An internal server error was encountered.
+  responses:
+    NotFound:
+      description: Not Found
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorNotFound'
+    BadRequest:
+      description: BadRequest
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorConstraintViolation'
+    InternalServer:
+      description: Internal Server Error
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorInternalServerError'
+    Forbidden:
+      description: Forbidden
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorForbidden'
+    HolidayResponse:
+      description: Holiday Response
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Holiday'
+          examples:
+            Holiday-Response:
+              $ref: '#/components/examples/HolidayResponse'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorUnauthorized'
+    HolidaysPageResponse:
+      description: Holiday Page Response
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/HolidaysPage'
+          examples:
+            Holiday-Page-Response:
+              $ref: '#/components/examples/HolidayPageResponse'
+  parameters:
+    accountId:
+      name: accountId
+      description: The unique 6 character internal id that represents the customer account.
+      required: true
+      in: path
+      schema:
+        type: string
+        minLength: 6
+        maxLength: 6
+        pattern: ^[a-zA-Z]{6}$
+        example: ABCDEF
+    pageSize:
+      name: pageSize
+      description: The maximum number of results per page.
+      required: false
+      in: query
+      schema:
+        type: integer
+        format: int32
+        default: 5
+        minimum: 5
+        maximum: 50
+        example: 5
+    pageNumber:
+      name: pageNumber
+      description: The target page of results.
+      required: false
+      in: query
+      schema:
+        type: integer
+        format: int32
+        default: 1
+        minimum: 1
+        example: 1
+    timetableId:
+      name: timetableId
+      in: path
+      required: true
+      description: The unique 36 character internal id that represents the timetable.
+      schema:
+        type: string
+        minLength: 36
+        maxLength: 36
+        pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
+        example: 8c872648-2b50-11ec-8d3d-0242ac130003
+    holidayId:
+      name: holidayId
+      in: path
+      required: true
+      description: The unique 36 character internal id that represents the holiday.
+      schema:
+        type: string
+        minLength: 36
+        maxLength: 36
+        pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
+        example: 72f456b0-2b50-11ec-8d3d-0242ac130003
+  schemas:
+    Holiday:
+      type: object
+      required:
+      - name
+      - dates
+      properties:
+        holidayId:
+          type: string
+          readOnly: true
+          description: The unique 36 character internal id that represents the holiday.
+          minLength: 36
+          maxLength: 36
+          pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
+        name:
+          type: string
+          description: The name of the holiday. Holiday names are not unique.
+          maxLength: 256
+        description:
+          type: string
+          description: The description of the holiday
+          maxLength: 1024
+        dates:
+          type: array
+          description: List of specific dates the holiday applies to.
+          minItems: 1
+          maxItems: 356
+          items:
+            type: string
+            format: date
+            maxLength: 10
+            description: Date of holiday in ISO 8601 format. Format is 'YYYY-MM-dd' i.e. 2021-03-17
+            example: '2021-01-03'
+          example:
+          - '2021-01-01'
+          - '2021-01-02'
+          - '2021-01-03'
+          - '2021-01-04'
+    Links:
+      type: object
+      properties:
+        prev:
+          type: string
+          description: URL of the previous page. Blank if currently on the first page.
+        next:
+          type: string
+          description: URL of the next page. Blank if currently on the last page.
+    HolidaysPage:
+      description: A paginated list of holidays
+      type: object
+      properties:
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+        holidays:
+          type: array
+          description: List of holidays
+          items:
+            $ref: '#/components/schemas/Holiday'
+        links:
+          $ref: '#/components/schemas/Links'
+    Pagination:
+      type: object
+      properties:
+        pageNumber:
+          type: integer
+          description: The current page number.
+        pageSize:
+          type: integer
+          description: The max number of records that can be retrieved on this page.
+        total:
+          type: integer
+          description: The total number of records.
+    Problem:
+      type: object
+      description: '<b>Problem Detail</b> as a way to carry machine-readable details of errors in a HTTP response to avoid the need to define new error response formats for HTTP APIs <a href="https://tools.ietf.org/html/rfc7807">RFC 7807</a>
+
+        '
+      properties:
+        type:
+          type: string
+          format: uri
+          description: 'An absolute URI that identifies the problem type. When dereferenced, it SHOULD provide human-readable documentation for the problem type (e.g., using HTML).
+
+            '
+          default: about:blank
+          example: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#constraint-violation
+        title:
+          type:
+          - string
+          - 'null'
+          description: 'A short, summary of the problem type. Written in english and readable for engineers (usually not suited for non technical stakeholders and not localized).
+
+            '
+          example: Service Unavailable
+        status:
+          type:
+          - integer
+          - 'null'
+          format: int32
+          description: 'The HTTP status code generated by the origin server for this occurrence of the problem.
+
+            '
+          minimum: 100
+          example: 503
+          exclusiveMaximum: 600
+        detail:
+          type:
+          - string
+          - 'null'
+          description: 'A human readable explanation specific to this occurrence of the problem.
+
+            '
+          example: Connection to database timed out
+        instance:
+          type:
+          - string
+          - 'null'
+          format: uri
+          description: 'An absolute URI that identifies the specific occurrence of the problem. It may or may not yield further information if dereferenced.
+
+            '
+        violations:
+          type:
+          - array
+          - 'null'
+          description: 'A list of violations that occurred as a result of invalid data provided as part of a request.
+
+            '
+          items:
+            type: object
+            properties:
+              field:
+                type: string
+                description: 'The name of the field in the request that caused the violation. This can be the name of a path parameter, query parameter, or a field within the request body.
+
+                  '
+                example: accountId
+              message:
+                type: string
+                description: 'A human readable explanation specific to this occurrence of the violation.
+
+                  '
+                example: must match "^[a-zA-Z]{6}$"
+              code:
+                type: integer
+                format: int32
+                description: 'The violation code generated by the server for this occurrence of the violation. Use this code when implementing any error handling logic instead of the message, as the message can change.
+
+                  '
+                example: 20006
+          example:
+          - field: emailAddress
+            message: must not be null
+            code: 20002
+          - field: accountId
+            message: must match "^[a-zA-Z]{6}$"
+            code: 20006
+  requestBodies:
+    HolidayRequestBody:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Holiday'
+          examples:
+            CreateOrUpdate-Holiday:
+              $ref: '#/components/examples/HolidayCreate'
+      required: true
+      description: Create/Update Holiday request
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      description: This API uses Bearer Token Authorization Flow
+      bearerFormat: JWT
+    AppKey:
+      type: apiKey
+      in: header
+      name: appkey
+      description: This API needs an appKey as header
+x-explorer-enabled: false
+x-samples-languages:
+- curl
+- node
+- java
+- javascript
+- python
+- go

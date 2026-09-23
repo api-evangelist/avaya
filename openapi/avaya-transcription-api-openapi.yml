@@ -1,0 +1,775 @@
+openapi: 3.2.0
+info:
+  title: Interactions Transcription API
+  version: 1.0.0
+  description: '## Overview
+
+
+    These APIs allow you to programmatically manage conversation transcripts and create interactions in Avaya Infinity.'
+  contact:
+    name: Avaya API Team
+    url: https://developers.avayacloud.com/onecloud-ccaas
+    email: apiteam@avaya.com
+  license:
+    name: Avaya Software Development Kit (SDK) Software License Terms
+    url: http://support.avaya.com/css/P8/documents/101038288
+servers:
+- url: https://core.{customer-subdomain}.ec.avayacloud.com
+  description: Avaya Infinity Platform
+  variables:
+    customer-subdomain:
+      default: avaya1234
+      description: Your Infinity instance subdomain (e.g., avaya1234, acme-corp-prod)
+security:
+- BearerAuth: []
+tags:
+- name: Transcription
+paths:
+  /api/core/transcripts/{interaction-id}:
+    post:
+      summary: Add messages to interaction transcript
+      description: '## Overview
+
+
+        Records conversation messages to an interaction''s transcript. Use this API to programmatically log customer and agent/bot messages during or after a conversation.
+
+
+        ## Finding Your Interaction ID
+
+
+        The interaction ID is a unique identifier for each conversation in Infinity. You can obtain it:
+
+        - When creating an interaction via the Interactions API
+
+        - From workflow execution responses
+
+        - From interaction events and webhooks
+
+
+        **To use this API:**
+
+
+        1. **Find your subdomain** from your Infinity portal URL
+
+        2. **Get your Bearer token** by following the Access Token API guide
+
+        3. **In the API explorer on the right:**
+
+        - Replace `{interaction-id}` with your actual interaction ID
+
+        - Paste your Bearer token in the Credentials section
+
+        - Fill out the Body Parameters with your message data
+
+
+        ## Message Structure
+
+
+        Each message requires:
+
+        - **message**: The text content
+
+        - **direction**: `in` (from customer) or `out` (to customer)
+
+        - **author**: Object with `type` (customer/agent/bot/system) and `id`
+
+        - **languageCode**: Language of the message (e.g., "en-us")
+
+        - **createdAt**: ISO 8601 timestamp
+
+
+        ## Common Use Cases
+
+
+        - Record bot conversation messages for quality monitoring
+
+        - Log agent responses for training and compliance
+
+        - Capture customer messages for sentiment analysis
+
+        - Build conversation history for CRM integration
+
+        - Archive communications for regulatory compliance
+
+
+        ## Additional Information
+
+
+        - Messages are appended to the existing transcript
+
+        - Multiple messages can be posted in a single request
+
+        - Timestamps should be in chronological order
+
+        - Authentication is required for all transcript operations'
+      operationId: postTranscript
+      tags:
+      - Transcription
+      parameters:
+      - name: interaction-id
+        in: path
+        required: true
+        description: Unique identifier of the interaction to add transcript messages to
+        schema:
+          type: string
+          example: 004d01110897e9e99f19c09082
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - messages
+              properties:
+                messages:
+                  type: array
+                  description: Array of message objects to add to the transcript
+                  items:
+                    $ref: '#/components/schemas/TranscriptMessage'
+            examples:
+              customer_support_conversation:
+                summary: Customer Support Conversation
+                description: 'Example of recording a customer service interaction with both customer and bot messages.
+
+
+                  // messages: Array of conversation messages
+
+                  // Each message includes:
+
+                  //   - message: The actual text content
+
+                  //   - direction: "in" for customer messages, "out" for bot/agent messages
+
+                  //   - author.type: customer, bot, agent, or system
+
+                  //   - author.id: Unique identifier for the speaker
+
+                  //   - languageCode: Language of the message
+
+                  //   - createdAt: Timestamp in ISO 8601 format
+
+                  '
+                value:
+                  messages:
+                  - message: Hello, I'm calling about my bill. There seems to be an error on last month's statement.
+                    direction: in
+                    author:
+                      type: customer
+                      id: customer_phone_session_123
+                    languageCode: en-us
+                    createdAt: '2024-10-17T10:30:56.789Z'
+                  - message: Thank you for reaching out. I'll take a look at your billing history and get back to you shortly.
+                    direction: out
+                    author:
+                      type: bot
+                      id: billing_bot_001
+                    languageCode: en-us
+                    createdAt: '2024-10-17T10:31:10.123Z'
+              agent_conversation:
+                summary: Agent Conversation
+                description: Recording messages from a live agent interaction
+                value:
+                  messages:
+                  - message: I need help resetting my password
+                    direction: in
+                    author:
+                      type: customer
+                      id: cust_web_session_456
+                    languageCode: en-us
+                    createdAt: '2024-10-17T14:20:15.000Z'
+                  - message: I can help you with that. Let me send you a password reset link to your registered email.
+                    direction: out
+                    author:
+                      type: agent
+                      id: agent_john_smith
+                    languageCode: en-us
+                    createdAt: '2024-10-17T14:20:45.000Z'
+              multilingual_example:
+                summary: Multilingual Conversation
+                description: Example with messages in different languages
+                value:
+                  messages:
+                  - message: Hola, necesito ayuda con mi cuenta
+                    direction: in
+                    author:
+                      type: customer
+                      id: customer_chat_789
+                    languageCode: es-mx
+                    createdAt: '2024-10-17T16:10:00.000Z'
+                  - message: Por supuesto, con gusto le ayudo. ¿Cuál es el problema específico?
+                    direction: out
+                    author:
+                      type: agent
+                      id: agent_maria_garcia
+                    languageCode: es-mx
+                    createdAt: '2024-10-17T16:10:30.000Z'
+      responses:
+        '200':
+          description: Transcript messages successfully added
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  messagesAdded:
+                    type: integer
+                    example: 2
+        '400':
+          description: Bad Request - Invalid message format
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                invalid_format:
+                  summary: Invalid message format
+                  value:
+                    error: Invalid message format
+                    message: Messages array is required and must contain valid message objects
+        '401':
+          description: Unauthorized - Invalid or missing authentication
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                unauthorized:
+                  summary: Authentication required
+                  value:
+                    error: Unauthorized
+                    message: Valid authentication credentials required
+        '404':
+          description: Not Found - Interaction not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                not_found:
+                  summary: Interaction not found
+                  value:
+                    error: Interaction not found
+                    message: No interaction found with the specified ID
+        '500':
+          description: Internal Server Error - Unexpected server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                internal_error:
+                  summary: Server error
+                  value:
+                    error: Internal server error
+                    message: An unexpected error occurred while processing the request
+    get:
+      summary: Retrieve interaction transcript
+      description: '## Overview
+
+
+        Retrieves the complete transcript for a specific interaction. Returns all messages exchanged during the conversation in chronological order.
+
+
+        ## Finding Your Interaction ID
+
+
+        The interaction ID can be obtained from:
+
+        - Interaction creation responses
+
+        - Workflow execution outputs
+
+        - Interaction events and webhooks
+
+        - Infinity reporting interfaces
+
+
+        **To use this API:**
+
+
+        1. **Find your subdomain** from your Infinity portal URL
+
+        2. **Get your Bearer token** by following the Access Token API guide
+
+        3. **In the API explorer on the right:**
+
+        - Replace `{interaction-id}` with your actual interaction ID
+
+        - Paste your Bearer token in the Credentials section
+
+        - Optionally set `includeEmail` parameter
+
+
+        ## Query Parameters
+
+
+        **includeEmail** (optional, boolean):
+
+        - When `true`: Includes email message content in the transcript
+
+        - When `false` or omitted: Standard transcript without email bodies
+
+        - Use this when you need to retrieve full email thread content
+
+
+        ## Common Use Cases
+
+
+        - Display conversation history to agents or customers
+
+        - Export transcripts for quality assurance review
+
+        - Analyze conversation patterns and sentiment
+
+        - Generate reports on customer interactions
+
+        - Archive conversations for compliance requirements
+
+
+        ## Response Format
+
+
+        The API returns all messages with:
+
+        - Message text content
+
+        - Direction (inbound/outbound)
+
+        - Author information (customer, agent, bot)
+
+        - Timestamps
+
+        - Language codes
+
+
+        ## Additional Information
+
+
+        - Messages are returned in chronological order
+
+        - Transcript includes all message types (text, email, etc.)
+
+        - Authentication is required
+
+        - Rate limiting applies'
+      operationId: getTranscript
+      tags:
+      - Transcription
+      parameters:
+      - name: interaction-id
+        in: path
+        required: true
+        description: Unique identifier of the interaction to retrieve transcript for
+        schema:
+          type: string
+          example: 004d01110897e9e99f19c09082
+      - name: includeEmail
+        in: query
+        required: false
+        description: Include email message content in the transcript
+        schema:
+          type: boolean
+          default: false
+        example: true
+      responses:
+        '200':
+          description: Successfully retrieved transcript
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  interactionId:
+                    type: string
+                    example: 004d01110897e9e99f19c09082
+                  messages:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/TranscriptMessage'
+              examples:
+                complete_transcript:
+                  summary: Complete conversation transcript
+                  value:
+                    interactionId: 004d01110897e9e99f19c09082
+                    messages:
+                    - message: Hello, I'm calling about my bill.
+                      direction: in
+                      author:
+                        type: customer
+                        id: customer_phone_session_123
+                      languageCode: en-us
+                      createdAt: '2024-10-17T10:30:56.789Z'
+                    - message: Thank you for reaching out. I'll help you with that.
+                      direction: out
+                      author:
+                        type: bot
+                        id: billing_bot_001
+                      languageCode: en-us
+                      createdAt: '2024-10-17T10:31:10.123Z'
+                    - message: Let me transfer you to a billing specialist.
+                      direction: out
+                      author:
+                        type: bot
+                        id: billing_bot_001
+                      languageCode: en-us
+                      createdAt: '2024-10-17T10:31:45.000Z'
+                    - message: This is John from billing, how can I assist you?
+                      direction: out
+                      author:
+                        type: agent
+                        id: agent_john_smith
+                      languageCode: en-us
+                      createdAt: '2024-10-17T10:32:15.000Z'
+        '400':
+          description: Bad Request - Invalid interaction ID format
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                invalid_format:
+                  summary: Invalid ID format
+                  value:
+                    error: Invalid interaction ID format
+                    message: The interaction ID must be a valid Infinity interaction identifier
+        '401':
+          description: Unauthorized - Invalid or missing authentication
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                unauthorized:
+                  summary: Authentication required
+                  value:
+                    error: Unauthorized
+                    message: Valid authentication credentials required
+        '404':
+          description: Not Found - Interaction or transcript not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                not_found:
+                  summary: Interaction not found
+                  value:
+                    error: Interaction not found
+                    message: No interaction found with the specified ID
+        '500':
+          description: Internal Server Error - Unexpected server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                internal_error:
+                  summary: Server error
+                  value:
+                    error: Internal server error
+                    message: An unexpected error occurred while retrieving the transcript
+  /api/core/transcripts/email/{interaction-id}:
+    get:
+      summary: Retrieve email transcript
+      description: '## Overview
+
+
+        Retrieves the email-specific transcript content for an interaction. This endpoint is specialized for email communications and returns the complete email thread including headers, body content, and attachments metadata.
+
+
+        ## Finding Your Interaction ID
+
+
+        For email interactions, the interaction ID is typically provided:
+
+        - When an email interaction is created
+
+        - Through email routing workflows
+
+        - In email notification webhooks
+
+        - From interaction tracking systems
+
+
+        **To use this API:**
+
+
+        1. **Find your subdomain** from your Infinity portal URL
+
+        2. **Get your Bearer token** by following the Access Token API guide
+
+        3. **In the API explorer on the right:**
+
+        - Replace `{interaction-id}` with your email interaction ID
+
+        - Paste your Bearer token in the Credentials section
+
+
+        ## Email-Specific Content
+
+
+        This endpoint returns email-specific information including:
+
+        - Complete email headers (from, to, subject, cc, bcc)
+
+        - Full email body content (HTML and plain text)
+
+        - Attachment metadata (names, sizes, types)
+
+        - Email thread history
+
+        - Timestamps and delivery information
+
+
+        ## Difference from Standard Transcript API
+
+
+        **Email Transcript API:**
+
+        - Returns complete email structure and metadata
+
+        - Includes headers, body formatting, attachments
+
+        - Optimized for email communication channels
+
+
+        **Standard Transcript API:**
+
+        - Returns message-by-message conversation flow
+
+        - Normalized format across all communication types
+
+        - Better for chat, voice, and messaging channels
+
+
+        ## Common Use Cases
+
+
+        - Display email threads in agent interfaces
+
+        - Archive complete email communications
+
+        - Extract email content for case management systems
+
+        - Analyze email response times and patterns
+
+        - Export emails for compliance and legal review
+
+
+        ## Additional Information
+
+
+        - Only works with email-type interactions
+
+        - Returns structured email data
+
+        - Authentication is required
+
+        - Rate limiting applies'
+      operationId: getEmailTranscript
+      tags:
+      - Transcription
+      parameters:
+      - name: interaction-id
+        in: path
+        required: true
+        description: Unique identifier of the email interaction
+        schema:
+          type: string
+          example: 004d011111ae9c1adeba443743
+      responses:
+        '200':
+          description: Successfully retrieved email transcript
+          headers:
+            x-request-id:
+              schema:
+                type: string
+              description: Unique identifier for this API request
+              example: 012d0111052c72ff10e01ef4e0
+            av-log-id:
+              schema:
+                type: string
+              description: Avaya logging identifier for troubleshooting
+              example: 8868d4f0-1d87-4c94-89d3-9c5f36a364b7
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  interactionId:
+                    type: string
+                    example: 004d011111ae9c1adeba443743
+                  emailData:
+                    type: object
+                    properties:
+                      from:
+                        type: string
+                        example: customer@example.com
+                      to:
+                        type: array
+                        items:
+                          type: string
+                        example:
+                        - support@company.com
+                      subject:
+                        type: string
+                        example: Question about billing
+                      body:
+                        type: object
+                        properties:
+                          html:
+                            type: string
+                          text:
+                            type: string
+                      timestamp:
+                        type: string
+                        format: date-time
+                      attachments:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            filename:
+                              type: string
+                            size:
+                              type: integer
+                            contentType:
+                              type: string
+              examples:
+                email_response:
+                  summary: Email transcript with metadata
+                  value:
+                    interactionId: 004d011111ae9c1adeba443743
+                    emailData:
+                      from: john.smith@example.com
+                      to:
+                      - support@avaya.com
+                      cc: []
+                      subject: 'Billing Question - Account #12345'
+                      body:
+                        html: <p>Hello,</p><p>I have a question about my recent bill...</p>
+                        text: 'Hello,
+
+
+                          I have a question about my recent bill...'
+                      timestamp: '2025-11-05T11:15:30.000Z'
+                      attachments:
+                      - filename: invoice.pdf
+                        size: 245678
+                        contentType: application/pdf
+        '401':
+          description: Unauthorized - Invalid or missing authentication
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                unauthorized:
+                  summary: Authentication required
+                  value:
+                    error: Unauthorized
+                    message: Valid authentication credentials required
+        '404':
+          description: Not Found - Email interaction not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                not_found:
+                  summary: Email interaction not found
+                  value:
+                    error: Email interaction not found
+                    message: No email interaction found with the specified ID
+        '500':
+          description: Internal Server Error - Unexpected server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                internal_error:
+                  summary: Server error
+                  value:
+                    error: Internal server error
+                    message: An unexpected error occurred while retrieving the email transcript
+components:
+  schemas:
+    TranscriptMessage:
+      type: object
+      required:
+      - message
+      - direction
+      - author
+      - createdAt
+      properties:
+        message:
+          type: string
+          description: The actual message text content
+          example: Hello, I'm calling about my bill. There seems to be an error on last month's statement.
+        direction:
+          type: string
+          enum:
+          - in
+          - out
+          description: Message direction - 'in' for incoming (from customer), 'out' for outgoing (to customer)
+          example: in
+        author:
+          type: object
+          required:
+          - type
+          - id
+          properties:
+            type:
+              type: string
+              enum:
+              - customer
+              - agent
+              - bot
+              - system
+              description: Type of message author
+              example: customer
+            id:
+              type: string
+              description: Unique identifier for the author
+              example: customer_phone_session_123
+        languageCode:
+          type: string
+          description: Language code for the message (ISO 639-1 format with region)
+          example: en-us
+        createdAt:
+          type: string
+          format: date-time
+          description: Timestamp when the message was created (ISO 8601 format)
+          example: '2024-10-17T10:30:56.789Z'
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+          description: A brief description of the error
+          example: Invalid interaction ID
+        message:
+          type: string
+          description: Detailed error message
+          example: The specified interaction ID does not exist or is invalid
+      required:
+      - error
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: 'JWT Bearer token authentication. Obtain your token from the authentication endpoint:
+
+        ```
+
+        POST https://core.{customer-subdomain}.ec.avayacloud.com/auth/realms/avaya/protocol/openid-connect/token
+
+        ```
+
+        '

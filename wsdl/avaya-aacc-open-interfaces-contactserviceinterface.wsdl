@@ -1,0 +1,694 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<wsdl:definitions name="address_service_interface"
+	targetNamespace="http://www.nortel.com/soa/oi/cct/ContactService"
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns:service="http://www.nortel.com/soa/oi/cct/ContactService"
+	xmlns:types="http://www.nortel.com/soa/oi/cct/types"
+	xmlns:exceptions="http://www.nortel.com/soa/oi/cct/faults"
+	xmlns:local="http://www.nortel.com/soa/oi/cct/types/ContactService">
+
+	<wsdl:import 
+		namespace="http://www.nortel.com/soa/oi/cct/faults"
+		location="SessionServiceExceptions.wsdl" />
+		
+	<wsdl:types>
+
+		<xsd:schema elementFormDefault="qualified"
+			xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+			targetNamespace="http://www.nortel.com/soa/oi/cct/types/ContactService">
+
+			<xsd:import
+				namespace="http://www.nortel.com/soa/oi/cct/types"
+				schemaLocation="types.xsd">
+			</xsd:import>
+			
+			<xsd:complexType name="ContactRequest">
+				<xsd:sequence>
+					<xsd:element name="ssoToken" type="types:ssoToken" />
+					<xsd:element name="contact" type="types:contact" />															
+				</xsd:sequence>
+			</xsd:complexType>
+			
+			<xsd:complexType name="ContactAddressRequest">
+				<xsd:sequence>
+					<xsd:element name="ssoToken" type="types:ssoToken" />
+					<xsd:element name="contact" type="types:contact" />															
+					<xsd:element name="address" type="types:address" />
+				</xsd:sequence>
+			</xsd:complexType>
+			
+			<xsd:complexType name="AddressResponse">
+				<xsd:sequence>					
+					<xsd:element name="address" type="types:address" />															
+				</xsd:sequence>
+			</xsd:complexType>
+						
+			<xsd:complexType name="TerminalResponse">
+				<xsd:sequence>					
+					<xsd:element name="terminal" type="types:terminal" />															
+				</xsd:sequence>
+			</xsd:complexType>
+			
+			<xsd:complexType name="GetContactCapabilitiesResponse">
+				<xsd:sequence>
+					<xsd:element name="contactCapabilities" type="types:contactCapabilities" />
+				</xsd:sequence>
+			</xsd:complexType>
+			
+			<xsd:complexType name="GetConnectionsResponse">
+				<xsd:sequence>
+					<xsd:element name="connection" type="types:connection" minOccurs="0" maxOccurs="unbounded"/>					
+				</xsd:sequence>
+			</xsd:complexType>
+			
+			<xsd:complexType name="ConnectionResponse">
+				<xsd:sequence>
+					<xsd:element name="connection" type="types:connection" minOccurs="1" maxOccurs="1"/>					
+				</xsd:sequence>
+			</xsd:complexType>
+			
+			<xsd:complexType name="TreatmentConnectionResponse">
+				<xsd:sequence>
+					<xsd:element name="connection" type="types:treatmentConnection" minOccurs="1" maxOccurs="1"/>					
+				</xsd:sequence>
+			</xsd:complexType>		
+			
+			<xsd:complexType name="GetAttachedDataResponse">
+				<xsd:sequence>
+					<xsd:element name="attachedData" type="types:attachedData" minOccurs="1" maxOccurs="1"/>					
+				</xsd:sequence>
+			</xsd:complexType>
+			
+			<xsd:complexType name="GetAttachedXMLDataResponse">
+				<xsd:sequence>
+					<xsd:element name="attachedXMLData" type="types:attachedXMLData" minOccurs="1" maxOccurs="1"/>		
+				</xsd:sequence>
+			</xsd:complexType>
+			
+			<xsd:complexType name="ContactAttachedDataRequest">
+				<xsd:sequence>
+					<xsd:element name="ssoToken" type="types:ssoToken" />
+					<xsd:element name="contact" type="types:contact" />
+					<xsd:element name="attachedData" type="types:attachedData" />					
+				</xsd:sequence>
+			</xsd:complexType>
+			
+			<xsd:complexType name="GiveTreatmentRequest">
+				<xsd:sequence>
+					<xsd:element name="ssoToken" type="types:ssoToken" />
+					<xsd:element name="contact" type="types:contact" />
+					<xsd:element name="address" type="types:address" />					
+					<xsd:element name="mediaTreatment" type="types:mediaTreatment" />
+				</xsd:sequence>
+			</xsd:complexType>
+			
+			<xsd:complexType name="GetContactTypesResponse">
+				<xsd:sequence>									
+					<xsd:element name="contactTypes" type="xsd:string" minOccurs="0" maxOccurs="unbounded"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			
+			<xsd:complexType name="GetInstantMessagesResponse">
+				<xsd:sequence>									
+					<xsd:element name="instantMessage" type="types:instantMessage" minOccurs="0" maxOccurs="unbounded"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			
+			<xsd:complexType name="GetUUIResponse">
+				<xsd:sequence>									
+					<xsd:element name="uui" type="xsd:string"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			
+			<xsd:complexType name="GetIntrinsicsResponse">
+				<xsd:sequence>									
+					<xsd:element name="intrinsic" type="types:intrinsic" minOccurs="0" maxOccurs="unbounded"/>
+				</xsd:sequence>
+			</xsd:complexType>						
+			
+			<xsd:complexType name="SetUUIRequest">
+				<xsd:sequence>									
+					<xsd:element name="ssoToken" type="types:ssoToken" />
+					<xsd:element name="contact" type="types:contact" />				
+					<xsd:element name="uui" type="xsd:string"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			
+			<xsd:complexType name="SetInstantMessagesRequest">
+				<xsd:sequence>
+					<xsd:element name="ssoToken" type="types:ssoToken" />
+					<xsd:element name="contact" type="types:contact" />									
+					<xsd:element name="instantMessage" type="types:instantMessage"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			
+			<xsd:complexType name="SetIntrinsicsRequest">
+				<xsd:sequence>
+					<xsd:element name="ssoToken" type="types:ssoToken" />
+					<xsd:element name="contact" type="types:contact" />									
+					<xsd:element name="intrinsics" type="types:intrinsic" minOccurs="0" maxOccurs="unbounded"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			
+			<xsd:complexType name="BargeInRequest">
+				<xsd:sequence>
+					<xsd:element name="ssoToken" type="types:ssoToken" />
+					<xsd:element name="contact" type="types:contact" />									
+					<xsd:element name="terminal" type="types:terminal"/>
+					<xsd:element name="address" type="types:address"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			
+			<xsd:complexType name="WhisperRequest">
+				<xsd:sequence>
+					<xsd:element name="ssoToken" type="types:ssoToken" />
+					<xsd:element name="contact" type="types:contact" />									
+					<xsd:element name="sourceTerminal" type="types:terminal"/>
+					<xsd:element name="sourceAddress" type="types:address"/>
+					<xsd:element name="desitnationTerminal" type="types:terminal"/>
+					<xsd:element name="desitnationAddress" type="types:address"/>
+				</xsd:sequence>
+			</xsd:complexType>
+					
+			<xsd:complexType name="ObserveRequest">
+				<xsd:sequence>
+					<xsd:element name="ssoToken" type="types:ssoToken" />
+					<xsd:element name="contact" type="types:contact" />									
+					<xsd:element name="terminal" type="types:terminal"/>					
+					<xsd:element name="address" type="types:address"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			
+			<xsd:complexType name="AddPartyRequest">
+				<xsd:sequence>
+					<xsd:element name="ssoToken" type="types:ssoToken" />
+					<xsd:element name="contact" type="types:contact" />
+					<xsd:element name="newParty" type="xsd:string"/>				
+				</xsd:sequence>
+			</xsd:complexType>
+			
+
+			<xsd:element name="GetVersionRequest" type="types:getVersionRequest" />
+			<xsd:element name="GetVersionResponse" type="types:getVersionResponse" />
+
+			<xsd:element name="GetCalledAddressRequest" type="local:ContactRequest" />					
+			<xsd:element name="GetCalledAddressResponse" type="local:AddressResponse" />
+			
+			<xsd:element name="GetCallingAddressRequest" type="local:ContactRequest" />					
+			<xsd:element name="GetCallingAddressResponse" type="local:AddressResponse" />
+			
+			<xsd:element name="GetCallingTerminalRequest" type="local:ContactRequest" />					
+			<xsd:element name="GetCallingTerminalResponse" type="local:TerminalResponse" />
+			
+			<xsd:element name="GetCapabilitiesRequest" type="local:ContactRequest" />					
+			<xsd:element name="GetCapabilitiesResponse" type="local:GetContactCapabilitiesResponse" />
+			
+			<xsd:element name="GetConnectionsRequest" type="local:ContactRequest" />					
+			<xsd:element name="GetConnectionsResponse" type="local:GetConnectionsResponse" />
+			
+			<xsd:element name="GetConnectionRequest" type="local:ContactAddressRequest" />					
+			<xsd:element name="GetConnectionResponse" type="local:ConnectionResponse" />
+			
+			<xsd:element name="GetAttachedDataRequest" type="local:ContactRequest" />					
+			<xsd:element name="GetAttachedDataResponse" type="local:GetAttachedDataResponse" />
+			
+			<xsd:element name="SetAttachedDataRequest" type="local:ContactAttachedDataRequest" />					
+			
+			<xsd:element name="GetAttachedXMLDataRequest" type="local:ContactRequest" />					
+			<xsd:element name="GetAttachedXMLDataResponse" type="local:GetAttachedXMLDataResponse" />
+			
+			<xsd:element name="GetLastRedirectedAddressRequest" type="local:ContactRequest" />					
+			<xsd:element name="GetLastRedirectedAddressResponse" type="local:AddressResponse" />
+						
+			<xsd:element name="GetOriginalDestinationAddressRequest" type="local:ContactRequest" />					
+			<xsd:element name="GetOriginalDestinationAddressResponse" type="local:AddressResponse" />
+			
+			<xsd:element name="GiveTreatmentRequest" type="local:GiveTreatmentRequest" />
+			<xsd:element name="GiveTreatmentResponse" type="local:TreatmentConnectionResponse" />			
+			
+			<xsd:element name="GetContactTypesRequest" type="local:ContactRequest" />
+			<xsd:element name="GetContactTypesResponse" type="local:GetContactTypesResponse" />
+			
+			<xsd:element name="GetInstantMessagesRequest" type="local:ContactRequest" />
+			<xsd:element name="GetInstantMessagesResponse" type="local:GetInstantMessagesResponse" />
+			
+			<xsd:element name="SetInstantMessagesRequest" type="local:SetInstantMessagesRequest" />
+		
+			<xsd:element name="GetUUIRequest" type="local:ContactRequest" />
+			<xsd:element name="GetUUIResponse" type="local:GetUUIResponse" />
+			
+			<xsd:element name="SetUUIRequest" type="local:SetUUIRequest" />
+			
+			<xsd:element name="GetIntrinsicsRequest" type="local:ContactRequest" />
+			<xsd:element name="GetIntrinsicsResponse" type="local:GetIntrinsicsResponse" />
+			
+			<xsd:element name="SetIntrinsicsRequest" type="local:SetIntrinsicsRequest" />	
+			
+			<xsd:element name="BargeInRequest" type="local:BargeInRequest" />
+			<xsd:element name="BargeInResponse" type="local:ConnectionResponse" />
+			
+			<xsd:element name="WhisperRequest" type="local:WhisperRequest" />
+			<xsd:element name="WhisperResponse" type="local:ConnectionResponse" />
+			
+			<xsd:element name="AddPartyRequest" type="local:AddPartyRequest" />
+			<xsd:element name="AddPartyResponse" type="local:ConnectionResponse" />
+			
+			<xsd:element name="ObserveRequest" type="local:ObserveRequest" />
+			<xsd:element name="ObserveResponse" type="local:ConnectionResponse" />
+			
+			<xsd:element name="DropRequest" type="local:ContactRequest" />
+		</xsd:schema>
+	</wsdl:types>
+	
+	<wsdl:message name="GetVersionRequest">
+		<wsdl:part name="parameters" element="local:GetVersionRequest" />
+	</wsdl:message>
+	<wsdl:message name="GetVersionResponse">
+		<wsdl:part name="response" element="local:GetVersionResponse" />
+	</wsdl:message>
+	
+	<wsdl:message name="GetCalledAddressRequest">	
+		<wsdl:part name="parameters" element="local:GetCalledAddressRequest" />
+	</wsdl:message>
+	<wsdl:message name="GetCalledAddressResponse">
+	<wsdl:part name="response" element="local:GetCalledAddressResponse" />
+	</wsdl:message>
+	
+	
+	<wsdl:message name="GetCallingAddressRequest">	
+		<wsdl:part name="parameters" element="local:GetCallingAddressRequest" />
+	</wsdl:message>
+	<wsdl:message name="GetCallingAddressResponse">
+	<wsdl:part name="response" element="local:GetCallingAddressResponse" />
+	</wsdl:message>
+	
+	<wsdl:message name="GetCallingTerminalRequest">	
+		<wsdl:part name="parameters" element="local:GetCallingTerminalRequest" />
+	</wsdl:message>
+	<wsdl:message name="GetCallingTerminalResponse">
+	<wsdl:part name="response" element="local:GetCallingTerminalResponse" />
+	</wsdl:message>
+	
+	
+	<wsdl:message name="GetCapabilitiesRequest">	
+		<wsdl:part name="parameters" element="local:GetCapabilitiesRequest" />
+	</wsdl:message>
+	
+	<wsdl:message name="GetCapabilitiesResponse">	
+		<wsdl:part name="response" element="local:GetCapabilitiesResponse" />
+	</wsdl:message>
+	
+	<wsdl:message name="GetConnectionsRequest">
+	<wsdl:part name="parameters" element="local:GetConnectionsRequest" />
+	</wsdl:message>
+	
+	<wsdl:message name="GetConnectionsResponse">
+	<wsdl:part name="response" element="local:GetConnectionsResponse" />
+	</wsdl:message>
+	
+	<wsdl:message name="GetConnectionRequest">
+	<wsdl:part name="parameters" element="local:GetConnectionRequest" />
+	</wsdl:message>
+	
+	<wsdl:message name="GetConnectionResponse">
+	<wsdl:part name="response" element="local:GetConnectionResponse" />
+	</wsdl:message>
+	
+	
+	<wsdl:message name="GetAttachedDataRequest">
+	<wsdl:part name="parameters" element="local:GetAttachedDataRequest" />
+	</wsdl:message>
+	
+	<wsdl:message name="GetAttachedDataResponse">
+	<wsdl:part name="response" element="local:GetAttachedDataResponse" />
+	</wsdl:message>
+	
+	
+	<wsdl:message name="SetAttachedDataRequest">
+	<wsdl:part name="parameters" element="local:SetAttachedDataRequest" />
+	</wsdl:message>
+	
+	<wsdl:message name="SetAttachedDataResponse"/>
+	
+	<wsdl:message name="GetAttachedXMLDataRequest">
+	<wsdl:part name="parameters" element="local:GetAttachedXMLDataRequest" />
+	</wsdl:message>
+	
+	<wsdl:message name="GetAttachedXMLDataResponse">
+	<wsdl:part name="response" element="local:GetAttachedXMLDataResponse" />
+	</wsdl:message>
+		
+	
+	<wsdl:message name="GetLastRedirectedAddressRequest">
+	<wsdl:part name="parameters" element="local:GetLastRedirectedAddressRequest" />
+	</wsdl:message>
+	
+	<wsdl:message name="GetLastRedirectedAddressResponse">
+	<wsdl:part name="response" element="local:GetLastRedirectedAddressResponse" />
+	</wsdl:message>
+	
+	<wsdl:message name="GetOriginalDestinationAddressRequest">
+	<wsdl:part name="parameters" element="local:GetOriginalDestinationAddressRequest" />
+	</wsdl:message>
+	
+	<wsdl:message name="GetOriginalDestinationAddressResponse">
+	<wsdl:part name="response" element="local:GetOriginalDestinationAddressResponse" />
+	</wsdl:message>
+	
+	<wsdl:message name="GiveTreatmentResponse">
+	<wsdl:part name="response" element="local:GiveTreatmentResponse" />
+	</wsdl:message>
+	
+	<wsdl:message name="GiveTreatmentRequest">
+	<wsdl:part name="parameters" element="local:GiveTreatmentRequest" />
+	</wsdl:message>
+		
+	<wsdl:message name="GetContactTypesRequest">
+	<wsdl:part name="parameters" element="local:GetContactTypesRequest" />
+	</wsdl:message>
+	
+	<wsdl:message name="GetContactTypesResponse">
+	<wsdl:part name="response" element="local:GetContactTypesResponse" />
+	</wsdl:message>
+	
+	<wsdl:message name="GetInstantMessagesRequest">
+	<wsdl:part name="parameters" element="local:GetInstantMessagesRequest" />
+	</wsdl:message>
+	
+	<wsdl:message name="GetInstantMessagesResponse">
+	<wsdl:part name="response" element="local:GetInstantMessagesResponse" />
+	</wsdl:message>
+	
+	<wsdl:message name="SetInstantMessagesRequest">
+	<wsdl:part name="parameters" element="local:SetInstantMessagesRequest" />
+	</wsdl:message>
+	
+	<wsdl:message name="SetInstantMessagesResponse">
+	
+	</wsdl:message>
+	
+	
+	<wsdl:message name="GetUUIRequest">
+	<wsdl:part name="parameters" element="local:GetUUIRequest" />
+	</wsdl:message>
+	
+	<wsdl:message name="GetUUIResponse">
+	<wsdl:part name="response" element="local:GetUUIResponse" />
+	</wsdl:message>
+	
+	<wsdl:message name="SetUUIRequest">
+	<wsdl:part name="parameters" element="local:SetUUIRequest" />
+	</wsdl:message>
+	
+	<wsdl:message name="SetUUIResponse">	
+	</wsdl:message>
+	
+	
+	<wsdl:message name="GetIntrinsicsRequest">
+	<wsdl:part name="parameters" element="local:GetIntrinsicsRequest" />
+	</wsdl:message>
+	
+	<wsdl:message name="GetIntrinsicsResponse">
+	<wsdl:part name="response" element="local:GetIntrinsicsResponse" />
+	</wsdl:message>
+	
+	<wsdl:message name="SetIntrinsicsRequest">
+	<wsdl:part name="parameters" element="local:SetIntrinsicsRequest" />
+	</wsdl:message>
+	
+	<wsdl:message name="SetIntrinsicsResponse">
+	
+	</wsdl:message>
+	
+	<wsdl:message name="BargeInRequest">
+	<wsdl:part name="parameters" element="local:BargeInRequest" />
+	</wsdl:message>
+	
+	<wsdl:message name="BargeInResponse">
+	<wsdl:part name="response" element="local:BargeInResponse" />
+	</wsdl:message>
+	
+	<wsdl:message name="WhisperRequest">
+	<wsdl:part name="parameters" element="local:WhisperRequest" />
+	</wsdl:message>
+	
+	<wsdl:message name="WhisperResponse">
+	<wsdl:part name="response" element="local:WhisperResponse" />
+	</wsdl:message>
+	
+	
+	<wsdl:message name="AddPartyRequest">
+	<wsdl:part name="parameters" element="local:AddPartyRequest" />
+	</wsdl:message>
+	
+	<wsdl:message name="AddPartyResponse">
+	<wsdl:part name="response" element="local:AddPartyResponse" />
+	</wsdl:message>
+	
+	
+	<wsdl:message name="ObserveRequest">
+	<wsdl:part name="request" element="local:ObserveRequest" />
+	</wsdl:message>
+	<wsdl:message name="ObserveResponse">
+	<wsdl:part name="response" element="local:ObserveResponse" />
+	</wsdl:message>
+	
+	<wsdl:message name="DropResponse">	
+	</wsdl:message>
+	
+	<wsdl:message name="DropRequest">
+	<wsdl:part name="request" element="local:DropRequest"/>	
+	</wsdl:message>
+	
+
+
+	<wsdl:portType name="ContactService">
+
+		<wsdl:operation name="GetVersion">
+			<wsdl:input message="service:GetVersionRequest" />
+			<wsdl:output message="service:GetVersionResponse" />
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="GetVersionException" message="exceptions:GetVersionException" />
+		</wsdl:operation>
+		
+		<wsdl:operation name="GetCalledAddress">
+			<wsdl:input message="service:GetCalledAddressRequest" />
+			<wsdl:output message="service:GetCalledAddressResponse" />
+			<wsdl:fault name="SessionNotCreatedException"
+				message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="GetCalledAddressException"
+				message="exceptions:GetCalledAddressException" />
+		</wsdl:operation>
+
+		<wsdl:operation name="GetCallingAddress">
+			<wsdl:input message="service:GetCallingAddressRequest" />
+			<wsdl:output message="service:GetCallingAddressResponse" />
+			<wsdl:fault name="SessionNotCreatedException"
+				message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="GetCallingAddressException"
+				message="exceptions:GetCallingAddressException" />
+		</wsdl:operation>
+
+
+		<wsdl:operation name="GetCallingTerminal">
+			<wsdl:input message="service:GetCallingTerminalRequest" />
+			<wsdl:output message="service:GetCallingTerminalResponse" />
+			<wsdl:fault name="SessionNotCreatedException"
+				message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="GetCallingTerminalException"
+				message="exceptions:GetCallingTerminalException" />
+		</wsdl:operation>
+		
+		<wsdl:operation name="GetCapabilities">
+			<wsdl:input message="service:GetCapabilitiesRequest" />
+			<wsdl:output message="service:GetCapabilitiesResponse" />
+			<wsdl:fault name="SessionNotCreatedException"
+				message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="GetCapabilitiesException"
+				message="exceptions:GetCapabilitiesException" />
+		</wsdl:operation>
+		
+		<wsdl:operation name="GetConnections">
+			<wsdl:input message="service:GetConnectionsRequest" />
+			<wsdl:output message="service:GetConnectionsResponse" />
+			<wsdl:fault name="SessionNotCreatedException"
+				message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="GetConnectionsException"
+				message="exceptions:GetConnectionsException" />
+		</wsdl:operation>
+		
+		<wsdl:operation name="GetConnection">
+			<wsdl:input message="service:GetConnectionRequest" />
+			<wsdl:output message="service:GetConnectionResponse" />
+			<wsdl:fault name="SessionNotCreatedException"
+				message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="GetConnectionException"
+				message="exceptions:GetConnectionException" />
+		</wsdl:operation>
+		
+		<wsdl:operation name="GetAttachedData">
+			<wsdl:input message="service:GetAttachedDataRequest" />
+			<wsdl:output message="service:GetAttachedDataResponse" />
+			<wsdl:fault name="SessionNotCreatedException"
+				message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="GetAttachedDataException"
+				message="exceptions:GetAttachedDataException" />
+		</wsdl:operation>
+		
+		
+		<wsdl:operation name="SetAttachedData">
+			<wsdl:input message="service:SetAttachedDataRequest" />
+			<wsdl:output message="service:SetAttachedDataResponse" />
+			<wsdl:fault name="SessionNotCreatedException"
+				message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="SetAttachedDataException"
+				message="exceptions:SetAttachedDataException" />
+		</wsdl:operation>
+		
+		<wsdl:operation name="GetAttachedXMLData">
+			<wsdl:input message="service:GetAttachedXMLDataRequest" />
+			<wsdl:output message="service:GetAttachedXMLDataResponse" />
+			<wsdl:fault name="SessionNotCreatedException"
+				message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="GetAttachedXMLDataException"
+				message="exceptions:GetAttachedXMLDataException" />
+		</wsdl:operation>
+		
+		<wsdl:operation name="GetLastRedirectedAddress">
+			<wsdl:input message="service:GetLastRedirectedAddressRequest" />
+			<wsdl:output message="service:GetLastRedirectedAddressResponse" />
+			<wsdl:fault name="SessionNotCreatedException"
+				message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="GetLastRedirectedAddressException"
+				message="exceptions:GetLastRedirectedAddressException" />
+		</wsdl:operation>
+		
+		<wsdl:operation name="GetOriginalDestinationAddress">
+			<wsdl:input message="service:GetOriginalDestinationAddressRequest" />
+			<wsdl:output message="service:GetOriginalDestinationAddressResponse" />
+			<wsdl:fault name="SessionNotCreatedException"
+				message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="GetOriginalDestinationAddressException"
+				message="exceptions:GetOriginalDestinationAddressException" />
+		</wsdl:operation>
+		
+		<wsdl:operation name="GiveTreatment">
+			<wsdl:input message="service:GiveTreatmentRequest" />
+			<wsdl:output message="service:GiveTreatmentResponse" />
+			<wsdl:fault name="SessionNotCreatedException"
+				message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="GiveTreatmentException"
+				message="exceptions:GiveTreatmentException" />
+		</wsdl:operation>
+		
+		<wsdl:operation name="GetContactTypes">
+			<wsdl:input message="service:GetContactTypesRequest" />
+			<wsdl:output message="service:GetContactTypesResponse" />
+			<wsdl:fault name="SessionNotCreatedException"
+				message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="GetContactTypesException"
+				message="exceptions:GetContactTypesException" />
+		</wsdl:operation>
+		
+		<wsdl:operation name="GetInstantMessages">
+			<wsdl:input message="service:GetInstantMessagesRequest" />
+			<wsdl:output message="service:GetInstantMessagesResponse" />
+			<wsdl:fault name="SessionNotCreatedException"
+				message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="GetInstantMessagesException"
+				message="exceptions:GetInstantMessagesException" />
+		</wsdl:operation>
+		
+		<wsdl:operation name="SetInstantMessages">
+			<wsdl:input message="service:SetInstantMessagesRequest" />
+			<wsdl:output message="service:SetInstantMessagesResponse" />
+			<wsdl:fault name="SessionNotCreatedException"
+				message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="SetInstantMessagesException"
+				message="exceptions:SetInstantMessagesException" />
+		</wsdl:operation>
+		
+		<wsdl:operation name="GetUUI">
+			<wsdl:input message="service:GetUUIRequest" />
+			<wsdl:output message="service:GetUUIResponse" />
+			<wsdl:fault name="SessionNotCreatedException"
+				message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="GetUUIException"
+				message="exceptions:GetUUIException" />
+		</wsdl:operation>
+		
+		<wsdl:operation name="SetUUI">
+			<wsdl:input message="service:SetUUIRequest" />
+			<wsdl:output message="service:SetUUIResponse" />
+			<wsdl:fault name="SessionNotCreatedException"
+				message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="SetUUIException"
+				message="exceptions:SetUUIException" />
+		</wsdl:operation>
+		
+		<wsdl:operation name="GetIntrinsics">
+			<wsdl:input message="service:GetIntrinsicsRequest" />
+			<wsdl:output message="service:GetIntrinsicsResponse" />
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="GetIntrinsicsException" message="exceptions:GetIntrinsicsException" />
+		</wsdl:operation>
+
+		<wsdl:operation name="SetIntrinsics">
+			<wsdl:input message="service:SetIntrinsicsRequest" />
+			<wsdl:output message="service:SetIntrinsicsResponse" />
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="SetIntrinsicsException" message="exceptions:SetIntrinsicsException" />
+		</wsdl:operation>
+
+		<wsdl:operation name="BargeIn">
+			<wsdl:input message="service:BargeInRequest" />
+			<wsdl:output message="service:BargeInResponse" />
+			<wsdl:fault name="SessionNotCreatedException"
+				message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="BargeInException"
+				message="exceptions:BargeInException" />
+		</wsdl:operation>
+		
+		<wsdl:operation name="AddParty">
+			<wsdl:input message="service:AddPartyRequest" />
+			<wsdl:output message="service:AddPartyResponse" />
+			<wsdl:fault name="SessionNotCreatedException"
+				message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="AddPartyException"
+				message="exceptions:AddPartyException" />
+		</wsdl:operation>
+		
+		<wsdl:operation name="Whisper">
+			<wsdl:input message="service:WhisperRequest" />
+			<wsdl:output message="service:WhisperResponse" />
+			<wsdl:fault name="SessionNotCreatedException"
+				message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="WhisperException"
+				message="exceptions:WhisperException" />
+		</wsdl:operation>
+		
+		<wsdl:operation name="Observe">
+			<wsdl:input message="service:ObserveRequest" />
+			<wsdl:output message="service:ObserveResponse" />
+			<wsdl:fault name="SessionNotCreatedException"
+				message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="ObserveException"
+				message="exceptions:ObserveException" />
+		</wsdl:operation>
+		
+		<wsdl:operation name="Drop">
+			<wsdl:input message="service:DropRequest" />
+			<wsdl:output message="service:DropResponse" />
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="DropException" message="exceptions:DropException" />
+		</wsdl:operation>
+		
+
+		
+	</wsdl:portType>
+
+
+
+</wsdl:definitions>

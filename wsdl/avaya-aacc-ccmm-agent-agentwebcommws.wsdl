@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://nortel.com/CCMMAgentWebservices/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:s1="http://ws.db.ccmm.applications.nortel.com" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://nortel.com/CCMMAgentWebservices/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://nortel.com/CCMMAgentWebservices/">
+      <s:import namespace="http://ws.db.ccmm.applications.nortel.com" />
+      <s:element name="CreateWCSession">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="id" type="s:long" />
+            <s:element minOccurs="0" maxOccurs="1" name="sessionKey" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CreateWCSessionResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="CreateWCSessionResult" type="s:long" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="WriteChatMessage">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="id" type="s:long" />
+            <s:element minOccurs="0" maxOccurs="1" name="strNewMessage" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="strHiddenMessage" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="lMessageType" type="s:long" />
+            <s:element minOccurs="0" maxOccurs="1" name="sessionKey" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="WriteChatMessageResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="WriteChatMessageResult" type="s:long" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ReadChatMessage">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="id" type="s:long" />
+            <s:element minOccurs="1" maxOccurs="1" name="dtReadTime" type="s:dateTime" />
+            <s:element minOccurs="1" maxOccurs="1" name="bIsWriting" type="s:boolean" />
+            <s:element minOccurs="0" maxOccurs="1" name="sessionKey" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ReadChatMessageResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ReadChatMessageResult" type="s1:ListOfWebCommsMessages" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="UpdateAliveTime">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="id" type="s:long" />
+            <s:element minOccurs="0" maxOccurs="1" name="sessionKey" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="UpdateAliveTimeResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="UpdateAliveTimeResult" type="s:dateTime" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CloseSession">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="id" type="s:long" />
+            <s:element minOccurs="1" maxOccurs="1" name="lClosedReason" type="s:long" />
+            <s:element minOccurs="0" maxOccurs="1" name="strAgentNote" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="lClosureType" type="s:long" />
+            <s:element minOccurs="0" maxOccurs="1" name="strClosureText" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="bEmailChatLog" type="s:boolean" />
+            <s:element minOccurs="0" maxOccurs="1" name="sessionKey" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CloseSessionResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="CloseSessionResult" type="s:long" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+    </s:schema>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://ws.db.ccmm.applications.nortel.com">
+      <s:complexType name="ListOfWebCommsMessages">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="ReadTime" type="s:dateTime" />
+          <s:element minOccurs="0" maxOccurs="1" name="IsWriting" type="s:boolean" />
+          <s:element minOccurs="0" maxOccurs="1" name="LastAliveTime" type="s:dateTime" />
+          <s:element minOccurs="0" maxOccurs="1" name="ListOfWebCommsMessages" type="s1:ArrayOfWebCommsMessage" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfWebCommsMessage">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="WebCommsMessage" nillable="true" type="s1:WebCommsMessage" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="WebCommsMessage">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="ID" type="s:long" />
+          <s:element minOccurs="0" maxOccurs="1" name="Message" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="WriteTime" type="s:dateTime" />
+          <s:element minOccurs="0" maxOccurs="1" name="HiddenMessage" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Type" type="s1:CodeMapping" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="CodeMapping">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="ID" type="s:long" />
+          <s:element minOccurs="0" maxOccurs="1" name="FieldName" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="NumericValue" type="s:long" />
+          <s:element minOccurs="0" maxOccurs="1" name="TextValue" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Icon" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="CreateWCSessionSoapIn">
+    <wsdl:part name="parameters" element="tns:CreateWCSession" />
+  </wsdl:message>
+  <wsdl:message name="CreateWCSessionSoapOut">
+    <wsdl:part name="parameters" element="tns:CreateWCSessionResponse" />
+  </wsdl:message>
+  <wsdl:message name="WriteChatMessageSoapIn">
+    <wsdl:part name="parameters" element="tns:WriteChatMessage" />
+  </wsdl:message>
+  <wsdl:message name="WriteChatMessageSoapOut">
+    <wsdl:part name="parameters" element="tns:WriteChatMessageResponse" />
+  </wsdl:message>
+  <wsdl:message name="ReadChatMessageSoapIn">
+    <wsdl:part name="parameters" element="tns:ReadChatMessage" />
+  </wsdl:message>
+  <wsdl:message name="ReadChatMessageSoapOut">
+    <wsdl:part name="parameters" element="tns:ReadChatMessageResponse" />
+  </wsdl:message>
+  <wsdl:message name="UpdateAliveTimeSoapIn">
+    <wsdl:part name="parameters" element="tns:UpdateAliveTime" />
+  </wsdl:message>
+  <wsdl:message name="UpdateAliveTimeSoapOut">
+    <wsdl:part name="parameters" element="tns:UpdateAliveTimeResponse" />
+  </wsdl:message>
+  <wsdl:message name="CloseSessionSoapIn">
+    <wsdl:part name="parameters" element="tns:CloseSession" />
+  </wsdl:message>
+  <wsdl:message name="CloseSessionSoapOut">
+    <wsdl:part name="parameters" element="tns:CloseSessionResponse" />
+  </wsdl:message>
+  <wsdl:portType name="AgentWebCommWSSoap">
+    <wsdl:operation name="CreateWCSession">
+      <wsdl:input message="tns:CreateWCSessionSoapIn" />
+      <wsdl:output message="tns:CreateWCSessionSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="WriteChatMessage">
+      <wsdl:input message="tns:WriteChatMessageSoapIn" />
+      <wsdl:output message="tns:WriteChatMessageSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ReadChatMessage">
+      <wsdl:input message="tns:ReadChatMessageSoapIn" />
+      <wsdl:output message="tns:ReadChatMessageSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="UpdateAliveTime">
+      <wsdl:input message="tns:UpdateAliveTimeSoapIn" />
+      <wsdl:output message="tns:UpdateAliveTimeSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="CloseSession">
+      <wsdl:input message="tns:CloseSessionSoapIn" />
+      <wsdl:output message="tns:CloseSessionSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="AgentWebCommWSSoap" type="tns:AgentWebCommWSSoap">
+    <wsdl:documentation>
+      <wsi:Claim conformsTo="http://ws-i.org/profiles/basic/1.1" xmlns:wsi="http://ws-i.org/schemas/conformanceClaim/" />
+    </wsdl:documentation>
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="CreateWCSession">
+      <soap:operation soapAction="http://nortel.com/CCMMAgentWebservices/CreateWCSession" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="WriteChatMessage">
+      <soap:operation soapAction="http://nortel.com/CCMMAgentWebservices/WriteChatMessage" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ReadChatMessage">
+      <soap:operation soapAction="http://nortel.com/CCMMAgentWebservices/ReadChatMessage" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UpdateAliveTime">
+      <soap:operation soapAction="http://nortel.com/CCMMAgentWebservices/UpdateAliveTime" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CloseSession">
+      <soap:operation soapAction="http://nortel.com/CCMMAgentWebservices/CloseSession" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="AgentWebCommWSSoap12" type="tns:AgentWebCommWSSoap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="CreateWCSession">
+      <soap12:operation soapAction="http://nortel.com/CCMMAgentWebservices/CreateWCSession" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="WriteChatMessage">
+      <soap12:operation soapAction="http://nortel.com/CCMMAgentWebservices/WriteChatMessage" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ReadChatMessage">
+      <soap12:operation soapAction="http://nortel.com/CCMMAgentWebservices/ReadChatMessage" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UpdateAliveTime">
+      <soap12:operation soapAction="http://nortel.com/CCMMAgentWebservices/UpdateAliveTime" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CloseSession">
+      <soap12:operation soapAction="http://nortel.com/CCMMAgentWebservices/CloseSession" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="AgentWebCommWS">
+    <wsdl:port name="AgentWebCommWSSoap" binding="tns:AgentWebCommWSSoap">
+      <soap:address location="https://ccmm-minchin/ccmmagentwebservices/AgentWebCommWS.asmx" />
+    </wsdl:port>
+    <wsdl:port name="AgentWebCommWSSoap12" binding="tns:AgentWebCommWSSoap12">
+      <soap12:address location="https://ccmm-minchin/ccmmagentwebservices/AgentWebCommWS.asmx" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

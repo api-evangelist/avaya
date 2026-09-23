@@ -1,0 +1,414 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<wsdl:definitions name="agent_terminal_service_interface" 
+	targetNamespace="http://www.nortel.com/soa/oi/cct/AgentTerminalService" 
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" 
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+	xmlns:service="http://www.nortel.com/soa/oi/cct/AgentTerminalService"
+	xmlns:types="http://www.nortel.com/soa/oi/cct/types" 
+	xmlns:exceptions="http://www.nortel.com/soa/oi/cct/faults"
+	xmlns:local="http://www.nortel.com/soa/oi/cct/types/AgentTerminalService">
+
+	<wsdl:import namespace="http://www.nortel.com/soa/oi/cct/faults" location="SessionServiceExceptions.wsdl" />
+
+	<wsdl:types>
+
+		<xsd:schema elementFormDefault="qualified" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+			targetNamespace="http://www.nortel.com/soa/oi/cct/types/AgentTerminalService">
+
+			<xsd:import namespace="http://www.nortel.com/soa/oi/cct/types" schemaLocation="types.xsd"></xsd:import>
+
+			<xsd:complexType name="IsForwardedResponse">
+				<xsd:sequence>
+					<xsd:element name="isForwarded" type="xsd:boolean" />
+				</xsd:sequence>
+			</xsd:complexType>
+
+			<xsd:complexType name="GetDoNotDisturbResponse">
+				<xsd:sequence>
+					<xsd:element name="doNotDisturb" type="xsd:boolean" />
+				</xsd:sequence>
+			</xsd:complexType>
+
+			<xsd:complexType name="GetTerminalConnectionsResponse">
+				<xsd:sequence>
+					<xsd:element name="terminalConnection" type="types:terminalConnection" minOccurs="0" maxOccurs="unbounded" />
+				</xsd:sequence>
+			</xsd:complexType>
+
+			<xsd:complexType name="GetRelatedAddressesResponse">
+				<xsd:sequence>
+					<xsd:element name="address" type="types:address" minOccurs="0" maxOccurs="unbounded" />
+				</xsd:sequence>
+			</xsd:complexType>
+
+			<xsd:complexType name="GetAgentTerminalCapabilitiesResponse">
+				<xsd:sequence>
+					<xsd:element name="terminalCapabilities" type="types:agentTerminalCapabilities" />
+				</xsd:sequence>
+			</xsd:complexType>
+
+			<xsd:complexType name="TerminalRequest">
+				<xsd:sequence>
+					<xsd:element name="ssoToken" type="types:ssoToken" />
+					<xsd:element name="terminal" type="types:terminal" />
+				</xsd:sequence>
+			</xsd:complexType>
+			
+			<xsd:complexType name="BooleanTerminalRequest">
+				<xsd:sequence>
+					<xsd:element name="ssoToken" type="types:ssoToken" />
+					<xsd:element name="terminal" type="types:terminal" />
+					<xsd:element name="value" type="xsd:boolean" />
+				</xsd:sequence>
+			</xsd:complexType>
+			
+			<xsd:complexType name="StringTerminalRequest">
+				<xsd:sequence>
+					<xsd:element name="ssoToken" type="types:ssoToken" />
+					<xsd:element name="terminal" type="types:terminal" />
+					<xsd:element name="value" type="xsd:string" />
+				</xsd:sequence>
+			</xsd:complexType>
+			
+			
+			<xsd:complexType name="GetActivityCodeResponse">
+				<xsd:sequence>
+					<xsd:element name="activityCode" type="xsd:string" />
+				</xsd:sequence>
+			</xsd:complexType>
+			
+			<xsd:complexType name="GetLoginIdResponse">
+				<xsd:sequence>
+					<xsd:element name="loginId" type="xsd:string" />
+				</xsd:sequence>
+			</xsd:complexType>
+			
+			<xsd:complexType name="GetNotReadyReasonCodeResponse">
+				<xsd:sequence>
+					<xsd:element name="notReadyReasonCode" type="xsd:string" />
+				</xsd:sequence>
+			</xsd:complexType>
+			
+			<xsd:complexType name="IsReadyResponse">
+				<xsd:sequence>
+					<xsd:element name="isReady" type="xsd:boolean" />
+				</xsd:sequence>
+			</xsd:complexType>
+			
+			
+			<xsd:complexType name="AgentTerminalLoginRequest">
+				<xsd:sequence>
+					<xsd:element name="ssoToken" type="types:ssoToken"/>					
+					<xsd:element name="agentTerminal" type="types:terminal"/>
+					<xsd:element name="agentId" type="xsd:string"/>
+					<xsd:element name="password" type="xsd:string"/>
+					<!-- EoinMc, pass in enum AgentReadyStatus instead of int -->
+					<!-- <xsd:element name="initialState" type="xsd:int"/>  -->
+					<xsd:element name="initialState" type="types:agentReadyStatus"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			
+			<xsd:complexType name="AgentTerminalLogoutRequest">
+				<xsd:sequence>
+					<xsd:element name="ssoToken" type="types:ssoToken"/>					
+					<xsd:element name="agentTerminal" type="types:terminal"/>					
+				</xsd:sequence>
+			</xsd:complexType>
+			
+			<xsd:complexType name="SetActivityCodeRequest">
+				<xsd:sequence>
+					<xsd:element name="ssoToken" type="types:ssoToken"/>					
+					<xsd:element name="agentTerminal" type="types:terminal"/>
+					<xsd:element name="activityCode" type="xsd:string"/>					
+				</xsd:sequence>
+			</xsd:complexType>
+			
+			<xsd:complexType name="TerminalAddressRequest">
+				<xsd:sequence>
+					<xsd:element name="ssoToken" type="types:ssoToken" />
+					<xsd:element name="terminal" type="types:terminal" />
+					<xsd:element name="address" type="types:address" />
+				</xsd:sequence>
+			</xsd:complexType>
+
+
+			<xsd:element name="GetVersionRequest" type="types:getVersionRequest" />
+			<xsd:element name="GetVersionResponse" type="types:getVersionResponse" />
+
+			<xsd:element name="GetCapabilitiesRequest" type="local:TerminalRequest" />
+			<xsd:element name="GetCapabilitiesResponse" type="local:GetAgentTerminalCapabilitiesResponse" />
+
+			<xsd:element name="GetTerminalConnectionsRequest" type="local:TerminalRequest" />
+			<xsd:element name="GetTerminalConnectionsResponse" type="local:GetTerminalConnectionsResponse" />
+
+			<xsd:element name="GetRelatedAddressesRequest" type="local:TerminalRequest" />
+			<xsd:element name="GetRelatedAddressesResponse" type="local:GetRelatedAddressesResponse" />
+
+			<xsd:element name="GetDoNotDisturbRequest" type="local:TerminalRequest" />
+			<xsd:element name="GetDoNotDisturbResponse" type="local:GetDoNotDisturbResponse" />
+
+			<xsd:element name="IsForwardedRequest" type="local:TerminalRequest" />
+			<xsd:element name="IsForwardedResponse" type="local:IsForwardedResponse" />
+			
+			<xsd:element name="GetActivityCodeRequest" type="local:TerminalRequest" />
+			<xsd:element name="GetActivityCodeResponse" type="local:GetActivityCodeResponse" />
+			
+			<xsd:element name="IsReadyRequest" type="local:TerminalRequest" />
+			<xsd:element name="IsReadyResponse" type="local:IsReadyResponse" />
+			
+			<xsd:element name="SetIsReadyRequest" type="local:BooleanTerminalRequest" />
+			
+			<xsd:element name="GetLoginIdRequest" type="local:TerminalRequest" />
+			<xsd:element name="GetLoginIdResponse" type="local:GetLoginIdResponse" />
+			
+			<xsd:element name="GetNotReadyReasonCodeRequest" type="local:TerminalRequest" />
+			<xsd:element name="GetNotReadyReasonCodeResponse" type="local:GetNotReadyReasonCodeResponse" />
+			
+			<xsd:element name="SetNotReadyReasonCodeRequest" type="local:StringTerminalRequest" />
+			<xsd:element name="LoginRequest" type="local:AgentTerminalLoginRequest" />
+			<xsd:element name="LogoutRequest" type="local:AgentTerminalLogoutRequest" />
+
+			<xsd:element name="SetActivityCodeRequest" type="local:SetActivityCodeRequest" />
+						
+			<xsd:element name="CallSupervisorRequest" type="local:TerminalAddressRequest" />
+
+		</xsd:schema>
+	</wsdl:types>
+
+	<wsdl:message name="GetVersionRequest">
+		<wsdl:part name="parameters" element="local:GetVersionRequest" />
+	</wsdl:message>
+	<wsdl:message name="GetVersionResponse">
+		<wsdl:part name="response" element="local:GetVersionResponse" />
+	</wsdl:message>
+
+	<wsdl:message name="GetCapabilitiesRequest">
+		<wsdl:part name="parameters" element="local:GetCapabilitiesRequest" />
+	</wsdl:message>
+	<wsdl:message name="GetCapabilitiesResponse">
+		<wsdl:part name="response" element="local:GetCapabilitiesResponse" />
+	</wsdl:message>
+
+	<wsdl:message name="GetTerminalConnectionsRequest">
+		<wsdl:part name="parameters" element="local:GetTerminalConnectionsRequest" />
+	</wsdl:message>
+
+	<wsdl:message name="GetTerminalConnectionsResponse">
+		<wsdl:part name="response" element="local:GetTerminalConnectionsResponse" />
+	</wsdl:message>
+
+	<wsdl:message name="GetRelatedAddressesRequest">
+		<wsdl:part name="parameters" element="local:GetRelatedAddressesRequest" />
+	</wsdl:message>
+
+	<wsdl:message name="GetRelatedAddressesResponse">
+		<wsdl:part name="response" element="local:GetRelatedAddressesResponse" />
+	</wsdl:message>
+
+	<wsdl:message name="GetDoNotDisturbRequest">
+		<wsdl:part name="parameters" element="local:GetDoNotDisturbRequest" />
+	</wsdl:message>
+	<wsdl:message name="GetDoNotDisturbResponse">
+		<wsdl:part name="response" element="local:GetDoNotDisturbResponse" />
+	</wsdl:message>
+
+	<wsdl:message name="IsForwardedRequest">
+		<wsdl:part name="parameters" element="local:IsForwardedRequest" />
+	</wsdl:message>
+	<wsdl:message name="IsForwardedResponse">
+		<wsdl:part name="response" element="local:IsForwardedResponse" />
+	</wsdl:message>
+
+	<wsdl:message name="GetActivityCodeRequest">
+		<wsdl:part name="parameters" element="local:GetActivityCodeRequest" />
+	</wsdl:message>
+
+	<wsdl:message name="GetActivityCodeResponse">
+		<wsdl:part name="response" element="local:GetActivityCodeResponse" />
+	</wsdl:message>
+	
+	<wsdl:message name="SetActivityCodeRequest">
+		<wsdl:part name="parameters" element="local:SetActivityCodeRequest" />
+	</wsdl:message>
+
+	<wsdl:message name="SetActivityCodeResponse"/>
+
+	<wsdl:message name="IsReadyRequest">
+		<wsdl:part name="parameters" element="local:IsReadyRequest" />
+	</wsdl:message>
+
+	<wsdl:message name="IsReadyResponse">
+		<wsdl:part name="response" element="local:IsReadyResponse" />
+	</wsdl:message>
+
+	<wsdl:message name="SetIsReadyRequest">
+		<wsdl:part name="parameters" element="local:SetIsReadyRequest" />
+	</wsdl:message>
+
+	<wsdl:message name="SetIsReadyResponse" />
+
+	<wsdl:message name="GetLoginIdRequest">
+		<wsdl:part name="parameters" element="local:GetLoginIdRequest" />
+	</wsdl:message>
+
+	<wsdl:message name="GetLoginIdResponse">
+		<wsdl:part name="response" element="local:GetLoginIdResponse" />
+	</wsdl:message>
+
+	<wsdl:message name="GetNotReadyReasonCodeRequest">
+		<wsdl:part name="parameters" element="local:GetNotReadyReasonCodeRequest" />
+	</wsdl:message>
+
+	<wsdl:message name="GetNotReadyReasonCodeResponse">
+		<wsdl:part name="response" element="local:GetNotReadyReasonCodeResponse" />
+	</wsdl:message>
+
+	<wsdl:message name="SetNotReadyReasonCodeRequest">
+		<wsdl:part name="parameters" element="local:SetNotReadyReasonCodeRequest" />
+	</wsdl:message>
+
+	<wsdl:message name="SetNotReadyReasonCodeResponse" />
+
+
+
+
+	<wsdl:message name="LoginRequest">
+		<wsdl:part name="parameters" element="local:LoginRequest" />
+	</wsdl:message>
+	
+	<wsdl:message name="LoginResponse"/>		
+	
+		<wsdl:message name="LogoutRequest">
+		<wsdl:part name="parameters" element="local:LogoutRequest" />
+	</wsdl:message>
+	
+	<wsdl:message name="LogoutResponse"/>
+
+	<wsdl:message name="CallSupervisorRequest">
+		<wsdl:part name="parameters" element="local:CallSupervisorRequest" />
+	</wsdl:message>
+
+	<wsdl:message name="CallSupervisorResponse" />
+
+
+	<wsdl:portType name="AgentTerminalService">
+
+		<wsdl:operation name="GetVersion">
+			<wsdl:input message="service:GetVersionRequest" />
+			<wsdl:output message="service:GetVersionResponse" />
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="GetVersionException" message="exceptions:GetVersionException" />
+		</wsdl:operation>
+		
+		<wsdl:operation name="GetCapabilities">
+			<wsdl:input message="service:GetCapabilitiesRequest" />
+			<wsdl:output message="service:GetCapabilitiesResponse" />
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="GetCapabilitiesException" message="exceptions:GetCapabilitiesException" />
+		</wsdl:operation>
+
+		<wsdl:operation name="GetTerminalConnections">
+			<wsdl:input message="service:GetTerminalConnectionsRequest" />
+			<wsdl:output message="service:GetTerminalConnectionsResponse" />
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="GetTerminalConnectionsException" message="exceptions:GetTerminalConnectionsException" />
+		</wsdl:operation>
+
+		<wsdl:operation name="GetDoNotDisturb">
+			<wsdl:input message="service:GetDoNotDisturbRequest" />
+			<wsdl:output message="service:GetDoNotDisturbResponse" />
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="GetDoNotDisturbException" message="exceptions:GetDoNotDisturbException" />
+		</wsdl:operation>
+
+		<wsdl:operation name="IsForwarded">
+			<wsdl:input message="service:IsForwardedRequest" />
+			<wsdl:output message="service:IsForwardedResponse" />
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="IsForwardedException" message="exceptions:IsForwardedException" />
+		</wsdl:operation>
+
+
+		<wsdl:operation name="GetRelatedAddresses">
+			<wsdl:input message="service:GetRelatedAddressesRequest" />
+			<wsdl:output message="service:GetRelatedAddressesResponse" />
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="GetRelatedAddressesException" message="exceptions:GetRelatedAddressesException" />
+		</wsdl:operation>
+
+		<wsdl:operation name="GetActivityCode">
+			<wsdl:input message="service:GetActivityCodeRequest" />
+			<wsdl:output message="service:GetActivityCodeResponse" />
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="GetActivityCodeException" message="exceptions:GetActivityCodeException" />
+		</wsdl:operation>
+		
+		<wsdl:operation name="SetActivityCode">
+			<wsdl:input message="service:SetActivityCodeRequest" />
+			<wsdl:output message="service:SetActivityCodeResponse" />
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="SetActivityCodeException" message="exceptions:SetActivityCodeException" />
+		</wsdl:operation>
+
+		<wsdl:operation name="IsReady">
+			<wsdl:input message="service:IsReadyRequest" />
+			<wsdl:output message="service:IsReadyResponse" />
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="IsReadyException" message="exceptions:IsReadyException" />
+		</wsdl:operation>
+
+		<wsdl:operation name="SetIsReady">
+			<wsdl:input message="service:SetIsReadyRequest" />
+			<wsdl:output message="service:SetIsReadyResponse" />
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="SetIsReadyException" message="exceptions:SetIsReadyException" />
+		</wsdl:operation>
+
+		<wsdl:operation name="GetLoginId">
+			<wsdl:input message="service:GetLoginIdRequest" />
+			<wsdl:output message="service:GetLoginIdResponse" />
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="GetLoginIdException" message="exceptions:GetLoginIdException" />
+		</wsdl:operation>
+
+		<wsdl:operation name="GetNotReadyReasonCode">
+			<wsdl:input message="service:GetNotReadyReasonCodeRequest" />
+			<wsdl:output message="service:GetNotReadyReasonCodeResponse" />
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="GetNotReadyReasonCodeException" message="exceptions:GetNotReadyReasonCodeException" />
+		</wsdl:operation>
+
+		<wsdl:operation name="SetNotReadyReasonCode">
+			<wsdl:input message="service:SetNotReadyReasonCodeRequest" />
+			<wsdl:output message="service:SetNotReadyReasonCodeResponse" />
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="SetNotReadyReasonCodeException" message="exceptions:SetNotReadyReasonCodeException" />
+		</wsdl:operation>
+		
+		<wsdl:operation name="Login">
+			<wsdl:input message="service:LoginRequest" />
+			<wsdl:output message="service:LoginResponse" />
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="LoginException" message="exceptions:LoginException" />
+		</wsdl:operation>
+		
+		<wsdl:operation name="Logout">
+			<wsdl:input message="service:LogoutRequest" />
+			<wsdl:output message="service:LogoutResponse" />
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="LogoutException" message="exceptions:LogoutException" />
+		</wsdl:operation>
+
+		<wsdl:operation name="CallSupervisor">
+			<wsdl:input name="CallSupervisorRequest" message="service:CallSupervisorRequest" />
+			<wsdl:output name="CallSupervisorResponse" message="service:CallSupervisorResponse" />
+			<wsdl:fault name="SessionNotCreatedException" message="exceptions:SessionNotCreatedException" />
+			<wsdl:fault name="CallSupervisorException" message="exceptions:CallSupervisorException" />
+		</wsdl:operation>
+
+	</wsdl:portType>
+
+
+
+</wsdl:definitions>

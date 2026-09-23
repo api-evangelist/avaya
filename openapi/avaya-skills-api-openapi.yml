@@ -1,0 +1,502 @@
+openapi: 3.2.0
+info:
+  title: Outbound Skills API
+  description: 'Outbound API allows you to manage outbound call campaigns, records, agents, skills, and Do Not Call lists.
+
+
+    ## Authentication
+
+    All requests require an Bearer Token.
+
+
+    ## Pagination
+
+    Many list endpoints return paginated results with a limit of 200 records per page. When more records are available, the response includes `"more_records": "1"`. To retrieve subsequent pages, include a `page` parameter in your request.'
+  version: 1.0.0
+servers:
+- url: '{protocol}://{server}{basePath}'
+  description: Open API
+  variables:
+    protocol:
+      enum:
+      - https
+      default: https
+    server:
+      default: HOST-REGION.api.avayacloud.com
+    basePath:
+      default: /api/outbound
+- url: '{protocol}://{server}:{port}'
+  description: Internal API
+  variables:
+    protocol:
+      enum:
+      - http
+      - https
+      default: https
+    server:
+      default: outbound-service
+    port:
+      enum:
+      - '80'
+      - '443'
+      default: '443'
+security:
+- {}
+- BearerAuth: []
+tags:
+- name: Skills
+  description: Manage skills and agent/campaigns assignments
+paths:
+  /GetSkillIDs:
+    post:
+      tags:
+      - Skills
+      summary: Get skill IDs
+      description: 'This function returns a collection of skills based on the details you request (by Initiative ID, skill name, or Agent ID).
+
+
+        **Pagination:** Results are paginated with a limit of 200 records per page.
+
+
+        | Response Code | Description |
+
+        | --- | --- |
+
+        | 200 | Success |
+
+        | 400 | Bad Request |
+
+        | 401 | Unauthorized |
+
+        | 404 | Not Found |
+
+        | 405 | Method Not Allowed |
+
+        | 429 | Too Many Requests |'
+      operationId: getSkillIDs
+      requestBody:
+        required: false
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                initiativeid:
+                  type: string
+                  description: 'Optional: The Initiative ID to query the skills for.'
+                skillname:
+                  type: string
+                  description: 'Optional: The name of the skill to query.'
+                agentid:
+                  type: string
+                  description: 'Optional: The Agent ID to query the skills for.'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  info:
+                    $ref: '#/components/schemas/PaginationInfo'
+                  skills:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        Id:
+                          type: string
+                        Name:
+                          type: string
+                        Description:
+                          type: string
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+        '405':
+          description: Method Not Allowed
+        '429':
+          description: Too Many Requests
+  /GetSkillsInfo:
+    post:
+      tags:
+      - Skills
+      summary: Get detailed skill information
+      description: 'Retrieve detailed information about a specific Skill, including assigned agents, groups, and initiatives.
+
+
+        | Response Code | Description |
+
+        | --- | --- |
+
+        | 200 | Success |
+
+        | 400 | Bad Request |
+
+        | 401 | Unauthorized |
+
+        | 404 | Not Found |
+
+        | 405 | Method Not Allowed |
+
+        | 429 | Too Many Requests |'
+      operationId: getSkillsInfo
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+              - skillid
+              properties:
+                skillid:
+                  type: string
+                  description: The Skill ID to retrieve information for.
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  info:
+                    $ref: '#/components/schemas/PaginationInfo'
+                  skills:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        Id:
+                          type: string
+                        Name:
+                          type: string
+                        Description:
+                          type: string
+                        Agents:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              Id:
+                                type: string
+                              Name:
+                                type: string
+                              SkillLevel:
+                                type: string
+                        Groups:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              Id:
+                                type: string
+                              Name:
+                                type: string
+                              SkillLevel:
+                                type: string
+                              Type:
+                                type: string
+                        Initiatives:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              Id:
+                                type: string
+                              Name:
+                                type: string
+                              Weight:
+                                type: string
+                              FilterId:
+                                type: string
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+        '405':
+          description: Method Not Allowed
+        '429':
+          description: Too Many Requests
+  /AddEditInitiativeToSkill:
+    put:
+      tags:
+      - Skills
+      summary: Add or edit an initiative in a skill
+      description: 'This function connects an initiative with an existing skill.
+
+
+        | Response Code | Description |
+
+        | --- | --- |
+
+        | 200 | Success |
+
+        | 400 | Bad Request |
+
+        | 401 | Unauthorized |
+
+        | 405 | Method Not Allowed |
+
+        | 429 | Too Many Requests |'
+      operationId: addEditInitiativeToSkill
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+              - skillid
+              - initiativeid
+              - weight
+              properties:
+                skillid:
+                  type: string
+                  description: Skill ID to add the Initiative to.
+                initiativeid:
+                  type: string
+                  description: Initiative ID to add to the skill.
+                weight:
+                  type: string
+                  description: 'Weight of skill: 100–10 in steps of 10 (100=High, 10=Low). Default and recommended value is 100.'
+                filterid:
+                  type: string
+                  description: 'Optional: ID of the filter to use for records assigned to this skill.'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  info:
+                    $ref: '#/components/schemas/PaginationInfo'
+                  skills:
+                    type: array
+                    items:
+                      type: object
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '405':
+          description: Method Not Allowed
+        '429':
+          description: Too Many Requests
+  /AddEditUserToSkill:
+    put:
+      tags:
+      - Skills
+      summary: Add or edit a user in a skill
+      description: 'This function is used to add a User to a specific Skill.
+
+
+        | Response Code | Description |
+
+        | --- | --- |
+
+        | 200 | Success |
+
+        | 400 | Bad Request |
+
+        | 401 | Unauthorized |
+
+        | 405 | Method Not Allowed |
+
+        | 429 | Too Many Requests |'
+      operationId: addEditUserToSkill
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+              - skillid
+              - userid
+              - skilllevel
+              properties:
+                skillid:
+                  type: string
+                  description: ID of the skill to assign the user to.
+                userid:
+                  type: string
+                  description: User ID of the user to assign to the skill.
+                skilllevel:
+                  type: string
+                  description: 'Skill level: 10–1 (10=High, 1=Low). Default and recommended setting is 10.'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  info:
+                    $ref: '#/components/schemas/PaginationInfo'
+                  skills:
+                    type: array
+                    items:
+                      type: object
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '405':
+          description: Method Not Allowed
+        '429':
+          description: Too Many Requests
+  /RemoveInitiativeFromSkill:
+    put:
+      tags:
+      - Skills
+      summary: Remove an initiative from a skill
+      description: 'This function removes an Initiative from a Skill.
+
+
+        | Response Code | Description |
+
+        | --- | --- |
+
+        | 200 | Success |
+
+        | 400 | Bad Request |
+
+        | 401 | Unauthorized |
+
+        | 405 | Method Not Allowed |
+
+        | 429 | Too Many Requests |'
+      operationId: removeInitiativeFromSkill
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+              - skillid
+              - initiativeid
+              properties:
+                skillid:
+                  type: string
+                  description: Skill ID from which the Initiative will be removed.
+                initiativeid:
+                  type: string
+                  description: The Initiative ID to remove from the skill.
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  info:
+                    $ref: '#/components/schemas/PaginationInfo'
+                  skills:
+                    type: array
+                    items:
+                      type: object
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '405':
+          description: Method Not Allowed
+        '429':
+          description: Too Many Requests
+  /RemoveUserFromSkill:
+    put:
+      tags:
+      - Skills
+      summary: Remove a user from a skill
+      description: 'This function removes a user from a specific skill.
+
+
+        | Response Code | Description |
+
+        | --- | --- |
+
+        | 200 | Success |
+
+        | 400 | Bad Request |
+
+        | 401 | Unauthorized |
+
+        | 405 | Method Not Allowed |
+
+        | 429 | Too Many Requests |'
+      operationId: removeUserFromSkill
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+              - skillid
+              - userid
+              properties:
+                skillid:
+                  type: string
+                  description: The Skill ID to remove the user from. Set to 0 to remove the user from ALL skills.
+                userid:
+                  type: string
+                  description: The User ID of the user to remove.
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  info:
+                    $ref: '#/components/schemas/PaginationInfo'
+                  skills:
+                    type: array
+                    items:
+                      type: object
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '405':
+          description: Method Not Allowed
+        '429':
+          description: Too Many Requests
+components:
+  schemas:
+    PaginationInfo:
+      type: object
+      properties:
+        per_page:
+          type: string
+          example: '200'
+        count:
+          type: string
+          example: '10'
+        page:
+          type: string
+          example: '1'
+        more_records:
+          type: string
+          example: '0'
+          description: Set to '1' if more records are available. Increment the `page` parameter to retrieve the next page.
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      description: This API uses Bearer Token Authorization Flow
+      bearerFormat: JWT

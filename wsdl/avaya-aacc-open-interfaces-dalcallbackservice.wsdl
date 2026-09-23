@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<wsdl:definitions name="dal_client_service_service" 
+	targetNamespace="http://www.nortel.com/soa/oi/cct/DALCallbackService" 
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" 
+	xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" 
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns:tns="http://www.nortel.com/soa/oi/cct/DALCallbackService" 
+	xmlns:interface="http://www.nortel.com/soa/oi/cct/DALCallbackService">
+
+	<wsdl:import 
+		namespace="http://www.nortel.com/soa/oi/cct/DALCallbackService" 
+		location="DALCallbackServiceInterface.wsdl" />
+
+	<wsdl:binding name="DALCallbackServiceBinding" type="tns:DALCallbackService">
+
+		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http" />
+		
+		<wsdl:operation name="OnAddressAdded">
+			<soap:operation soapAction="http://www.nortel.com/soa/oi/cct/DALCallbackService/OnAddressAdded" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="SessionNotCreatedException">
+				<soap:fault use="literal" name="SessionNotCreatedException" />
+			</wsdl:fault>
+		</wsdl:operation>
+		
+		<wsdl:operation name="OnAddressDeleted">
+			<soap:operation soapAction="http://www.nortel.com/soa/oi/cct/DALCallbackService/OnAddressDeleted" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="SessionNotCreatedException">
+				<soap:fault use="literal" name="SessionNotCreatedException" />
+			</wsdl:fault>
+		</wsdl:operation>
+		
+		<wsdl:operation name="OnAddressMapChange">
+			<soap:operation soapAction="http://www.nortel.com/soa/oi/cct/DALCallbackService/OnAddressMapChange" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="SessionNotCreatedException">
+				<soap:fault use="literal" name="SessionNotCreatedException" />
+			</wsdl:fault>
+		</wsdl:operation>
+		
+		<wsdl:operation name="OnTerminalAdded">
+			<soap:operation soapAction="http://www.nortel.com/soa/oi/cct/DALCallbackService/OnTerminalAdded" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="SessionNotCreatedException">
+				<soap:fault use="literal" name="SessionNotCreatedException" />
+			</wsdl:fault>
+		</wsdl:operation>
+		
+		<wsdl:operation name="OnTerminalDeleted">
+			<soap:operation soapAction="http://www.nortel.com/soa/oi/cct/DALCallbackService/OnTerminalDeleted" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="SessionNotCreatedException">
+				<soap:fault use="literal" name="SessionNotCreatedException" />
+			</wsdl:fault>
+		</wsdl:operation>
+		
+		<wsdl:operation name="OnTerminalMapEvent">
+			<soap:operation soapAction="http://www.nortel.com/soa/oi/cct/DALCallbackService/OnTerminalMapEvent" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="SessionNotCreatedException">
+				<soap:fault use="literal" name="SessionNotCreatedException" />
+			</wsdl:fault>
+		</wsdl:operation>
+		
+		<wsdl:operation name="OnAgentAdded">
+			<soap:operation soapAction="http://www.nortel.com/soa/oi/cct/DALCallbackService/OnAgentAdded" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="SessionNotCreatedException">
+				<soap:fault use="literal" name="SessionNotCreatedException" />
+			</wsdl:fault>
+		</wsdl:operation>
+		
+		<wsdl:operation name="OnAgentDeleted">
+			<soap:operation soapAction="http://www.nortel.com/soa/oi/cct/DALCallbackService/OnAgentDeleted" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="SessionNotCreatedException">
+				<soap:fault use="literal" name="SessionNotCreatedException" />
+			</wsdl:fault>
+		</wsdl:operation>
+		
+		<wsdl:operation name="OnAgentRename">
+			<soap:operation soapAction="http://www.nortel.com/soa/oi/cct/DALCallbackService/OnAgentRename" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="SessionNotCreatedException">
+				<soap:fault use="literal" name="SessionNotCreatedException" />
+			</wsdl:fault>
+		</wsdl:operation>
+		
+		<wsdl:operation name="OnUserEvent">
+			<soap:operation soapAction="http://www.nortel.com/soa/oi/cct/DALCallbackService/OnUserEvent" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>  
+			<wsdl:fault name="SessionNotCreatedException">
+				<soap:fault use="literal" name="SessionNotCreatedException" />
+			</wsdl:fault>
+		</wsdl:operation>
+		
+		<wsdl:operation name="OnSystemShutdownEvent">
+			<soap:operation
+				soapAction="http://www.nortel.com/soa/oi/cct/DALCallbackService/OnSystemShutdownEvent" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="SessionNotCreatedException">
+				<soap:fault use="literal"
+					name="SessionNotCreatedException" />
+			</wsdl:fault>
+		</wsdl:operation>
+
+		<wsdl:operation name="OnEndOfGracePeriodEvent">
+			<soap:operation
+				soapAction="http://www.nortel.com/soa/oi/cct/DALCallbackService/OnEndOfGracePeriodEvent" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="SessionNotCreatedException">
+				<soap:fault use="literal"
+					name="SessionNotCreatedException" />
+			</wsdl:fault>
+		</wsdl:operation>
+		
+		<wsdl:operation name="OnNormalOperationResumedEvent">
+			<soap:operation
+				soapAction="htttp://www.nortel.com/soa/oi/cct/DALCallbackService/OnNormalOperationResumedEvent" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="SessionNotCreatedException">
+				<soap:fault use="literal"
+					name="SessionNotCreatedException" />
+			</wsdl:fault>
+		</wsdl:operation>
+
+	</wsdl:binding>
+		
+
+	<wsdl:service name="SOAOICCT_DALCallbackService">
+		<wsdl:port name="DALCallbackService" binding="tns:DALCallbackServiceBinding">
+			<soap:address location="http://localhost:9080/SOAOICCT/services/DALCallbackService" />
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>
