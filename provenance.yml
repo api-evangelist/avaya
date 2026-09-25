@@ -22,7 +22,7 @@ artifacts:
     method: searched
     evidence: declared in the artifact
   conformance/avaya-conformance.yml:
-    method: derived
+    method: searched
     evidence: declared in the artifact
   conventions/avaya-conventions.yml:
     method: searched
@@ -33,37 +33,16 @@ artifacts:
   errors/avaya-problem-types.yml:
     method: derived
     evidence: declared in the artifact
-  kin/checks-2026-09-14T064754.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-17T064519.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-19T080027.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-19T082702.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-19T114122.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-20T165047.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-20T191845.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-20T205517.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-21T110057.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-24T064859.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-24T171257.yml:
+  front-door-ai/2026-09-17.yml:
+    method: unknown
+    evidence: no authorship recorded
+  grpc/avaya-ip-office-mtcti3.proto:
+    method: unknown
+    evidence: no authorship recorded
+  grpc/avaya-protobuf.yml:
+    method: searched
+    evidence: declared in the artifact
+  kin/checks-2026-09-24T161608.yml:
     method: generated
     evidence: Kin Score snapshot written by score.rb
   kin/score-2026-08-25T125852.yml:
@@ -204,253 +183,648 @@ artifacts:
   kin/score-2026-09-14T064754.yml:
     method: generated
     evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-14T210656.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-14T225847.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-15T211329.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-15T230249.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-16T210549.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-16T225339.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-17T211151.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-17T233623.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-18T205255.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-18T231945.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-19T165737.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-19T193153.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-20T205903.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-20T232958.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-21T211425.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-21T233935.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-22T213221.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-23T000603.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-24T064009.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-24T090406.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-24T161608.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
   lifecycle/avaya-lifecycle.yml:
     method: searched
     evidence: declared in the artifact
   llms/avaya-llms.txt:
-    method: unknown
-    evidence: no authorship recorded
+    method: searched
+    evidence: 'derive-llms-provenance.py: harvested'
   mcp/avaya-mcp.yml:
     method: searched
     evidence: declared in the artifact
   openapi/_original/avaya-axp-admin-account-openapi-original.json:
     method: harvested
-    evidence: fetched from the provider as-is; byte-identical to the source
+    evidence: found in openapi/_original/; the fetch URL and bytes were not recorded, so byte-identity
+      to the provider's source is unverified
+  openapi/_original/avaya-axp-admin-account-openapi.yml:
+    method: harvested
+    evidence: found in openapi/_original/; the fetch URL and bytes were not recorded, so byte-identity
+      to the provider's source is unverified
   openapi/_original/avaya-axp-admin-element-inventory-openapi-original.json:
     method: harvested
-    evidence: fetched from the provider as-is; byte-identical to the source
+    evidence: found in openapi/_original/; the fetch URL and bytes were not recorded, so byte-identity
+      to the provider's source is unverified
+  openapi/_original/avaya-axp-admin-element-inventory-openapi.yml:
+    method: harvested
+    evidence: found in openapi/_original/; the fetch URL and bytes were not recorded, so byte-identity
+      to the provider's source is unverified
   openapi/_original/avaya-axp-admin-group-openapi-original.json:
     method: harvested
-    evidence: fetched from the provider as-is; byte-identical to the source
+    evidence: found in openapi/_original/; the fetch URL and bytes were not recorded, so byte-identity
+      to the provider's source is unverified
+  openapi/_original/avaya-axp-admin-group-openapi.yml:
+    method: harvested
+    evidence: found in openapi/_original/; the fetch URL and bytes were not recorded, so byte-identity
+      to the provider's source is unverified
   openapi/_original/avaya-axp-admin-match-openapi-original.json:
     method: harvested
-    evidence: fetched from the provider as-is; byte-identical to the source
+    evidence: found in openapi/_original/; the fetch URL and bytes were not recorded, so byte-identity
+      to the provider's source is unverified
+  openapi/_original/avaya-axp-admin-match-openapi.yml:
+    method: harvested
+    evidence: found in openapi/_original/; the fetch URL and bytes were not recorded, so byte-identity
+      to the provider's source is unverified
   openapi/_original/avaya-axp-admin-timetable-openapi-original.json:
     method: harvested
-    evidence: fetched from the provider as-is; byte-identical to the source
+    evidence: found in openapi/_original/; the fetch URL and bytes were not recorded, so byte-identity
+      to the provider's source is unverified
+  openapi/_original/avaya-axp-admin-timetable-openapi.yml:
+    method: harvested
+    evidence: found in openapi/_original/; the fetch URL and bytes were not recorded, so byte-identity
+      to the provider's source is unverified
   openapi/_original/avaya-axp-admin-user-openapi-original.json:
     method: harvested
-    evidence: fetched from the provider as-is; byte-identical to the source
+    evidence: found in openapi/_original/; the fetch URL and bytes were not recorded, so byte-identity
+      to the provider's source is unverified
+  openapi/_original/avaya-axp-admin-user-openapi.yml:
+    method: harvested
+    evidence: found in openapi/_original/; the fetch URL and bytes were not recorded, so byte-identity
+      to the provider's source is unverified
   openapi/_original/avaya-axp-admin-voice-openapi-original.json:
     method: harvested
-    evidence: fetched from the provider as-is; byte-identical to the source
+    evidence: found in openapi/_original/; the fetch URL and bytes were not recorded, so byte-identity
+      to the provider's source is unverified
+  openapi/_original/avaya-axp-admin-voice-openapi.yml:
+    method: harvested
+    evidence: found in openapi/_original/; the fetch URL and bytes were not recorded, so byte-identity
+      to the provider's source is unverified
   openapi/_original/avaya-axp-analytics-historical-data-v1-openapi-original.json:
     method: harvested
-    evidence: fetched from the provider as-is; byte-identical to the source
+    evidence: found in openapi/_original/; the fetch URL and bytes were not recorded, so byte-identity
+      to the provider's source is unverified
+  openapi/_original/avaya-axp-analytics-historical-data-v1-openapi.yml:
+    method: harvested
+    evidence: found in openapi/_original/; the fetch URL and bytes were not recorded, so byte-identity
+      to the provider's source is unverified
   openapi/_original/avaya-axp-analytics-historical-data-v2-openapi-original.json:
     method: harvested
-    evidence: fetched from the provider as-is; byte-identical to the source
+    evidence: found in openapi/_original/; the fetch URL and bytes were not recorded, so byte-identity
+      to the provider's source is unverified
+  openapi/_original/avaya-axp-analytics-historical-data-v2-openapi.yml:
+    method: harvested
+    evidence: found in openapi/_original/; the fetch URL and bytes were not recorded, so byte-identity
+      to the provider's source is unverified
   openapi/_original/avaya-axp-analytics-producer-management-openapi-original.json:
     method: harvested
-    evidence: fetched from the provider as-is; byte-identical to the source
+    evidence: found in openapi/_original/; the fetch URL and bytes were not recorded, so byte-identity
+      to the provider's source is unverified
+  openapi/_original/avaya-axp-analytics-producer-management-openapi.yml:
+    method: harvested
+    evidence: found in openapi/_original/; the fetch URL and bytes were not recorded, so byte-identity
+      to the provider's source is unverified
   openapi/_original/avaya-axp-auth-openapi-original.json:
     method: harvested
-    evidence: fetched from the provider as-is; byte-identical to the source
+    evidence: found in openapi/_original/; the fetch URL and bytes were not recorded, so byte-identity
+      to the provider's source is unverified
+  openapi/_original/avaya-axp-auth-openapi.yml:
+    method: harvested
+    evidence: found in openapi/_original/; the fetch URL and bytes were not recorded, so byte-identity
+      to the provider's source is unverified
   openapi/_original/avaya-axp-customer-journey-openapi-original.json:
     method: harvested
-    evidence: fetched from the provider as-is; byte-identical to the source
+    evidence: found in openapi/_original/; the fetch URL and bytes were not recorded, so byte-identity
+      to the provider's source is unverified
+  openapi/_original/avaya-axp-customer-journey-openapi.yml:
+    method: harvested
+    evidence: found in openapi/_original/; the fetch URL and bytes were not recorded, so byte-identity
+      to the provider's source is unverified
   openapi/_original/avaya-axp-digital-custom-chat-openapi-original.json:
     method: harvested
-    evidence: fetched from the provider as-is; byte-identical to the source
+    evidence: found in openapi/_original/; the fetch URL and bytes were not recorded, so byte-identity
+      to the provider's source is unverified
+  openapi/_original/avaya-axp-digital-custom-chat-openapi.yml:
+    method: harvested
+    evidence: found in openapi/_original/; the fetch URL and bytes were not recorded, so byte-identity
+      to the provider's source is unverified
   openapi/_original/avaya-axp-digital-custom-messaging-openapi-original.json:
     method: harvested
-    evidence: fetched from the provider as-is; byte-identical to the source
+    evidence: found in openapi/_original/; the fetch URL and bytes were not recorded, so byte-identity
+      to the provider's source is unverified
+  openapi/_original/avaya-axp-digital-custom-messaging-openapi.yml:
+    method: harvested
+    evidence: found in openapi/_original/; the fetch URL and bytes were not recorded, so byte-identity
+      to the provider's source is unverified
   openapi/_original/avaya-axp-digital-notification-openapi-original.json:
     method: harvested
-    evidence: fetched from the provider as-is; byte-identical to the source
+    evidence: found in openapi/_original/; the fetch URL and bytes were not recorded, so byte-identity
+      to the provider's source is unverified
+  openapi/_original/avaya-axp-digital-notification-openapi.yml:
+    method: harvested
+    evidence: found in openapi/_original/; the fetch URL and bytes were not recorded, so byte-identity
+      to the provider's source is unverified
   openapi/_original/avaya-axp-digital-sdk-auth-openapi-original.json:
     method: harvested
-    evidence: fetched from the provider as-is; byte-identical to the source
+    evidence: found in openapi/_original/; the fetch URL and bytes were not recorded, so byte-identity
+      to the provider's source is unverified
+  openapi/_original/avaya-axp-digital-sdk-auth-openapi.yml:
+    method: harvested
+    evidence: found in openapi/_original/; the fetch URL and bytes were not recorded, so byte-identity
+      to the provider's source is unverified
   openapi/_original/avaya-axp-digital-signed-media-openapi-original.json:
     method: harvested
-    evidence: fetched from the provider as-is; byte-identical to the source
+    evidence: found in openapi/_original/; the fetch URL and bytes were not recorded, so byte-identity
+      to the provider's source is unverified
+  openapi/_original/avaya-axp-digital-signed-media-openapi.yml:
+    method: harvested
+    evidence: found in openapi/_original/; the fetch URL and bytes were not recorded, so byte-identity
+      to the provider's source is unverified
   openapi/_original/avaya-axp-digital-signed-media-uri-openapi-original.json:
     method: harvested
-    evidence: fetched from the provider as-is; byte-identical to the source
+    evidence: found in openapi/_original/; the fetch URL and bytes were not recorded, so byte-identity
+      to the provider's source is unverified
+  openapi/_original/avaya-axp-digital-signed-media-uri-openapi.yml:
+    method: harvested
+    evidence: found in openapi/_original/; the fetch URL and bytes were not recorded, so byte-identity
+      to the provider's source is unverified
   openapi/_original/avaya-axp-draft-retrieval-openapi-original.json:
     method: harvested
-    evidence: fetched from the provider as-is; byte-identical to the source
+    evidence: found in openapi/_original/; the fetch URL and bytes were not recorded, so byte-identity
+      to the provider's source is unverified
+  openapi/_original/avaya-axp-draft-retrieval-openapi.yml:
+    method: harvested
+    evidence: found in openapi/_original/; the fetch URL and bytes were not recorded, so byte-identity
+      to the provider's source is unverified
   openapi/_original/avaya-axp-draft-save-openapi-original.json:
     method: harvested
-    evidence: fetched from the provider as-is; byte-identical to the source
+    evidence: found in openapi/_original/; the fetch URL and bytes were not recorded, so byte-identity
+      to the provider's source is unverified
+  openapi/_original/avaya-axp-draft-save-openapi.yml:
+    method: harvested
+    evidence: found in openapi/_original/; the fetch URL and bytes were not recorded, so byte-identity
+      to the provider's source is unverified
   openapi/_original/avaya-axp-notification-openapi-original.json:
     method: harvested
-    evidence: fetched from the provider as-is; byte-identical to the source
+    evidence: found in openapi/_original/; the fetch URL and bytes were not recorded, so byte-identity
+      to the provider's source is unverified
+  openapi/_original/avaya-axp-notification-openapi.yml:
+    method: harvested
+    evidence: found in openapi/_original/; the fetch URL and bytes were not recorded, so byte-identity
+      to the provider's source is unverified
   openapi/_original/avaya-axp-routing-queue-metrics-openapi-original.json:
     method: harvested
-    evidence: fetched from the provider as-is; byte-identical to the source
+    evidence: found in openapi/_original/; the fetch URL and bytes were not recorded, so byte-identity
+      to the provider's source is unverified
+  openapi/_original/avaya-axp-routing-queue-metrics-openapi.yml:
+    method: harvested
+    evidence: found in openapi/_original/; the fetch URL and bytes were not recorded, so byte-identity
+      to the provider's source is unverified
   openapi/_original/avaya-axp-transcript-retrieval-openapi-original.json:
     method: harvested
-    evidence: fetched from the provider as-is; byte-identical to the source
+    evidence: found in openapi/_original/; the fetch URL and bytes were not recorded, so byte-identity
+      to the provider's source is unverified
+  openapi/_original/avaya-axp-transcript-retrieval-openapi.yml:
+    method: harvested
+    evidence: found in openapi/_original/; the fetch URL and bytes were not recorded, so byte-identity
+      to the provider's source is unverified
   openapi/_original/avaya-axp-transcript-save-openapi-original.json:
     method: harvested
-    evidence: fetched from the provider as-is; byte-identical to the source
+    evidence: found in openapi/_original/; the fetch URL and bytes were not recorded, so byte-identity
+      to the provider's source is unverified
+  openapi/_original/avaya-axp-transcript-save-openapi.yml:
+    method: harvested
+    evidence: found in openapi/_original/; the fetch URL and bytes were not recorded, so byte-identity
+      to the provider's source is unverified
   openapi/_original/avaya-infinity-access-token-openapi-original.json:
     method: harvested
-    evidence: fetched from the provider as-is; byte-identical to the source
+    evidence: found in openapi/_original/; the fetch URL and bytes were not recorded, so byte-identity
+      to the provider's source is unverified
+  openapi/_original/avaya-infinity-access-token-openapi.yml:
+    method: harvested
+    evidence: found in openapi/_original/; the fetch URL and bytes were not recorded, so byte-identity
+      to the provider's source is unverified
   openapi/_original/avaya-infinity-analytics-historical-openapi-original.json:
     method: harvested
-    evidence: fetched from the provider as-is; byte-identical to the source
+    evidence: found in openapi/_original/; the fetch URL and bytes were not recorded, so byte-identity
+      to the provider's source is unverified
+  openapi/_original/avaya-infinity-analytics-historical-openapi.yml:
+    method: harvested
+    evidence: found in openapi/_original/; the fetch URL and bytes were not recorded, so byte-identity
+      to the provider's source is unverified
   openapi/_original/avaya-infinity-groups-management-openapi-original.json:
     method: harvested
-    evidence: fetched from the provider as-is; byte-identical to the source
+    evidence: found in openapi/_original/; the fetch URL and bytes were not recorded, so byte-identity
+      to the provider's source is unverified
+  openapi/_original/avaya-infinity-groups-management-openapi.yml:
+    method: harvested
+    evidence: found in openapi/_original/; the fetch URL and bytes were not recorded, so byte-identity
+      to the provider's source is unverified
   openapi/_original/avaya-infinity-messaging-openapi-original.json:
     method: harvested
-    evidence: fetched from the provider as-is; byte-identical to the source
+    evidence: found in openapi/_original/; the fetch URL and bytes were not recorded, so byte-identity
+      to the provider's source is unverified
+  openapi/_original/avaya-infinity-messaging-openapi.yml:
+    method: harvested
+    evidence: found in openapi/_original/; the fetch URL and bytes were not recorded, so byte-identity
+      to the provider's source is unverified
   openapi/_original/avaya-infinity-notification-service-openapi-original.json:
     method: harvested
-    evidence: fetched from the provider as-is; byte-identical to the source
+    evidence: found in openapi/_original/; the fetch URL and bytes were not recorded, so byte-identity
+      to the provider's source is unverified
+  openapi/_original/avaya-infinity-notification-service-openapi.yml:
+    method: harvested
+    evidence: found in openapi/_original/; the fetch URL and bytes were not recorded, so byte-identity
+      to the provider's source is unverified
   openapi/_original/avaya-infinity-notifications-openapi-original.json:
     method: harvested
-    evidence: fetched from the provider as-is; byte-identical to the source
+    evidence: found in openapi/_original/; the fetch URL and bytes were not recorded, so byte-identity
+      to the provider's source is unverified
+  openapi/_original/avaya-infinity-notifications-openapi.yml:
+    method: harvested
+    evidence: found in openapi/_original/; the fetch URL and bytes were not recorded, so byte-identity
+      to the provider's source is unverified
   openapi/_original/avaya-infinity-outbound-openapi-original.json:
     method: harvested
-    evidence: fetched from the provider as-is; byte-identical to the source
+    evidence: found in openapi/_original/; the fetch URL and bytes were not recorded, so byte-identity
+      to the provider's source is unverified
+  openapi/_original/avaya-infinity-outbound-openapi.yml:
+    method: harvested
+    evidence: found in openapi/_original/; the fetch URL and bytes were not recorded, so byte-identity
+      to the provider's source is unverified
   openapi/_original/avaya-infinity-profile-management-openapi-original.json:
     method: harvested
-    evidence: fetched from the provider as-is; byte-identical to the source
+    evidence: found in openapi/_original/; the fetch URL and bytes were not recorded, so byte-identity
+      to the provider's source is unverified
+  openapi/_original/avaya-infinity-profile-management-openapi.yml:
+    method: harvested
+    evidence: found in openapi/_original/; the fetch URL and bytes were not recorded, so byte-identity
+      to the provider's source is unverified
   openapi/_original/avaya-infinity-queue-management-openapi-original.json:
     method: harvested
-    evidence: fetched from the provider as-is; byte-identical to the source
+    evidence: found in openapi/_original/; the fetch URL and bytes were not recorded, so byte-identity
+      to the provider's source is unverified
+  openapi/_original/avaya-infinity-queue-management-openapi.yml:
+    method: harvested
+    evidence: found in openapi/_original/; the fetch URL and bytes were not recorded, so byte-identity
+      to the provider's source is unverified
   openapi/_original/avaya-infinity-queue-metrics-openapi-original.json:
     method: harvested
-    evidence: fetched from the provider as-is; byte-identical to the source
+    evidence: found in openapi/_original/; the fetch URL and bytes were not recorded, so byte-identity
+      to the provider's source is unverified
+  openapi/_original/avaya-infinity-queue-metrics-openapi.yml:
+    method: harvested
+    evidence: found in openapi/_original/; the fetch URL and bytes were not recorded, so byte-identity
+      to the provider's source is unverified
   openapi/_original/avaya-infinity-transcription-interactions-openapi-original.json:
     method: harvested
-    evidence: fetched from the provider as-is; byte-identical to the source
+    evidence: found in openapi/_original/; the fetch URL and bytes were not recorded, so byte-identity
+      to the provider's source is unverified
+  openapi/_original/avaya-infinity-transcription-interactions-openapi.yml:
+    method: harvested
+    evidence: found in openapi/_original/; the fetch URL and bytes were not recorded, so byte-identity
+      to the provider's source is unverified
   openapi/_original/avaya-infinity-transcripts-openapi-original.json:
     method: harvested
-    evidence: fetched from the provider as-is; byte-identical to the source
+    evidence: found in openapi/_original/; the fetch URL and bytes were not recorded, so byte-identity
+      to the provider's source is unverified
+  openapi/_original/avaya-infinity-transcripts-openapi.yml:
+    method: harvested
+    evidence: found in openapi/_original/; the fetch URL and bytes were not recorded, so byte-identity
+      to the provider's source is unverified
   openapi/_original/avaya-infinity-user-management-openapi-original.json:
     method: harvested
-    evidence: fetched from the provider as-is; byte-identical to the source
+    evidence: found in openapi/_original/; the fetch URL and bytes were not recorded, so byte-identity
+      to the provider's source is unverified
+  openapi/_original/avaya-infinity-user-management-openapi.yml:
+    method: harvested
+    evidence: found in openapi/_original/; the fetch URL and bytes were not recorded, so byte-identity
+      to the provider's source is unverified
   openapi/_original/avaya-infinity-workflow-execution-openapi-original.json:
     method: harvested
-    evidence: fetched from the provider as-is; byte-identical to the source
+    evidence: found in openapi/_original/; the fetch URL and bytes were not recorded, so byte-identity
+      to the provider's source is unverified
+  openapi/_original/avaya-infinity-workflow-execution-openapi.yml:
+    method: harvested
+    evidence: found in openapi/_original/; the fetch URL and bytes were not recorded, so byte-identity
+      to the provider's source is unverified
   openapi/_original/avaya-infinity-workflow-openapi-original.json:
     method: harvested
-    evidence: fetched from the provider as-is; byte-identical to the source
+    evidence: found in openapi/_original/; the fetch URL and bytes were not recorded, so byte-identity
+      to the provider's source is unverified
+  openapi/_original/avaya-infinity-workflow-openapi.yml:
+    method: harvested
+    evidence: found in openapi/_original/; the fetch URL and bytes were not recorded, so byte-identity
+      to the provider's source is unverified
   openapi/_original/avaya-infinity-workflow-sessions-openapi-original.json:
     method: harvested
-    evidence: fetched from the provider as-is; byte-identical to the source
-  openapi/avaya-axp-admin-account-openapi.yml:
+    evidence: found in openapi/_original/; the fetch URL and bytes were not recorded, so byte-identity
+      to the provider's source is unverified
+  openapi/_original/avaya-infinity-workflow-sessions-openapi.yml:
+    method: harvested
+    evidence: found in openapi/_original/; the fetch URL and bytes were not recorded, so byte-identity
+      to the provider's source is unverified
+  openapi/avaya-access-token-api-openapi.yml:
     method: derived
     evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
-  openapi/avaya-axp-admin-element-inventory-openapi.yml:
+  openapi/avaya-account-api-openapi.yml:
     method: derived
     evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
-  openapi/avaya-axp-admin-group-openapi.yml:
+  openapi/avaya-agent-location-api-openapi.yml:
     method: derived
     evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
-  openapi/avaya-axp-admin-match-openapi.yml:
+  openapi/avaya-agent-notes-api-openapi.yml:
     method: derived
     evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
-  openapi/avaya-axp-admin-timetable-openapi.yml:
+  openapi/avaya-agents-api-openapi.yml:
     method: derived
     evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
-  openapi/avaya-axp-admin-user-openapi.yml:
+  openapi/avaya-asynchronous-messages-api-openapi.yml:
     method: derived
     evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
-  openapi/avaya-axp-admin-voice-openapi.yml:
+  openapi/avaya-audit-records-api-openapi.yml:
     method: derived
     evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
-  openapi/avaya-axp-analytics-historical-data-v1-openapi.yml:
+  openapi/avaya-available-phone-numbers-api-openapi.yml:
     method: derived
     evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
-  openapi/avaya-axp-analytics-historical-data-v2-openapi.yml:
+  openapi/avaya-avaya-aura-device-services-api-openapi.yml:
     method: derived
     evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
-  openapi/avaya-axp-analytics-producer-management-openapi.yml:
+  openapi/avaya-avaya-cloud-office-management-api-openapi.yml:
     method: derived
     evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
-  openapi/avaya-axp-auth-openapi.yml:
+  openapi/avaya-avaya-cloud-office-sip-trunks-api-openapi.yml:
     method: derived
     evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
-  openapi/avaya-axp-customer-journey-openapi.yml:
+  openapi/avaya-bulk-job-api-openapi.yml:
     method: derived
     evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
-  openapi/avaya-axp-digital-custom-chat-openapi.yml:
+  openapi/avaya-bulk-user-api-openapi.yml:
     method: derived
     evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
-  openapi/avaya-axp-digital-custom-messaging-openapi.yml:
+  openapi/avaya-calls-api-openapi.yml:
     method: derived
     evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
-  openapi/avaya-axp-digital-notification-openapi.yml:
+  openapi/avaya-campaigns-api-openapi.yml:
     method: derived
     evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
-  openapi/avaya-axp-digital-sdk-auth-openapi.yml:
+  openapi/avaya-category-api-openapi.yml:
     method: derived
     evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
-  openapi/avaya-axp-digital-signed-media-openapi.yml:
+  openapi/avaya-comm-manager-job-details-api-openapi.yml:
     method: derived
     evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
-  openapi/avaya-axp-digital-signed-media-uri-openapi.yml:
+  openapi/avaya-communication-manager-api-openapi.yml:
     method: derived
     evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
-  openapi/avaya-axp-draft-retrieval-openapi.yml:
+  openapi/avaya-country-api-openapi.yml:
     method: derived
     evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
-  openapi/avaya-axp-draft-save-openapi.yml:
+  openapi/avaya-dataset-api-openapi.yml:
     method: derived
     evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
-  openapi/avaya-axp-notification-openapi.yml:
+  openapi/avaya-datasets-api-openapi.yml:
     method: derived
     evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
-  openapi/avaya-axp-routing-queue-metrics-openapi.yml:
+  openapi/avaya-dictionaries-api-openapi.yml:
     method: derived
     evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
-  openapi/avaya-axp-transcript-retrieval-openapi.yml:
+  openapi/avaya-dimensions-api-openapi.yml:
     method: derived
     evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
-  openapi/avaya-axp-transcript-save-openapi.yml:
+  openapi/avaya-dnc-api-openapi.yml:
     method: derived
     evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
-  openapi/avaya-infinity-access-token-openapi.yml:
+  openapi/avaya-drafts-api-openapi.yml:
     method: derived
     evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
-  openapi/avaya-infinity-analytics-historical-openapi.yml:
+  openapi/avaya-element-management-api-openapi.yml:
     method: derived
     evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
-  openapi/avaya-infinity-groups-management-openapi.yml:
+  openapi/avaya-engagement-api-openapi.yml:
     method: derived
     evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
-  openapi/avaya-infinity-messaging-openapi.yml:
+  openapi/avaya-engagements-api-openapi.yml:
     method: derived
     evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
-  openapi/avaya-infinity-notification-service-openapi.yml:
+  openapi/avaya-extension-api-openapi.yml:
     method: derived
     evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
-  openapi/avaya-infinity-notifications-openapi.yml:
+  openapi/avaya-gateway-connection-manager-api-openapi.yml:
     method: derived
     evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
-  openapi/avaya-infinity-outbound-openapi.yml:
+  openapi/avaya-group-management-api-openapi.yml:
     method: derived
     evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
-  openapi/avaya-infinity-profile-management-openapi.yml:
+  openapi/avaya-group-users-api-openapi.yml:
     method: derived
     evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
-  openapi/avaya-infinity-queue-management-openapi.yml:
+  openapi/avaya-groups-api-openapi.yml:
     method: derived
     evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
-  openapi/avaya-infinity-queue-metrics-openapi.yml:
+  openapi/avaya-holiday-api-openapi.yml:
     method: derived
     evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
-  openapi/avaya-infinity-transcription-interactions-openapi.yml:
+  openapi/avaya-hybrid-cloud-gateway-api-openapi.yml:
     method: derived
     evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
-  openapi/avaya-infinity-transcripts-openapi.yml:
+  openapi/avaya-hybrid-cloud-manager-api-openapi.yml:
     method: derived
     evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
-  openapi/avaya-infinity-user-management-openapi.yml:
+  openapi/avaya-hybrid-extension-api-openapi.yml:
     method: derived
     evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
-  openapi/avaya-infinity-workflow-execution-openapi.yml:
+  openapi/avaya-hybrid-skill-api-openapi.yml:
     method: derived
     evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
-  openapi/avaya-infinity-workflow-openapi.yml:
+  openapi/avaya-identifiers-api-openapi.yml:
     method: derived
     evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
-  openapi/avaya-infinity-workflow-sessions-openapi.yml:
+  openapi/avaya-indicators-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/avaya-interactions-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/avaya-interval-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/avaya-journey-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/avaya-jwt-token-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/avaya-locales-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/avaya-location-profile-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/avaya-measure-producers-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/avaya-media-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/avaya-messaging-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/avaya-microsoft-teams-management-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/avaya-microsoft-teams-sip-trunks-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/avaya-organization-structure-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/avaya-outbound-number-routing-rules-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/avaya-participant-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/avaya-phone-number-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/avaya-profile-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/avaya-profile-management-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/avaya-provider-dialogs-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/avaya-queue-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/avaya-queue-metrics-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/avaya-queues-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/avaya-reason-codes-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/avaya-records-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/avaya-reports-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/avaya-resource-partition-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/avaya-sessions-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/avaya-signed-uri-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/avaya-sip-trunks-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/avaya-skills-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/avaya-subscriptions-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/avaya-sync-aura-entities-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/avaya-system-manager-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/avaya-timetable-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/avaya-transcript-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/avaya-transcription-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/avaya-transcripts-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/avaya-user-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/avaya-user-password-policy-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/avaya-users-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/avaya-ux-profile-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/avaya-voice-numbers-and-extensions-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/avaya-voice-plan-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/avaya-workflow-sessions-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/avaya-workspaces-api-openapi.yml:
     method: derived
     evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
   overlays/avaya-axp-admin-account-overlay.yaml:
@@ -646,5 +1020,176 @@ artifacts:
     method: unknown
     evidence: no authorship recorded
   well-known/avaya-well-known.yml:
+    method: searched
+    evidence: declared in the artifact
+  wsdl/avaya-aacc-ccmm-agent-agentcontactws.wsdl:
+    method: unknown
+    evidence: no authorship recorded
+  wsdl/avaya-aacc-ccmm-agent-agentemailws.wsdl:
+    method: unknown
+    evidence: no authorship recorded
+  wsdl/avaya-aacc-ccmm-agent-agentutilityws.wsdl:
+    method: unknown
+    evidence: no authorship recorded
+  wsdl/avaya-aacc-ccmm-agent-agentwebcommws.wsdl:
+    method: unknown
+    evidence: no authorship recorded
+  wsdl/avaya-aacc-ccmm-outbound-outboundcampaignws.wsdl:
+    method: unknown
+    evidence: no authorship recorded
+  wsdl/avaya-aacc-ccmm-outbound-outboundcontactws.wsdl:
+    method: unknown
+    evidence: no authorship recorded
+  wsdl/avaya-aacc-ccmm-outbound-outboundutilityws.wsdl:
+    method: unknown
+    evidence: no authorship recorded
+  wsdl/avaya-aacc-open-interfaces-addressservice.wsdl:
+    method: unknown
+    evidence: no authorship recorded
+  wsdl/avaya-aacc-open-interfaces-addressserviceinterface.wsdl:
+    method: unknown
+    evidence: no authorship recorded
+  wsdl/avaya-aacc-open-interfaces-agenteventconsumer.wsdl:
+    method: unknown
+    evidence: no authorship recorded
+  wsdl/avaya-aacc-open-interfaces-agentservice.wsdl:
+    method: unknown
+    evidence: no authorship recorded
+  wsdl/avaya-aacc-open-interfaces-agentserviceinterface.wsdl:
+    method: unknown
+    evidence: no authorship recorded
+  wsdl/avaya-aacc-open-interfaces-agentterminalconnectionservice.wsdl:
+    method: unknown
+    evidence: no authorship recorded
+  wsdl/avaya-aacc-open-interfaces-agentterminalconnectionserviceinterface.wsdl:
+    method: unknown
+    evidence: no authorship recorded
+  wsdl/avaya-aacc-open-interfaces-agentterminalservice.wsdl:
+    method: unknown
+    evidence: no authorship recorded
+  wsdl/avaya-aacc-open-interfaces-agentterminalserviceinterface.wsdl:
+    method: unknown
+    evidence: no authorship recorded
+  wsdl/avaya-aacc-open-interfaces-calleventconsumer.wsdl:
+    method: unknown
+    evidence: no authorship recorded
+  wsdl/avaya-aacc-open-interfaces-commonnotificationfaults.wsdl:
+    method: unknown
+    evidence: no authorship recorded
+  wsdl/avaya-aacc-open-interfaces-connectionservice.wsdl:
+    method: unknown
+    evidence: no authorship recorded
+  wsdl/avaya-aacc-open-interfaces-connectionserviceinterface.wsdl:
+    method: unknown
+    evidence: no authorship recorded
+  wsdl/avaya-aacc-open-interfaces-contactmanagerservice.wsdl:
+    method: unknown
+    evidence: no authorship recorded
+  wsdl/avaya-aacc-open-interfaces-contactmanagerserviceexceptions.wsdl:
+    method: unknown
+    evidence: no authorship recorded
+  wsdl/avaya-aacc-open-interfaces-contactmanagerserviceinterface.wsdl:
+    method: unknown
+    evidence: no authorship recorded
+  wsdl/avaya-aacc-open-interfaces-contactservice.wsdl:
+    method: unknown
+    evidence: no authorship recorded
+  wsdl/avaya-aacc-open-interfaces-contactserviceinterface.wsdl:
+    method: unknown
+    evidence: no authorship recorded
+  wsdl/avaya-aacc-open-interfaces-dalcallbackservice.wsdl:
+    method: unknown
+    evidence: no authorship recorded
+  wsdl/avaya-aacc-open-interfaces-dalcallbackserviceinterface.wsdl:
+    method: unknown
+    evidence: no authorship recorded
+  wsdl/avaya-aacc-open-interfaces-dalclient.wsdl:
+    method: unknown
+    evidence: no authorship recorded
+  wsdl/avaya-aacc-open-interfaces-metricsservice.wsdl:
+    method: unknown
+    evidence: no authorship recorded
+  wsdl/avaya-aacc-open-interfaces-metricsserviceinterface.wsdl:
+    method: unknown
+    evidence: no authorship recorded
+  wsdl/avaya-aacc-open-interfaces-notificationconsumer.wsdl:
+    method: unknown
+    evidence: no authorship recorded
+  wsdl/avaya-aacc-open-interfaces-notificationconsumerinterface.wsdl:
+    method: unknown
+    evidence: no authorship recorded
+  wsdl/avaya-aacc-open-interfaces-notificationproducer.wsdl:
+    method: unknown
+    evidence: no authorship recorded
+  wsdl/avaya-aacc-open-interfaces-notificationproducerinterface.wsdl:
+    method: unknown
+    evidence: no authorship recorded
+  wsdl/avaya-aacc-open-interfaces-opennetworking.wsdl:
+    method: unknown
+    evidence: no authorship recorded
+  wsdl/avaya-aacc-open-interfaces-opennetworkinginterface.wsdl:
+    method: unknown
+    evidence: no authorship recorded
+  wsdl/avaya-aacc-open-interfaces-openq.wsdl:
+    method: unknown
+    evidence: no authorship recorded
+  wsdl/avaya-aacc-open-interfaces-openqinterface.wsdl:
+    method: unknown
+    evidence: no authorship recorded
+  wsdl/avaya-aacc-open-interfaces-routepointaddressservice.wsdl:
+    method: unknown
+    evidence: no authorship recorded
+  wsdl/avaya-aacc-open-interfaces-routepointaddressserviceinterface.wsdl:
+    method: unknown
+    evidence: no authorship recorded
+  wsdl/avaya-aacc-open-interfaces-routepointconnectionservice.wsdl:
+    method: unknown
+    evidence: no authorship recorded
+  wsdl/avaya-aacc-open-interfaces-routepointconnectionserviceinterface.wsdl:
+    method: unknown
+    evidence: no authorship recorded
+  wsdl/avaya-aacc-open-interfaces-sessionservice.wsdl:
+    method: unknown
+    evidence: no authorship recorded
+  wsdl/avaya-aacc-open-interfaces-sessionserviceexceptions.wsdl:
+    method: unknown
+    evidence: no authorship recorded
+  wsdl/avaya-aacc-open-interfaces-sessionserviceinterface.wsdl:
+    method: unknown
+    evidence: no authorship recorded
+  wsdl/avaya-aacc-open-interfaces-sspiclient.wsdl:
+    method: unknown
+    evidence: no authorship recorded
+  wsdl/avaya-aacc-open-interfaces-statsnotificationconsumer.wsdl:
+    method: unknown
+    evidence: no authorship recorded
+  wsdl/avaya-aacc-open-interfaces-statsnotificationconsumerinterface.wsdl:
+    method: unknown
+    evidence: no authorship recorded
+  wsdl/avaya-aacc-open-interfaces-statsnotificationproducer.wsdl:
+    method: unknown
+    evidence: no authorship recorded
+  wsdl/avaya-aacc-open-interfaces-statsnotificationproducerinterface.wsdl:
+    method: unknown
+    evidence: no authorship recorded
+  wsdl/avaya-aacc-open-interfaces-terminalconnectionservice.wsdl:
+    method: unknown
+    evidence: no authorship recorded
+  wsdl/avaya-aacc-open-interfaces-terminalconnectionserviceinterface.wsdl:
+    method: unknown
+    evidence: no authorship recorded
+  wsdl/avaya-aacc-open-interfaces-terminalservice.wsdl:
+    method: unknown
+    evidence: no authorship recorded
+  wsdl/avaya-aacc-open-interfaces-terminalserviceinterface.wsdl:
+    method: unknown
+    evidence: no authorship recorded
+  wsdl/avaya-aacc-open-interfaces-userservice.wsdl:
+    method: unknown
+    evidence: no authorship recorded
+  wsdl/avaya-aacc-open-interfaces-userserviceinterface.wsdl:
+    method: unknown
+    evidence: no authorship recorded
+  wsdl/avaya-wsdl.yml:
     method: searched
     evidence: declared in the artifact
