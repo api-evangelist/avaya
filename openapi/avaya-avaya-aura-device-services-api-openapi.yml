@@ -290,70 +290,71 @@ paths:
         '500':
           $ref: '#/components/responses/InternalServerError'
 components:
-  examples:
-    ErrorForbidden:
-      description: Forbidden
-      value:
-        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#forbidden
-        title: Forbidden
-        status: 403
-        detail: According to the access control policy the current user does not have permission to access this resource.
-    AvayaAuraDeviceServiceReq:
-      description: Avaya Aura Device Service request model
-      value:
-        name: AADS
-        description: AADS server for testing
-        hostname: dev-11.avaya.com
-        port: 443
-    AvayaAuraDeviceServiceObj:
-      description: Avaya Aura Device Service model
-      value:
-        id: 04703a3a-3dfb-4606-ae79-fd0fe0be3e64
-        name: AADS
-        description: AADS server for testing
-        hostname: aadsserver.avaya.com
-        port: 443
-        openIDConnectDiscovery: https://dev-11.ixcc-sandbox.avayacloud.com/auth/realms/YOPXPM/.well-known/openid-configuration
-        status: SUCCESS
+  responses:
+    MethodNotAllowed:
+      description: Method Not Allowed
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorMethodNotAllowed'
     ErrorConstraintViolation:
       description: Constraint Violation
-      value:
-        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#constraint-violation
-        title: Constraint Violation
-        status: 400
-        detail: A problem that indicates a syntactically correct, yet semantically illegal request. The Server can not process this request until the client resolves the semantic errors described in the violations section.
-        violations:
-        - field: accountId
-          message: must match "^[a-zA-Z]{6}$"
-          code: 20006
-    ErrorMethodNotAllowed:
-      description: Method not allowed
-      value:
-        title: Method not allowed
-        status: 405
-        detail: The request calls an HTTP method that is not supported at the resource.
-    AvayaAuraDeviceServiceRes:
-      description: A HATEOAS url response that is a reference to the created or updated AADS Element
-      value:
-        url: /api/admin/voice/v1/accounts/ABCDEF/avaya-aura-device-services/63c6ff9d-3370-090e-bkb2-7gh442b99985
-    ErrorNotFound:
-      description: Not Found
-      value:
-        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#resource-not-found
-        title: Resource Not Found
-        status: 404
-        detail: Either there is no API method associated with the URL path of the request, or the request refers to one or more resources that were not found.
-    OpenIDConnectDiscoveryRes:
-      description: Open ID Connect Discovery model
-      value:
-        openIDConnectDiscovery: https://dev-11.ixcc-sandbox.avayacloud.com/auth/realms/YOPXPM/.well-known/openid-configuration
-    ErrorUnauthorized:
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorConstraintViolation'
+    InternalServerError:
+      description: All other application errors
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorInternalServerError'
+    Unauthorized:
       description: Unauthorized
-      value:
-        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#unauthorized
-        title: Unauthorized
-        status: 401
-        detail: This operation requires authentication. See https://developers.avayacloud.com/onecloud-ccaas/docs/how-to-authenticate-with-ccaas-apis
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorUnauthorized'
+    Conflict:
+      description: Conflict
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorConflict'
+    NotFound:
+      description: Not Found
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorNotFound'
+    Forbidden:
+      description: Forbidden
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorForbidden'
+  examples:
     AvayaAuraDeviceServicesRes:
       description: Avaya Aura Device Services model
       value:
@@ -365,6 +366,13 @@ components:
           port: 443
           openIDConnectDiscovery: https://dev-11.ixcc-sandbox.avayacloud.com/auth/realms/YOPXPM/.well-known/openid-configuration
           status: SUCCESS
+    ErrorForbidden:
+      description: Forbidden
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#forbidden
+        title: Forbidden
+        status: 403
+        detail: According to the access control policy the current user does not have permission to access this resource.
     ErrorConflict:
       description: Conflict
       value:
@@ -377,6 +385,55 @@ components:
           message: Communication Manager with same name already exists.
         - field: hostname
           message: Communication Manager with same hostname already exists.
+    OpenIDConnectDiscoveryRes:
+      description: Open ID Connect Discovery model
+      value:
+        openIDConnectDiscovery: https://dev-11.ixcc-sandbox.avayacloud.com/auth/realms/YOPXPM/.well-known/openid-configuration
+    ErrorConstraintViolation:
+      description: Constraint Violation
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#constraint-violation
+        title: Constraint Violation
+        status: 400
+        detail: A problem that indicates a syntactically correct, yet semantically illegal request. The Server can not process this request until the client resolves the semantic errors described in the violations section.
+        violations:
+        - field: accountId
+          message: must match "^[a-zA-Z]{6}$"
+          code: 20006
+    ErrorNotFound:
+      description: Not Found
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#resource-not-found
+        title: Resource Not Found
+        status: 404
+        detail: Either there is no API method associated with the URL path of the request, or the request refers to one or more resources that were not found.
+    AvayaAuraDeviceServiceRes:
+      description: A HATEOAS url response that is a reference to the created or updated AADS Element
+      value:
+        url: /api/admin/voice/v1/accounts/ABCDEF/avaya-aura-device-services/63c6ff9d-3370-090e-bkb2-7gh442b99985
+    AvayaAuraDeviceServiceObj:
+      description: Avaya Aura Device Service model
+      value:
+        id: 04703a3a-3dfb-4606-ae79-fd0fe0be3e64
+        name: AADS
+        description: AADS server for testing
+        hostname: aadsserver.avaya.com
+        port: 443
+        openIDConnectDiscovery: https://dev-11.ixcc-sandbox.avayacloud.com/auth/realms/YOPXPM/.well-known/openid-configuration
+        status: SUCCESS
+    ErrorUnauthorized:
+      description: Unauthorized
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#unauthorized
+        title: Unauthorized
+        status: 401
+        detail: This operation requires authentication. See https://developers.avayacloud.com/onecloud-ccaas/docs/how-to-authenticate-with-ccaas-apis
+    ErrorMethodNotAllowed:
+      description: Method not allowed
+      value:
+        title: Method not allowed
+        status: 405
+        detail: The request calls an HTTP method that is not supported at the resource.
     ErrorInternalServerError:
       description: Server Error
       value:
@@ -384,177 +441,14 @@ components:
         title: Server Error
         status: 500
         detail: An internal server error was encountered.
-  parameters:
-    avayaAuraDeviceServiceId:
-      name: avayaAuraDeviceServiceId
-      description: The unique id of the element
-      in: path
-      required: true
-      schema:
-        type: string
-        example: 2ec20580-d204-43f3-ae0b-34795439137f
-        maxLength: 36
-        minLength: 36
-    accountId:
-      name: accountId
-      description: The unique 6 character internal id that represents the customer account.
-      required: true
-      in: path
-      schema:
-        type: string
-        minLength: 6
-        maxLength: 6
-        pattern: ^[a-zA-Z]{6}$
-        example: ABCDEF
-  responses:
-    NotFound:
-      description: Not Found
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorNotFound'
-    InternalServerError:
-      description: All other application errors
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorInternalServerError'
-    ErrorConstraintViolation:
-      description: Constraint Violation
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorConstraintViolation'
-    Conflict:
-      description: Conflict
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorConflict'
-    Forbidden:
-      description: Forbidden
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorForbidden'
-    MethodNotAllowed:
-      description: Method Not Allowed
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorMethodNotAllowed'
-    Unauthorized:
-      description: Unauthorized
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorUnauthorized'
+    AvayaAuraDeviceServiceReq:
+      description: Avaya Aura Device Service request model
+      value:
+        name: AADS
+        description: AADS server for testing
+        hostname: dev-11.avaya.com
+        port: 443
   schemas:
-    AvayaAuraDeviceServices:
-      title: AvayaAuraDeviceServices
-      type: object
-      description: List of Avaya Aura Device Service Elements
-      properties:
-        resources:
-          type: array
-          maxItems: 10
-          items:
-            $ref: '#/components/schemas/AvayaAuraDeviceService'
-    AvayaAuraDeviceService:
-      title: AvayaAuraDeviceService
-      type: object
-      description: Avaya Aura Device Service Element
-      required:
-      - hostname
-      - name
-      - port
-      properties:
-        id:
-          type: string
-          readOnly: true
-          description: The unique id of the element.
-          example: 04703a3a-3dfb-4606-ae79-fd0fe0be3e64
-        name:
-          type: string
-          description: Name of the element. This should be unique per type.
-          example: AADS
-          minLength: 3
-          maxLength: 255
-          pattern: ^[a-zA-Z0-9\p{L}\-\_\.\ ]+$
-        description:
-          type: string
-          description: Description of Avaya Aura Device Service Element
-          example: cust
-          minLength: 3
-          maxLength: 255
-          pattern: (^$|^[a-zA-Z0-9\p{L}\(\)\-\_\.\ \n]+$)
-        hostname:
-          type: string
-          description: Hostname of Element
-          example: aads-dev-11.avaya.com
-          minLength: 1
-          maxLength: 255
-          pattern: ^[a-zA-Z0-9\p{L}\@\-\_\/\:\.\ ]+$
-        port:
-          type: integer
-          format: int32
-          description: Port used to connect to Avaya Aura Device Service Element
-          minimum: 0
-          maximum: 65536
-          example: 443
-        openIDConnectDiscovery:
-          type: string
-          readOnly: true
-          description: OpenID Connect Discovery URL
-          example: https://dev-11.ixcc-sandbox.avayacloud.com/auth/realms/YOPXPM/.well-known/openid-configuration
-        status:
-          type: string
-          readOnly: true
-          description: Status of the object under operation
-          enum:
-          - IN_PROGRESS
-          - FAILED
-          - SUCCESS
-          example: SUCCESS
-    OpenIDConnectDiscovery:
-      title: OpenIDConnectDiscovery
-      type: object
-      description: OpenID Connect Discovery Url  which is associated with Avaya Aura Device Service
-      properties:
-        openIDConnectDiscovery:
-          type: string
-          readOnly: true
-          description: OpenID Connect Discovery Url
-          example: https://dev-11.ixcc-sandbox.avayacloud.com/auth/realms/YOPXPM/.well-known/openid-configuration
-    AvayaAuraDeviceServiceResponse:
-      type: object
-      description: Represents the response for an asynchronous operation that simply returns a HATEOAS url, that provides a reference to the object under operation
-      properties:
-        url:
-          type: string
-          example: /api/admin/voice/v1/accounts/ABCDEF/avaya-aura-device-services/63c6ff9d-3370-090e-bkb2-7gh442b99985
-          maxLength: 2048
     Problem:
       type: object
       description: '<b>Problem Detail</b> as a way to carry machine-readable details of errors in a HTTP response to avoid the need to define new error response formats for HTTP APIs <a href="https://tools.ietf.org/html/rfc7807">RFC 7807</a>
@@ -640,6 +534,112 @@ components:
           - field: accountId
             message: must match "^[a-zA-Z]{6}$"
             code: 20006
+    AvayaAuraDeviceServiceResponse:
+      type: object
+      description: Represents the response for an asynchronous operation that simply returns a HATEOAS url, that provides a reference to the object under operation
+      properties:
+        url:
+          type: string
+          example: /api/admin/voice/v1/accounts/ABCDEF/avaya-aura-device-services/63c6ff9d-3370-090e-bkb2-7gh442b99985
+          maxLength: 2048
+    AvayaAuraDeviceServices:
+      title: AvayaAuraDeviceServices
+      type: object
+      description: List of Avaya Aura Device Service Elements
+      properties:
+        resources:
+          type: array
+          maxItems: 10
+          items:
+            $ref: '#/components/schemas/AvayaAuraDeviceService'
+    AvayaAuraDeviceService:
+      title: AvayaAuraDeviceService
+      type: object
+      description: Avaya Aura Device Service Element
+      required:
+      - hostname
+      - name
+      - port
+      properties:
+        id:
+          type: string
+          readOnly: true
+          description: The unique id of the element.
+          example: 04703a3a-3dfb-4606-ae79-fd0fe0be3e64
+        name:
+          type: string
+          description: Name of the element. This should be unique per type.
+          example: AADS
+          minLength: 3
+          maxLength: 255
+          pattern: ^[a-zA-Z0-9\p{L}\-\_\.\ ]+$
+        description:
+          type: string
+          description: Description of Avaya Aura Device Service Element
+          example: cust
+          minLength: 3
+          maxLength: 255
+          pattern: (^$|^[a-zA-Z0-9\p{L}\(\)\-\_\.\ \n]+$)
+        hostname:
+          type: string
+          description: Hostname of Element
+          example: aads-dev-11.avaya.com
+          minLength: 1
+          maxLength: 255
+          pattern: ^[a-zA-Z0-9\p{L}\@\-\_\/\:\.\ ]+$
+        port:
+          type: integer
+          format: int32
+          description: Port used to connect to Avaya Aura Device Service Element
+          minimum: 0
+          maximum: 65536
+          example: 443
+        openIDConnectDiscovery:
+          type: string
+          readOnly: true
+          description: OpenID Connect Discovery URL
+          example: https://dev-11.ixcc-sandbox.avayacloud.com/auth/realms/YOPXPM/.well-known/openid-configuration
+        status:
+          type: string
+          readOnly: true
+          description: Status of the object under operation
+          enum:
+          - IN_PROGRESS
+          - FAILED
+          - SUCCESS
+          example: SUCCESS
+    OpenIDConnectDiscovery:
+      title: OpenIDConnectDiscovery
+      type: object
+      description: OpenID Connect Discovery Url  which is associated with Avaya Aura Device Service
+      properties:
+        openIDConnectDiscovery:
+          type: string
+          readOnly: true
+          description: OpenID Connect Discovery Url
+          example: https://dev-11.ixcc-sandbox.avayacloud.com/auth/realms/YOPXPM/.well-known/openid-configuration
+  parameters:
+    accountId:
+      name: accountId
+      description: The unique 6 character internal id that represents the customer account.
+      required: true
+      in: path
+      schema:
+        type: string
+        minLength: 6
+        maxLength: 6
+        pattern: ^[a-zA-Z]{6}$
+        example: ABCDEF
+    avayaAuraDeviceServiceId:
+      name: avayaAuraDeviceServiceId
+      description: The unique id of the element
+      in: path
+      required: true
+      schema:
+        type: string
+        example: 2ec20580-d204-43f3-ae0b-34795439137f
+        maxLength: 36
+        minLength: 36
   securitySchemes:
     BearerAuth:
       type: http

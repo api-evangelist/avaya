@@ -66,17 +66,6 @@ paths:
           $ref: '#/components/responses/InternalServerError'
 components:
   examples:
-    HybridCloudManagerResponse:
-      description: Hybrid Cloud Manager hostname.
-      value:
-        hostname: testhcm.avaya.com
-    ErrorNotFound:
-      description: Not Found
-      value:
-        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#resource-not-found
-        title: Resource Not Found
-        status: 404
-        detail: Either there is no API method associated with the URL path of the request, or the request refers to one or more resources that were not found.
     ErrorForbidden:
       description: Forbidden
       value:
@@ -84,6 +73,13 @@ components:
         title: Forbidden
         status: 403
         detail: According to the access control policy the current user does not have permission to access this resource.
+    ErrorNotFound:
+      description: Not Found
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#resource-not-found
+        title: Resource Not Found
+        status: 404
+        detail: Either there is no API method associated with the URL path of the request, or the request refers to one or more resources that were not found.
     ErrorUnauthorized:
       description: Unauthorized
       value:
@@ -98,25 +94,11 @@ components:
         title: Server Error
         status: 500
         detail: An internal server error was encountered.
+    HybridCloudManagerResponse:
+      description: Hybrid Cloud Manager hostname.
+      value:
+        hostname: testhcm.avaya.com
   responses:
-    Forbidden:
-      description: Forbidden
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorForbidden'
-    NotFound:
-      description: Not Found
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorNotFound'
     Unauthorized:
       description: Unauthorized
       content:
@@ -126,6 +108,15 @@ components:
           examples:
             default:
               $ref: '#/components/examples/ErrorUnauthorized'
+    Forbidden:
+      description: Forbidden
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorForbidden'
     InternalServerError:
       description: All other application errors
       content:
@@ -135,18 +126,15 @@ components:
           examples:
             default:
               $ref: '#/components/examples/ErrorInternalServerError'
-  parameters:
-    accountId:
-      name: accountId
-      description: The unique 6 character internal id that represents the customer account.
-      required: true
-      in: path
-      schema:
-        type: string
-        minLength: 6
-        maxLength: 6
-        pattern: ^[a-zA-Z]{6}$
-        example: ABCDEF
+    NotFound:
+      description: Not Found
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorNotFound'
   schemas:
     HybridCloudManager:
       type: object
@@ -241,6 +229,18 @@ components:
           - field: accountId
             message: must match "^[a-zA-Z]{6}$"
             code: 20006
+  parameters:
+    accountId:
+      name: accountId
+      description: The unique 6 character internal id that represents the customer account.
+      required: true
+      in: path
+      schema:
+        type: string
+        minLength: 6
+        maxLength: 6
+        pattern: ^[a-zA-Z]{6}$
+        example: ABCDEF
   securitySchemes:
     BearerAuth:
       type: http

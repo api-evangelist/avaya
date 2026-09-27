@@ -77,17 +77,6 @@ paths:
           $ref: '#/components/responses/InternalServer'
 components:
   examples:
-    WorkspacesResponse:
-      description: Workspaces server details
-      value:
-        hostname: uk.prod.ws.avayacloud.com
-    ErrorNotFound:
-      description: Not Found
-      value:
-        type: https://developers.avayacloud.com/avaya-experience-platform/docs/error-handling#resource-not-found
-        title: Resource Not Found
-        status: 404
-        detail: Either there is no API method associated with the URL path of the request, or the request refers to one or more resources that were not found.
     ErrorForbidden:
       description: Forbidden
       value:
@@ -95,6 +84,17 @@ components:
         title: Forbidden
         status: 403
         detail: According to the access control policy the current user and/or accountId does not have permission to access this resource.
+    ErrorNotFound:
+      description: Not Found
+      value:
+        type: https://developers.avayacloud.com/avaya-experience-platform/docs/error-handling#resource-not-found
+        title: Resource Not Found
+        status: 404
+        detail: Either there is no API method associated with the URL path of the request, or the request refers to one or more resources that were not found.
+    WorkspacesResponse:
+      description: Workspaces server details
+      value:
+        hostname: uk.prod.ws.avayacloud.com
     ErrorUnauthorized:
       description: Unauthorized
       value:
@@ -110,24 +110,6 @@ components:
         status: 500
         detail: An internal server error was encountered.
   responses:
-    Forbidden:
-      description: Forbidden
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorForbidden'
-    NotFound:
-      description: Not Found
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorNotFound'
     Unauthorized:
       description: Unauthorized
       content:
@@ -137,6 +119,15 @@ components:
           examples:
             default:
               $ref: '#/components/examples/ErrorUnauthorized'
+    Forbidden:
+      description: Forbidden
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorForbidden'
     InternalServer:
       description: Request processing failed
       content:
@@ -146,18 +137,15 @@ components:
           examples:
             default:
               $ref: '#/components/examples/ErrorInternalServerError'
-  parameters:
-    accountId:
-      name: accountId
-      description: The unique 6 character internal id that represents the customer account.
-      required: true
-      in: path
-      schema:
-        type: string
-        minLength: 6
-        maxLength: 6
-        pattern: ^[a-zA-Z]{6}$
-        example: ABCDEF
+    NotFound:
+      description: Not Found
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorNotFound'
   schemas:
     Problem:
       type: object
@@ -252,6 +240,18 @@ components:
           type: string
           example: uk.prod.ws.avayacloud.com
           description: The hostname of Workspaces server
+  parameters:
+    accountId:
+      name: accountId
+      description: The unique 6 character internal id that represents the customer account.
+      required: true
+      in: path
+      schema:
+        type: string
+        minLength: 6
+        maxLength: 6
+        pattern: ^[a-zA-Z]{6}$
+        example: ABCDEF
   securitySchemes:
     BearerAuth:
       type: http

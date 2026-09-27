@@ -91,16 +91,44 @@ paths:
           $ref: '#/components/responses/InternalServerError'
       deprecated: false
 components:
+  examples:
+    ErrorForbidden:
+      description: Forbidden
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#forbidden
+        title: Forbidden
+        status: 403
+        detail: According to the access control policy the current user and/or accountId does not have permission to access this resource.
+    ErrorConstraintViolation:
+      description: Constraint Violation
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#constraint-violation
+        title: Constraint Violation
+        status: 400
+        detail: A problem that indicates a syntactically correct, yet semantically illegal request. The Server can not process this request until the client resolves the semantic errors described in the violations section.
+        violations:
+        - field: accountId
+          message: must match "^[a-zA-Z]{6}$"
+    ErrorUnauthorized:
+      description: Unauthorized
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#unauthorized
+        title: Unauthorized
+        status: 401
+        detail: This operation requires authentication. See https://developers.avayacloud.com/onecloud-ccaas/docs/how-to-authenticate-with-ccaas-apis
+    TypingIndicator:
+      value:
+        channelProviderId: 4af56dfe-9d07-46dc-b1d2-60bdd179bcd9
+        businessAccountName: e94e278d-72e7-48cc-80fc-dba9f8dd1c36
+        correlationId: zc38400d-c44f-4451-8316-e75c4efbt779
+    ErrorInternalServerError:
+      description: Internal Server Error
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#internal-error
+        title: Internal Server Error
+        status: 500
+        detail: An internal server error was encountered.
   responses:
-    Forbidden:
-      description: Forbidden.
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorForbidden'
     Unauthorized:
       description: Unauthorized.
       content:
@@ -110,15 +138,6 @@ components:
           examples:
             default:
               $ref: '#/components/examples/ErrorUnauthorized'
-    InternalServerError:
-      description: Internal Server Error
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorInternalServerError'
     BadRequest:
       description: Bad Request
       content:
@@ -128,28 +147,49 @@ components:
           examples:
             default:
               $ref: '#/components/examples/ErrorConstraintViolation'
+    Forbidden:
+      description: Forbidden.
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorForbidden'
+    InternalServerError:
+      description: Internal Server Error
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorInternalServerError'
+  parameters:
+    providerDialogId:
+      name: providerDialogId
+      description: 'The provider side identifier for a Contact Center dialog.  Messages with same ''providerDialogId'' value are considered part of same conversation.  If no or blank value is passed while sending a message, a new individual dialog  will be created. For integrating third party providers, provide the identifier that represents an individual conversation in the third party provider.
+
+        '
+      required: true
+      in: path
+      schema:
+        type: string
+        minLength: 3
+        maxLength: 256
+        example: ed7e49dc8458c71d1d2f1e31
+    accountId:
+      name: accountId
+      description: The unique 6 character internal id that represents the customer account.
+      required: true
+      in: path
+      schema:
+        type: string
+        minLength: 6
+        maxLength: 6
+        pattern: ^[a-zA-Z]{6}$
+        example: ABCDEF
   schemas:
-    TypingIndicator:
-      type: object
-      description: Typing indicator
-      required:
-      - channelProviderId
-      - businessAccountName
-      properties:
-        channelProviderId:
-          type: string
-          description: The unique id that represents the channel provider
-          minLength: 3
-          maxLength: 256
-        businessAccountName:
-          type: string
-          description: The name of the business account configured on the channel provider. For custom messaging integration, provide the unique id of the integration (integrationId) here.
-          minLength: 3
-          maxLength: 256
-        correlationId:
-          type: string
-          description: The correlation id can be used to uniquely identify the client request. This is an optional field but when specified it will be included in any callback events and can be used to correlate the callback event with the original API request.
-          maxLength: 256
     Problem:
       type: object
       description: '<b>Problem Detail</b> as a way to carry machine-readable details of errors in a HTTP response to avoid the need to define new error response formats for HTTP APIs <a href="https://tools.ietf.org/html/rfc7807">RFC 7807</a>
@@ -235,67 +275,27 @@ components:
           - field: accountId
             message: must match "^[a-zA-Z]{6}$"
             code: 20006
-  examples:
-    ErrorForbidden:
-      description: Forbidden
-      value:
-        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#forbidden
-        title: Forbidden
-        status: 403
-        detail: According to the access control policy the current user and/or accountId does not have permission to access this resource.
-    ErrorInternalServerError:
-      description: Internal Server Error
-      value:
-        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#internal-error
-        title: Internal Server Error
-        status: 500
-        detail: An internal server error was encountered.
-    ErrorUnauthorized:
-      description: Unauthorized
-      value:
-        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#unauthorized
-        title: Unauthorized
-        status: 401
-        detail: This operation requires authentication. See https://developers.avayacloud.com/onecloud-ccaas/docs/how-to-authenticate-with-ccaas-apis
     TypingIndicator:
-      value:
-        channelProviderId: 4af56dfe-9d07-46dc-b1d2-60bdd179bcd9
-        businessAccountName: e94e278d-72e7-48cc-80fc-dba9f8dd1c36
-        correlationId: zc38400d-c44f-4451-8316-e75c4efbt779
-    ErrorConstraintViolation:
-      description: Constraint Violation
-      value:
-        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#constraint-violation
-        title: Constraint Violation
-        status: 400
-        detail: A problem that indicates a syntactically correct, yet semantically illegal request. The Server can not process this request until the client resolves the semantic errors described in the violations section.
-        violations:
-        - field: accountId
-          message: must match "^[a-zA-Z]{6}$"
-  parameters:
-    accountId:
-      name: accountId
-      description: The unique 6 character internal id that represents the customer account.
-      required: true
-      in: path
-      schema:
-        type: string
-        minLength: 6
-        maxLength: 6
-        pattern: ^[a-zA-Z]{6}$
-        example: ABCDEF
-    providerDialogId:
-      name: providerDialogId
-      description: 'The provider side identifier for a Contact Center dialog.  Messages with same ''providerDialogId'' value are considered part of same conversation.  If no or blank value is passed while sending a message, a new individual dialog  will be created. For integrating third party providers, provide the identifier that represents an individual conversation in the third party provider.
-
-        '
-      required: true
-      in: path
-      schema:
-        type: string
-        minLength: 3
-        maxLength: 256
-        example: ed7e49dc8458c71d1d2f1e31
+      type: object
+      description: Typing indicator
+      required:
+      - channelProviderId
+      - businessAccountName
+      properties:
+        channelProviderId:
+          type: string
+          description: The unique id that represents the channel provider
+          minLength: 3
+          maxLength: 256
+        businessAccountName:
+          type: string
+          description: The name of the business account configured on the channel provider. For custom messaging integration, provide the unique id of the integration (integrationId) here.
+          minLength: 3
+          maxLength: 256
+        correlationId:
+          type: string
+          description: The correlation id can be used to uniquely identify the client request. This is an optional field but when specified it will be included in any callback events and can be used to correlate the callback event with the original API request.
+          maxLength: 256
   securitySchemes:
     BearerAuth:
       type: http

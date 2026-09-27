@@ -650,7 +650,7 @@ paths:
         - Personalize notifications and messages
 
         - Pass customer context to agents'
-      operationId: startWorkflowSession
+      operationId: postWorkflowsSessions
       tags:
       - Workflow Sessions
       requestBody:
@@ -860,6 +860,8 @@ paths:
         source: "curl -X POST \\\n  https://core.avaya1234.ec.avayacloud.com/api/workflow/v1/workflows/sessions \\\n  -H 'Authorization: Bearer your-access-token-here' \\\n  -H 'Content-Type: application/json' \\\n  -d '{\n    \"workflowId\": \"wf_customer_inquiry\",\n    \"workflowVersionId\": \"v2.1\",\n    \"variables\": {\n      \"customer_name\": \"John Smith\",\n      \"order_id\": \"ORD-2024-1984\",\n      \"issue_type\": \"billing\"\n    }\n  }'\n"
       security:
       - bearerAuth: []
+      x-operation-id-source: normalized
+      x-operation-id-original: startWorkflowSession
     servers:
     - url: https://core.{customer-subdomain}.ec.avayacloud.com/api/workflow/v1
       description: Production server
@@ -897,7 +899,7 @@ paths:
         - Do not expose workflow session IDs directly to end users in client applications
 
         - Implement proper access controls to ensure users can only query their own sessions'
-      operationId: getWorkflowSessionStatus
+      operationId: getApiWorkflowV1WorkflowsSessionsByWorkflowSessionId
       tags:
       - Workflow Sessions
       parameters:
@@ -1010,6 +1012,8 @@ paths:
       security:
       - OAuth2:
         - workflows:execute
+      x-operation-id-source: normalized
+      x-operation-id-original: getWorkflowSessionStatus
     servers:
     - url: '{protocol}://{server}{basePath}'
       description: Open API
@@ -1217,19 +1221,6 @@ components:
               example: Customer Support Workflow
           required:
           - id
-    ErrorResponse:
-      type: object
-      properties:
-        error:
-          type: string
-          description: A brief description of the error
-          example: workflowId is required
-        message:
-          type: string
-          description: Detailed error message
-          example: No published version found for the specified workflow
-      required:
-      - error
     WorkflowSessionStatus:
       type: object
       properties:
@@ -1267,6 +1258,19 @@ components:
       - status
       - currentModule
       - outputVariables
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+          description: A brief description of the error
+          example: workflowId is required
+        message:
+          type: string
+          description: Detailed error message
+          example: No published version found for the specified workflow
+      required:
+      - error
     Error:
       type: object
       properties:
@@ -1312,19 +1316,6 @@ components:
               example: Customer Support Flow
           required:
           - id
-    ErrorResponse_2:
-      type: object
-      properties:
-        error:
-          type: string
-          description: A brief description of the error
-          example: workflowId is required
-        message:
-          type: string
-          description: Detailed error message
-          example: Missing required parameter workflowId in request body
-      required:
-      - error
     WorkflowSessionStatus_2:
       type: object
       properties:
@@ -1362,6 +1353,19 @@ components:
       - status
       - currentModule
       - outputVariables
+    ErrorResponse_2:
+      type: object
+      properties:
+        error:
+          type: string
+          description: A brief description of the error
+          example: workflowId is required
+        message:
+          type: string
+          description: Detailed error message
+          example: Missing required parameter workflowId in request body
+      required:
+      - error
   securitySchemes:
     BearerAuth:
       type: http

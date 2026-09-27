@@ -428,7 +428,7 @@ paths:
 
 
         Downloads the Bulk Operation Template as an `.xlsx` file.'
-      operationId: downloadBulkTemplate
+      operationId: getUsersBulkTemplate
       responses:
         '200':
           description: OK
@@ -454,6 +454,8 @@ paths:
           $ref: '#/components/responses/InternalServerError'
       security:
       - BearerAuth: []
+      x-operation-id-source: normalized
+      x-operation-id-original: downloadBulkTemplate
     servers:
     - url: https://core.{customerId}.ec.avayacloud.com/api/config/v1
       description: Production
@@ -481,7 +483,7 @@ paths:
 
 
         Will trigger an asynchronous job, the status of which should be monitored via `/jobs/{jobId}`.'
-      operationId: bulkAddUsers
+      operationId: postUsers:bulkAdd
       parameters:
       - $ref: '#/components/parameters/jobName_2'
       requestBody:
@@ -514,6 +516,8 @@ paths:
           $ref: '#/components/responses/InternalServerError'
       security:
       - BearerAuth: []
+      x-operation-id-source: normalized
+      x-operation-id-original: bulkAddUsers
     servers:
     - url: https://core.{customerId}.ec.avayacloud.com/api/config/v1
       description: Production
@@ -536,7 +540,7 @@ paths:
 
 
         Will trigger an asynchronous job, the status of which should be monitored via `/jobs/{jobId}`.'
-      operationId: bulkUpdateUsers
+      operationId: postUsers:bulkUpdate
       parameters:
       - $ref: '#/components/parameters/jobName_2'
       requestBody:
@@ -567,6 +571,8 @@ paths:
           $ref: '#/components/responses/InternalServerError'
       security:
       - BearerAuth: []
+      x-operation-id-source: normalized
+      x-operation-id-original: bulkUpdateUsers
     servers:
     - url: https://core.{customerId}.ec.avayacloud.com/api/config/v1
       description: Production
@@ -594,7 +600,7 @@ paths:
 
 
         Once the job has completed, the file can be downloaded using the API `/jobs/{jobId}/exported-users`.'
-      operationId: bulkExportUsers
+      operationId: postUsers:bulkExport
       parameters:
       - $ref: '#/components/parameters/jobName_2'
       - name: folderId
@@ -628,6 +634,8 @@ paths:
           $ref: '#/components/responses/InternalServerError'
       security:
       - BearerAuth: []
+      x-operation-id-source: normalized
+      x-operation-id-original: bulkExportUsers
     servers:
     - url: https://core.{customerId}.ec.avayacloud.com/api/config/v1
       description: Production
@@ -636,6 +644,128 @@ paths:
           description: Your organization identifier
           default: your-org-id
 components:
+  responses:
+    ErrorConstraintViolation:
+      description: Constraint Violation
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorConstraintViolation'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorUnauthorized'
+    InternalServer:
+      description: Request processing failed
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorInternalServerError'
+    JobNameExists:
+      description: Conflict
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorJobNameExists'
+    NotFound:
+      description: Not Found
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorNotFound'
+    Forbidden:
+      description: Forbidden
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorForbidden'
+    Unauthorized_2:
+      description: Unauthorized
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem_2'
+          example:
+            type: https://developers.avayacloud.com/errors/unauthorized
+            title: Unauthorized
+            status: 401
+            detail: Bearer token expired at 2025-12-08T10:15:00Z. Request a new token.
+            requestId: req_xyz789
+            timestamp: '2025-12-08T10:30:05Z'
+    BadRequest:
+      description: Bad Request
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem_2'
+          example:
+            type: https://developers.avayacloud.com/errors/constraint-violation
+            title: Constraint Violation
+            status: 400
+            detail: Request contains invalid or missing fields
+            violations:
+            - field: accountId
+              message: must match "^[a-zA-Z]{6}$"
+              code: 20006
+    Forbidden_2:
+      description: Forbidden
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem_2'
+          example:
+            type: https://developers.avayacloud.com/errors/forbidden
+            title: Forbidden
+            status: 403
+            detail: 'Missing required scope: ''workflows:execute''. Your token has: ''workflows:read'''
+            requestId: req_xyz789
+            timestamp: '2025-12-08T10:30:05Z'
+    InternalServerError:
+      description: Internal Server Error
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem_2'
+          example:
+            type: https://developers.avayacloud.com/errors/internal-error
+            title: Internal Server Error
+            status: 500
+            detail: An unexpected error occurred while processing your request
+            requestId: req_xyz789
+            timestamp: '2025-12-08T10:30:05Z'
+    NotFound_2:
+      description: Not Found
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem_2'
+          example:
+            type: https://developers.avayacloud.com/errors/resource-not-found
+            title: Resource Not Found
+            status: 404
+            detail: workflowId 'wf_123abc' does not exist
+            requestId: req_xyz789
+            timestamp: '2025-12-08T10:30:05Z'
   examples:
     ErrorForbidden:
       description: Forbidden
@@ -644,6 +774,18 @@ components:
         title: Forbidden
         status: 403
         detail: According to the access control policy the current user and/or accountId does not have permission to access this resource.
+    BulkAddedUsers:
+      description: Bulk Users Response
+      value:
+        jobId: c8c2909d-75e9-484a-94c0-b7e8d30771fe
+        url: /api/admin/user/v1/accounts/ABCDEF/jobs/c8c2909d-75e9-484a-94c0-b7e8d30771fe
+    ErrorNotFound:
+      description: Not Found
+      value:
+        type: https://developers.avayacloud.com/avaya-experience-platform/docs/error-handling#resource-not-found
+        title: Resource Not Found
+        status: 404
+        detail: Either there is no API method associated with the URL path of the request, or the request refers to one or more resources that were not found.
     ErrorConstraintViolation:
       description: Constraint Violation
       value:
@@ -665,18 +807,6 @@ components:
         violations:
         - field: jobName
           message: A job with this name already exists
-    ErrorNotFound:
-      description: Not Found
-      value:
-        type: https://developers.avayacloud.com/avaya-experience-platform/docs/error-handling#resource-not-found
-        title: Resource Not Found
-        status: 404
-        detail: Either there is no API method associated with the URL path of the request, or the request refers to one or more resources that were not found.
-    UsersExportResponse:
-      description: User export
-      value:
-        jobId: c8c2909d-75e9-484a-94c0-b7e8d30771fe
-        url: /api/admin/user/v1/accounts/ABCDEF/jobs/c8c2909d-75e9-484a-94c0-b7e8d30771fe:downloadExportedUsers
     ErrorUnauthorized:
       description: Unauthorized
       value:
@@ -684,11 +814,11 @@ components:
         title: Unauthorized
         status: 401
         detail: This operation requires authentication. See https://developers.avayacloud.com/avaya-experience-platform/docs/how-to-authenticate-with-ccaas-apis
-    BulkAddedUsers:
-      description: Bulk Users Response
+    UsersExportResponse:
+      description: User export
       value:
         jobId: c8c2909d-75e9-484a-94c0-b7e8d30771fe
-        url: /api/admin/user/v1/accounts/ABCDEF/jobs/c8c2909d-75e9-484a-94c0-b7e8d30771fe
+        url: /api/admin/user/v1/accounts/ABCDEF/jobs/c8c2909d-75e9-484a-94c0-b7e8d30771fe:downloadExportedUsers
     ErrorInternalServerError:
       description: Server Error
       value:
@@ -696,140 +826,7 @@ components:
         title: Server Error
         status: 500
         detail: An internal server error was encountered.
-  responses:
-    NotFound:
-      description: Not Found
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorNotFound'
-    InternalServer:
-      description: Request processing failed
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorInternalServerError'
-    JobNameExists:
-      description: Conflict
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorJobNameExists'
-    ErrorConstraintViolation:
-      description: Constraint Violation
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorConstraintViolation'
-    Forbidden:
-      description: Forbidden
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorForbidden'
-    Unauthorized:
-      description: Unauthorized
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorUnauthorized'
-    Forbidden_2:
-      description: Forbidden
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem_2'
-          example:
-            type: https://developers.avayacloud.com/errors/forbidden
-            title: Forbidden
-            status: 403
-            detail: 'Missing required scope: ''workflows:execute''. Your token has: ''workflows:read'''
-            requestId: req_xyz789
-            timestamp: '2025-12-08T10:30:05Z'
-    NotFound_2:
-      description: Not Found
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem_2'
-          example:
-            type: https://developers.avayacloud.com/errors/resource-not-found
-            title: Resource Not Found
-            status: 404
-            detail: workflowId 'wf_123abc' does not exist
-            requestId: req_xyz789
-            timestamp: '2025-12-08T10:30:05Z'
-    Unauthorized_2:
-      description: Unauthorized
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem_2'
-          example:
-            type: https://developers.avayacloud.com/errors/unauthorized
-            title: Unauthorized
-            status: 401
-            detail: Bearer token expired at 2025-12-08T10:15:00Z. Request a new token.
-            requestId: req_xyz789
-            timestamp: '2025-12-08T10:30:05Z'
-    InternalServerError:
-      description: Internal Server Error
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem_2'
-          example:
-            type: https://developers.avayacloud.com/errors/internal-error
-            title: Internal Server Error
-            status: 500
-            detail: An unexpected error occurred while processing your request
-            requestId: req_xyz789
-            timestamp: '2025-12-08T10:30:05Z'
-    BadRequest:
-      description: Bad Request
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem_2'
-          example:
-            type: https://developers.avayacloud.com/errors/constraint-violation
-            title: Constraint Violation
-            status: 400
-            detail: Request contains invalid or missing fields
-            violations:
-            - field: accountId
-              message: must match "^[a-zA-Z]{6}$"
-              code: 20006
   parameters:
-    accountId:
-      name: accountId
-      description: The unique 6 character internal id that represents the customer account.
-      required: true
-      in: path
-      schema:
-        type: string
-        minLength: 6
-        maxLength: 6
-        pattern: ^[a-zA-Z]{6}$
-        example: ABCDEF
     jobName:
       name: jobName
       in: query
@@ -841,6 +838,17 @@ components:
         maxLength: 255
         pattern: ^[\p{L}\p{M}\p{N}\p{IsKatakana}0-9]+[\s\p{L}\p{M}\p{N}\p{IsKatakana}0-9\-\[\]\\_\.\+\*\'\"\!\|\(\)\{\}\;\:\,\^\+\<\>\&\£\@\$\¥\€\`\~\?\#\%\=]*$
         example: Bulk Job
+    accountId:
+      name: accountId
+      description: The unique 6 character internal id that represents the customer account.
+      required: true
+      in: path
+      schema:
+        type: string
+        minLength: 6
+        maxLength: 6
+        pattern: ^[a-zA-Z]{6}$
+        example: ABCDEF
     jobName_2:
       name: jobName
       in: query
@@ -852,40 +860,6 @@ components:
         maxLength: 255
         example: Bulk Job
   schemas:
-    UsersImportResponse:
-      description: User import response to notify that user import accepted.
-      type: object
-      properties:
-        jobId:
-          description: An unique id mapped to each user import job.
-          type: string
-          example: c8c2909d-75e9-484a-94c0-b7e8d30771fe
-          minLength: 36
-          maxLength: 36
-          pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
-        url:
-          description: Details of users import job
-          type: string
-          example: /api/admin/user/v1/accounts/ABCDEF/jobs/c8c2909d-75e9-484a-94c0-b7e8d30771fe
-          maxLength: 2048
-      title: UsersImportResponse
-    UsersExportResponse:
-      description: Bulk user export response to notify that user export request accepted.
-      type: object
-      properties:
-        jobId:
-          description: An unique id mapped to each user bulk export job.
-          type: string
-          example: c8c2909d-75e9-484a-94c0-b7e8d30771fe
-          minLength: 36
-          maxLength: 36
-          pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
-        url:
-          description: URL to download exported user file
-          type: string
-          example: /api/admin/user/v1/accounts/ABCDEF/jobs/c8c2909d-75e9-484a-94c0-b7e8d30771fe:downloadExportedUsers
-          maxLength: 2048
-      title: UsersExportResponse
     Problem:
       type: object
       description: '<b>Problem Detail</b> as a way to carry machine-readable details of errors in a HTTP response to avoid the need to define new error response formats for HTTP APIs <a href="https://tools.ietf.org/html/rfc7807">RFC 7807</a>
@@ -971,45 +945,62 @@ components:
           - field: accountId
             message: must match "^[a-zA-Z]{6}$"
             code: 20006
-    Violation:
+    UsersImportResponse:
+      description: User import response to notify that user import accepted.
       type: object
       properties:
-        field:
-          description: 'The name of the field in the request that caused the violation.
-
-
-            This can be the name of a path parameter, query parameter, or a field within the request body.
-
-            '
+        jobId:
+          description: An unique id mapped to each user import job.
           type: string
-          readOnly: true
-          example: jobName
-        message:
-          description: 'A human-readable explanation specific to this occurrence of the violation.
-
-            '
+          example: c8c2909d-75e9-484a-94c0-b7e8d30771fe
+          minLength: 36
+          maxLength: 36
+          pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
+        url:
+          description: Details of users import job
           type: string
-          readOnly: true
-          example: must match "^[a-zA-Z]{6}$"
-        code:
-          description: 'The violation code generated by the server for this occurrence of the violation.
-
-
-            Use this code when implementing any error handling logic instead of the message, as the message can change.
-
-            '
-          type: integer
-          format: int32
-          readOnly: true
-          example: 20006
+          example: /api/admin/user/v1/accounts/ABCDEF/jobs/c8c2909d-75e9-484a-94c0-b7e8d30771fe
+          maxLength: 2048
+      title: UsersImportResponse
+    UsersExportResponse:
+      description: Bulk user export response to notify that user export request accepted.
+      type: object
+      properties:
+        jobId:
+          description: An unique id mapped to each user bulk export job.
+          type: string
+          example: c8c2909d-75e9-484a-94c0-b7e8d30771fe
+          minLength: 36
+          maxLength: 36
+          pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
+        url:
+          description: URL to download exported user file
+          type: string
+          example: /api/admin/user/v1/accounts/ABCDEF/jobs/c8c2909d-75e9-484a-94c0-b7e8d30771fe:downloadExportedUsers
+          maxLength: 2048
+      title: UsersExportResponse
+    BulkOperationResponse:
+      description: Response for a bulk user operation request having been accepted.
+      type: object
       required:
-      - field
-      - message
-      - code
-      example:
-      - field: emailAddress
-        message: must not be null
-        code: 20002
+      - jobId
+      - url
+      properties:
+        jobId:
+          allOf:
+          - $ref: '#/components/schemas/JobId'
+          readOnly: true
+        url:
+          description: URL to get details of the bulk user operation job.
+          type: string
+          example: /api/config/v1/jobs/c8c2909d-75e9-484a-94c0-b7e8d30771fe
+          readOnly: true
+      title: BulkOperationResponse
+    FolderId:
+      description: Unique identifier for a folder.
+      type: string
+      pattern: ^073[0-9a-f]{23}$
+      example: 073d010813b941cf7da111d147
     BulkExportOperationResponse:
       description: Response for a bulk export users operation request having been accepted.
       type: object
@@ -1033,33 +1024,6 @@ components:
           example: /api/config/v1/jobs/c8c2909d-75e9-484a-94c0-b7e8d30771fe/exported-users
           readOnly: true
       title: BulkExportOperationResponse
-    JobId:
-      description: Unique ID for a bulk user operation job.
-      type: string
-      format: uuid
-      example: c8c2909d-75e9-484a-94c0-b7e8d30771fe
-    BulkOperationResponse:
-      description: Response for a bulk user operation request having been accepted.
-      type: object
-      required:
-      - jobId
-      - url
-      properties:
-        jobId:
-          allOf:
-          - $ref: '#/components/schemas/JobId'
-          readOnly: true
-        url:
-          description: URL to get details of the bulk user operation job.
-          type: string
-          example: /api/config/v1/jobs/c8c2909d-75e9-484a-94c0-b7e8d30771fe
-          readOnly: true
-      title: BulkOperationResponse
-    FolderId:
-      description: Unique identifier for a folder.
-      type: string
-      pattern: ^073[0-9a-f]{23}$
-      example: 073d010813b941cf7da111d147
     Problem_2:
       type: object
       description: '<b>Problem Detail</b> is a way to carry machine-readable details of errors in an HTTP
@@ -1127,6 +1091,50 @@ components:
           items:
             $ref: '#/components/schemas/Violation'
           readOnly: true
+    JobId:
+      description: Unique ID for a bulk user operation job.
+      type: string
+      format: uuid
+      example: c8c2909d-75e9-484a-94c0-b7e8d30771fe
+    Violation:
+      type: object
+      properties:
+        field:
+          description: 'The name of the field in the request that caused the violation.
+
+
+            This can be the name of a path parameter, query parameter, or a field within the request body.
+
+            '
+          type: string
+          readOnly: true
+          example: jobName
+        message:
+          description: 'A human-readable explanation specific to this occurrence of the violation.
+
+            '
+          type: string
+          readOnly: true
+          example: must match "^[a-zA-Z]{6}$"
+        code:
+          description: 'The violation code generated by the server for this occurrence of the violation.
+
+
+            Use this code when implementing any error handling logic instead of the message, as the message can change.
+
+            '
+          type: integer
+          format: int32
+          readOnly: true
+          example: 20006
+      required:
+      - field
+      - message
+      - code
+      example:
+      - field: emailAddress
+        message: must not be null
+        code: 20002
   securitySchemes:
     BearerAuth:
       type: http

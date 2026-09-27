@@ -114,60 +114,7 @@ paths:
         '500':
           $ref: '#/components/responses/InternalServerError'
 components:
-  responses:
-    Forbidden:
-      description: Forbidden
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorForbidden'
-    NotFound:
-      description: Not Found
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorNotFound'
-    Unauthorized:
-      description: Unauthorized
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorUnauthorized'
-    InternalServerError:
-      description: All other application errors
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorInternalServerError'
-    ErrorConstraintViolation:
-      description: Constraint Violation
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorConstraintViolation'
   examples:
-    ErrorNotFound:
-      description: Not Found
-      value:
-        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#resource-not-found
-        title: Resource Not Found
-        status: 404
-        detail: Either there is no API method associated with the URL path of the request, or the request refers to one or more resources that were not found.
     ErrorForbidden:
       description: Forbidden
       value:
@@ -175,13 +122,13 @@ components:
         title: Forbidden
         status: 403
         detail: According to the access control policy the current user and/or accountId does not have permission to access this resource.
-    ErrorUnauthorized:
-      description: Unauthorized
+    ErrorNotFound:
+      description: Not Found
       value:
-        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#unauthorized
-        title: Unauthorized
-        status: 401
-        detail: This operation requires authentication. See https://developers.avayacloud.com/onecloud-ccaas/docs/how-to-authenticate-with-ccaas-apis
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#resource-not-found
+        title: Resource Not Found
+        status: 404
+        detail: Either there is no API method associated with the URL path of the request, or the request refers to one or more resources that were not found.
     ErrorConstraintViolation:
       description: Constraint Violation
       value:
@@ -193,6 +140,20 @@ components:
         - field: accountId
           message: must match "^[a-zA-Z]{6}$"
           code: 20006
+    ErrorUnauthorized:
+      description: Unauthorized
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#unauthorized
+        title: Unauthorized
+        status: 401
+        detail: This operation requires authentication. See https://developers.avayacloud.com/onecloud-ccaas/docs/how-to-authenticate-with-ccaas-apis
+    ErrorInternalServerError:
+      description: Server Error
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#server-error
+        title: Server Error
+        status: 500
+        detail: An internal server error was encountered.
     ElementPage:
       description: Paginated Element Data
       value:
@@ -224,88 +185,53 @@ components:
         links:
           prev: /api/admin/inventory/v1/elements?pageNumber=1&pageSize=10
           next: /api/admin/inventory/v1/elements?pageNumber=3&pageSize=10
-    ErrorInternalServerError:
-      description: Server Error
-      value:
-        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#server-error
-        title: Server Error
-        status: 500
-        detail: An internal server error was encountered.
-  parameters:
-    accountId:
-      name: accountId
-      description: The unique 6 character internal id that represents the customer account.
-      required: true
-      in: path
-      schema:
-        type: string
-        minLength: 6
-        maxLength: 6
-        pattern: ^[a-zA-Z]{6}$
-        example: ABCDEF
-    pageNumber:
-      name: pageNumber
-      in: query
-      description: The page number of the records to retrieve. Default value is 1.
-      schema:
-        type: integer
-        format: int32
-        default: 1
-        minimum: 1
-        example: 2
+  responses:
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorUnauthorized'
+    Forbidden:
+      description: Forbidden
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorForbidden'
+    ErrorConstraintViolation:
+      description: Constraint Violation
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorConstraintViolation'
+    InternalServerError:
+      description: All other application errors
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorInternalServerError'
+    NotFound:
+      description: Not Found
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorNotFound'
   schemas:
-    Element:
-      type: object
-      description: 'An Element is a server instance
-
-        '
-      properties:
-        elementId:
-          type: string
-          example: fa703a3a-3dfb-4606-ae79-fd0fe0be3e64
-          description: The unique 36 character internal id (uuid) that represents the element.
-          minLength: 36
-          maxLength: 36
-          pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
-        description:
-          type: string
-          example: Avaya Cloud Office Description
-          maxLength: 1024
-          pattern: (^$|^[a-zA-Z0-9\p{L}\(\)\-\_\.\ \n]+$)
-        elementData:
-          type: object
-          properties: {}
-          example:
-            name: Avaya Cloud Office
-            hostname: Production
-        elementType:
-          type: string
-          example: ACO
-          minLength: 1
-          maxLength: 255
-          pattern: ^[a-zA-Z0-9\-\_\.\ ]+$
-        elementSubType:
-          type: string
-          maxLength: 255
-          pattern: ^[a-zA-Z0-9\-\_\.\ ]+$
-        status:
-          type: string
-          description: "This field indicates the current status of an Element.\n\nAn explanation of the values is listed below:\n  * SUCCESS - An Element was created/updated successfully.\n  * FAILED - operation on Element was failed.\n  * IN_PROGRESS - operation performed on an Element is in progress.\n"
-          enum:
-          - SUCCESS
-          - FAILED
-          - IN_PROGRESS
-        statusCode:
-          type: string
-          readOnly: true
-          example: '14066'
-        statusMessage:
-          type: string
-          readOnly: true
-          example: cannot create element due to database failure
-      required:
-      - elementData
-      - elementType
     ElementPage:
       description: 'Paginated Element Data
 
@@ -409,17 +335,58 @@ components:
           - field: accountId
             message: must match "^[a-zA-Z]{6}$"
             code: 20006
-    Links:
+    Element:
       type: object
+      description: 'An Element is a server instance
+
+        '
       properties:
-        prev:
+        elementId:
           type: string
-          default: ''
-          description: URL of the previous page. Blank if currently on the first page.
-        next:
+          example: fa703a3a-3dfb-4606-ae79-fd0fe0be3e64
+          description: The unique 36 character internal id (uuid) that represents the element.
+          minLength: 36
+          maxLength: 36
+          pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
+        description:
           type: string
-          default: ''
-          description: URL of the next page. Blank if currently on the last page.
+          example: Avaya Cloud Office Description
+          maxLength: 1024
+          pattern: (^$|^[a-zA-Z0-9\p{L}\(\)\-\_\.\ \n]+$)
+        elementData:
+          type: object
+          properties: {}
+          example:
+            name: Avaya Cloud Office
+            hostname: Production
+        elementType:
+          type: string
+          example: ACO
+          minLength: 1
+          maxLength: 255
+          pattern: ^[a-zA-Z0-9\-\_\.\ ]+$
+        elementSubType:
+          type: string
+          maxLength: 255
+          pattern: ^[a-zA-Z0-9\-\_\.\ ]+$
+        status:
+          type: string
+          description: "This field indicates the current status of an Element.\n\nAn explanation of the values is listed below:\n  * SUCCESS - An Element was created/updated successfully.\n  * FAILED - operation on Element was failed.\n  * IN_PROGRESS - operation performed on an Element is in progress.\n"
+          enum:
+          - SUCCESS
+          - FAILED
+          - IN_PROGRESS
+        statusCode:
+          type: string
+          readOnly: true
+          example: '14066'
+        statusMessage:
+          type: string
+          readOnly: true
+          example: cannot create element due to database failure
+      required:
+      - elementData
+      - elementType
     Pagination:
       type: object
       properties:
@@ -432,6 +399,39 @@ components:
         total:
           type: integer
           description: The total number of records.
+    Links:
+      type: object
+      properties:
+        prev:
+          type: string
+          default: ''
+          description: URL of the previous page. Blank if currently on the first page.
+        next:
+          type: string
+          default: ''
+          description: URL of the next page. Blank if currently on the last page.
+  parameters:
+    accountId:
+      name: accountId
+      description: The unique 6 character internal id that represents the customer account.
+      required: true
+      in: path
+      schema:
+        type: string
+        minLength: 6
+        maxLength: 6
+        pattern: ^[a-zA-Z]{6}$
+        example: ABCDEF
+    pageNumber:
+      name: pageNumber
+      in: query
+      description: The page number of the records to retrieve. Default value is 1.
+      schema:
+        type: integer
+        format: int32
+        default: 1
+        minimum: 1
+        example: 2
   securitySchemes:
     BearerAuth:
       type: http

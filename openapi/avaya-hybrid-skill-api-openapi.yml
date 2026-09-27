@@ -322,160 +322,7 @@ paths:
         '500':
           $ref: '#/components/responses/InternalServerError'
 components:
-  examples:
-    ErrorForbidden:
-      description: Forbidden
-      value:
-        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#forbidden
-        title: Forbidden
-        status: 403
-        detail: According to the access control policy the current user does not have permission to access this resource.
-    ErrorConstraintViolation:
-      description: Constraint Violation
-      value:
-        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#constraint-violation
-        title: Constraint Violation
-        status: 400
-        detail: A problem that indicates a syntactically correct, yet semantically illegal request. The Server can not process this request until the client resolves the semantic errors described in the violations section.
-        violations:
-        - field: accountId
-          message: must match "^[a-zA-Z]{6}$"
-          code: 20006
-    HybridSkillResponsePartial:
-      description: Single skill response
-      value:
-        id: 1f15835f-1365-4913-acf3-0ffd0767ad6e
-        number: '8000'
-        name: French
-        extension: '253647784'
-        agentAssistProfileId: 6a305019-a43c-4ed4-8dab-324d82dd9d55
-        errorMessage: Failure in agent assist API while skill creation
-    HybridSkillRequest:
-      description: Request model for creating a Skill.
-      value:
-        name: French
-        number: '1'
-        extension: '253647784'
-        agentAssistProfileId: 1f15835f-1365-4913-acf3-0ffd0767ad6e
-    HybridSkillPageResponse:
-      description: Lists all Skills.
-      value:
-        pagination:
-          pageNumber: 2
-          pageSize: 10
-          total: 20
-        skills:
-        - id: 7700d655-5807-4738-a868-712740a18199
-          name: French
-          number: '11'
-          extension: '253647784'
-        - id: 8b2ae74d-61e5-48df-8b32-81a7bc726495
-          name: English
-          number: '12'
-          extension: '253647784'
-        links:
-          prev: /api/admin/voice/v1/accounts/NCWBNY/communication-managers/5e9be49a-32d3-4927-83c7-7b0952798028/skills?pageNumber=1&pageSize=10
-          next: /api/admin/voice/v1/accounts/NCWBNY/communication-managers/5e9be49a-32d3-4927-83c7-7b0952798028/skills?pageNumber=3&pageSize=10
-    ErrorMethodNotAllowed:
-      description: Method not allowed
-      value:
-        title: Method not allowed
-        status: 405
-        detail: The request calls an HTTP method that is not supported at the resource.
-    ErrorNotFound:
-      description: Not Found
-      value:
-        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#resource-not-found
-        title: Resource Not Found
-        status: 404
-        detail: Either there is no API method associated with the URL path of the request, or the request refers to one or more resources that were not found.
-    ErrorUnauthorized:
-      description: Unauthorized
-      value:
-        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#unauthorized
-        title: Unauthorized
-        status: 401
-        detail: This operation requires authentication. See https://developers.avayacloud.com/onecloud-ccaas/docs/how-to-authenticate-with-ccaas-apis
-    UpdateHybridSkillRequest:
-      description: Request model for updating a Skill.
-      value:
-        name: French
-        number: '1'
-        extension: '253647784'
-        agentAssistProfileId: 1f15835f-1365-4913-acf3-0ffd0767ad6e
-    HybridSkillResponse:
-      description: Single skill response
-      value:
-        id: 1f15835f-1365-4913-acf3-0ffd0767ad6e
-        number: '8000'
-        name: French
-        extension: '253647784'
-        agentAssistProfileId: 6a305019-a43c-4ed4-8dab-324d82dd9d55
-    ErrorConflict:
-      description: Conflict
-      value:
-        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#conflict
-        title: Conflict
-        status: 409
-        detail: A resource with the same unique constraint values already exists.
-        violations:
-        - field: name
-          message: Communication Manager with same name already exists.
-        - field: hostname
-          message: Communication Manager with same hostname already exists.
-    ErrorInternalServerError:
-      description: Server Error
-      value:
-        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#server-error
-        title: Server Error
-        status: 500
-        detail: An internal server error was encountered.
   responses:
-    NotFound:
-      description: Not Found
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorNotFound'
-    InternalServerError:
-      description: All other application errors
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorInternalServerError'
-    ErrorConstraintViolation:
-      description: Constraint Violation
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorConstraintViolation'
-    Conflict:
-      description: Conflict
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorConflict'
-    Forbidden:
-      description: Forbidden
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorForbidden'
     MethodNotAllowed:
       description: Method Not Allowed
       content:
@@ -485,6 +332,24 @@ components:
           examples:
             default:
               $ref: '#/components/examples/ErrorMethodNotAllowed'
+    ErrorConstraintViolation:
+      description: Constraint Violation
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorConstraintViolation'
+    InternalServerError:
+      description: All other application errors
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorInternalServerError'
     Unauthorized:
       description: Unauthorized
       content:
@@ -494,166 +359,34 @@ components:
           examples:
             default:
               $ref: '#/components/examples/ErrorUnauthorized'
-  parameters:
-    accountId:
-      name: accountId
-      description: The unique 6 character internal id that represents the customer account.
-      required: true
-      in: path
-      schema:
-        type: string
-        minLength: 6
-        maxLength: 6
-        pattern: ^[a-zA-Z]{6}$
-        example: ABCDEF
-    skillId:
-      name: skillId
-      in: path
-      description: Id of existing skill
-      required: true
-      schema:
-        type: string
-        format: uuid
-        example: 1f15835f-1365-4913-acf3-0ffd0767ad6e
-    pageNumber:
-      name: pageNumber
-      in: query
-      description: The page number of the records to retrieve. Default value is 1.
-      required: false
-      schema:
-        type: integer
-        format: int32
-        example: 1
-        default: 1
-        minimum: 1
-    communicationManagerId:
-      name: communicationManagerId
-      description: The unique id of the Communication Manager
-      in: path
-      required: true
-      schema:
-        type: string
-        format: uuid
-        example: 2ec20580-d204-43f3-ae0b-34795439137f
+    Conflict:
+      description: Conflict
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorConflict'
+    NotFound:
+      description: Not Found
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorNotFound'
+    Forbidden:
+      description: Forbidden
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorForbidden'
   schemas:
-    Links:
-      type: object
-      properties:
-        prev:
-          type: string
-          description: URL of the previous page. Blank if currently on the first page.
-        next:
-          type: string
-          description: URL of the next page. Blank if currently on the last page.
-    HybridSkillResponseWithoutAgentAssistProfileId:
-      title: HybridSkillResponseWithoutAgentAssistProfileId
-      type: object
-      description: Represents the model used to get details of a single Skill.
-      properties:
-        id:
-          type: string
-          description: The unique id of Skill
-          readOnly: true
-          format: uuid
-          example: 7700d655-5807-4738-a868-712740a18199
-        name:
-          type: string
-          example: French
-          minLength: 1
-          maxLength: 27
-          pattern: ^[a-zA-Z0-9\p{L}\-\_\.\ ]+$
-        number:
-          type: string
-          example: '8000'
-          minLength: 1
-          maxLength: 4
-          pattern: ^[0-9]*$
-        extension:
-          type: string
-          description: The extension number of skill unique per communication manager.
-          example: '914565637786'
-          minLength: 1
-          maxLength: 16
-          pattern: ^[1-9][0-9]*$
-    HybridSkill:
-      title: HybridSkill
-      type: object
-      description: Hybrid Skill for specific account and communication manager server.
-      properties:
-        id:
-          type: string
-          description: The unique id of Skill
-          readOnly: true
-          format: uuid
-          example: 7700d655-5807-4738-a868-712740a18199
-        number:
-          type: string
-          example: '8000'
-          description: The skill unique per communication manager.
-          minLength: 1
-          maxLength: 4
-          pattern: ^[0-9]*$
-        name:
-          type: string
-          example: French
-          minLength: 1
-          maxLength: 27
-          pattern: ^[a-zA-Z0-9\p{L}\-\_\.\ ]+$
-        extension:
-          type: string
-          example: '914565637786'
-          description: The extension number of skill unique per communication manager.
-          minLength: 1
-          maxLength: 16
-          pattern: ^[1-9][0-9]*$
-        agentAssistProfileId:
-          type: string
-          format: uuid
-          description: Agent Assist Profile ID reterived from Agent Assist service.
-          example: 36c707a7-7a29-4cd7-82c0-60a61346ed29
-      required:
-      - number
-      - name
-      - extension
-    HybridSkillResponse:
-      title: HybridSkillResponse
-      type: object
-      description: Represents the model used to get details of a single Skill.
-      properties:
-        id:
-          type: string
-          description: The unique id of Skill
-          readOnly: true
-          format: uuid
-          example: 7700d655-5807-4738-a868-712740a18199
-        name:
-          type: string
-          example: French
-          minLength: 1
-          maxLength: 27
-          pattern: ^[a-zA-Z0-9\p{L}\-\_\.\ ]+$
-        number:
-          type: string
-          example: '8000'
-          minLength: 1
-          maxLength: 4
-          pattern: ^[0-9]*$
-        extension:
-          type: string
-          description: The extension number of skill unique per communication manager.
-          example: '914565637786'
-          minLength: 1
-          maxLength: 16
-          pattern: ^[1-9][0-9]*$
-        agentAssistProfileId:
-          type: string
-          format: uuid
-          description: Agent Assist Profile ID reterived from Agent Assist service.
-          example: 36c707a7-7a29-4cd7-82c0-60a61346ed29
-        errorMessage:
-          type: string
-          example: Failed to delete skill
-          description: The error message in case of failure from agent assist API.
     HybridSkillPage:
       title: HybridSkillPage
       type: object
@@ -671,18 +404,6 @@ components:
           example:
             prev: /api/admin/voice/v1/accounts/{accountId}/communication-managers/{communicationManagerId}/skills?pageNumber=1&pageSize=10
             next: /api/admin/voice/v1/accounts/{accountId}/communication-managers/{communicationManagerId}/skills?pageNumber=3&pageSize=10
-    Pagination:
-      type: object
-      properties:
-        pageNumber:
-          type: integer
-          description: The current page number.
-        pageSize:
-          type: integer
-          description: The max number of records that can be retrieved on this page.
-        total:
-          type: integer
-          description: The total number of records.
     CreateHybridSkill:
       title: CreateHybridSkill
       type: object
@@ -802,6 +523,285 @@ components:
           - field: accountId
             message: must match "^[a-zA-Z]{6}$"
             code: 20006
+    HybridSkillResponseWithoutAgentAssistProfileId:
+      title: HybridSkillResponseWithoutAgentAssistProfileId
+      type: object
+      description: Represents the model used to get details of a single Skill.
+      properties:
+        id:
+          type: string
+          description: The unique id of Skill
+          readOnly: true
+          format: uuid
+          example: 7700d655-5807-4738-a868-712740a18199
+        name:
+          type: string
+          example: French
+          minLength: 1
+          maxLength: 27
+          pattern: ^[a-zA-Z0-9\p{L}\-\_\.\ ]+$
+        number:
+          type: string
+          example: '8000'
+          minLength: 1
+          maxLength: 4
+          pattern: ^[0-9]*$
+        extension:
+          type: string
+          description: The extension number of skill unique per communication manager.
+          example: '914565637786'
+          minLength: 1
+          maxLength: 16
+          pattern: ^[1-9][0-9]*$
+    HybridSkill:
+      title: HybridSkill
+      type: object
+      description: Hybrid Skill for specific account and communication manager server.
+      properties:
+        id:
+          type: string
+          description: The unique id of Skill
+          readOnly: true
+          format: uuid
+          example: 7700d655-5807-4738-a868-712740a18199
+        number:
+          type: string
+          example: '8000'
+          description: The skill unique per communication manager.
+          minLength: 1
+          maxLength: 4
+          pattern: ^[0-9]*$
+        name:
+          type: string
+          example: French
+          minLength: 1
+          maxLength: 27
+          pattern: ^[a-zA-Z0-9\p{L}\-\_\.\ ]+$
+        extension:
+          type: string
+          example: '914565637786'
+          description: The extension number of skill unique per communication manager.
+          minLength: 1
+          maxLength: 16
+          pattern: ^[1-9][0-9]*$
+        agentAssistProfileId:
+          type: string
+          format: uuid
+          description: Agent Assist Profile ID reterived from Agent Assist service.
+          example: 36c707a7-7a29-4cd7-82c0-60a61346ed29
+      required:
+      - number
+      - name
+      - extension
+    HybridSkillResponse:
+      title: HybridSkillResponse
+      type: object
+      description: Represents the model used to get details of a single Skill.
+      properties:
+        id:
+          type: string
+          description: The unique id of Skill
+          readOnly: true
+          format: uuid
+          example: 7700d655-5807-4738-a868-712740a18199
+        name:
+          type: string
+          example: French
+          minLength: 1
+          maxLength: 27
+          pattern: ^[a-zA-Z0-9\p{L}\-\_\.\ ]+$
+        number:
+          type: string
+          example: '8000'
+          minLength: 1
+          maxLength: 4
+          pattern: ^[0-9]*$
+        extension:
+          type: string
+          description: The extension number of skill unique per communication manager.
+          example: '914565637786'
+          minLength: 1
+          maxLength: 16
+          pattern: ^[1-9][0-9]*$
+        agentAssistProfileId:
+          type: string
+          format: uuid
+          description: Agent Assist Profile ID reterived from Agent Assist service.
+          example: 36c707a7-7a29-4cd7-82c0-60a61346ed29
+        errorMessage:
+          type: string
+          example: Failed to delete skill
+          description: The error message in case of failure from agent assist API.
+    Pagination:
+      type: object
+      properties:
+        pageNumber:
+          type: integer
+          description: The current page number.
+        pageSize:
+          type: integer
+          description: The max number of records that can be retrieved on this page.
+        total:
+          type: integer
+          description: The total number of records.
+    Links:
+      type: object
+      properties:
+        prev:
+          type: string
+          description: URL of the previous page. Blank if currently on the first page.
+        next:
+          type: string
+          description: URL of the next page. Blank if currently on the last page.
+  examples:
+    ErrorForbidden:
+      description: Forbidden
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#forbidden
+        title: Forbidden
+        status: 403
+        detail: According to the access control policy the current user does not have permission to access this resource.
+    ErrorConflict:
+      description: Conflict
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#conflict
+        title: Conflict
+        status: 409
+        detail: A resource with the same unique constraint values already exists.
+        violations:
+        - field: name
+          message: Communication Manager with same name already exists.
+        - field: hostname
+          message: Communication Manager with same hostname already exists.
+    HybridSkillPageResponse:
+      description: Lists all Skills.
+      value:
+        pagination:
+          pageNumber: 2
+          pageSize: 10
+          total: 20
+        skills:
+        - id: 7700d655-5807-4738-a868-712740a18199
+          name: French
+          number: '11'
+          extension: '253647784'
+        - id: 8b2ae74d-61e5-48df-8b32-81a7bc726495
+          name: English
+          number: '12'
+          extension: '253647784'
+        links:
+          prev: /api/admin/voice/v1/accounts/NCWBNY/communication-managers/5e9be49a-32d3-4927-83c7-7b0952798028/skills?pageNumber=1&pageSize=10
+          next: /api/admin/voice/v1/accounts/NCWBNY/communication-managers/5e9be49a-32d3-4927-83c7-7b0952798028/skills?pageNumber=3&pageSize=10
+    ErrorConstraintViolation:
+      description: Constraint Violation
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#constraint-violation
+        title: Constraint Violation
+        status: 400
+        detail: A problem that indicates a syntactically correct, yet semantically illegal request. The Server can not process this request until the client resolves the semantic errors described in the violations section.
+        violations:
+        - field: accountId
+          message: must match "^[a-zA-Z]{6}$"
+          code: 20006
+    ErrorNotFound:
+      description: Not Found
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#resource-not-found
+        title: Resource Not Found
+        status: 404
+        detail: Either there is no API method associated with the URL path of the request, or the request refers to one or more resources that were not found.
+    HybridSkillResponsePartial:
+      description: Single skill response
+      value:
+        id: 1f15835f-1365-4913-acf3-0ffd0767ad6e
+        number: '8000'
+        name: French
+        extension: '253647784'
+        agentAssistProfileId: 6a305019-a43c-4ed4-8dab-324d82dd9d55
+        errorMessage: Failure in agent assist API while skill creation
+    UpdateHybridSkillRequest:
+      description: Request model for updating a Skill.
+      value:
+        name: French
+        number: '1'
+        extension: '253647784'
+        agentAssistProfileId: 1f15835f-1365-4913-acf3-0ffd0767ad6e
+    ErrorUnauthorized:
+      description: Unauthorized
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#unauthorized
+        title: Unauthorized
+        status: 401
+        detail: This operation requires authentication. See https://developers.avayacloud.com/onecloud-ccaas/docs/how-to-authenticate-with-ccaas-apis
+    HybridSkillRequest:
+      description: Request model for creating a Skill.
+      value:
+        name: French
+        number: '1'
+        extension: '253647784'
+        agentAssistProfileId: 1f15835f-1365-4913-acf3-0ffd0767ad6e
+    ErrorMethodNotAllowed:
+      description: Method not allowed
+      value:
+        title: Method not allowed
+        status: 405
+        detail: The request calls an HTTP method that is not supported at the resource.
+    HybridSkillResponse:
+      description: Single skill response
+      value:
+        id: 1f15835f-1365-4913-acf3-0ffd0767ad6e
+        number: '8000'
+        name: French
+        extension: '253647784'
+        agentAssistProfileId: 6a305019-a43c-4ed4-8dab-324d82dd9d55
+    ErrorInternalServerError:
+      description: Server Error
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#server-error
+        title: Server Error
+        status: 500
+        detail: An internal server error was encountered.
+  parameters:
+    accountId:
+      name: accountId
+      description: The unique 6 character internal id that represents the customer account.
+      required: true
+      in: path
+      schema:
+        type: string
+        minLength: 6
+        maxLength: 6
+        pattern: ^[a-zA-Z]{6}$
+        example: ABCDEF
+    communicationManagerId:
+      name: communicationManagerId
+      description: The unique id of the Communication Manager
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+        example: 2ec20580-d204-43f3-ae0b-34795439137f
+    skillId:
+      name: skillId
+      in: path
+      description: Id of existing skill
+      required: true
+      schema:
+        type: string
+        format: uuid
+        example: 1f15835f-1365-4913-acf3-0ffd0767ad6e
+    pageNumber:
+      name: pageNumber
+      in: query
+      description: The page number of the records to retrieve. Default value is 1.
+      required: false
+      schema:
+        type: integer
+        format: int32
+        example: 1
+        default: 1
+        minimum: 1
   securitySchemes:
     BearerAuth:
       type: http

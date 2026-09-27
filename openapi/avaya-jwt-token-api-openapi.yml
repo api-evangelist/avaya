@@ -96,43 +96,6 @@ paths:
           $ref: '#/components/responses/InternalServerError'
       deprecated: false
 components:
-  responses:
-    Forbidden:
-      description: Forbidden.
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorForbidden'
-    Unauthorized:
-      description: Unauthorized.
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorUnauthorized'
-    InternalServerError:
-      description: Internal Server Error
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorInternalServerError'
-    BadRequest:
-      description: Bad Request
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorConstraintViolation'
   examples:
     ErrorForbidden:
       description: Forbidden
@@ -141,20 +104,23 @@ components:
         title: Forbidden
         status: 403
         detail: According to the access control policy the current user and/or accountId does not have permission to access this resource.
-    ErrorInternalServerError:
-      description: Internal Server Error
+    GenerateJWTTokenNoAuth:
       value:
-        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#internal-error
-        title: Internal Server Error
-        status: 500
-        detail: An internal server error was encountered.
-    ErrorUnauthorized:
-      description: Unauthorized
+        integrationId: 0847c56d-30fd-4b75-90be-a4ff8d08bd44
+        customerId: f44266bc-9133-4aa2-bf17-80374f1195ac
+        verifiedCustomer: false
+        customerName: ''
+    ErrorConstraintViolation:
+      description: Constraint Violation
       value:
-        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#unauthorized
-        title: Unauthorized
-        status: 401
-        detail: This operation requires authentication. See https://developers.avayacloud.com/onecloud-ccaas/docs/how-to-authenticate-with-ccaas-apis
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#constraint-violation
+        title: Constraint Violation
+        status: 400
+        detail: A problem that indicates a syntactically correct, yet semantically illegal request. The Server can not process this request until the client resolves the semantic errors described in the violations section.
+        violations:
+        - field: integrationId
+          message: must match "^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}$"
+          code: 20006
     GenerateJWTTokenAuth:
       value:
         integrationId: 0847c56d-30fd-4b75-90be-a4ff8d08bd44
@@ -167,27 +133,70 @@ components:
           phoneNumbers:
           - +91 20 4101 8003
         ttl: 15
-    ErrorConstraintViolation:
-      description: Constraint Violation
+    ErrorUnauthorized:
+      description: Unauthorized
       value:
-        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#constraint-violation
-        title: Constraint Violation
-        status: 400
-        detail: A problem that indicates a syntactically correct, yet semantically illegal request. The Server can not process this request until the client resolves the semantic errors described in the violations section.
-        violations:
-        - field: integrationId
-          message: must match "^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}$"
-          code: 20006
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#unauthorized
+        title: Unauthorized
+        status: 401
+        detail: This operation requires authentication. See https://developers.avayacloud.com/onecloud-ccaas/docs/how-to-authenticate-with-ccaas-apis
     Token:
       value:
         jwtToken: jwt.eyJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJodHRwczpcL1wvY2MuYXZheWFjbG91ZC5jb20iLCJzdWIiOiJ1c2VyY2hhdEludGVncmF0aW9uIiwiaW50ZWdyYXRpb25JZCI6IjQ2NTljNWE0LTgwMzItMTFlYy1hOGEzLTAyNDJhYzEyMDA0NSIsImV4cCI6MTY0NTc3MzEzNSwianRpIjoiY2RhZDhhYzQtZDM3Mi00NjRlLWFhMGEtZDcxODdjZDNiNWM2In0.e7-H43WzSxAOuQ0l9ySiTp-nfWVyS_bNjFgqPrv2VtwG1_-UzbC4p6ISvWdEf-dRBZYPmcj8JTX0bB3Afm5bd2oPt4dCyyW__5b20QTLZcoI_1gTAUj8TrwBk_kdOMZnT-YgEcGXJVnzARBN08WQY0rdvqShRARODmZV0QiYXBuLYHTZXevkLWXqXwpvGWdqs4atbhKyZNDFMer9MGwzB_UCnzg8AMsli2biPJQkrklMrh7-x-RP1Rq5SZ77CT4Q1mH5ExhxXwpikz1VUWtirLZHKfRlntQ5UHsJbE31_zHr2dEG-jaVxxxYU5usIAPxiDSbkn4H4Jf6t9gDN6DMxA
-    GenerateJWTTokenNoAuth:
+    ErrorInternalServerError:
+      description: Internal Server Error
       value:
-        integrationId: 0847c56d-30fd-4b75-90be-a4ff8d08bd44
-        customerId: f44266bc-9133-4aa2-bf17-80374f1195ac
-        verifiedCustomer: false
-        customerName: ''
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#internal-error
+        title: Internal Server Error
+        status: 500
+        detail: An internal server error was encountered.
+  responses:
+    Unauthorized:
+      description: Unauthorized.
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorUnauthorized'
+    BadRequest:
+      description: Bad Request
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorConstraintViolation'
+    Forbidden:
+      description: Forbidden.
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorForbidden'
+    InternalServerError:
+      description: Internal Server Error
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorInternalServerError'
   schemas:
+    Token:
+      type: object
+      description: The auth token
+      required:
+      - jwtToken
+      properties:
+        jwtToken:
+          type: string
+          description: The generated JWT token
     GenerateJWTToken:
       type: object
       required:
@@ -221,30 +230,6 @@ components:
           default: 15
           minimum: 15
           maximum: 60
-    Token:
-      type: object
-      description: The auth token
-      required:
-      - jwtToken
-      properties:
-        jwtToken:
-          type: string
-          description: The generated JWT token
-    CustomerIdentifiers:
-      type: object
-      description: Unique identifiers for identifying the end-customer such as phoneNumbers or emailAddresses. Customer identifiers should not be added for anonymous users.
-      minProperties: 1
-      maxProperties: 10
-      additionalProperties:
-        type: array
-        description: 'Additional identifiers related to the Customer. The maximum length of an identifer key is 50 characters and must be a valid "name" of a pre-configured identifier in Customer Journey.
-
-          '
-        maxItems: 5
-        items:
-          type: string
-          minLength: 1
-          maxLength: 256
     Problem:
       type: object
       description: '<b>Problem Detail</b> as a way to carry machine-readable details of errors in a HTTP response to avoid the need to define new error response formats for HTTP APIs <a href="https://tools.ietf.org/html/rfc7807">RFC 7807</a>
@@ -330,6 +315,21 @@ components:
           - field: accountId
             message: must match "^[a-zA-Z]{6}$"
             code: 20006
+    CustomerIdentifiers:
+      type: object
+      description: Unique identifiers for identifying the end-customer such as phoneNumbers or emailAddresses. Customer identifiers should not be added for anonymous users.
+      minProperties: 1
+      maxProperties: 10
+      additionalProperties:
+        type: array
+        description: 'Additional identifiers related to the Customer. The maximum length of an identifer key is 50 characters and must be a valid "name" of a pre-configured identifier in Customer Journey.
+
+          '
+        maxItems: 5
+        items:
+          type: string
+          minLength: 1
+          maxLength: 256
   securitySchemes:
     BearerAuth:
       type: http

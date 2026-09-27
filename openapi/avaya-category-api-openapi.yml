@@ -312,286 +312,13 @@ paths:
         '500':
           $ref: '#/components/responses/InternalServerError'
 components:
-  examples:
-    ErrorForbidden:
-      description: Forbidden
-      value:
-        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#forbidden
-        title: Forbidden
-        status: 403
-        detail: According to the access control policy the current user and/or accountId does not have permission to access this resource.
-    BulkDeleteCategoryArray:
-      description: 'Array of category ids to delete.
-
-        '
-      value:
-      - 4331fa35-9671-4ea0-94e0-517097a5a13a
-      - a730d229-c386-43df-9241-b5191af2725c
-    AllCategoryResponsePage:
-      description: 'Page of categories.
-
-        '
-      value:
-        pagination:
-          pageNumber: 2
-          pageSize: 10
-          total: 3
-        categories:
-        - categoryId: 4331fa35-9671-4ea0-94e0-517097a5a13a
-          name: Language
-          attributes:
-          - value: French
-            name: Language.French
-          - value: German
-            name: Language.German
-        - categoryId: a730d229-c386-43df-9241-b5191af2725c
-          name: Product
-          attributes:
-          - value: Landline
-            name: Product.Landline
-          - value: Mobile
-            name: Product.Mobile
-        links:
-          next: /api/admin/match/v1/accounts/ABCDEF/categories?pageNumber=3&pageSize=10
-          prev: /api/admin/match/v1/accounts/ABCDEF/categories?pageNumber=1&pageSize=10
-    PrevBulkCategoryResponseArray:
-      description: 'Previous properties, by category.
-
-        '
-      value:
-      - categoryId: 4331fa35-9671-4ea0-94e0-517097a5a13a
-        name: Language
-        attributes:
-        - value: English
-          name: Language.English
-        - value: French
-          name: Language.French
-      - categoryId: a730d229-c386-43df-9241-b5191af2725c
-        name: Product
-        attributes:
-        - value: Landline
-          name: Product.Landline
-    ErrorConstraintViolation:
-      description: Constraint Violation
-      value:
-        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#constraint-violation
-        title: Constraint Violation
-        status: 400
-        detail: A problem that indicates a syntactically correct, yet semantically illegal request. The Server can not process this request until the client resolves the semantic errors described in the violations section.
-        violations:
-        - field: accountId
-          message: must match "^[a-zA-Z]{6}$"
-          code: 20006
-    PrevCategoryResponse:
-      description: 'Previous category properties, if found.
-
-        '
-      value:
-        categoryId: 4331fa35-9671-4ea0-94e0-517097a5a13a
-        name: Language
-        attributes:
-        - value: English
-          name: Language.English
-        - value: French
-          name: Language.French
-    ErrorCategoryNameExists:
-      description: Constraint Violation
-      value:
-        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#conflict
-        title: Conflict
-        status: 409
-        detail: A resource with the same unique constraint values already exists.
-        violations:
-        - field: name
-          message: A category with this name already exists
-    ErrorInternalServerError:
-      description: Server Error
-      value:
-        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#server-error
-        title: Server Error
-        status: 500
-        detail: An internal server error was encountered.
-    ErrorNotFound:
-      description: Not Found
-      value:
-        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#resource-not-found
-        title: Resource Not Found
-        status: 404
-        detail: Either there is no API method associated with the URL path of the request, or the request refers to one or more resources that were not found.
-    BulkCategoryArray:
-      description: 'Category name can be inferred in attributes.
-
-        '
-      value:
-      - name: Language
-        attributes:
-        - value: French
-        - value: German
-      - name: Product
-        attributes:
-        - value: Mobile
-        - value: Landline
-    ErrorUnauthorized:
-      description: Unauthorized
-      value:
-        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#unauthorized
-        title: Unauthorized
-        status: 401
-        detail: This operation requires authentication. See https://developers.avayacloud.com/onecloud-ccaas/docs/how-to-authenticate-with-ccaas-apis
-    ErrorBulkCategoryNameExists:
-      description: Constraint Violation
-      value:
-        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#conflict
-        title: Conflict
-        status: 409
-        detail: A resource with the same unique constraint values already exists.
-        violations:
-        - field: bulkCreateCategories.createCategory[0].name
-          message: A category with this name already exists
-    GetCategory:
-      description: 'Generated attribute name included.
-
-        '
-      value:
-        categoryId: 4331fa35-9671-4ea0-94e0-517097a5a13a
-        name: Language
-        attributes:
-        - value: French
-          name: Language.French
-        - value: German
-          name: Language.German
-    PutCategory:
-      description: 'Update attributes belonging to category.
-
-        '
-      value:
-        attributes:
-        - value: French
-        - value: German
-    PostCategory:
-      description: 'Create named category with an initial list of attribute values.
-
-        '
-      value:
-        name: Language
-        attributes:
-        - value: French
-        - value: German
-  responses:
-    CategoryNameExists:
-      description: Conflict
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorCategoryNameExists'
-    BulkCategoryNameExists:
-      description: Conflict
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorBulkCategoryNameExists'
-    NotFound:
-      description: Not Found.
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorNotFound'
-    InternalServerError:
-      description: Internal Server Error
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorInternalServerError'
-    Forbidden:
-      description: Forbidden.
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorForbidden'
-    Unauthorized:
-      description: Unauthorized.
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorUnauthorized'
-    BadRequest:
-      description: Bad Request
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorConstraintViolation'
   schemas:
-    CategoryName:
+    AttributeValue:
       type: string
-      description: The category name.
+      description: The attribute value.
       maxLength: 50
       pattern: ^[^\s|\[\*`/?=;,.\]]([^\[\*`/?=;,.\]]{0,48}[^\s|\[\*`/?=;,.\]])?$
-      example: Language
-    CategoryUpdate:
-      type: object
-      description: Update attributes for matching in category.
-      required:
-      - attributes
-      properties:
-        attributes:
-          type: array
-          description: 'List of attributes. Empty list is supported.
-
-            '
-          minItems: 0
-          maxItems: 100
-          items:
-            $ref: '#/components/schemas/Attribute'
-    Links:
-      type: object
-      properties:
-        prev:
-          type: string
-          description: URL of the previous page. Blank if currently on the first page.
-        next:
-          type: string
-          description: URL of the next page. Blank if currently on the last page.
-    Category:
-      type: object
-      description: Category used for matching. Contains the category name and a list of attributes.
-      required:
-      - name
-      - attributes
-      properties:
-        categoryId:
-          $ref: '#/components/schemas/CategoryId'
-        name:
-          $ref: '#/components/schemas/CategoryName'
-        attributes:
-          type: array
-          description: 'List of attributes. Empty list is supported.
-
-            '
-          minItems: 0
-          maxItems: 100
-          items:
-            $ref: '#/components/schemas/Attribute'
+      example: French
     CategoryId:
       type: string
       minLength: 36
@@ -599,60 +326,6 @@ components:
       pattern: ^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}$
       description: The unique 36 character internal id that represents the category.
       example: 4331fa35-9671-4ea0-94e0-517097a5a13a
-    CategoryCreate:
-      type: object
-      description: Create a category and its attributes for matching.
-      required:
-      - name
-      - attributes
-      properties:
-        name:
-          $ref: '#/components/schemas/CategoryName'
-        attributes:
-          type: array
-          description: 'List of attributes. Empty list is supported.
-
-            '
-          minItems: 0
-          maxItems: 100
-          items:
-            $ref: '#/components/schemas/Attribute'
-    AttributeName:
-      type: string
-      description: The internally generated name of the attribute.
-      example: Language.French
-      readOnly: true
-    AttributeValue:
-      type: string
-      description: The attribute value.
-      maxLength: 50
-      pattern: ^[^\s|\[\*`/?=;,.\]]([^\[\*`/?=;,.\]]{0,48}[^\s|\[\*`/?=;,.\]])?$
-      example: French
-    CategoryPage:
-      type: object
-      description: Page of matching categories.
-      properties:
-        pagination:
-          $ref: '#/components/schemas/Pagination'
-        categories:
-          type: array
-          description: List of categories.
-          items:
-            $ref: '#/components/schemas/Category'
-        links:
-          $ref: '#/components/schemas/Links'
-    Pagination:
-      type: object
-      properties:
-        pageNumber:
-          type: integer
-          description: The current page number.
-        pageSize:
-          type: integer
-          description: The max number of records that can be retrieved on this page.
-        total:
-          type: integer
-          description: The total number of records.
     Attribute:
       type: object
       description: Matching attribute in category
@@ -748,6 +421,333 @@ components:
           - field: accountId
             message: must match "^[a-zA-Z]{6}$"
             code: 20006
+    CategoryName:
+      type: string
+      description: The category name.
+      maxLength: 50
+      pattern: ^[^\s|\[\*`/?=;,.\]]([^\[\*`/?=;,.\]]{0,48}[^\s|\[\*`/?=;,.\]])?$
+      example: Language
+    AttributeName:
+      type: string
+      description: The internally generated name of the attribute.
+      example: Language.French
+      readOnly: true
+    CategoryPage:
+      type: object
+      description: Page of matching categories.
+      properties:
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+        categories:
+          type: array
+          description: List of categories.
+          items:
+            $ref: '#/components/schemas/Category'
+        links:
+          $ref: '#/components/schemas/Links'
+    CategoryCreate:
+      type: object
+      description: Create a category and its attributes for matching.
+      required:
+      - name
+      - attributes
+      properties:
+        name:
+          $ref: '#/components/schemas/CategoryName'
+        attributes:
+          type: array
+          description: 'List of attributes. Empty list is supported.
+
+            '
+          minItems: 0
+          maxItems: 100
+          items:
+            $ref: '#/components/schemas/Attribute'
+    CategoryUpdate:
+      type: object
+      description: Update attributes for matching in category.
+      required:
+      - attributes
+      properties:
+        attributes:
+          type: array
+          description: 'List of attributes. Empty list is supported.
+
+            '
+          minItems: 0
+          maxItems: 100
+          items:
+            $ref: '#/components/schemas/Attribute'
+    Category:
+      type: object
+      description: Category used for matching. Contains the category name and a list of attributes.
+      required:
+      - name
+      - attributes
+      properties:
+        categoryId:
+          $ref: '#/components/schemas/CategoryId'
+        name:
+          $ref: '#/components/schemas/CategoryName'
+        attributes:
+          type: array
+          description: 'List of attributes. Empty list is supported.
+
+            '
+          minItems: 0
+          maxItems: 100
+          items:
+            $ref: '#/components/schemas/Attribute'
+    Pagination:
+      type: object
+      properties:
+        pageNumber:
+          type: integer
+          description: The current page number.
+        pageSize:
+          type: integer
+          description: The max number of records that can be retrieved on this page.
+        total:
+          type: integer
+          description: The total number of records.
+    Links:
+      type: object
+      properties:
+        prev:
+          type: string
+          description: URL of the previous page. Blank if currently on the first page.
+        next:
+          type: string
+          description: URL of the next page. Blank if currently on the last page.
+  responses:
+    InternalServerError:
+      description: Internal Server Error
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorInternalServerError'
+    Unauthorized:
+      description: Unauthorized.
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorUnauthorized'
+    BulkCategoryNameExists:
+      description: Conflict
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorBulkCategoryNameExists'
+    CategoryNameExists:
+      description: Conflict
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorCategoryNameExists'
+    NotFound:
+      description: Not Found.
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorNotFound'
+    BadRequest:
+      description: Bad Request
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorConstraintViolation'
+    Forbidden:
+      description: Forbidden.
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorForbidden'
+  examples:
+    BulkCategoryArray:
+      description: 'Category name can be inferred in attributes.
+
+        '
+      value:
+      - name: Language
+        attributes:
+        - value: French
+        - value: German
+      - name: Product
+        attributes:
+        - value: Mobile
+        - value: Landline
+    ErrorForbidden:
+      description: Forbidden
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#forbidden
+        title: Forbidden
+        status: 403
+        detail: According to the access control policy the current user and/or accountId does not have permission to access this resource.
+    GetCategory:
+      description: 'Generated attribute name included.
+
+        '
+      value:
+        categoryId: 4331fa35-9671-4ea0-94e0-517097a5a13a
+        name: Language
+        attributes:
+        - value: French
+          name: Language.French
+        - value: German
+          name: Language.German
+    ErrorConstraintViolation:
+      description: Constraint Violation
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#constraint-violation
+        title: Constraint Violation
+        status: 400
+        detail: A problem that indicates a syntactically correct, yet semantically illegal request. The Server can not process this request until the client resolves the semantic errors described in the violations section.
+        violations:
+        - field: accountId
+          message: must match "^[a-zA-Z]{6}$"
+          code: 20006
+    ErrorNotFound:
+      description: Not Found
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#resource-not-found
+        title: Resource Not Found
+        status: 404
+        detail: Either there is no API method associated with the URL path of the request, or the request refers to one or more resources that were not found.
+    BulkDeleteCategoryArray:
+      description: 'Array of category ids to delete.
+
+        '
+      value:
+      - 4331fa35-9671-4ea0-94e0-517097a5a13a
+      - a730d229-c386-43df-9241-b5191af2725c
+    PrevBulkCategoryResponseArray:
+      description: 'Previous properties, by category.
+
+        '
+      value:
+      - categoryId: 4331fa35-9671-4ea0-94e0-517097a5a13a
+        name: Language
+        attributes:
+        - value: English
+          name: Language.English
+        - value: French
+          name: Language.French
+      - categoryId: a730d229-c386-43df-9241-b5191af2725c
+        name: Product
+        attributes:
+        - value: Landline
+          name: Product.Landline
+    PostCategory:
+      description: 'Create named category with an initial list of attribute values.
+
+        '
+      value:
+        name: Language
+        attributes:
+        - value: French
+        - value: German
+    ErrorUnauthorized:
+      description: Unauthorized
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#unauthorized
+        title: Unauthorized
+        status: 401
+        detail: This operation requires authentication. See https://developers.avayacloud.com/onecloud-ccaas/docs/how-to-authenticate-with-ccaas-apis
+    ErrorBulkCategoryNameExists:
+      description: Constraint Violation
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#conflict
+        title: Conflict
+        status: 409
+        detail: A resource with the same unique constraint values already exists.
+        violations:
+        - field: bulkCreateCategories.createCategory[0].name
+          message: A category with this name already exists
+    PutCategory:
+      description: 'Update attributes belonging to category.
+
+        '
+      value:
+        attributes:
+        - value: French
+        - value: German
+    ErrorCategoryNameExists:
+      description: Constraint Violation
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#conflict
+        title: Conflict
+        status: 409
+        detail: A resource with the same unique constraint values already exists.
+        violations:
+        - field: name
+          message: A category with this name already exists
+    PrevCategoryResponse:
+      description: 'Previous category properties, if found.
+
+        '
+      value:
+        categoryId: 4331fa35-9671-4ea0-94e0-517097a5a13a
+        name: Language
+        attributes:
+        - value: English
+          name: Language.English
+        - value: French
+          name: Language.French
+    AllCategoryResponsePage:
+      description: 'Page of categories.
+
+        '
+      value:
+        pagination:
+          pageNumber: 2
+          pageSize: 10
+          total: 3
+        categories:
+        - categoryId: 4331fa35-9671-4ea0-94e0-517097a5a13a
+          name: Language
+          attributes:
+          - value: French
+            name: Language.French
+          - value: German
+            name: Language.German
+        - categoryId: a730d229-c386-43df-9241-b5191af2725c
+          name: Product
+          attributes:
+          - value: Landline
+            name: Product.Landline
+          - value: Mobile
+            name: Product.Mobile
+        links:
+          next: /api/admin/match/v1/accounts/ABCDEF/categories?pageNumber=3&pageSize=10
+          prev: /api/admin/match/v1/accounts/ABCDEF/categories?pageNumber=1&pageSize=10
+    ErrorInternalServerError:
+      description: Server Error
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#server-error
+        title: Server Error
+        status: 500
+        detail: An internal server error was encountered.
   parameters:
     accountId:
       name: accountId

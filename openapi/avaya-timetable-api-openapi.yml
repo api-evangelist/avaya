@@ -160,21 +160,12 @@ paths:
           $ref: '#/components/responses/InternalServer'
 components:
   examples:
-    TimetablePageResponse:
+    TimetableCreate:
       value:
-        pagination:
-          pageNumber: 2
-          pageSize: 10
-          total: 11
-        timetables:
-        - timetableId: 8c872648-2b50-11ec-8d3d-0242ac130003
-          name: Timetable 2021
-          description: A timetable for 2021 that contains a five-day working week without interruptions
-          timeZone: Europe/Dublin
-          autoDaylightSavingTime: true
-        links:
-          prev: /api/business-hours/v1/accounts/JDBUTC/timetables?pageNumber=2&pageSize=10
-          next: ''
+        name: Timetable 2021
+        description: A timetable for 2021 that contains a five-day working week without interruptions
+        timeZone: Europe/Dublin
+        autoDaylightSavingTime: true
     ErrorForbidden:
       description: Forbidden
       value:
@@ -182,12 +173,13 @@ components:
         title: Forbidden
         status: 403
         detail: According to the access control policy the current user and/or accountId does not have permission to access this resource.
-    TimetableCreate:
+    ErrorConflict:
+      description: Conflict
       value:
-        name: Timetable 2021
-        description: A timetable for 2021 that contains a five-day working week without interruptions
-        timeZone: Europe/Dublin
-        autoDaylightSavingTime: true
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#conflict
+        title: Conflict
+        status: 409
+        detail: Conflict data.
     ErrorConstraintViolation:
       description: Constraint Violation
       value:
@@ -206,13 +198,6 @@ components:
         title: Resource Not Found
         status: 404
         detail: Resource not found.
-    ErrorUnauthorized:
-      description: Unauthorized
-      value:
-        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#unauthorized
-        title: Unauthorized
-        status: 401
-        detail: This operation requires authentication. See https://developers.avayacloud.com/onecloud-ccaas/docs/how-to-authenticate-with-ccaas-apis
     TimetableResponse:
       value:
         timetableId: 8c872648-2b50-11ec-8d3d-0242ac130003
@@ -220,13 +205,28 @@ components:
         description: A timetable for 2021 that contains a five-day working week without interruptions
         timeZone: Europe/Dublin
         autoDaylightSavingTime: true
-    ErrorConflict:
-      description: Conflict
+    ErrorUnauthorized:
+      description: Unauthorized
       value:
-        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#conflict
-        title: Conflict
-        status: 409
-        detail: Conflict data.
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#unauthorized
+        title: Unauthorized
+        status: 401
+        detail: This operation requires authentication. See https://developers.avayacloud.com/onecloud-ccaas/docs/how-to-authenticate-with-ccaas-apis
+    TimetablePageResponse:
+      value:
+        pagination:
+          pageNumber: 2
+          pageSize: 10
+          total: 11
+        timetables:
+        - timetableId: 8c872648-2b50-11ec-8d3d-0242ac130003
+          name: Timetable 2021
+          description: A timetable for 2021 that contains a five-day working week without interruptions
+          timeZone: Europe/Dublin
+          autoDaylightSavingTime: true
+        links:
+          prev: /api/business-hours/v1/accounts/JDBUTC/timetables?pageNumber=2&pageSize=10
+          next: ''
     ErrorInternalServerError:
       description: Server Error
       value:
@@ -234,52 +234,62 @@ components:
         title: Server Error
         status: 500
         detail: An internal server error was encountered.
+  parameters:
+    pageSize:
+      name: pageSize
+      description: The maximum number of results per page.
+      required: false
+      in: query
+      schema:
+        type: integer
+        format: int32
+        default: 5
+        minimum: 5
+        maximum: 50
+        example: 5
+    timetableId:
+      name: timetableId
+      in: path
+      required: true
+      description: The unique 36 character internal id that represents the timetable.
+      schema:
+        type: string
+        minLength: 36
+        maxLength: 36
+        pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
+        example: 8c872648-2b50-11ec-8d3d-0242ac130003
+    accountId:
+      name: accountId
+      description: The unique 6 character internal id that represents the customer account.
+      required: true
+      in: path
+      schema:
+        type: string
+        minLength: 6
+        maxLength: 6
+        pattern: ^[a-zA-Z]{6}$
+        example: ABCDEF
+    pageNumber:
+      name: pageNumber
+      description: The target page of results.
+      required: false
+      in: query
+      schema:
+        type: integer
+        format: int32
+        default: 1
+        minimum: 1
+        example: 1
   responses:
-    NotFound:
-      description: Not Found
+    TimetableResponse:
+      description: Timetable Response
       content:
-        application/problem+json:
+        application/json:
           schema:
-            $ref: '#/components/schemas/Problem'
+            $ref: '#/components/schemas/Timetable'
           examples:
-            default:
-              $ref: '#/components/examples/ErrorNotFound'
-    BadRequest:
-      description: BadRequest
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorConstraintViolation'
-    InternalServer:
-      description: Internal Server Error
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorInternalServerError'
-    Conflict:
-      description: Conflict
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorConflict'
-    Forbidden:
-      description: Forbidden
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorForbidden'
+            Timetable-Response:
+              $ref: '#/components/examples/TimetableResponse'
     Unauthorized:
       description: Unauthorized
       content:
@@ -298,15 +308,51 @@ components:
           examples:
             Timetable-Page-Response:
               $ref: '#/components/examples/TimetablePageResponse'
-    TimetableResponse:
-      description: Timetable Response
+    InternalServer:
+      description: Internal Server Error
       content:
-        application/json:
+        application/problem+json:
           schema:
-            $ref: '#/components/schemas/Timetable'
+            $ref: '#/components/schemas/Problem'
           examples:
-            Timetable-Response:
-              $ref: '#/components/examples/TimetableResponse'
+            default:
+              $ref: '#/components/examples/ErrorInternalServerError'
+    Conflict:
+      description: Conflict
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorConflict'
+    NotFound:
+      description: Not Found
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorNotFound'
+    BadRequest:
+      description: BadRequest
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorConstraintViolation'
+    Forbidden:
+      description: Forbidden
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorForbidden'
   requestBodies:
     TimetableRequestBody:
       content:
@@ -318,117 +364,7 @@ components:
               $ref: '#/components/examples/TimetableCreate'
       required: true
       description: Create/Update Timetable request
-  parameters:
-    accountId:
-      name: accountId
-      description: The unique 6 character internal id that represents the customer account.
-      required: true
-      in: path
-      schema:
-        type: string
-        minLength: 6
-        maxLength: 6
-        pattern: ^[a-zA-Z]{6}$
-        example: ABCDEF
-    pageSize:
-      name: pageSize
-      description: The maximum number of results per page.
-      required: false
-      in: query
-      schema:
-        type: integer
-        format: int32
-        default: 5
-        minimum: 5
-        maximum: 50
-        example: 5
-    pageNumber:
-      name: pageNumber
-      description: The target page of results.
-      required: false
-      in: query
-      schema:
-        type: integer
-        format: int32
-        default: 1
-        minimum: 1
-        example: 1
-    timetableId:
-      name: timetableId
-      in: path
-      required: true
-      description: The unique 36 character internal id that represents the timetable.
-      schema:
-        type: string
-        minLength: 36
-        maxLength: 36
-        pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
-        example: 8c872648-2b50-11ec-8d3d-0242ac130003
   schemas:
-    TimetablesPage:
-      description: A paginated list of timetables
-      type: object
-      properties:
-        pagination:
-          $ref: '#/components/schemas/Pagination'
-        timetables:
-          type: array
-          description: List of timetables
-          items:
-            $ref: '#/components/schemas/Timetable'
-        links:
-          $ref: '#/components/schemas/Links'
-    Links:
-      type: object
-      properties:
-        prev:
-          type: string
-          description: URL of the previous page. Blank if currently on the first page.
-        next:
-          type: string
-          description: URL of the next page. Blank if currently on the last page.
-    Timetable:
-      type: object
-      required:
-      - name
-      - description
-      - timeZone
-      properties:
-        timetableId:
-          type: string
-          readOnly: true
-          description: The unique 36 character internal id that represents the timetable.
-          minLength: 36
-          maxLength: 36
-          pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
-        name:
-          type: string
-          description: The name of the timetable. Timetable names are not unique.
-          maxLength: 256
-        description:
-          type: string
-          description: The description of the timetable
-          maxLength: 1024
-        timeZone:
-          type: string
-          description: The time zone of the timetable. Formatted as an IANA Time Zone Database name, e.g. 'Europe/Zurich'
-          maxLength: 50
-        autoDaylightSavingTime:
-          type: boolean
-          default: false
-          description: When true auto daylight saving time will be enabled. Default value is false.
-    Pagination:
-      type: object
-      properties:
-        pageNumber:
-          type: integer
-          description: The current page number.
-        pageSize:
-          type: integer
-          description: The max number of records that can be retrieved on this page.
-        total:
-          type: integer
-          description: The total number of records.
     Problem:
       type: object
       description: '<b>Problem Detail</b> as a way to carry machine-readable details of errors in a HTTP response to avoid the need to define new error response formats for HTTP APIs <a href="https://tools.ietf.org/html/rfc7807">RFC 7807</a>
@@ -514,6 +450,70 @@ components:
           - field: accountId
             message: must match "^[a-zA-Z]{6}$"
             code: 20006
+    Timetable:
+      type: object
+      required:
+      - name
+      - description
+      - timeZone
+      properties:
+        timetableId:
+          type: string
+          readOnly: true
+          description: The unique 36 character internal id that represents the timetable.
+          minLength: 36
+          maxLength: 36
+          pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
+        name:
+          type: string
+          description: The name of the timetable. Timetable names are not unique.
+          maxLength: 256
+        description:
+          type: string
+          description: The description of the timetable
+          maxLength: 1024
+        timeZone:
+          type: string
+          description: The time zone of the timetable. Formatted as an IANA Time Zone Database name, e.g. 'Europe/Zurich'
+          maxLength: 50
+        autoDaylightSavingTime:
+          type: boolean
+          default: false
+          description: When true auto daylight saving time will be enabled. Default value is false.
+    TimetablesPage:
+      description: A paginated list of timetables
+      type: object
+      properties:
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+        timetables:
+          type: array
+          description: List of timetables
+          items:
+            $ref: '#/components/schemas/Timetable'
+        links:
+          $ref: '#/components/schemas/Links'
+    Pagination:
+      type: object
+      properties:
+        pageNumber:
+          type: integer
+          description: The current page number.
+        pageSize:
+          type: integer
+          description: The max number of records that can be retrieved on this page.
+        total:
+          type: integer
+          description: The total number of records.
+    Links:
+      type: object
+      properties:
+        prev:
+          type: string
+          description: URL of the previous page. Blank if currently on the first page.
+        next:
+          type: string
+          description: URL of the next page. Blank if currently on the last page.
   securitySchemes:
     BearerAuth:
       type: http

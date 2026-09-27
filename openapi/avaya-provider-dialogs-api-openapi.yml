@@ -100,43 +100,6 @@ paths:
           $ref: '#/components/responses/InternalServerError'
       deprecated: false
 components:
-  responses:
-    Forbidden:
-      description: Forbidden.
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorForbidden'
-    Unauthorized:
-      description: Unauthorized.
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorUnauthorized'
-    InternalServerError:
-      description: Internal Server Error
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorInternalServerError'
-    BadRequest:
-      description: Bad Request
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorConstraintViolation'
   examples:
     ErrorForbidden:
       description: Forbidden
@@ -145,29 +108,8 @@ components:
         title: Forbidden
         status: 403
         detail: According to the access control policy the current user and/or accountId does not have permission to access this resource.
-    ErrorInternalServerError:
-      description: Internal Server Error
-      value:
-        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#internal-error
-        title: Internal Server Error
-        status: 500
-        detail: An internal server error was encountered.
-    ErrorUnauthorized:
-      description: Unauthorized
-      value:
-        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#unauthorized
-        title: Unauthorized
-        status: 401
-        detail: This operation requires authentication. See https://developers.avayacloud.com/onecloud-ccaas/docs/how-to-authenticate-with-ccaas-apis
     DisconnectProviderDialog:
       value:
-        channelProviderId: 591c2529-c3a3-4062-a213-b239c18f543b
-        businessAccountName: e94e278d-72e7-48cc-80fc-dba9f8dd1c36
-        reason: SYSTEM_CLOSED
-        correlationId: zc38400d-c44f-4451-8316-e75c4efbt779
-    DisconnectProviderDialogResponse:
-      value:
-        providerDialogId: ed7e49dc8458c71d1d2f1e31
         channelProviderId: 591c2529-c3a3-4062-a213-b239c18f543b
         businessAccountName: e94e278d-72e7-48cc-80fc-dba9f8dd1c36
         reason: SYSTEM_CLOSED
@@ -182,18 +124,65 @@ components:
         violations:
         - field: accountId
           message: must match "^[a-zA-Z]{6}$"
+    ErrorUnauthorized:
+      description: Unauthorized
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#unauthorized
+        title: Unauthorized
+        status: 401
+        detail: This operation requires authentication. See https://developers.avayacloud.com/onecloud-ccaas/docs/how-to-authenticate-with-ccaas-apis
+    DisconnectProviderDialogResponse:
+      value:
+        providerDialogId: ed7e49dc8458c71d1d2f1e31
+        channelProviderId: 591c2529-c3a3-4062-a213-b239c18f543b
+        businessAccountName: e94e278d-72e7-48cc-80fc-dba9f8dd1c36
+        reason: SYSTEM_CLOSED
+        correlationId: zc38400d-c44f-4451-8316-e75c4efbt779
+    ErrorInternalServerError:
+      description: Internal Server Error
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#internal-error
+        title: Internal Server Error
+        status: 500
+        detail: An internal server error was encountered.
+  responses:
+    Unauthorized:
+      description: Unauthorized.
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorUnauthorized'
+    BadRequest:
+      description: Bad Request
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorConstraintViolation'
+    Forbidden:
+      description: Forbidden.
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorForbidden'
+    InternalServerError:
+      description: Internal Server Error
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorInternalServerError'
   parameters:
-    accountId:
-      name: accountId
-      description: The unique 6 character internal id that represents the customer account.
-      required: true
-      in: path
-      schema:
-        type: string
-        minLength: 6
-        maxLength: 6
-        pattern: ^[a-zA-Z]{6}$
-        example: ABCDEF
     providerDialogId:
       name: providerDialogId
       description: 'The provider side identifier for a Contact Center dialog.  Messages with same ''providerDialogId'' value are considered part of same conversation.  If no or blank value is passed while sending a message, a new individual dialog  will be created. For integrating third party providers, provide the identifier that represents an individual conversation in the third party provider.
@@ -206,6 +195,17 @@ components:
         minLength: 3
         maxLength: 256
         example: ed7e49dc8458c71d1d2f1e31
+    accountId:
+      name: accountId
+      description: The unique 6 character internal id that represents the customer account.
+      required: true
+      in: path
+      schema:
+        type: string
+        minLength: 6
+        maxLength: 6
+        pattern: ^[a-zA-Z]{6}$
+        example: ABCDEF
   schemas:
     DisconnectProviderDialog:
       type: object

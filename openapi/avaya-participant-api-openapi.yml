@@ -121,6 +121,13 @@ paths:
           $ref: '#/components/responses/InternalServer'
 components:
   examples:
+    ErrorForbidden:
+      description: Forbidden
+      value:
+        type: https://developers.avayacloud.com/avaya-experience-platform/docs/error-handling#forbidden
+        title: Forbidden
+        status: 403
+        detail: According to the access control policy the current user and/or accountId does not have permission to access this resource.
     ErrorConstraintViolation:
       description: Constraint Violation
       value:
@@ -132,6 +139,13 @@ components:
         - field: accountId
           message: must match "^[a-zA-Z]{6}$"
           code: 20006
+    ErrorNotFound:
+      description: Not Found
+      value:
+        type: https://developers.avayacloud.com/avaya-experience-platform/docs/error-handling#resource-not-found
+        title: Resource Not Found
+        status: 404
+        detail: Resource not found.
     participant-create-treatment:
       value:
         type: TREATMENT
@@ -140,28 +154,6 @@ components:
         automationType: SELF_SERVICE
         timestamp: '2019-07-23T17:45:21.002Z'
         dialogId: 67ec5131-259c-4924-bb08-d87cf315e5e3
-    ErrorNotFound:
-      description: Not Found
-      value:
-        type: https://developers.avayacloud.com/avaya-experience-platform/docs/error-handling#resource-not-found
-        title: Resource Not Found
-        status: 404
-        detail: Resource not found.
-    ErrorForbidden:
-      description: Forbidden
-      value:
-        type: https://developers.avayacloud.com/avaya-experience-platform/docs/error-handling#forbidden
-        title: Forbidden
-        status: 403
-        detail: According to the access control policy the current user and/or accountId does not have permission to access this resource.
-    participant-create-agent:
-      value:
-        type: AGENT
-        channelId: Voice
-        channelType: VOICE
-        extension: ext/1234
-        timestamp: '2019-07-23T17:45:21.003Z'
-        dialogId: 57f78d8e-5579-47de-b3d0-8aee161039c0
     ErrorUnauthorized:
       description: Unauthorized
       value:
@@ -169,6 +161,13 @@ components:
         title: Unauthorized
         status: 401
         detail: This operation requires authentication. See https://developers.avayacloud.com/avaya-experience-platform/docs/how-to-authenticate-with-ccaas-apis
+    ErrorInternalServerError:
+      description: Server Error
+      value:
+        type: https://developers.avayacloud.com/avaya-experience-platform/docs/error-handling#server-error
+        title: Server Error
+        status: 500
+        detail: An internal server error was encountered.
     participant-create-external:
       value:
         type: EXTERNAL
@@ -178,50 +177,14 @@ components:
         dialledNumber: 1590 12345
         timestamp: '2019-07-23T17:45:21.001Z'
         dialogId: 67ec5131-259c-4924-bb08-d87cf315e5e3
-    ErrorInternalServerError:
-      description: Server Error
+    participant-create-agent:
       value:
-        type: https://developers.avayacloud.com/avaya-experience-platform/docs/error-handling#server-error
-        title: Server Error
-        status: 500
-        detail: An internal server error was encountered.
-  responses:
-    Forbidden:
-      description: Forbidden
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorForbidden'
-    NotFound:
-      description: Not Found
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorNotFound'
-    Unauthorized:
-      description: Unauthorized
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorUnauthorized'
-    InternalServer:
-      description: Internal Server Error
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorInternalServerError'
+        type: AGENT
+        channelId: Voice
+        channelType: VOICE
+        extension: ext/1234
+        timestamp: '2019-07-23T17:45:21.003Z'
+        dialogId: 57f78d8e-5579-47de-b3d0-8aee161039c0
   parameters:
     accountId:
       name: accountId
@@ -255,6 +218,43 @@ components:
         minLength: 1
         maxLength: 36
         example: 1b3232rerew343432432432
+  responses:
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorUnauthorized'
+    NotFound:
+      description: Not Found
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorNotFound'
+    Forbidden:
+      description: Forbidden
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorForbidden'
+    InternalServer:
+      description: Internal Server Error
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorInternalServerError'
   schemas:
     Problem:
       type: object

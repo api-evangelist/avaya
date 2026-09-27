@@ -179,327 +179,322 @@ paths:
         '500':
           $ref: '#/components/responses/InternalServer'
 components:
-  examples:
-    AgentLoginLogoutByQueueDatasetPage:
-      summary: Agent Login/Logout by Queue dataset
-      description: 'Agent Login/Logout by Queue dataset provides historical agent login and logout events at the queue level.
+  parameters:
+    nextPageToken:
+      name: nextPageToken
+      in: query
+      description: The page token of the next set of records to retrieve, represented as unique 36 characters(uuid).
+      required: false
+      schema:
+        type: string
+        minLength: 36
+        maxLength: 100
+        example: 123e4567-e89b-12d3-a456-556642440000
+    pageSize:
+      name: pageSize
+      in: query
+      description: The maximum number of results per page.
+      required: false
+      schema:
+        type: integer
+        format: int32
+        default: 20
+        minimum: 1
+        maximum: 200
+        example: 20
+    interval:
+      name: interval
+      in: query
+      description: "Specify the interval range to be used.\nMust contain either a single datetime value or both 'starting' and 'ending' datetimes. The datetime format is dependent on the datasetType param.\n\nFor **daily dataset** (datasetType = 'daily')\n  - datetime implies specific day(s).\n  - all datetime expressions should use YYYYMMDD format.\n  - 'HHmm' values should be either omitted or replaced with 0000. Non-standard values may return empty results.\n  - Example values:\n    - starting:20250201\n    - ending:20250225\n    - starting:20250201,ending:20250225\n\n\nFor **interval dataset** (datasetType =  'interval')\n  - all datetime expressions should use YYYYMMDDHHmm format.\n    'mm' part can be used to indicate the 15 min interval such as '00', '15',  '30' or '45'. Non-standard values may return empty results.\n    - interval should be less than atleast 30 mins from the current interval.\n  - Example values:\n    - starting:202502010415\n    - ending:202502251530\n    - starting:202502010415,ending:202502251545\n"
+      required: true
+      schema:
+        type: string
+        minLength: 8
+        maxLength: 41
+      examples:
+        startingInterval:
+          value: starting:202502010415
+          summary: Interval dataset. Data starting from 202502010415 to current(based on pipeline processing status)
+        startEndInterval:
+          value: starting:202502010415,ending:202502010415
+          summary: Interval dataset. Records in 202502010415 interval i.e. 1 interval
+        endingInterval:
+          value: ending:202502251500
+          summary: Interval dataset. Data filtering from beginning to 202502251530
+        bothInterval:
+          value: starting:202502010415,ending:202502010445
+          summary: Interval dataset. Records from 3 intervals, 15, 30, 45
+        startingDay:
+          value: starting:20250201
+          summary: Daily dataset. Data filtering from specified starting date till ending of data rows
+        endingDay:
+          value: ending:20250225
+          summary: Daily dataset. Data filtering from beginning of data rows till specified ending date
+    datasetName:
+      name: datasetName
+      in: path
+      description: 'The unique name of the dataset. Available datasets:
 
-        This data is sourced from user_status_history_silver with status_type=''Q Login'' and allows filtering by time range, agent ID, and queue ID.
+        - `agent` - Agent performance metrics
 
-        The endpoint supports pagination and enforces read-only access with authentication and authorization controls.
+        - `queue` - Queue performance metrics
+
+        - `agentLoginSessions` - Agent login session data
+
+        - `workflow` - Workflow execution data
+
+        - `mpccdr` - MPC CDR data
+
+        - `transcript` - Interaction transcripts
+
+        - `clientSessions` - Client session data
+
+        - `agentAux` - Agent auxiliary/status data
+
+        - `interactionSegments` - Interaction segments (requires Analytics Insights)
+
+        - `workflowTrace` - Workflow trace data (requires Analytics Insights)
+
+        - `cxAgentLoginLogout` - CX Agent login/logout events
+
+        - `agentByQueue` - Agent performance metrics by queue
+
+        - `agentLoginLogoutByQueue` - Agent login/logout events by queue
 
         '
+      required: true
+      schema:
+        type: string
+        minLength: 1
+        maxLength: 50
+      examples:
+        agent:
+          value: agent
+          summary: Agent performance metrics
+        queue:
+          value: queue
+          summary: Queue performance metrics
+        agentLoginSessions:
+          value: agentLoginSessions
+          summary: Agent login session data
+        workflow:
+          value: workflow
+          summary: Workflow execution data
+        mpccdr:
+          value: mpccdr
+          summary: MPC CDR data
+        transcript:
+          value: transcript
+          summary: Interaction transcripts
+        clientSessions:
+          value: clientSessions
+          summary: Client session data
+        agentAux:
+          value: agentAux
+          summary: Agent auxiliary data
+        interactionSegments:
+          value: interactionSegments
+          summary: Interaction segments (Analytics Insights required)
+        workflowTrace:
+          value: workflowTrace
+          summary: Workflow trace data (Analytics Insights required)
+        cxAgentLoginLogout:
+          value: cxAgentLoginLogout
+          summary: CX Agent login/logout events
+        agentByQueue:
+          value: agentByQueue
+          summary: Agent performance metrics by queue
+        agentLoginLogoutByQueue:
+          value: agentLoginLogoutByQueue
+          summary: Agent login/logout events by queue
+    prevPageToken:
+      name: prevPageToken
+      in: query
+      description: 'Reserved for future use. Backward pagination is not currently supported. Submitting this parameter has no effect. The response will always return an empty string for prevPageToken.
+
+        '
+      required: false
+      schema:
+        type: string
+        minLength: 36
+        maxLength: 100
+        example: 123e4567-e89b-12d3-a456-556642440000
+    filter:
+      name: filter
+      in: query
+      description: "Specifies details of a row filter. The allowed format:\n  - Begins with the column name to be filtered, followed by a colon, then:\n  - Either an exact string to match, or\n  - A string expression including the * wildcard character\n\n**Important:** Not all column names are valid filter keys. Using an unsupported column name\nreturns `400 Invalid filter column`. The following columns are known to be filterable:\n  - `CHANNEL` — e.g., `CHANNEL:phone`\n  - `AGENT_ID` — e.g., `AGENT_ID:002d011106bf83ae15133ec0a7`\n  - `QUEUE_ID` — e.g., `QUEUE_ID:003d0110243d0fd4d9c7f27dea`\n  - `ACCOUNT_ID` — e.g., `ACCOUNT_ID:001d010917f6594b9a104630f7`\n\nColumns not listed above (e.g., `AGENT_NAME`) are not accepted as filter keys and will\nreturn a `400` error. Contact Avaya support to confirm the full list of filterable columns\nfor a specific dataset.\n"
+      required: false
+      schema:
+        type: string
+        minLength: 3
+        maxLength: 256
+      examples:
+        equals:
+          value: AGENT_ID:123
+          summary: Exact string to match
+        like:
+          value: CHANNEL:phone
+          summary: Expression including the * wildcard character
+    datasetType:
+      name: datasetType
+      in: query
+      description: "The type of dataset to be retrieved. The allowed values are:\n  - daily\n  - interval\nThe default value is 'interval'.\nThe datasetType param is used to determine the format of the interval param.\n"
+      required: false
+      schema:
+        type: string
+        example: daily
+  examples:
+    QueueDatasetPage:
       value:
         columnHeaders:
         - name: ROW_ID
           type: string
-        - name: ROW_DATE_UTC
-          type: datetime
         - name: STARTTIME
           type: string
+        - name: INTERVAL
+          type: number
         - name: STARTTIME_UTC
           type: datetime
         - name: SOURCE_SYSTEM
           type: string
-        - name: SESSION_ID
-          type: string
         - name: ACCOUNT_ID
           type: string
         - name: QUEUE_ID
-          type: string
-        - name: AGENT_ID
-          type: string
-        - name: LOGIN_TIME
-          type: datetime
-        - name: LOGOUT_TIME
-          type: datetime
-        - name: LOGOUT_REASON
-          type: string
-        - name: COMMIT_TS
-          type: datetime
-        records:
-        - - haglog-001-abc123def456
-          - '2026-03-10'
-          - 08:00
-          - '2026-03-10T08:00:00Z'
-          - AXP
-          - session-001-xyz
-          - 001d010917f6594b9a104630f7
-          - 003d0110243d0fd4d9c7f27dea
-          - 002d011106bf83ae15133ec0a7
-          - '2026-03-10T08:00:00Z'
-          - '2026-03-10T17:00:00Z'
-          - Manual
-          - '2026-03-10T17:05:00.123Z'
-        - - haglog-002-abc123def456
-          - '2026-03-10'
-          - 08:30
-          - '2026-03-10T08:30:00Z'
-          - AXP
-          - session-002-xyz
-          - 001d010917f6594b9a104630f7
-          - 003d011106bbb091e8af2a4719
-          - 002d011106bf83ae15133ec0a7
-          - '2026-03-10T08:30:00Z'
-          - ''
-          - ''
-          - '2026-03-10T08:35:00.456Z'
-        pagination:
-          pageSize: 20
-          prevPageToken: ''
-          nextPageToken: MjAyNi0wMy0xMFQwMDowMDowMFpAaGFnbG9nLTAwMi1hYmMxMjNkZWY0NTY=
-        links:
-          prev: ''
-          next: /v2/datasets/agentLoginLogoutByQueue?interval=starting%3A20260310%2Cending%3A20260310&nextPageToken=MjAyNi0wMy0xMFQwMDowMDowMFpAaGFnbG9nLTAwMi1hYmMxMjNkZWY0NTY%3D&pageSize=20
-    ErrorForbidden:
-      description: Forbidden
-      value:
-        title: Forbidden
-        status: 403
-        detail: According to the access control policy the current user does not have permission to access this resource.
-    ErrorInsightsEntitlementRequired:
-      description: Analytics Insights Entitlement Required
-      value:
-        title: Forbidden
-        status: 403
-        detail: This dataset requires the Analytics Insights entitlement. Please contact your administrator to enable Analytics Insights for your account.
-    ErrorConstraintViolation:
-      description: Constraint Violation
-      value:
-        title: Constraint Violation
-        status: 400
-        detail: A problem that indicates a syntactically correct, yet semantically illegal request.
-    CXAgentLoginLogoutDatasetPage:
-      summary: CX Agent Login/Logout dataset
-      description: 'CX Agent Login/Logout dataset provides historical agent login and logout session events including duration breakdown by status type.
-
-        '
-      value:
-        columnHeaders:
-        - name: ID
-          type: string
-        - name: ACCOUNT_ID
-          type: string
-        - name: USER_ID
-          type: string
-        - name: STATUS_TYPE
-          type: string
-        - name: STATUS
-          type: string
-        - name: START_TIME
-          type: datetime
-        - name: END_TIME
-          type: datetime
-        - name: DURATION
-          type: number
-        - name: DURATION_AVAILABLE
-          type: number
-        - name: DURATION_AWAY
-          type: number
-        - name: DURATION_BUSY
-          type: number
-        - name: DURATION_OFFLINE
-          type: number
-        - name: IS_SYSTEM
-          type: number
-        - name: IS_LOGIN
-          type: number
-        - name: CREATED_AT
-          type: datetime
-        - name: UPDATED_AT
-          type: datetime
-        records:
-        - - session-001-abc123
-          - 001d010108ea8843ae7f07ca2d
-          - 002d010122f00d24776effc1fa
-          - CX Login
-          - Available
-          - '2026-03-10T08:00:00Z'
-          - ''
-          - '0'
-          - '3600'
-          - '0'
-          - '0'
-          - '0'
-          - '0'
-          - '1'
-          - '2026-03-10T08:00:00Z'
-          - ''
-        - - session-002-abc123
-          - 001d010108ea8843ae7f07ca2d
-          - 002d010122f00d24776effc1fa
-          - CX Login
-          - Offline
-          - '2026-03-10T08:00:00Z'
-          - '2026-03-10T17:00:00Z'
-          - '32400'
-          - '28800'
-          - '1800'
-          - '1800'
-          - '0'
-          - '0'
-          - '1'
-          - '2026-03-10T08:00:00Z'
-          - '2026-03-10T17:00:00Z'
-        pagination:
-          pageSize: 20
-          prevPageToken: ''
-          nextPageToken: MjAyNi0wMy0xMFQwODowMDowMFpAc2Vzc2lvbi0wMDItYWJjMTIz
-        links:
-          prev: ''
-          next: /v2/datasets/cxAgentLoginLogout?interval=starting%3A20260310%2Cending%3A20260310&nextPageToken=MjAyNi0wMy0xMFQwODowMDowMFpAc2Vzc2lvbi0wMDItYWJjMTIz&pageSize=20
-    InteractionSegmentsDatasetPage:
-      summary: Interaction Segments dataset (requires Analytics Insights)
-      description: 'Interaction Segments dataset provides detailed segment-level data for interactions including agent assignments, queue information, and timing metrics.
-
-        This dataset requires the Analytics Insights entitlement.
-
-        '
-      value:
-        columnHeaders:
-        - name: INTERACTION_SEGMENT_ID
-          type: string
-        - name: INTERACTION_ID
-          type: string
-        - name: ACCOUNT_ID
-          type: string
-        - name: QUEUE_ID
-          type: string
-        - name: USER_ID
-          type: string
-        - name: STATUS
-          type: string
-        - name: COMM_TYPE
-          type: string
-        - name: SUB_COMM_TYPE
-          type: string
-        - name: SERVER_NAME
-          type: string
-        - name: RECORDED_RECEIVE
-          type: number
-        - name: RECORDED_TRANSMIT
-          type: number
-        - name: RECORDED_BOTH
-          type: number
-        - name: WAIT_TIME
-          type: number
-        - name: HOLD_TIME
-          type: number
-        - name: TIME_INTERACTING
-          type: number
-        - name: WRAP_UP_TIME
-          type: number
-        - name: END_TIME
-          type: datetime
-        - name: EVENT
-          type: string
-        - name: EVENT_DESC
-          type: string
-        - name: SEGMENT_NUMBER
-          type: number
-        - name: CREATED_ON
-          type: datetime
-        - name: CREATED_BY
-          type: string
-        - name: LAST_UPDATED_BY
-          type: string
-        - name: LAST_UPDATED
-          type: datetime
-        - name: INSERT_API_REQUEST_ID
-          type: string
-        - name: UPDATE_API_REQUEST_ID
-          type: string
-        - name: COMPLETION_TYPE
-          type: string
-        - name: COMPLETION_VALUE
-          type: string
-        - name: COMPLETION_DISPLAY_NAME
-          type: string
-        - name: COMPLETION_TIME_UNIX
-          type: number
-        - name: TRANSFER_LOCATION
-          type: string
-        - name: TRANSFER_RESULT
-          type: string
-        - name: XFER_LOC_QUEUE_ID
-          type: string
-        - name: XFER_LOC_INTERACTION_ID
-          type: string
-        - name: SILENCE_SEGMENTS
-          type: string
-        - name: SILENCE_TOTAL
-          type: number
-        - name: INTERACTION_TYPE
-          type: string
-        - name: INTERACTION_NOTES
-          type: string
-        - name: INTERACTION_RESULT
-          type: string
-        - name: INTERACTION_SUBJECT
-          type: string
-        - name: FIRST_LAST_NAME
           type: string
         - name: QUEUE_NAME
           type: string
-        - name: SOURCE_PHONE_NUMBER
+        - name: CHANNEL
           type: string
-        - name: SOURCE_EMAIL
+        - name: SUB_CHANNEL
           type: string
-        - name: INTERACTION_TAGS
-          type: string
+        - name: INTERACTIONS
+          type: number
+        - name: INTERACTIONSOFFERED
+          type: number
+        - name: WAITTIME
+          type: number
+        - name: MAXOCWTIME
+          type: number
+        - name: HOLDTIME
+          type: number
+        - name: INTERACTIONTIME
+          type: number
+        - name: WRAPUPTIME
+          type: number
+        - name: ABNINTERACTIONS
+          type: number
+        - name: ABNWAITTIME
+          type: number
+        - name: OUTFLOWINTERACTIONS
+          type: number
+        - name: I_INTERACTIONTIME
+          type: number
+        - name: INFLOWINTERACTIONS
+          type: number
+        - name: I_WRAPUPTIME
+          type: number
+        - name: I_STAFFTIME
+          type: number
+        - name: OUTOFFOCUSTIME
+          type: number
+        - name: INTERACTION_OUTOFFOCUSTIME
+          type: number
+        - name: WRAPUP_OUTOFFOCUSTIME
+          type: number
+        - name: I_OUTOFFOCUSTIME
+          type: number
+        - name: I_INTERACTION_OUTOFFOCUSTIME
+          type: number
+        - name: I_WRAPUP_OUTOFFOCUSTIME
+          type: number
+        - name: INTERACTION_INFOCUSTIME
+          type: number
+        - name: WRAPUP_INFOCUSTIME
+          type: number
+        - name: I_INTERACTION_INFOCUSTIME
+          type: number
+        - name: I_WRAPUP_INFOCUSTIME
+          type: number
+        - name: COMMIT_TS
+          type: datetime
         records:
-        - - 005d010209168c243f8be303a6
-          - 004d01020900ba6055326abf2c
-          - 001d010108ea8843ae7f07ca2d
-          - 003d0101224974c284fdf52b35
-          - 002d010122f00d24776effc1fa
-          - connected
-          - task
-          - other
-          - ''
-          - '0'
-          - '0'
-          - '0'
-          - '0'
-          - '0'
-          - '0'
-          - '0'
-          - '2026-02-09T23:56:58Z'
-          - status
-          - connected
-          - '1'
-          - '2026-02-09T23:56:58.479177Z'
-          - ''
-          - 002d010122f00d24776effc1fa
-          - '2026-02-09T23:56:58.522931Z'
-          - 012d010209709c94226939452c
-          - 012d010209e25dc19cda2e8716
-          - ''
-          - ''
-          - ''
-          - '0'
-          - ''
-          - ''
-          - ''
-          - ''
-          - ''
-          - '0'
-          - ''
-          - ''
-          - ''
-          - New task other
-          - Oguz Korkmaz
-          - ''
-          - 'null'
-          - 'null'
-          - '[]'
+        - - ff0f980b5506441efb7073252e3a59f59fb88235f87649d28810fa04bc368ecd
+          - 00:45
+          - 15
+          - '2025-11-25T00:45:00Z'
+          - AXP
+          - 001d010917f6594b9a104630f7
+          - 003d0110243d0fd4d9c7f27dea
+          - Jeffs Queue
+          - email
+          - inbound
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 900
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - '2025-11-25T23:18:16.943Z'
+        - - f80f3d4d3366e29fac7a184ffe24da6f4a529c5f9138e93860c4c3594cb67a5a
+          - 00:45
+          - 15
+          - '2025-11-25T00:45:00Z'
+          - AXP
+          - 001d010917f6594b9a104630f7
+          - 003d011106bbb091e8af2a4719
+          - ZhaoTestQueue
+          - email
+          - inbound
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 900
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - '2025-11-25T23:18:16.943Z'
         pagination:
           pageSize: 20
           prevPageToken: ''
-          nextPageToken: MjAyNi0wMi0wOVQyMzoyNjoxNlpAMDA1ZDAxMDIwOWQ3NjIzYTI4ZTcyYzc0ZmU=
+          nextPageToken: 123e4567-e89b-12d3-a456-556642440000
         links:
           prev: ''
-          next: /v2/datasets/interactionSegments?interval=starting%3A20260207%2Cending%3A20260209&nextPageToken=MjAyNi0wMi0wOVQyMzoyNjoxNlpAMDA1ZDAxMDIwOWQ3NjIzYTI4ZTcyYzc0ZmU%3D&pageSize=20
+          next: /v2/datasets/queue?interval=starting%3A20250310%2Cending%3A20250310&nextPageToken=123e4567-e89b-12d3-a456-556642440000&pageSize=20
     AgentDatasetPage:
       value:
         columnHeaders:
@@ -655,169 +650,103 @@ components:
         links:
           prev: ''
           next: /v2/datasets/agent?nextPageToken=MjAyNS0xMC0yN1QxOTowMDowMFpAMDAyZDAxMTAwOTczZWM1YWQ2OWQzZmNmYWU%3D&pageSize=200
-    QueueDatasetPage:
+    ErrorForbidden:
+      description: Forbidden
       value:
-        columnHeaders:
-        - name: ROW_ID
-          type: string
-        - name: STARTTIME
-          type: string
-        - name: INTERVAL
-          type: number
-        - name: STARTTIME_UTC
-          type: datetime
-        - name: SOURCE_SYSTEM
-          type: string
-        - name: ACCOUNT_ID
-          type: string
-        - name: QUEUE_ID
-          type: string
-        - name: QUEUE_NAME
-          type: string
-        - name: CHANNEL
-          type: string
-        - name: SUB_CHANNEL
-          type: string
-        - name: INTERACTIONS
-          type: number
-        - name: INTERACTIONSOFFERED
-          type: number
-        - name: WAITTIME
-          type: number
-        - name: MAXOCWTIME
-          type: number
-        - name: HOLDTIME
-          type: number
-        - name: INTERACTIONTIME
-          type: number
-        - name: WRAPUPTIME
-          type: number
-        - name: ABNINTERACTIONS
-          type: number
-        - name: ABNWAITTIME
-          type: number
-        - name: OUTFLOWINTERACTIONS
-          type: number
-        - name: I_INTERACTIONTIME
-          type: number
-        - name: INFLOWINTERACTIONS
-          type: number
-        - name: I_WRAPUPTIME
-          type: number
-        - name: I_STAFFTIME
-          type: number
-        - name: OUTOFFOCUSTIME
-          type: number
-        - name: INTERACTION_OUTOFFOCUSTIME
-          type: number
-        - name: WRAPUP_OUTOFFOCUSTIME
-          type: number
-        - name: I_OUTOFFOCUSTIME
-          type: number
-        - name: I_INTERACTION_OUTOFFOCUSTIME
-          type: number
-        - name: I_WRAPUP_OUTOFFOCUSTIME
-          type: number
-        - name: INTERACTION_INFOCUSTIME
-          type: number
-        - name: WRAPUP_INFOCUSTIME
-          type: number
-        - name: I_INTERACTION_INFOCUSTIME
-          type: number
-        - name: I_WRAPUP_INFOCUSTIME
-          type: number
-        - name: COMMIT_TS
-          type: datetime
-        records:
-        - - ff0f980b5506441efb7073252e3a59f59fb88235f87649d28810fa04bc368ecd
-          - 00:45
-          - 15
-          - '2025-11-25T00:45:00Z'
-          - AXP
-          - 001d010917f6594b9a104630f7
-          - 003d0110243d0fd4d9c7f27dea
-          - Jeffs Queue
-          - email
-          - inbound
-          - 0
-          - 0
-          - 0
-          - 0
-          - 0
-          - 0
-          - 0
-          - 0
-          - 0
-          - 0
-          - 0
-          - 0
-          - 0
-          - 900
-          - 0
-          - 0
-          - 0
-          - 0
-          - 0
-          - 0
-          - 0
-          - 0
-          - 0
-          - 0
-          - '2025-11-25T23:18:16.943Z'
-        - - f80f3d4d3366e29fac7a184ffe24da6f4a529c5f9138e93860c4c3594cb67a5a
-          - 00:45
-          - 15
-          - '2025-11-25T00:45:00Z'
-          - AXP
-          - 001d010917f6594b9a104630f7
-          - 003d011106bbb091e8af2a4719
-          - ZhaoTestQueue
-          - email
-          - inbound
-          - 0
-          - 0
-          - 0
-          - 0
-          - 0
-          - 0
-          - 0
-          - 0
-          - 0
-          - 0
-          - 0
-          - 0
-          - 0
-          - 900
-          - 0
-          - 0
-          - 0
-          - 0
-          - 0
-          - 0
-          - 0
-          - 0
-          - 0
-          - 0
-          - '2025-11-25T23:18:16.943Z'
-        pagination:
-          pageSize: 20
-          prevPageToken: ''
-          nextPageToken: 123e4567-e89b-12d3-a456-556642440000
-        links:
-          prev: ''
-          next: /v2/datasets/queue?interval=starting%3A20250310%2Cending%3A20250310&nextPageToken=123e4567-e89b-12d3-a456-556642440000&pageSize=20
+        title: Forbidden
+        status: 403
+        detail: According to the access control policy the current user does not have permission to access this resource.
+    ErrorConstraintViolation:
+      description: Constraint Violation
+      value:
+        title: Constraint Violation
+        status: 400
+        detail: A problem that indicates a syntactically correct, yet semantically illegal request.
     ErrorNotFound:
       description: Not Found
       value:
         title: Resource Not Found
         status: 404
         detail: Resource not found.
-    ErrorUnauthorized:
-      description: Unauthorized
+    AgentAuxDatasetPage:
       value:
-        title: Unauthorized
-        status: 401
-        detail: This operation requires authentication. See https://developers.avayacloud.com/avaya-infinity/docs/how-to-authenticate
+        columnHeaders:
+        - name: ROW_DATE_UTC
+          type: datetime
+        - name: STARTTIME
+          type: string
+        - name: INTERVAL
+          type: number
+        - name: SOURCE_SYSTEM
+          type: string
+        - name: STARTTIME_UTC
+          type: datetime
+        - name: ACCOUNT_ID
+          type: string
+        - name: AGENT_ID
+          type: string
+        - name: AGENT_NAME
+          type: string
+        - name: AGENT_TAGS
+          type: string
+        - name: STATUS_TYPE
+          type: string
+        - name: STATUS
+          type: string
+        - name: AGENT_TIME_ZONE
+          type: string
+        - name: I_STAFFTIME
+          type: number
+        - name: TI_STAFFTIME
+          type: number
+        - name: I_AUXTIME
+          type: number
+        - name: TI_AUXTIME
+          type: number
+        - name: COMMIT_TS
+          type: datetime
+        records:
+        - - '2025-11-25'
+          - 00:45
+          - 15
+          - AXP
+          - '2025-11-25T00:45:00Z'
+          - 001d010917f6594b9a104630f7
+          - 002d011106bf83ae15133ec0a7
+          - Ji RanInf113
+          - team-alpha,support
+          - Q Login
+          - Available
+          - America/New_York
+          - 900
+          - 900
+          - 0
+          - 0
+          - '2025-11-25T23:18:55.781Z'
+        - - '2025-11-25'
+          - 00:45
+          - 15
+          - AXP
+          - '2025-11-25T00:45:00Z'
+          - 001d010917f6594b9a104630f7
+          - 002d0110314f2a4260d8778b95
+          - test digital
+          - team-beta
+          - busy
+          - On Call
+          - UTC
+          - 600
+          - 900
+          - 300
+          - 300
+          - '2025-11-25T23:18:55.781Z'
+        pagination:
+          pageSize: 200
+          prevPageToken: ''
+          nextPageToken: MjAyNS0xMC0yN1QxOTowMDowMFpAMDAyZDAxMTAwOTczZWM1YWQ2OWQzZmNmYWU=
+        links:
+          prev: ''
+          next: /v2/datasets/agentAux?nextPageToken=MjAyNS0xMC0yN1QxOTowMDowMFpAMDAyZDAxMTAwOTczZWM1YWQ2OWQzZmNmYWU%3D&pageSize=200
     AgentByQueueDatasetPage:
       summary: Agent by Queue dataset
       description: 'Agent by Queue dataset provides historical performance metrics for agents within specific queues.
@@ -937,6 +866,91 @@ components:
         links:
           prev: ''
           next: /v2/datasets/agentByQueue?interval=starting%3A20260310%2Cending%3A20260310&nextPageToken=MjAyNi0wMy0xMFQwMDo0NTowMFpAYjJjM2Q0ZTVmNjc4OTAxMjM0NTY3ODkwMTIzNDU2Nzg5MGFiY2RlZjEy&pageSize=20
+    ErrorUnauthorized:
+      description: Unauthorized
+      value:
+        title: Unauthorized
+        status: 401
+        detail: This operation requires authentication. See https://developers.avayacloud.com/avaya-infinity/docs/how-to-authenticate
+    CXAgentLoginLogoutDatasetPage:
+      summary: CX Agent Login/Logout dataset
+      description: 'CX Agent Login/Logout dataset provides historical agent login and logout session events including duration breakdown by status type.
+
+        '
+      value:
+        columnHeaders:
+        - name: ID
+          type: string
+        - name: ACCOUNT_ID
+          type: string
+        - name: USER_ID
+          type: string
+        - name: STATUS_TYPE
+          type: string
+        - name: STATUS
+          type: string
+        - name: START_TIME
+          type: datetime
+        - name: END_TIME
+          type: datetime
+        - name: DURATION
+          type: number
+        - name: DURATION_AVAILABLE
+          type: number
+        - name: DURATION_AWAY
+          type: number
+        - name: DURATION_BUSY
+          type: number
+        - name: DURATION_OFFLINE
+          type: number
+        - name: IS_SYSTEM
+          type: number
+        - name: IS_LOGIN
+          type: number
+        - name: CREATED_AT
+          type: datetime
+        - name: UPDATED_AT
+          type: datetime
+        records:
+        - - session-001-abc123
+          - 001d010108ea8843ae7f07ca2d
+          - 002d010122f00d24776effc1fa
+          - CX Login
+          - Available
+          - '2026-03-10T08:00:00Z'
+          - ''
+          - '0'
+          - '3600'
+          - '0'
+          - '0'
+          - '0'
+          - '0'
+          - '1'
+          - '2026-03-10T08:00:00Z'
+          - ''
+        - - session-002-abc123
+          - 001d010108ea8843ae7f07ca2d
+          - 002d010122f00d24776effc1fa
+          - CX Login
+          - Offline
+          - '2026-03-10T08:00:00Z'
+          - '2026-03-10T17:00:00Z'
+          - '32400'
+          - '28800'
+          - '1800'
+          - '1800'
+          - '0'
+          - '0'
+          - '1'
+          - '2026-03-10T08:00:00Z'
+          - '2026-03-10T17:00:00Z'
+        pagination:
+          pageSize: 20
+          prevPageToken: ''
+          nextPageToken: MjAyNi0wMy0xMFQwODowMDowMFpAc2Vzc2lvbi0wMDItYWJjMTIz
+        links:
+          prev: ''
+          next: /v2/datasets/cxAgentLoginLogout?interval=starting%3A20260310%2Cending%3A20260310&nextPageToken=MjAyNi0wMy0xMFQwODowMDowMFpAc2Vzc2lvbi0wMDItYWJjMTIz&pageSize=20
     WorkflowTraceDatasetPage:
       summary: Workflow Trace dataset (requires Analytics Insights)
       description: 'Workflow Trace dataset provides detailed execution trace of workflow sessions including step-by-step history, timing, and workflow variables.
@@ -1158,274 +1172,242 @@ components:
         links:
           prev: ''
           next: /v2/datasets/workflowTrace?interval=starting%3A20260301%2Cending%3A20260301&nextPageToken=MjAyNi0wMy0wMVQxMDowMDowMFpAdWhpLTAwMQ%3D%3D&pageSize=20
-    AgentAuxDatasetPage:
+    AgentLoginLogoutByQueueDatasetPage:
+      summary: Agent Login/Logout by Queue dataset
+      description: 'Agent Login/Logout by Queue dataset provides historical agent login and logout events at the queue level.
+
+        This data is sourced from user_status_history_silver with status_type=''Q Login'' and allows filtering by time range, agent ID, and queue ID.
+
+        The endpoint supports pagination and enforces read-only access with authentication and authorization controls.
+
+        '
       value:
         columnHeaders:
+        - name: ROW_ID
+          type: string
         - name: ROW_DATE_UTC
           type: datetime
         - name: STARTTIME
           type: string
-        - name: INTERVAL
-          type: number
-        - name: SOURCE_SYSTEM
-          type: string
         - name: STARTTIME_UTC
           type: datetime
+        - name: SOURCE_SYSTEM
+          type: string
+        - name: SESSION_ID
+          type: string
         - name: ACCOUNT_ID
+          type: string
+        - name: QUEUE_ID
           type: string
         - name: AGENT_ID
           type: string
-        - name: AGENT_NAME
+        - name: LOGIN_TIME
+          type: datetime
+        - name: LOGOUT_TIME
+          type: datetime
+        - name: LOGOUT_REASON
           type: string
-        - name: AGENT_TAGS
-          type: string
-        - name: STATUS_TYPE
-          type: string
-        - name: STATUS
-          type: string
-        - name: AGENT_TIME_ZONE
-          type: string
-        - name: I_STAFFTIME
-          type: number
-        - name: TI_STAFFTIME
-          type: number
-        - name: I_AUXTIME
-          type: number
-        - name: TI_AUXTIME
-          type: number
         - name: COMMIT_TS
           type: datetime
         records:
-        - - '2025-11-25'
-          - 00:45
-          - 15
+        - - haglog-001-abc123def456
+          - '2026-03-10'
+          - 08:00
+          - '2026-03-10T08:00:00Z'
           - AXP
-          - '2025-11-25T00:45:00Z'
+          - session-001-xyz
           - 001d010917f6594b9a104630f7
+          - 003d0110243d0fd4d9c7f27dea
           - 002d011106bf83ae15133ec0a7
-          - Ji RanInf113
-          - team-alpha,support
-          - Q Login
-          - Available
-          - America/New_York
-          - 900
-          - 900
-          - 0
-          - 0
-          - '2025-11-25T23:18:55.781Z'
-        - - '2025-11-25'
-          - 00:45
-          - 15
+          - '2026-03-10T08:00:00Z'
+          - '2026-03-10T17:00:00Z'
+          - Manual
+          - '2026-03-10T17:05:00.123Z'
+        - - haglog-002-abc123def456
+          - '2026-03-10'
+          - 08:30
+          - '2026-03-10T08:30:00Z'
           - AXP
-          - '2025-11-25T00:45:00Z'
+          - session-002-xyz
           - 001d010917f6594b9a104630f7
-          - 002d0110314f2a4260d8778b95
-          - test digital
-          - team-beta
-          - busy
-          - On Call
-          - UTC
-          - 600
-          - 900
-          - 300
-          - 300
-          - '2025-11-25T23:18:55.781Z'
+          - 003d011106bbb091e8af2a4719
+          - 002d011106bf83ae15133ec0a7
+          - '2026-03-10T08:30:00Z'
+          - ''
+          - ''
+          - '2026-03-10T08:35:00.456Z'
         pagination:
-          pageSize: 200
+          pageSize: 20
           prevPageToken: ''
-          nextPageToken: MjAyNS0xMC0yN1QxOTowMDowMFpAMDAyZDAxMTAwOTczZWM1YWQ2OWQzZmNmYWU=
+          nextPageToken: MjAyNi0wMy0xMFQwMDowMDowMFpAaGFnbG9nLTAwMi1hYmMxMjNkZWY0NTY=
         links:
           prev: ''
-          next: /v2/datasets/agentAux?nextPageToken=MjAyNS0xMC0yN1QxOTowMDowMFpAMDAyZDAxMTAwOTczZWM1YWQ2OWQzZmNmYWU%3D&pageSize=200
+          next: /v2/datasets/agentLoginLogoutByQueue?interval=starting%3A20260310%2Cending%3A20260310&nextPageToken=MjAyNi0wMy0xMFQwMDowMDowMFpAaGFnbG9nLTAwMi1hYmMxMjNkZWY0NTY%3D&pageSize=20
+    ErrorInsightsEntitlementRequired:
+      description: Analytics Insights Entitlement Required
+      value:
+        title: Forbidden
+        status: 403
+        detail: This dataset requires the Analytics Insights entitlement. Please contact your administrator to enable Analytics Insights for your account.
     ErrorInternalServerError:
       description: Server Error
       value:
         title: Server Error
         status: 500
         detail: An internal server error was encountered.
-  parameters:
-    interval:
-      name: interval
-      in: query
-      description: "Specify the interval range to be used.\nMust contain either a single datetime value or both 'starting' and 'ending' datetimes. The datetime format is dependent on the datasetType param.\n\nFor **daily dataset** (datasetType = 'daily')\n  - datetime implies specific day(s).\n  - all datetime expressions should use YYYYMMDD format.\n  - 'HHmm' values should be either omitted or replaced with 0000. Non-standard values may return empty results.\n  - Example values:\n    - starting:20250201\n    - ending:20250225\n    - starting:20250201,ending:20250225\n\n\nFor **interval dataset** (datasetType =  'interval')\n  - all datetime expressions should use YYYYMMDDHHmm format.\n    'mm' part can be used to indicate the 15 min interval such as '00', '15',  '30' or '45'. Non-standard values may return empty results.\n    - interval should be less than atleast 30 mins from the current interval.\n  - Example values:\n    - starting:202502010415\n    - ending:202502251530\n    - starting:202502010415,ending:202502251545\n"
-      required: true
-      schema:
-        type: string
-        minLength: 8
-        maxLength: 41
-      examples:
-        startingInterval:
-          value: starting:202502010415
-          summary: Interval dataset. Data starting from 202502010415 to current(based on pipeline processing status)
-        startEndInterval:
-          value: starting:202502010415,ending:202502010415
-          summary: Interval dataset. Records in 202502010415 interval i.e. 1 interval
-        endingInterval:
-          value: ending:202502251500
-          summary: Interval dataset. Data filtering from beginning to 202502251530
-        bothInterval:
-          value: starting:202502010415,ending:202502010445
-          summary: Interval dataset. Records from 3 intervals, 15, 30, 45
-        startingDay:
-          value: starting:20250201
-          summary: Daily dataset. Data filtering from specified starting date till ending of data rows
-        endingDay:
-          value: ending:20250225
-          summary: Daily dataset. Data filtering from beginning of data rows till specified ending date
-    pageSize:
-      name: pageSize
-      in: query
-      description: The maximum number of results per page.
-      required: false
-      schema:
-        type: integer
-        format: int32
-        default: 20
-        minimum: 1
-        maximum: 200
-        example: 20
-    datasetName:
-      name: datasetName
-      in: path
-      description: 'The unique name of the dataset. Available datasets:
+    InteractionSegmentsDatasetPage:
+      summary: Interaction Segments dataset (requires Analytics Insights)
+      description: 'Interaction Segments dataset provides detailed segment-level data for interactions including agent assignments, queue information, and timing metrics.
 
-        - `agent` - Agent performance metrics
-
-        - `queue` - Queue performance metrics
-
-        - `agentLoginSessions` - Agent login session data
-
-        - `workflow` - Workflow execution data
-
-        - `mpccdr` - MPC CDR data
-
-        - `transcript` - Interaction transcripts
-
-        - `clientSessions` - Client session data
-
-        - `agentAux` - Agent auxiliary/status data
-
-        - `interactionSegments` - Interaction segments (requires Analytics Insights)
-
-        - `workflowTrace` - Workflow trace data (requires Analytics Insights)
-
-        - `cxAgentLoginLogout` - CX Agent login/logout events
-
-        - `agentByQueue` - Agent performance metrics by queue
-
-        - `agentLoginLogoutByQueue` - Agent login/logout events by queue
+        This dataset requires the Analytics Insights entitlement.
 
         '
-      required: true
-      schema:
-        type: string
-        minLength: 1
-        maxLength: 50
-      examples:
-        agent:
-          value: agent
-          summary: Agent performance metrics
-        queue:
-          value: queue
-          summary: Queue performance metrics
-        agentLoginSessions:
-          value: agentLoginSessions
-          summary: Agent login session data
-        workflow:
-          value: workflow
-          summary: Workflow execution data
-        mpccdr:
-          value: mpccdr
-          summary: MPC CDR data
-        transcript:
-          value: transcript
-          summary: Interaction transcripts
-        clientSessions:
-          value: clientSessions
-          summary: Client session data
-        agentAux:
-          value: agentAux
-          summary: Agent auxiliary data
-        interactionSegments:
-          value: interactionSegments
-          summary: Interaction segments (Analytics Insights required)
-        workflowTrace:
-          value: workflowTrace
-          summary: Workflow trace data (Analytics Insights required)
-        cxAgentLoginLogout:
-          value: cxAgentLoginLogout
-          summary: CX Agent login/logout events
-        agentByQueue:
-          value: agentByQueue
-          summary: Agent performance metrics by queue
-        agentLoginLogoutByQueue:
-          value: agentLoginLogoutByQueue
-          summary: Agent login/logout events by queue
-    prevPageToken:
-      name: prevPageToken
-      in: query
-      description: 'Reserved for future use. Backward pagination is not currently supported. Submitting this parameter has no effect. The response will always return an empty string for prevPageToken.
-
-        '
-      required: false
-      schema:
-        type: string
-        minLength: 36
-        maxLength: 100
-        example: 123e4567-e89b-12d3-a456-556642440000
-    filter:
-      name: filter
-      in: query
-      description: "Specifies details of a row filter. The allowed format:\n  - Begins with the column name to be filtered, followed by a colon, then:\n  - Either an exact string to match, or\n  - A string expression including the * wildcard character\n\n**Important:** Not all column names are valid filter keys. Using an unsupported column name\nreturns `400 Invalid filter column`. The following columns are known to be filterable:\n  - `CHANNEL` — e.g., `CHANNEL:phone`\n  - `AGENT_ID` — e.g., `AGENT_ID:002d011106bf83ae15133ec0a7`\n  - `QUEUE_ID` — e.g., `QUEUE_ID:003d0110243d0fd4d9c7f27dea`\n  - `ACCOUNT_ID` — e.g., `ACCOUNT_ID:001d010917f6594b9a104630f7`\n\nColumns not listed above (e.g., `AGENT_NAME`) are not accepted as filter keys and will\nreturn a `400` error. Contact Avaya support to confirm the full list of filterable columns\nfor a specific dataset.\n"
-      required: false
-      schema:
-        type: string
-        minLength: 3
-        maxLength: 256
-      examples:
-        equals:
-          value: AGENT_ID:123
-          summary: Exact string to match
-        like:
-          value: CHANNEL:phone
-          summary: Expression including the * wildcard character
-    nextPageToken:
-      name: nextPageToken
-      in: query
-      description: The page token of the next set of records to retrieve, represented as unique 36 characters(uuid).
-      required: false
-      schema:
-        type: string
-        minLength: 36
-        maxLength: 100
-        example: 123e4567-e89b-12d3-a456-556642440000
-    datasetType:
-      name: datasetType
-      in: query
-      description: "The type of dataset to be retrieved. The allowed values are:\n  - daily\n  - interval\nThe default value is 'interval'.\nThe datasetType param is used to determine the format of the interval param.\n"
-      required: false
-      schema:
-        type: string
-        example: daily
+      value:
+        columnHeaders:
+        - name: INTERACTION_SEGMENT_ID
+          type: string
+        - name: INTERACTION_ID
+          type: string
+        - name: ACCOUNT_ID
+          type: string
+        - name: QUEUE_ID
+          type: string
+        - name: USER_ID
+          type: string
+        - name: STATUS
+          type: string
+        - name: COMM_TYPE
+          type: string
+        - name: SUB_COMM_TYPE
+          type: string
+        - name: SERVER_NAME
+          type: string
+        - name: RECORDED_RECEIVE
+          type: number
+        - name: RECORDED_TRANSMIT
+          type: number
+        - name: RECORDED_BOTH
+          type: number
+        - name: WAIT_TIME
+          type: number
+        - name: HOLD_TIME
+          type: number
+        - name: TIME_INTERACTING
+          type: number
+        - name: WRAP_UP_TIME
+          type: number
+        - name: END_TIME
+          type: datetime
+        - name: EVENT
+          type: string
+        - name: EVENT_DESC
+          type: string
+        - name: SEGMENT_NUMBER
+          type: number
+        - name: CREATED_ON
+          type: datetime
+        - name: CREATED_BY
+          type: string
+        - name: LAST_UPDATED_BY
+          type: string
+        - name: LAST_UPDATED
+          type: datetime
+        - name: INSERT_API_REQUEST_ID
+          type: string
+        - name: UPDATE_API_REQUEST_ID
+          type: string
+        - name: COMPLETION_TYPE
+          type: string
+        - name: COMPLETION_VALUE
+          type: string
+        - name: COMPLETION_DISPLAY_NAME
+          type: string
+        - name: COMPLETION_TIME_UNIX
+          type: number
+        - name: TRANSFER_LOCATION
+          type: string
+        - name: TRANSFER_RESULT
+          type: string
+        - name: XFER_LOC_QUEUE_ID
+          type: string
+        - name: XFER_LOC_INTERACTION_ID
+          type: string
+        - name: SILENCE_SEGMENTS
+          type: string
+        - name: SILENCE_TOTAL
+          type: number
+        - name: INTERACTION_TYPE
+          type: string
+        - name: INTERACTION_NOTES
+          type: string
+        - name: INTERACTION_RESULT
+          type: string
+        - name: INTERACTION_SUBJECT
+          type: string
+        - name: FIRST_LAST_NAME
+          type: string
+        - name: QUEUE_NAME
+          type: string
+        - name: SOURCE_PHONE_NUMBER
+          type: string
+        - name: SOURCE_EMAIL
+          type: string
+        - name: INTERACTION_TAGS
+          type: string
+        records:
+        - - 005d010209168c243f8be303a6
+          - 004d01020900ba6055326abf2c
+          - 001d010108ea8843ae7f07ca2d
+          - 003d0101224974c284fdf52b35
+          - 002d010122f00d24776effc1fa
+          - connected
+          - task
+          - other
+          - ''
+          - '0'
+          - '0'
+          - '0'
+          - '0'
+          - '0'
+          - '0'
+          - '0'
+          - '2026-02-09T23:56:58Z'
+          - status
+          - connected
+          - '1'
+          - '2026-02-09T23:56:58.479177Z'
+          - ''
+          - 002d010122f00d24776effc1fa
+          - '2026-02-09T23:56:58.522931Z'
+          - 012d010209709c94226939452c
+          - 012d010209e25dc19cda2e8716
+          - ''
+          - ''
+          - ''
+          - '0'
+          - ''
+          - ''
+          - ''
+          - ''
+          - ''
+          - '0'
+          - ''
+          - ''
+          - ''
+          - New task other
+          - Oguz Korkmaz
+          - ''
+          - 'null'
+          - 'null'
+          - '[]'
+        pagination:
+          pageSize: 20
+          prevPageToken: ''
+          nextPageToken: MjAyNi0wMi0wOVQyMzoyNjoxNlpAMDA1ZDAxMDIwOWQ3NjIzYTI4ZTcyYzc0ZmU=
+        links:
+          prev: ''
+          next: /v2/datasets/interactionSegments?interval=starting%3A20260207%2Cending%3A20260209&nextPageToken=MjAyNi0wMi0wOVQyMzoyNjoxNlpAMDA1ZDAxMDIwOWQ3NjIzYTI4ZTcyYzc0ZmU%3D&pageSize=20
   responses:
-    NotFound:
-      description: Not Found
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorNotFound'
-    InternalServer:
-      description: Internal Server Error
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorInternalServerError'
     Unauthorized:
       description: 'Unauthorized. Authentication credentials were missing or invalid. Note: Unauthenticated requests may receive a 302 redirect to the authentication provider rather than this JSON response.
 
@@ -1437,64 +1419,25 @@ components:
           examples:
             default:
               $ref: '#/components/examples/ErrorUnauthorized'
+    InternalServer:
+      description: Internal Server Error
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorInternalServerError'
+    NotFound:
+      description: Not Found
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorNotFound'
   schemas:
-    Links:
-      type: object
-      properties:
-        prev:
-          type: string
-          description: 'URL of the previous page. If the value is "" you are currently on the first page. Note: Pagination is forward-only. This field is reserved for future use and currently always returns an empty string.
-
-            '
-        next:
-          type: string
-          description: 'URL of the next page. If the value is "" you are currently on the last page. Note: Ampersands in this URL may be unicode-escaped (\u0026). Consumers should handle unicode-escaped characters when parsing pagination links.
-
-            '
-    CursorPagination:
-      type: object
-      properties:
-        pageSize:
-          type: integer
-          description: The max number of records that can be retrieved on this page.
-        prevPageToken:
-          type: string
-          description: 'Reserved for future use. Pagination is forward-only. This field currently always returns an empty string. Do not rely on this value for backward pagination.
-
-            '
-        nextPageToken:
-          type: string
-          description: The token to retrieve the next page of records.
-    DatasetPage:
-      type: object
-      description: Root response object for dataset http requests.
-      properties:
-        columnHeaders:
-          type: array
-          items:
-            $ref: '#/components/schemas/ColumnHeader'
-        records:
-          type: array
-          items:
-            type: array
-            items:
-              type: string
-        pagination:
-          $ref: '#/components/schemas/CursorPagination'
-        links:
-          $ref: '#/components/schemas/Links'
-    ColumnHeader:
-      type: object
-      description: Name and data type of the column header
-      properties:
-        name:
-          type: string
-          description: Name of the header field
-          example: agentFirstName
-        type:
-          type: string
-          description: Data type of the header field
-          example: string
     Problem:
       type: object
       description: '<b>Problem Detail</b> as a way to carry machine-readable details of errors in a HTTP response
@@ -1582,6 +1525,63 @@ components:
           - field: accountId
             message: must match "^[a-zA-Z]{6}$"
             code: 20006
+    ColumnHeader:
+      type: object
+      description: Name and data type of the column header
+      properties:
+        name:
+          type: string
+          description: Name of the header field
+          example: agentFirstName
+        type:
+          type: string
+          description: Data type of the header field
+          example: string
+    CursorPagination:
+      type: object
+      properties:
+        pageSize:
+          type: integer
+          description: The max number of records that can be retrieved on this page.
+        prevPageToken:
+          type: string
+          description: 'Reserved for future use. Pagination is forward-only. This field currently always returns an empty string. Do not rely on this value for backward pagination.
+
+            '
+        nextPageToken:
+          type: string
+          description: The token to retrieve the next page of records.
+    Links:
+      type: object
+      properties:
+        prev:
+          type: string
+          description: 'URL of the previous page. If the value is "" you are currently on the first page. Note: Pagination is forward-only. This field is reserved for future use and currently always returns an empty string.
+
+            '
+        next:
+          type: string
+          description: 'URL of the next page. If the value is "" you are currently on the last page. Note: Ampersands in this URL may be unicode-escaped (\u0026). Consumers should handle unicode-escaped characters when parsing pagination links.
+
+            '
+    DatasetPage:
+      type: object
+      description: Root response object for dataset http requests.
+      properties:
+        columnHeaders:
+          type: array
+          items:
+            $ref: '#/components/schemas/ColumnHeader'
+        records:
+          type: array
+          items:
+            type: array
+            items:
+              type: string
+        pagination:
+          $ref: '#/components/schemas/CursorPagination'
+        links:
+          $ref: '#/components/schemas/Links'
   securitySchemes:
     BearerAuth:
       type: http
