@@ -319,6 +319,61 @@ paths:
         '500':
           $ref: '#/components/responses/InternalServerError'
 components:
+  responses:
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/UnauthorizedError'
+    Not_Found:
+      description: Not Found
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/NotFoundError'
+    InternalServerError:
+      description: All other application errors
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ServerError'
+    GroupNameConflict:
+      description: Conflict
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            name:
+              $ref: '#/components/examples/ErrorGroupNameExists'
+    Forbidden:
+      description: Forbidden
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ForbiddenError'
+    ErrorConstraintViolation:
+      description: Constraint Violation
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ConstraintViolationError'
   examples:
     ErrorGroupNameExists:
       description: Constraint Violation
@@ -330,34 +385,6 @@ components:
         violations:
         - field: name
           message: A group with this name already exists
-    Group:
-      description: Group Data
-      value:
-        name: AgentGroup
-        groupId: cd79f1f0-9e35-470c-bf70-542a39882b2d
-        description: Group user
-        resources:
-        - type: User
-          resourceIds:
-          - 673dab47-5a08-4593-be5a-cdc4d23df814
-        organizationNodeId: QTRWAD
-    Create-Group:
-      description: Create Group Request
-      value:
-        name: AgentGroup
-        description: Group user
-        resources:
-        - type: User
-          resourceIds:
-          - 673dab47-5a08-4593-be5a-cdc4d23df814
-        organizationNodeId: QTRWAD
-    ServerError:
-      description: Internal Server Error
-      value:
-        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#server-error
-        title: Server Error
-        status: 500
-        detail: An internal server error was encountered.
     GroupsResult:
       description: Groups search response
       value:
@@ -387,6 +414,13 @@ components:
           resourceIds:
           - 673dab47-5a08-4593-be5a-cdc4d23df814
         organizationNodeId: QTRWAD
+    NotFoundError:
+      description: Resource not found
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#resource-not-found
+        title: Resource Not Found
+        status: 404
+        detail: Group with id:7b711203-03fe-425c-8503-25826f2b579e not found.
     ConstraintViolationError:
       description: Constraint Violation
       value:
@@ -398,13 +432,6 @@ components:
         - field: accountId
           message: must match "^[a-zA-Z]{6}$"
           code: 20006
-    UnauthorizedError:
-      description: Forbidden
-      value:
-        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#unauthorized
-        title: Unauthorized
-        status: 401
-        detail: This operation requires authentication. See https://developers.avayacloud.com/onecloud-ccaas/docs/how-to-authenticate-with-ccaas-apis
     ForbiddenError:
       description: Forbidden
       value:
@@ -412,69 +439,56 @@ components:
         title: Forbidden
         status: 403
         detail: According to the access control policy the current user and/or accountId does not have permission to access this resource.
-    NotFoundError:
-      description: Resource not found
+    Create-Group:
+      description: Create Group Request
       value:
-        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#resource-not-found
-        title: Resource Not Found
-        status: 404
-        detail: Group with id:7b711203-03fe-425c-8503-25826f2b579e not found.
-  responses:
-    ErrorConstraintViolation:
-      description: Constraint Violation
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ConstraintViolationError'
-    InternalServerError:
-      description: All other application errors
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ServerError'
-    Unauthorized:
-      description: Unauthorized
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/UnauthorizedError'
-    GroupNameConflict:
-      description: Conflict
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            name:
-              $ref: '#/components/examples/ErrorGroupNameExists'
-    Not_Found:
-      description: Not Found
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/NotFoundError'
-    Forbidden:
+        name: AgentGroup
+        description: Group user
+        resources:
+        - type: User
+          resourceIds:
+          - 673dab47-5a08-4593-be5a-cdc4d23df814
+        organizationNodeId: QTRWAD
+    ServerError:
+      description: Internal Server Error
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#server-error
+        title: Server Error
+        status: 500
+        detail: An internal server error was encountered.
+    UnauthorizedError:
       description: Forbidden
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ForbiddenError'
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#unauthorized
+        title: Unauthorized
+        status: 401
+        detail: This operation requires authentication. See https://developers.avayacloud.com/onecloud-ccaas/docs/how-to-authenticate-with-ccaas-apis
+    Group:
+      description: Group Data
+      value:
+        name: AgentGroup
+        groupId: cd79f1f0-9e35-470c-bf70-542a39882b2d
+        description: Group user
+        resources:
+        - type: User
+          resourceIds:
+          - 673dab47-5a08-4593-be5a-cdc4d23df814
+        organizationNodeId: QTRWAD
   schemas:
+    GroupPage:
+      type: object
+      description: This is container model for group list response
+      properties:
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+        groups:
+          type: array
+          items:
+            $ref: '#/components/schemas/Group'
+        links:
+          type: array
+          items:
+            $ref: '#/components/schemas/Links'
     Problem:
       type: object
       description: '<b>Problem Detail</b> as a way to carry machine-readable details of errors in a HTTP response to avoid the need to define new error response formats for HTTP APIs <a href="https://tools.ietf.org/html/rfc7807">RFC 7807</a>
@@ -560,6 +574,53 @@ components:
           - field: accountId
             message: must match "^[a-zA-Z]{6}$"
             code: 20006
+    GroupResource:
+      type: object
+      description: This is container model for group data
+      properties:
+        type:
+          type: string
+          description: Type of the group
+          example: User
+          minLength: 1
+          maxLength: 255
+          pattern: ^[^<>\^@#]*$
+        resourceIds:
+          type: array
+          maxItems: 500
+          items:
+            type: string
+            minLength: 36
+            maxLength: 36
+            pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
+          example:
+          - c8c2909d-75e9-484a-94c0-b7e8d29771fe
+          description: Unique Id's of resources which are member of this group
+      required:
+      - type
+    Links:
+      type: object
+      properties:
+        prev:
+          type: string
+          default: ''
+          description: URL of the previous page. Blank if currently on the first page.
+        next:
+          type: string
+          default: ''
+          description: URL of the next page. Blank if currently on the last page.
+    Pagination:
+      type: object
+      properties:
+        pageNumber:
+          type: integer
+          description: The current page number.
+        pageSize:
+          type: integer
+          description: The max number of records that can be retrieved on this page.
+        total:
+          type: integer
+          description: The total number of records.
     Group:
       type: object
       description: This model holds the group related data
@@ -600,79 +661,7 @@ components:
           description: List of group resource
           items:
             $ref: '#/components/schemas/GroupResource'
-    GroupPage:
-      type: object
-      description: This is container model for group list response
-      properties:
-        pagination:
-          $ref: '#/components/schemas/Pagination'
-        groups:
-          type: array
-          items:
-            $ref: '#/components/schemas/Group'
-        links:
-          type: array
-          items:
-            $ref: '#/components/schemas/Links'
-    GroupResource:
-      type: object
-      description: This is container model for group data
-      properties:
-        type:
-          type: string
-          description: Type of the group
-          example: User
-          minLength: 1
-          maxLength: 255
-          pattern: ^[^<>\^@#]*$
-        resourceIds:
-          type: array
-          maxItems: 500
-          items:
-            type: string
-            minLength: 36
-            maxLength: 36
-            pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
-          example:
-          - c8c2909d-75e9-484a-94c0-b7e8d29771fe
-          description: Unique Id's of resources which are member of this group
-      required:
-      - type
-    Pagination:
-      type: object
-      properties:
-        pageNumber:
-          type: integer
-          description: The current page number.
-        pageSize:
-          type: integer
-          description: The max number of records that can be retrieved on this page.
-        total:
-          type: integer
-          description: The total number of records.
-    Links:
-      type: object
-      properties:
-        prev:
-          type: string
-          default: ''
-          description: URL of the previous page. Blank if currently on the first page.
-        next:
-          type: string
-          default: ''
-          description: URL of the next page. Blank if currently on the last page.
   parameters:
-    accountId:
-      name: accountId
-      description: The unique 6 character internal id that represents the customer account.
-      required: true
-      in: path
-      schema:
-        type: string
-        minLength: 6
-        maxLength: 6
-        pattern: ^[a-zA-Z]{6}$
-        example: ABCDEF
     groupId:
       name: groupId
       in: path
@@ -684,6 +673,17 @@ components:
         minLength: 36
         maxLength: 36
         pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
+    accountId:
+      name: accountId
+      description: The unique 6 character internal id that represents the customer account.
+      required: true
+      in: path
+      schema:
+        type: string
+        minLength: 6
+        maxLength: 6
+        pattern: ^[a-zA-Z]{6}$
+        example: ABCDEF
   securitySchemes:
     BearerAuth:
       type: http

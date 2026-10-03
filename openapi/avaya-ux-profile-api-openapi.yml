@@ -87,36 +87,6 @@ paths:
           $ref: '#/components/responses/InternalServer'
 components:
   examples:
-    ErrorForbidden:
-      description: Forbidden
-      value:
-        type: https://developers.avayacloud.com/avaya-experience-platform/docs/error-handling#forbidden
-        title: Forbidden
-        status: 403
-        detail: According to the access control policy the current user and/or accountId does not have permission to access this resource.
-    UXProfiles:
-      description: List of UX Profiles
-      value:
-      - uxProfileId: c8c2909d-75e9-484a-94c0-b7e8d30771ee
-        uxProfileName: UX Profile
-    ErrorNotFound:
-      description: Not Found
-      value:
-        type: https://developers.avayacloud.com/avaya-experience-platform/docs/error-handling#resource-not-found
-        title: Resource Not Found
-        status: 404
-        detail: Either there is no API method associated with the URL path of the request, or the request refers to one or more resources that were not found.
-    ErrorConstraintViolation:
-      description: Constraint Violation
-      value:
-        type: https://developers.avayacloud.com/avaya-experience-platform/docs/error-handling#constraint-violation
-        title: Constraint Violation
-        status: 400
-        detail: A problem that indicates a syntactically correct, yet semantically illegal request. The Server can not process this request until the client resolves the semantic errors described in the violations section.
-        violations:
-        - field: accountId
-          message: must match "^[a-zA-Z]{6}$"
-          code: 20006
     ErrorUnauthorized:
       description: Unauthorized
       value:
@@ -131,7 +101,55 @@ components:
         title: Server Error
         status: 500
         detail: An internal server error was encountered.
+    ErrorForbidden:
+      description: Forbidden
+      value:
+        type: https://developers.avayacloud.com/avaya-experience-platform/docs/error-handling#forbidden
+        title: Forbidden
+        status: 403
+        detail: According to the access control policy the current user and/or accountId does not have permission to access this resource.
+    ErrorConstraintViolation:
+      description: Constraint Violation
+      value:
+        type: https://developers.avayacloud.com/avaya-experience-platform/docs/error-handling#constraint-violation
+        title: Constraint Violation
+        status: 400
+        detail: A problem that indicates a syntactically correct, yet semantically illegal request. The Server can not process this request until the client resolves the semantic errors described in the violations section.
+        violations:
+        - field: accountId
+          message: must match "^[a-zA-Z]{6}$"
+          code: 20006
+    UXProfiles:
+      description: List of UX Profiles
+      value:
+      - uxProfileId: c8c2909d-75e9-484a-94c0-b7e8d30771ee
+        uxProfileName: UX Profile
+    ErrorNotFound:
+      description: Not Found
+      value:
+        type: https://developers.avayacloud.com/avaya-experience-platform/docs/error-handling#resource-not-found
+        title: Resource Not Found
+        status: 404
+        detail: Either there is no API method associated with the URL path of the request, or the request refers to one or more resources that were not found.
   responses:
+    NotFound:
+      description: Not Found
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorNotFound'
+    ErrorConstraintViolation:
+      description: Constraint Violation
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorConstraintViolation'
     Unauthorized:
       description: Unauthorized
       content:
@@ -150,15 +168,6 @@ components:
           examples:
             default:
               $ref: '#/components/examples/ErrorForbidden'
-    ErrorConstraintViolation:
-      description: Constraint Violation
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorConstraintViolation'
     InternalServer:
       description: Request processing failed
       content:
@@ -168,15 +177,6 @@ components:
           examples:
             default:
               $ref: '#/components/examples/ErrorInternalServerError'
-    NotFound:
-      description: Not Found
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorNotFound'
   schemas:
     Problem:
       type: object

@@ -669,7 +669,92 @@ paths:
         '500':
           $ref: '#/components/responses/InternalServerError'
 components:
+  responses:
+    NotFound:
+      description: Resource not found
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorNotFound'
+    Unauthorized:
+      description: Unauthorized - Authentication required
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorUnauthorized'
+    BadRequest:
+      description: Bad Request - Validation error
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorBadRequest'
+    InternalServerError:
+      description: Internal Server Error
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorInternalServerError'
+    UnprocessableEntity:
+      description: Unprocessable Entity - Semantic error
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorUnprocessableEntity'
+            duplicateName:
+              $ref: '#/components/examples/ErrorUnprocessableEntityDuplicateName'
+    Forbidden:
+      description: Forbidden - Insufficient permissions
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorForbidden'
   schemas:
+    AgentAssistProfileId:
+      type:
+      - string
+      - 'null'
+      format: uuid
+      description: UUID of the AI Media Gateway Profile to use as the Agent Assist provider. Optional.
+    PostCallModalVoiceCallbackEnabled:
+      type: boolean
+      default: false
+      description: When `true`, the voice callback option is shown in the post-call modal.
+    PostCallModalDefault:
+      type: string
+      enum:
+      - closeResolved
+      - email
+      - voiceCallback
+      - messaging
+      default: closeResolved
+      description: The default action pre-selected in the post-call modal. `closeResolved` marks the interaction resolved, `email` opens an email follow-up, `voiceCallback` schedules a callback, `messaging` opens a messaging follow-up.
+    EnableWrapUp:
+      type:
+      - boolean
+      - 'null'
+      description: When `true`, wrap-up is required before an agent can close a resolved interaction. When `null`, the queue uses the default behavior.
+    PostCallModalMessagingEnabled:
+      type: boolean
+      default: false
+      description: When `true`, the messaging option is shown in the post-call modal.
     QueueResponseConcise:
       type: object
       description: Concise queue summary returned when `view=concise`.
@@ -696,167 +781,6 @@ components:
           - string
           - 'null'
           description: The folder ID the queue is assigned to.
-    PostCallModalEmailEnabled:
-      type: boolean
-      default: false
-      description: When `true`, the email option is shown in the post-call modal.
-    QueueResponse:
-      type: object
-      required:
-      - queueId
-      - name
-      - isActive
-      description: Full queue object returned by create, get, and update operations.
-      properties:
-        queueId:
-          $ref: '#/components/schemas/QueueId'
-        accountId:
-          type: string
-          description: The account/tenant identifier this queue belongs to.
-        createdOn:
-          type: string
-          format: date-time
-          description: Timestamp (ISO 8601) when the queue was created.
-        lastUpdated:
-          type: string
-          format: date-time
-          description: Timestamp (ISO 8601) when the queue was last updated.
-        name:
-          type: string
-          description: The display name of the queue.
-        folderId:
-          $ref: '#/components/schemas/FolderId'
-        configDetails:
-          type: object
-          additionalProperties: true
-        extension:
-          type:
-          - string
-          - 'null'
-        timeZone:
-          type: string
-        templates:
-          type:
-          - object
-          - 'null'
-          additionalProperties: true
-        scoreCardId:
-          type:
-          - string
-          - 'null'
-        scoreCardVersionId:
-          type:
-          - string
-          - 'null'
-        queueWeight:
-          type: integer
-        routingMethod:
-          type: string
-        tagRoutable:
-          type: boolean
-        workflows:
-          type:
-          - object
-          - 'null'
-          additionalProperties: true
-        isActive:
-          type: boolean
-        isQPerformance:
-          type: boolean
-        externalTransferUserModify:
-          type: boolean
-        externalTransferCallerIdType:
-          type: string
-        externalTransferCallerIdNumber:
-          type:
-          - string
-          - 'null'
-        tagsToAdd:
-          type:
-          - object
-          - 'null'
-          additionalProperties: true
-        tagsToRemove:
-          type:
-          - object
-          - 'null'
-          additionalProperties: true
-        validateNumberCountry:
-          type: string
-        validateCustomerPhoneNumber:
-          type: boolean
-        keyLinkedIdPath:
-          type:
-          - string
-          - 'null'
-        sttPlan:
-          type:
-          - string
-          - 'null'
-        allowPhoneCommTypeClosedUnresolved:
-          type: boolean
-        defaultCloseValue:
-          type: string
-        requireCloseResolvedConfirmation:
-          type: boolean
-        promoteViewerToOwnerOnAgentLeave:
-          type: boolean
-        allowOwnerToSetViewerAsOwner:
-          type: boolean
-        doNotMoveToCompletedOnHangup:
-          type: boolean
-        allowOwnerMuteViewer:
-          type: boolean
-        allowOwnerRemoveViewer:
-          type: boolean
-        allowOwnerInvite:
-          type: boolean
-        allowOwnerInviteExternal:
-          type: boolean
-        eliteSkillAddress:
-          type:
-          - string
-          - 'null'
-        type:
-          type:
-          - string
-          - 'null'
-        lastUpdatedBy:
-          type:
-          - string
-          - 'null'
-        customDataDisplay:
-          type:
-          - object
-          - 'null'
-          additionalProperties: true
-        agentAssistEnabled:
-          $ref: '#/components/schemas/AgentAssistEnabled'
-        agentAssistProfileId:
-          $ref: '#/components/schemas/AgentAssistProfileId'
-        agentAssistWorkflowId:
-          $ref: '#/components/schemas/AgentAssistWorkflowId'
-        postCallModalEnabled:
-          $ref: '#/components/schemas/PostCallModalEnabled'
-        postCallModalVoiceCallbackEnabled:
-          $ref: '#/components/schemas/PostCallModalVoiceCallbackEnabled'
-        postCallModalMessagingEnabled:
-          $ref: '#/components/schemas/PostCallModalMessagingEnabled'
-        postCallModalEmailEnabled:
-          $ref: '#/components/schemas/PostCallModalEmailEnabled'
-        postCallModalCloseResolvedEnabled:
-          $ref: '#/components/schemas/PostCallModalCloseResolvedEnabled'
-        postCallModalTimeout:
-          $ref: '#/components/schemas/PostCallModalTimeout'
-        postCallModalDefault:
-          $ref: '#/components/schemas/PostCallModalDefault'
-        enableWrapUp:
-          $ref: '#/components/schemas/EnableWrapUp'
-    UpdateQueueBody:
-      allOf:
-      - $ref: '#/components/schemas/QueueBase'
-      - type: object
-        description: Request body for updating an existing queue. All fields are optional — only provided fields will be updated.
     QueueId:
       type: string
       description: The unique identifier of a queue.
@@ -864,112 +788,6 @@ components:
       maxLength: 26
       pattern: ^003[0-9a-f]{20,23}$
       example: 003d010826307dd6630992437c
-    PostCallModalCloseResolvedEnabled:
-      type: boolean
-      default: false
-      description: When `true`, the close-as-resolved option is shown in the post-call modal.
-    PostCallModalDefault:
-      type: string
-      enum:
-      - closeResolved
-      - email
-      - voiceCallback
-      - messaging
-      default: closeResolved
-      description: The default action pre-selected in the post-call modal. `closeResolved` marks the interaction resolved, `email` opens an email follow-up, `voiceCallback` schedules a callback, `messaging` opens a messaging follow-up.
-    AgentAssistWorkflowId:
-      type:
-      - string
-      - 'null'
-      maxLength: 64
-      description: Optional workflow ID for custom Agent Assist event processing.
-    PostCallModalMessagingEnabled:
-      type: boolean
-      default: false
-      description: When `true`, the messaging option is shown in the post-call modal.
-    Problem:
-      type: object
-      description: 'Problem detail as defined by RFC 7807 — a standard way to carry machine-readable error details in HTTP responses.
-
-        '
-      properties:
-        type:
-          type: string
-          format: uri
-          description: A URI identifying the problem type.
-          default: about:blank
-          example: about:blank
-        title:
-          type:
-          - string
-          - 'null'
-          description: A short, human-readable summary of the problem type.
-          example: Service Unavailable
-        status:
-          type:
-          - integer
-          - 'null'
-          format: int32
-          description: The HTTP status code for this occurrence of the problem.
-          minimum: 100
-          maximum: 600
-          exclusiveMaximum: true
-          example: 503
-        detail:
-          type:
-          - string
-          - 'null'
-          description: A human-readable explanation specific to this occurrence of the problem.
-          example: Connection to database timed out
-        instance:
-          type:
-          - string
-          - 'null'
-          format: uri
-          description: A URI identifying the specific occurrence of the problem.
-        violations:
-          type:
-          - array
-          - 'null'
-          description: A list of field-level validation violations, present on 400 and 422 responses.
-          items:
-            type: object
-            properties:
-              field:
-                type: string
-                description: The name of the field that caused the violation.
-                example: name
-              message:
-                type: string
-                description: A human-readable explanation of the violation.
-                example: Queue name is required
-              code:
-                type: integer
-                format: int32
-                description: A stable violation code. Use this in error handling logic — the message text may change.
-                example: 20001
-    AgentAssistEnabled:
-      type: boolean
-      default: false
-      description: When `true`, enables Agent Assist for this queue.
-    PostCallModalTimeout:
-      type: integer
-      minimum: 5
-      maximum: 300
-      default: 10
-      description: Time in seconds before the post-call modal auto-dismisses. Must be between 5 and 300. Defaults to 10.
-    PostCallModalEnabled:
-      type:
-      - boolean
-      - 'null'
-      description: When `true`, displays a post-call modal to agents after a call ends.
-    FolderId:
-      type: string
-      description: The unique identifier of a folder.
-      minLength: 26
-      maxLength: 26
-      pattern: ^073[0-9a-f]{23}$
-      example: 073d010813b941cf7da111d147
     CreateQueueBody:
       allOf:
       - $ref: '#/components/schemas/QueueBase'
@@ -977,16 +795,6 @@ components:
         required:
         - name
         description: Request body for creating a new queue. Only `name` is required.
-    AgentAssistProfileId:
-      type:
-      - string
-      - 'null'
-      format: uuid
-      description: UUID of the AI Media Gateway Profile to use as the Agent Assist provider. Optional.
-    PostCallModalVoiceCallbackEnabled:
-      type: boolean
-      default: false
-      description: When `true`, the voice callback option is shown in the post-call modal.
     QueueBase:
       type: object
       description: Base schema for queue configuration.
@@ -1211,26 +1019,85 @@ components:
           $ref: '#/components/schemas/PostCallModalDefault'
         enableWrapUp:
           $ref: '#/components/schemas/EnableWrapUp'
-    EnableWrapUp:
+    Problem:
+      type: object
+      description: 'Problem detail as defined by RFC 7807 — a standard way to carry machine-readable error details in HTTP responses.
+
+        '
+      properties:
+        type:
+          type: string
+          format: uri
+          description: A URI identifying the problem type.
+          default: about:blank
+          example: about:blank
+        title:
+          type:
+          - string
+          - 'null'
+          description: A short, human-readable summary of the problem type.
+          example: Service Unavailable
+        status:
+          type:
+          - integer
+          - 'null'
+          format: int32
+          description: The HTTP status code for this occurrence of the problem.
+          minimum: 100
+          maximum: 600
+          exclusiveMaximum: true
+          example: 503
+        detail:
+          type:
+          - string
+          - 'null'
+          description: A human-readable explanation specific to this occurrence of the problem.
+          example: Connection to database timed out
+        instance:
+          type:
+          - string
+          - 'null'
+          format: uri
+          description: A URI identifying the specific occurrence of the problem.
+        violations:
+          type:
+          - array
+          - 'null'
+          description: A list of field-level validation violations, present on 400 and 422 responses.
+          items:
+            type: object
+            properties:
+              field:
+                type: string
+                description: The name of the field that caused the violation.
+                example: name
+              message:
+                type: string
+                description: A human-readable explanation of the violation.
+                example: Queue name is required
+              code:
+                type: integer
+                format: int32
+                description: A stable violation code. Use this in error handling logic — the message text may change.
+                example: 20001
+    PostCallModalTimeout:
+      type: integer
+      minimum: 5
+      maximum: 300
+      default: 10
+      description: Time in seconds before the post-call modal auto-dismisses. Must be between 5 and 300. Defaults to 10.
+    FolderId:
+      type: string
+      description: The unique identifier of a folder.
+      minLength: 26
+      maxLength: 26
+      pattern: ^073[0-9a-f]{23}$
+      example: 073d010813b941cf7da111d147
+    PostCallModalEnabled:
       type:
       - boolean
       - 'null'
-      description: When `true`, wrap-up is required before an agent can close a resolved interaction. When `null`, the queue uses the default behavior.
-    PaginationLinks:
-      type: object
-      description: Pagination navigation links
-      required:
-      - prev
-      - next
-      properties:
-        prev:
-          type: string
-          description: URL of the previous page. Empty string if on the first page.
-          readOnly: true
-        next:
-          type: string
-          description: URL of the next page. Empty string if on the last page.
-          readOnly: true
+      description: When `true`, displays a post-call modal to agents after a call ends.
     Pagination:
       type: object
       description: Pagination metadata
@@ -1251,51 +1118,197 @@ components:
           type: integer
           description: The total number of items across all pages.
           readOnly: true
+    UpdateQueueBody:
+      allOf:
+      - $ref: '#/components/schemas/QueueBase'
+      - type: object
+        description: Request body for updating an existing queue. All fields are optional — only provided fields will be updated.
+    PostCallModalEmailEnabled:
+      type: boolean
+      default: false
+      description: When `true`, the email option is shown in the post-call modal.
+    AgentAssistWorkflowId:
+      type:
+      - string
+      - 'null'
+      maxLength: 64
+      description: Optional workflow ID for custom Agent Assist event processing.
+    AgentAssistEnabled:
+      type: boolean
+      default: false
+      description: When `true`, enables Agent Assist for this queue.
+    PostCallModalCloseResolvedEnabled:
+      type: boolean
+      default: false
+      description: When `true`, the close-as-resolved option is shown in the post-call modal.
+    PaginationLinks:
+      type: object
+      description: Pagination navigation links
+      required:
+      - prev
+      - next
+      properties:
+        prev:
+          type: string
+          description: URL of the previous page. Empty string if on the first page.
+          readOnly: true
+        next:
+          type: string
+          description: URL of the next page. Empty string if on the last page.
+          readOnly: true
+    QueueResponse:
+      type: object
+      required:
+      - queueId
+      - name
+      - isActive
+      description: Full queue object returned by create, get, and update operations.
+      properties:
+        queueId:
+          $ref: '#/components/schemas/QueueId'
+        accountId:
+          type: string
+          description: The account/tenant identifier this queue belongs to.
+        createdOn:
+          type: string
+          format: date-time
+          description: Timestamp (ISO 8601) when the queue was created.
+        lastUpdated:
+          type: string
+          format: date-time
+          description: Timestamp (ISO 8601) when the queue was last updated.
+        name:
+          type: string
+          description: The display name of the queue.
+        folderId:
+          $ref: '#/components/schemas/FolderId'
+        configDetails:
+          type: object
+          additionalProperties: true
+        extension:
+          type:
+          - string
+          - 'null'
+        timeZone:
+          type: string
+        templates:
+          type:
+          - object
+          - 'null'
+          additionalProperties: true
+        scoreCardId:
+          type:
+          - string
+          - 'null'
+        scoreCardVersionId:
+          type:
+          - string
+          - 'null'
+        queueWeight:
+          type: integer
+        routingMethod:
+          type: string
+        tagRoutable:
+          type: boolean
+        workflows:
+          type:
+          - object
+          - 'null'
+          additionalProperties: true
+        isActive:
+          type: boolean
+        isQPerformance:
+          type: boolean
+        externalTransferUserModify:
+          type: boolean
+        externalTransferCallerIdType:
+          type: string
+        externalTransferCallerIdNumber:
+          type:
+          - string
+          - 'null'
+        tagsToAdd:
+          type:
+          - object
+          - 'null'
+          additionalProperties: true
+        tagsToRemove:
+          type:
+          - object
+          - 'null'
+          additionalProperties: true
+        validateNumberCountry:
+          type: string
+        validateCustomerPhoneNumber:
+          type: boolean
+        keyLinkedIdPath:
+          type:
+          - string
+          - 'null'
+        sttPlan:
+          type:
+          - string
+          - 'null'
+        allowPhoneCommTypeClosedUnresolved:
+          type: boolean
+        defaultCloseValue:
+          type: string
+        requireCloseResolvedConfirmation:
+          type: boolean
+        promoteViewerToOwnerOnAgentLeave:
+          type: boolean
+        allowOwnerToSetViewerAsOwner:
+          type: boolean
+        doNotMoveToCompletedOnHangup:
+          type: boolean
+        allowOwnerMuteViewer:
+          type: boolean
+        allowOwnerRemoveViewer:
+          type: boolean
+        allowOwnerInvite:
+          type: boolean
+        allowOwnerInviteExternal:
+          type: boolean
+        eliteSkillAddress:
+          type:
+          - string
+          - 'null'
+        type:
+          type:
+          - string
+          - 'null'
+        lastUpdatedBy:
+          type:
+          - string
+          - 'null'
+        customDataDisplay:
+          type:
+          - object
+          - 'null'
+          additionalProperties: true
+        agentAssistEnabled:
+          $ref: '#/components/schemas/AgentAssistEnabled'
+        agentAssistProfileId:
+          $ref: '#/components/schemas/AgentAssistProfileId'
+        agentAssistWorkflowId:
+          $ref: '#/components/schemas/AgentAssistWorkflowId'
+        postCallModalEnabled:
+          $ref: '#/components/schemas/PostCallModalEnabled'
+        postCallModalVoiceCallbackEnabled:
+          $ref: '#/components/schemas/PostCallModalVoiceCallbackEnabled'
+        postCallModalMessagingEnabled:
+          $ref: '#/components/schemas/PostCallModalMessagingEnabled'
+        postCallModalEmailEnabled:
+          $ref: '#/components/schemas/PostCallModalEmailEnabled'
+        postCallModalCloseResolvedEnabled:
+          $ref: '#/components/schemas/PostCallModalCloseResolvedEnabled'
+        postCallModalTimeout:
+          $ref: '#/components/schemas/PostCallModalTimeout'
+        postCallModalDefault:
+          $ref: '#/components/schemas/PostCallModalDefault'
+        enableWrapUp:
+          $ref: '#/components/schemas/EnableWrapUp'
   examples:
-    ErrorBadRequest:
-      description: Bad Request - Validation error
-      value:
-        type: about:blank
-        title: Constraint Violation
-        status: 400
-        detail: A problem that indicates a syntactically correct, yet semantically illegal request. The Server can not process this request until the client resolves the semantic errors described in the violations section.
-        violations:
-        - field: name
-          message: Queue name is required
-          code: 20001
-    ErrorForbidden:
-      description: Forbidden
-      value:
-        type: about:blank
-        title: Forbidden
-        status: 403
-        detail: According to the access control policy the current user and/or accountId does not have permission to access this resource.
-    ErrorNotFound:
-      description: Not Found
-      value:
-        type: about:blank
-        title: Resource Not Found
-        status: 404
-        detail: Queue with the specified ID was not found.
-        instance: /api/config/v1/queues/003d010826307dd6630992437c
-    ErrorUnprocessableEntityDuplicateName:
-      description: Duplicate queue name
-      value:
-        type: about:blank
-        title: Validation failed
-        status: 422
-        detail: A problem that indicates a syntactically correct, yet semantically illegal request.
-        violations:
-        - field: name
-          message: name must be unique
-          code: 20003
-    ErrorUnauthorized:
-      description: Unauthorized
-      value:
-        type: about:blank
-        title: Unauthorized
-        status: 401
-        detail: This operation requires authentication.
     ErrorUnprocessableEntity:
       description: Validation failed
       value:
@@ -1307,6 +1320,43 @@ components:
         - field: scoreCardId
           message: Both scoreCardId and scoreCardVersionId must be provided together
           code: 20002
+    ErrorBadRequest:
+      description: Bad Request - Validation error
+      value:
+        type: about:blank
+        title: Constraint Violation
+        status: 400
+        detail: A problem that indicates a syntactically correct, yet semantically illegal request. The Server can not process this request until the client resolves the semantic errors described in the violations section.
+        violations:
+        - field: name
+          message: Queue name is required
+          code: 20001
+    ErrorUnprocessableEntityDuplicateName:
+      description: Duplicate queue name
+      value:
+        type: about:blank
+        title: Validation failed
+        status: 422
+        detail: A problem that indicates a syntactically correct, yet semantically illegal request.
+        violations:
+        - field: name
+          message: name must be unique
+          code: 20003
+    ErrorNotFound:
+      description: Not Found
+      value:
+        type: about:blank
+        title: Resource Not Found
+        status: 404
+        detail: Queue with the specified ID was not found.
+        instance: /api/config/v1/queues/003d010826307dd6630992437c
+    ErrorUnauthorized:
+      description: Unauthorized
+      value:
+        type: about:blank
+        title: Unauthorized
+        status: 401
+        detail: This operation requires authentication.
     ErrorInternalServerError:
       description: Server Error
       value:
@@ -1314,63 +1364,13 @@ components:
         title: Server Error
         status: 500
         detail: An internal server error was encountered.
-  responses:
-    InternalServerError:
-      description: Internal Server Error
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorInternalServerError'
-    Unauthorized:
-      description: Unauthorized - Authentication required
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorUnauthorized'
-    NotFound:
-      description: Resource not found
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorNotFound'
-    BadRequest:
-      description: Bad Request - Validation error
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorBadRequest'
-    UnprocessableEntity:
-      description: Unprocessable Entity - Semantic error
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorUnprocessableEntity'
-            duplicateName:
-              $ref: '#/components/examples/ErrorUnprocessableEntityDuplicateName'
-    Forbidden:
-      description: Forbidden - Insufficient permissions
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorForbidden'
+    ErrorForbidden:
+      description: Forbidden
+      value:
+        type: about:blank
+        title: Forbidden
+        status: 403
+        detail: According to the access control policy the current user and/or accountId does not have permission to access this resource.
   securitySchemes:
     BearerAuth:
       type: http

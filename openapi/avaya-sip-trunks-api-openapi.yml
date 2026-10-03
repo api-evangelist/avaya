@@ -117,33 +117,6 @@ paths:
           $ref: '#/components/responses/InternalServerError'
 components:
   responses:
-    ErrorConstraintViolation:
-      description: Constraint Violation
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorConstraintViolation'
-    InternalServerError:
-      description: All other application errors
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorInternalServerError'
-    Unauthorized:
-      description: Unauthorized
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorUnauthorized'
     NotFound:
       description: Not Found
       content:
@@ -153,6 +126,24 @@ components:
           examples:
             default:
               $ref: '#/components/examples/ErrorNotFound'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorUnauthorized'
+    InternalServerError:
+      description: All other application errors
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorInternalServerError'
     Forbidden:
       description: Forbidden
       content:
@@ -162,164 +153,16 @@ components:
           examples:
             default:
               $ref: '#/components/examples/ErrorForbidden'
-  parameters:
-    pageSize:
-      name: pageSize
-      in: query
-      description: The max number of records to retrieve per page. Default value is 5, Any value like 5,10,15,20,25,30 is allowed. If value comes more than 1000 then max 1000 records will be returned.
-      required: false
-      schema:
-        type: integer
-        format: int32
-        example: 5
-        default: 5
-        minimum: 1
-        maximum: 50
-    filter:
-      name: filter
-      in: query
-      required: false
-      description: "Specifies details of a row filter.\n\n The possible fields that can be filtered on are:\n  * name\n\nThe allowed format:\n  - Begins with the column name to be filtered, followed by a colon, then:\n    - Either an exact string to match, or\n    - A string expression including the * wildcard character\n      - :{PREFIX}* will be used to find out word start with.\n      - :*{POSTFIX} will be used to find out word end with\n      - : will be used to match exact word\n  - Begin with column name to be filtered, followed by a = operator. (this will be used to match exact string)\n"
-      schema:
-        type: string
-        maxLength: 255
-      examples:
-        exact:
-          description: Example of filtering based on an exact string.
-          value: name=Abc123
-        prefix:
-          description: Example of filtering based on a prefix string.
-          value: name:AB*
-        postfix:
-          description: Example of filtering based on a postfix string.
-          value: name:*C123
-    accountId:
-      name: accountId
-      description: The unique 6 character internal id that represents the customer account.
-      required: true
-      in: path
-      schema:
-        type: string
-        minLength: 6
-        maxLength: 6
-        pattern: ^[a-zA-Z]{6}$
-        example: ABCDEF
-    orderBy:
-      name: orderBy
-      in: query
-      required: false
-      description: "Field name on which ordering needs to be performed. The default order is ascending.\n\nThe possible fields that can be ordered on are:\n  * name\n\nField Names are case-senstive (should be written as it is in description).\n\nTo specify descending order, a suffix \" desc\" should be added. For example, \"name\" for ascending or \"name desc\" for descending\".\n"
-      schema:
-        type: string
-        maxLength: 255
-      examples:
-        ascending:
-          value: name
-        descending:
-          value: name desc
-    sipTrunkId:
-      name: sipTrunkId
-      in: path
-      description: The unique 36 character internal id (uuid) that represents the Element.
-      required: true
-      schema:
-        type: string
-        example: c8c2909d-75e9-484a-94c0-b7e8d29771fe
-        minLength: 36
-        maxLength: 36
-        pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
-    pageNumber:
-      name: pageNumber
-      in: query
-      description: The page number of the records to retrieve. Default value is 1.
-      required: false
-      schema:
-        type: integer
-        format: int32
-        example: 1
-        default: 1
-        minimum: 1
+    ErrorConstraintViolation:
+      description: Constraint Violation
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorConstraintViolation'
   schemas:
-    SipTrunk:
-      title: SipTrunk
-      type: object
-      description: SIP Trunks Element Model
-      properties:
-        id:
-          description: Unique UUID for SIP Trunk
-          type: string
-          readOnly: true
-          example: fa703a3a-3dfb-4606-ae79-fd0fe0be3e64
-        type:
-          description: Type of SIP Trunk
-          type: string
-          readOnly: true
-          example: ACOSIPTrunk
-        seqNumber:
-          description: Incremental sequence number of domain name
-          type: integer
-          readOnly: true
-          example: 1
-        provider:
-          description: Provider name of SIP Trunk
-          type: string
-          readOnly: true
-          example: RingCentral
-        providerDomain:
-          description: Provider Domain name configured for the SIP Trunk
-          type: string
-          readOnly: true
-          minLength: 3
-          maxLength: 255
-          pattern: ^((?!-)[A-Za-z0-9\p{L}-]{1,63}(?<!-)\.)+[A-Za-z\p{L}]{2,63}$
-          example: exchange.com
-        trunkName:
-          description: Name of the SIP Trunk
-          type: string
-          readOnly: true
-          minLength: 1
-          maxLength: 255
-          pattern: ^[a-zA-Z0-9\p{L}\-\_\.\ ]+$
-          example: ACO-Trunk-US
-        inboundDomain:
-          description: Inbound Domain name configured for the ACO SIP Trunk
-          type: string
-          readOnly: true
-          minLength: 3
-          maxLength: 255
-          pattern: ^((?!-)[A-Za-z0-9\p{L}-]{1,63}(?<!-)\.)+[A-Za-z\p{L}]{2,63}$
-          example: exchange.com
-        outboundDomain:
-          description: Outbound Domain name configured for the ACO SIP Trunk Element
-          type: string
-          readOnly: true
-          minLength: 3
-          maxLength: 255
-          pattern: ^((?!-)[A-Za-z0-9\p{L}-]{1,63}(?<!-)\.)+[A-Za-z\p{L}]{2,63}$
-          example: exchange.com
-        releaseMediaAnchorDuringTransfer:
-          type: boolean
-          readOnly: true
-          description: Release media anchor during transfer.
-          example: true
-        preferredMediaLocation:
-          type: string
-          readOnly: true
-          description: Preferred Media Processing Location set by tenant.
-          example: US-LA
-          minLength: 1
-          maxLength: 7
-        callerId:
-          description: Unique id of DNIS Details fetched from CPaas Server
-          type: string
-          readOnly: false
-          example: fa703a3a-3dfb-4606-ae79-fd0fe0be3e64
-        isDefault:
-          description: Default SIP trunk
-          type: boolean
-          readOnly: false
-          default: false
-          example: true
     Problem:
       type: object
       description: '<b>Problem Detail</b> as a way to carry machine-readable details of errors in a HTTP response to avoid the need to define new error response formats for HTTP APIs <a href="https://tools.ietf.org/html/rfc7807">RFC 7807</a>
@@ -405,6 +248,107 @@ components:
           - field: accountId
             message: must match "^[a-zA-Z]{6}$"
             code: 20006
+    Links:
+      type: object
+      properties:
+        prev:
+          type: string
+          description: URL of the previous page. Blank if currently on the first page.
+        next:
+          type: string
+          description: URL of the next page. Blank if currently on the last page.
+    Pagination:
+      type: object
+      properties:
+        pageNumber:
+          type: integer
+          description: The current page number.
+        pageSize:
+          type: integer
+          description: The max number of records that can be retrieved on this page.
+        total:
+          type: integer
+          description: The total number of records.
+    SipTrunk:
+      title: SipTrunk
+      type: object
+      description: SIP Trunks Element Model
+      properties:
+        id:
+          description: Unique UUID for SIP Trunk
+          type: string
+          readOnly: true
+          example: fa703a3a-3dfb-4606-ae79-fd0fe0be3e64
+        type:
+          description: Type of SIP Trunk
+          type: string
+          readOnly: true
+          example: ACOSIPTrunk
+        seqNumber:
+          description: Incremental sequence number of domain name
+          type: integer
+          readOnly: true
+          example: 1
+        provider:
+          description: Provider name of SIP Trunk
+          type: string
+          readOnly: true
+          example: RingCentral
+        providerDomain:
+          description: Provider Domain name configured for the SIP Trunk
+          type: string
+          readOnly: true
+          minLength: 3
+          maxLength: 255
+          pattern: ^((?!-)[A-Za-z0-9\p{L}-]{1,63}(?<!-)\.)+[A-Za-z\p{L}]{2,63}$
+          example: exchange.com
+        trunkName:
+          description: Name of the SIP Trunk
+          type: string
+          readOnly: true
+          minLength: 1
+          maxLength: 255
+          pattern: ^[a-zA-Z0-9\p{L}\-\_\.\ ]+$
+          example: ACO-Trunk-US
+        inboundDomain:
+          description: Inbound Domain name configured for the ACO SIP Trunk
+          type: string
+          readOnly: true
+          minLength: 3
+          maxLength: 255
+          pattern: ^((?!-)[A-Za-z0-9\p{L}-]{1,63}(?<!-)\.)+[A-Za-z\p{L}]{2,63}$
+          example: exchange.com
+        outboundDomain:
+          description: Outbound Domain name configured for the ACO SIP Trunk Element
+          type: string
+          readOnly: true
+          minLength: 3
+          maxLength: 255
+          pattern: ^((?!-)[A-Za-z0-9\p{L}-]{1,63}(?<!-)\.)+[A-Za-z\p{L}]{2,63}$
+          example: exchange.com
+        releaseMediaAnchorDuringTransfer:
+          type: boolean
+          readOnly: true
+          description: Release media anchor during transfer.
+          example: true
+        preferredMediaLocation:
+          type: string
+          readOnly: true
+          description: Preferred Media Processing Location set by tenant.
+          example: US-LA
+          minLength: 1
+          maxLength: 7
+        callerId:
+          description: Unique id of DNIS Details fetched from CPaas Server
+          type: string
+          readOnly: false
+          example: fa703a3a-3dfb-4606-ae79-fd0fe0be3e64
+        isDefault:
+          description: Default SIP trunk
+          type: boolean
+          readOnly: false
+          default: false
+          example: true
     SipTrunkPage:
       title: SipTrunkPage
       type: object
@@ -423,28 +367,46 @@ components:
           example:
             prev: /api/admin/voice/v1/accounts/{accountId}/sip-trunks?pageNumber=1&pageSize=10
             next: /api/admin/voice/v1/accounts/{accountId}/sip-trunks?pageNumber=3&pageSize=10
-    Pagination:
-      type: object
-      properties:
-        pageNumber:
-          type: integer
-          description: The current page number.
-        pageSize:
-          type: integer
-          description: The max number of records that can be retrieved on this page.
-        total:
-          type: integer
-          description: The total number of records.
-    Links:
-      type: object
-      properties:
-        prev:
-          type: string
-          description: URL of the previous page. Blank if currently on the first page.
-        next:
-          type: string
-          description: URL of the next page. Blank if currently on the last page.
   examples:
+    SipTrunkUpdateResponse:
+      value:
+        id: c8c2909d-75e9-484a-94c0-b7e8d29771fe
+        type: BYOC
+        seqNumber: 1
+        provider: umhgjt.eu.cc.avayacloud.com
+        providerDomain: ringcentral.eu.cc.avayacloud.com
+        trunkName: trunk1.umhgjt.eu.cc.avayacloud.com
+        outboundDomain: trunk1.umhgjt.eu.cc.avayacloud.com
+        inboundDomain: trunk1.umhgjt.eu.cc.avayacloud.com
+        releaseMediaAnchorDuringTransfer: false
+        preferredMediaLocation: AL-01
+        callerId: c8c2909d-75e9-484a-94c0-b7e8d297735f
+        isDefault: true
+    SipTrunkUpdateRequest:
+      value:
+        callerId: c8c2909d-75e9-484a-94c0-b7e8d297735f
+        isDefault: true
+    ErrorNotFound:
+      description: Not Found
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#resource-not-found
+        title: Resource Not Found
+        status: 404
+        detail: Either there is no API method associated with the URL path of the request, or the request refers to one or more resources that were not found.
+    ErrorUnauthorized:
+      description: Unauthorized
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#unauthorized
+        title: Unauthorized
+        status: 401
+        detail: This operation requires authentication. See https://developers.avayacloud.com/onecloud-ccaas/docs/how-to-authenticate-with-ccaas-apis
+    ErrorInternalServerError:
+      description: Server Error
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#server-error
+        title: Server Error
+        status: 500
+        detail: An internal server error was encountered.
     ErrorForbidden:
       description: Forbidden
       value:
@@ -463,38 +425,6 @@ components:
         - field: accountId
           message: must match "^[a-zA-Z]{6}$"
           code: 20006
-    ErrorNotFound:
-      description: Not Found
-      value:
-        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#resource-not-found
-        title: Resource Not Found
-        status: 404
-        detail: Either there is no API method associated with the URL path of the request, or the request refers to one or more resources that were not found.
-    SipTrunkUpdateRequest:
-      value:
-        callerId: c8c2909d-75e9-484a-94c0-b7e8d297735f
-        isDefault: true
-    SipTrunkUpdateResponse:
-      value:
-        id: c8c2909d-75e9-484a-94c0-b7e8d29771fe
-        type: BYOC
-        seqNumber: 1
-        provider: umhgjt.eu.cc.avayacloud.com
-        providerDomain: ringcentral.eu.cc.avayacloud.com
-        trunkName: trunk1.umhgjt.eu.cc.avayacloud.com
-        outboundDomain: trunk1.umhgjt.eu.cc.avayacloud.com
-        inboundDomain: trunk1.umhgjt.eu.cc.avayacloud.com
-        releaseMediaAnchorDuringTransfer: false
-        preferredMediaLocation: AL-01
-        callerId: c8c2909d-75e9-484a-94c0-b7e8d297735f
-        isDefault: true
-    ErrorUnauthorized:
-      description: Unauthorized
-      value:
-        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#unauthorized
-        title: Unauthorized
-        status: 401
-        detail: This operation requires authentication. See https://developers.avayacloud.com/onecloud-ccaas/docs/how-to-authenticate-with-ccaas-apis
     SipTrunkPageResponse:
       value:
         pagination:
@@ -536,13 +466,83 @@ components:
         links:
           prev: /api/admin/v1/accounts/ASDJGE/location-profiles?pageNumber=1&pageSize=3
           next: /api/admin/v1/accounts/ASDJGE/location-profiles?pageNumber=3&pageSize=3
-    ErrorInternalServerError:
-      description: Server Error
-      value:
-        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#server-error
-        title: Server Error
-        status: 500
-        detail: An internal server error was encountered.
+  parameters:
+    filter:
+      name: filter
+      in: query
+      required: false
+      description: "Specifies details of a row filter.\n\n The possible fields that can be filtered on are:\n  * name\n\nThe allowed format:\n  - Begins with the column name to be filtered, followed by a colon, then:\n    - Either an exact string to match, or\n    - A string expression including the * wildcard character\n      - :{PREFIX}* will be used to find out word start with.\n      - :*{POSTFIX} will be used to find out word end with\n      - : will be used to match exact word\n  - Begin with column name to be filtered, followed by a = operator. (this will be used to match exact string)\n"
+      schema:
+        type: string
+        maxLength: 255
+      examples:
+        exact:
+          description: Example of filtering based on an exact string.
+          value: name=Abc123
+        prefix:
+          description: Example of filtering based on a prefix string.
+          value: name:AB*
+        postfix:
+          description: Example of filtering based on a postfix string.
+          value: name:*C123
+    pageNumber:
+      name: pageNumber
+      in: query
+      description: The page number of the records to retrieve. Default value is 1.
+      required: false
+      schema:
+        type: integer
+        format: int32
+        example: 1
+        default: 1
+        minimum: 1
+    pageSize:
+      name: pageSize
+      in: query
+      description: The max number of records to retrieve per page. Default value is 5, Any value like 5,10,15,20,25,30 is allowed. If value comes more than 1000 then max 1000 records will be returned.
+      required: false
+      schema:
+        type: integer
+        format: int32
+        example: 5
+        default: 5
+        minimum: 1
+        maximum: 50
+    accountId:
+      name: accountId
+      description: The unique 6 character internal id that represents the customer account.
+      required: true
+      in: path
+      schema:
+        type: string
+        minLength: 6
+        maxLength: 6
+        pattern: ^[a-zA-Z]{6}$
+        example: ABCDEF
+    sipTrunkId:
+      name: sipTrunkId
+      in: path
+      description: The unique 36 character internal id (uuid) that represents the Element.
+      required: true
+      schema:
+        type: string
+        example: c8c2909d-75e9-484a-94c0-b7e8d29771fe
+        minLength: 36
+        maxLength: 36
+        pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
+    orderBy:
+      name: orderBy
+      in: query
+      required: false
+      description: "Field name on which ordering needs to be performed. The default order is ascending.\n\nThe possible fields that can be ordered on are:\n  * name\n\nField Names are case-senstive (should be written as it is in description).\n\nTo specify descending order, a suffix \" desc\" should be added. For example, \"name\" for ascending or \"name desc\" for descending\".\n"
+      schema:
+        type: string
+        maxLength: 255
+      examples:
+        ascending:
+          value: name
+        descending:
+          value: name desc
   securitySchemes:
     BearerAuth:
       type: http

@@ -77,24 +77,6 @@ paths:
           $ref: '#/components/responses/InternalServer'
 components:
   examples:
-    ErrorForbidden:
-      description: Forbidden
-      value:
-        type: https://developers.avayacloud.com/avaya-experience-platform/docs/error-handling#forbidden
-        title: Forbidden
-        status: 403
-        detail: According to the access control policy the current user and/or accountId does not have permission to access this resource.
-    ErrorNotFound:
-      description: Not Found
-      value:
-        type: https://developers.avayacloud.com/avaya-experience-platform/docs/error-handling#resource-not-found
-        title: Resource Not Found
-        status: 404
-        detail: Either there is no API method associated with the URL path of the request, or the request refers to one or more resources that were not found.
-    WorkspacesResponse:
-      description: Workspaces server details
-      value:
-        hostname: uk.prod.ws.avayacloud.com
     ErrorUnauthorized:
       description: Unauthorized
       value:
@@ -109,7 +91,34 @@ components:
         title: Server Error
         status: 500
         detail: An internal server error was encountered.
+    ErrorForbidden:
+      description: Forbidden
+      value:
+        type: https://developers.avayacloud.com/avaya-experience-platform/docs/error-handling#forbidden
+        title: Forbidden
+        status: 403
+        detail: According to the access control policy the current user and/or accountId does not have permission to access this resource.
+    WorkspacesResponse:
+      description: Workspaces server details
+      value:
+        hostname: uk.prod.ws.avayacloud.com
+    ErrorNotFound:
+      description: Not Found
+      value:
+        type: https://developers.avayacloud.com/avaya-experience-platform/docs/error-handling#resource-not-found
+        title: Resource Not Found
+        status: 404
+        detail: Either there is no API method associated with the URL path of the request, or the request refers to one or more resources that were not found.
   responses:
+    NotFound:
+      description: Not Found
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorNotFound'
     Unauthorized:
       description: Unauthorized
       content:
@@ -137,16 +146,15 @@ components:
           examples:
             default:
               $ref: '#/components/examples/ErrorInternalServerError'
-    NotFound:
-      description: Not Found
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorNotFound'
   schemas:
+    Workspaces:
+      description: Workspaces server details
+      type: object
+      properties:
+        hostname:
+          type: string
+          example: uk.prod.ws.avayacloud.com
+          description: The hostname of Workspaces server
     Problem:
       type: object
       description: '<b>Problem Detail</b> as a way to carry machine-readable details of errors in a HTTP response to avoid the need to define new error response formats for HTTP APIs <a href="https://tools.ietf.org/html/rfc7807">RFC 7807</a>
@@ -232,14 +240,6 @@ components:
           - field: accountId
             message: must match "^[a-zA-Z]{6}$"
             code: 20006
-    Workspaces:
-      description: Workspaces server details
-      type: object
-      properties:
-        hostname:
-          type: string
-          example: uk.prod.ws.avayacloud.com
-          description: The hostname of Workspaces server
   parameters:
     accountId:
       name: accountId

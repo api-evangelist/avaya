@@ -121,39 +121,6 @@ paths:
           $ref: '#/components/responses/InternalServer'
 components:
   examples:
-    ErrorForbidden:
-      description: Forbidden
-      value:
-        type: https://developers.avayacloud.com/avaya-experience-platform/docs/error-handling#forbidden
-        title: Forbidden
-        status: 403
-        detail: According to the access control policy the current user and/or accountId does not have permission to access this resource.
-    ErrorConstraintViolation:
-      description: Constraint Violation
-      value:
-        type: https://developers.avayacloud.com/avaya-experience-platform/docs/error-handling#constraint-violation
-        title: Constraint Violation
-        status: 400
-        detail: A problem that indicates a syntactically correct, yet semantically illegal request. The Server can not process this request until the client resolves the semantic errors described in the violations section.
-        violations:
-        - field: accountId
-          message: must match "^[a-zA-Z]{6}$"
-          code: 20006
-    ErrorNotFound:
-      description: Not Found
-      value:
-        type: https://developers.avayacloud.com/avaya-experience-platform/docs/error-handling#resource-not-found
-        title: Resource Not Found
-        status: 404
-        detail: Resource not found.
-    participant-create-treatment:
-      value:
-        type: TREATMENT
-        channelId: Voice
-        channelType: VOICE
-        automationType: SELF_SERVICE
-        timestamp: '2019-07-23T17:45:21.002Z'
-        dialogId: 67ec5131-259c-4924-bb08-d87cf315e5e3
     ErrorUnauthorized:
       description: Unauthorized
       value:
@@ -168,6 +135,40 @@ components:
         title: Server Error
         status: 500
         detail: An internal server error was encountered.
+    ErrorForbidden:
+      description: Forbidden
+      value:
+        type: https://developers.avayacloud.com/avaya-experience-platform/docs/error-handling#forbidden
+        title: Forbidden
+        status: 403
+        detail: According to the access control policy the current user and/or accountId does not have permission to access this resource.
+    participant-create-treatment:
+      value:
+        type: TREATMENT
+        channelId: Voice
+        channelType: VOICE
+        automationType: SELF_SERVICE
+        timestamp: '2019-07-23T17:45:21.002Z'
+        dialogId: 67ec5131-259c-4924-bb08-d87cf315e5e3
+    ErrorConstraintViolation:
+      description: Constraint Violation
+      value:
+        type: https://developers.avayacloud.com/avaya-experience-platform/docs/error-handling#constraint-violation
+        title: Constraint Violation
+        status: 400
+        detail: A problem that indicates a syntactically correct, yet semantically illegal request. The Server can not process this request until the client resolves the semantic errors described in the violations section.
+        violations:
+        - field: accountId
+          message: must match "^[a-zA-Z]{6}$"
+          code: 20006
+    participant-create-agent:
+      value:
+        type: AGENT
+        channelId: Voice
+        channelType: VOICE
+        extension: ext/1234
+        timestamp: '2019-07-23T17:45:21.003Z'
+        dialogId: 57f78d8e-5579-47de-b3d0-8aee161039c0
     participant-create-external:
       value:
         type: EXTERNAL
@@ -177,15 +178,24 @@ components:
         dialledNumber: 1590 12345
         timestamp: '2019-07-23T17:45:21.001Z'
         dialogId: 67ec5131-259c-4924-bb08-d87cf315e5e3
-    participant-create-agent:
+    ErrorNotFound:
+      description: Not Found
       value:
-        type: AGENT
-        channelId: Voice
-        channelType: VOICE
-        extension: ext/1234
-        timestamp: '2019-07-23T17:45:21.003Z'
-        dialogId: 57f78d8e-5579-47de-b3d0-8aee161039c0
+        type: https://developers.avayacloud.com/avaya-experience-platform/docs/error-handling#resource-not-found
+        title: Resource Not Found
+        status: 404
+        detail: Resource not found.
   parameters:
+    participantId:
+      name: participantId
+      description: The unique id that represents the participant.
+      required: true
+      in: path
+      schema:
+        type: string
+        minLength: 1
+        maxLength: 36
+        example: 1b3232rerew343432432432
     accountId:
       name: accountId
       description: The unique 6 character internal id that represents the customer account.
@@ -208,26 +218,7 @@ components:
         maxLength: 36
         pattern: ^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}$
         example: dfd117d7-73e3-4436-8bd7-3ce8f1a008ed
-    participantId:
-      name: participantId
-      description: The unique id that represents the participant.
-      required: true
-      in: path
-      schema:
-        type: string
-        minLength: 1
-        maxLength: 36
-        example: 1b3232rerew343432432432
   responses:
-    Unauthorized:
-      description: Unauthorized
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorUnauthorized'
     NotFound:
       description: Not Found
       content:
@@ -237,6 +228,15 @@ components:
           examples:
             default:
               $ref: '#/components/examples/ErrorNotFound'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorUnauthorized'
     Forbidden:
       description: Forbidden
       content:

@@ -463,71 +463,6 @@ components:
         links:
           prev: /api/admin/voice/v1/accounts/ABCDEF/phone-numbers?pageNumber=1&pageSize=10
           next: /api/admin/voice/v1/accounts/ABCDEF/phone-numbers?pageNumber=3&pageSize=10
-    ErrorForbidden:
-      description: Forbidden
-      value:
-        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#forbidden
-        title: Forbidden
-        status: 403
-        detail: According to the access control policy the current user does not have permission to access this resource.
-    PhoneNumbersDetailsRequest:
-      description: Get By Phone Numbers Request
-      value:
-      - '+1675904984'
-      - '+1923678899'
-    PhoneNumberDisabledResponse:
-      description: PhoneNumber Disabled Response
-      value:
-        phoneNumberId: c8c2909d-75e9-484a-94c0-b7e8d29771fe
-        phoneNumber: '+16479308804'
-        displayName: private Number
-        isCallingPartyNumber: true
-        countryCode: US
-        type: LOCAL
-        accountId: ABCDEF
-        status: DISABLED
-        preferredMediaLocation: US-LA
-    ErrorConstraintViolation:
-      description: Constraint Violation
-      value:
-        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#constraint-violation
-        title: Constraint Violation
-        status: 400
-        detail: A problem that indicates a syntactically correct, yet semantically illegal request. The Server can not process this request until the client resolves the semantic errors described in the violations section.
-        violations:
-        - field: accountId
-          message: must match "^[a-zA-Z]{6}$"
-          code: 20006
-    ErrorNotFound:
-      description: Not Found
-      value:
-        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#resource-not-found
-        title: Resource Not Found
-        status: 404
-        detail: Either there is no API method associated with the URL path of the request, or the request refers to one or more resources that were not found.
-    ErrorPhoneNumberExists:
-      description: Constraint Violation
-      value:
-        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#conflict
-        title: Conflict
-        status: 409
-        detail: A resource with the same unique constraint values already exists.
-        violations:
-        - field: phoneNumber
-          message: Number already exists
-    PhoneNumberInActiveResponse:
-      description: PhoneNumber InActive Response
-      value:
-        phoneNumberId: c8c2909d-75e9-484a-94c0-b7e8d29771fe
-        phoneNumber: '+16479308804'
-        displayName: private Number
-        isCallingPartyNumber: true
-        countryCode: US
-        type: LOCAL
-        accountId: ABCDEF
-        status: INACTIVE
-        statusMessage: Verification needed. Please send the necessary documents to siptrunksupport@avaya.com to activate it.
-        preferredMediaLocation: US-LA
     PhoneNumberListResponse:
       description: Phone Number List Response
       value:
@@ -551,6 +486,29 @@ components:
         status: INACTIVE
         statusMessage: Verification needed. Please send the necessary documents to siptrunksupport@avaya.com to activate it.
         preferredMediaLocation: US-LA
+    PhoneNumberFailedResponse:
+      description: PhoneNumber Failed Response
+      value:
+        phoneNumberId: c8c2909d-75e9-484a-94c0-b7e8d29771fe
+        phoneNumber: '+16479308804'
+        displayName: private Number
+        isCallingPartyNumber: true
+        countryCode: US
+        type: LOCAL
+        accountId: ABCDEF
+        status: FAILED
+        statusMessage: Internal Server Error
+        preferredMediaLocation: US-LA
+    PhoneNumberValidateResponse:
+      value:
+        valid:
+        - id: c8c2909d-75e9-484a-94c0-b7e8d29771fe
+        - id: 1f15835f-1365-4913-acf3-0ffd0767ad6e
+        invalid:
+        - id: 1d033683-f1cc-477d-a190-a6d10d8a686d
+          message: Phone number doesn't exist or disabled
+        - id: c96c4d34-57fa-4256-8dc3-5f66252acb99
+          message: Phone number doesn't exist or disabled
     PhoneNumberRequest:
       description: PhoneNumber create request
       value:
@@ -558,33 +516,24 @@ components:
         displayName: private Number
         countryCode: US
         isCallingPartyNumber: true
-    PhoneNumberUpdateResponse:
-      description: PhoneNumber update response
+    PhoneNumberInActiveResponse:
+      description: PhoneNumber InActive Response
       value:
         phoneNumberId: c8c2909d-75e9-484a-94c0-b7e8d29771fe
         phoneNumber: '+16479308804'
         displayName: private Number
+        isCallingPartyNumber: true
         countryCode: US
         type: LOCAL
-        isCallingPartyNumber: true
         accountId: ABCDEF
         status: INACTIVE
         statusMessage: Verification needed. Please send the necessary documents to siptrunksupport@avaya.com to activate it.
         preferredMediaLocation: US-LA
-    ErrorUnauthorized:
-      description: Unauthorized
-      value:
-        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#unauthorized
-        title: Unauthorized
-        status: 401
-        detail: This operation requires authentication. See https://developers.avayacloud.com/onecloud-ccaas/docs/how-to-authenticate-with-ccaas-apis
-    PhoneNumberValidateRequest:
+    PhoneNumberListRequest:
       description: Phone Number List Request
       value:
       - c8c2909d-75e9-484a-94c0-b7e8d29771fe
       - 1f15835f-1365-4913-acf3-0ffd0767ad6e
-      - 1d033683-f1cc-477d-a190-a6d10d8a686d
-      - c96c4d34-57fa-4256-8dc3-5f66252acb99
     PhoneNumberInProgressResponse:
       description: PhoneNumber InProgress Response
       value:
@@ -608,14 +557,71 @@ components:
         accountId: ABCDEF
         status: ACTIVE
         preferredMediaLocation: US-LA
+    ErrorNotFound:
+      description: Not Found
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#resource-not-found
+        title: Resource Not Found
+        status: 404
+        detail: Either there is no API method associated with the URL path of the request, or the request refers to one or more resources that were not found.
+    PhoneNumberUpdateResponse:
+      description: PhoneNumber update response
+      value:
+        phoneNumberId: c8c2909d-75e9-484a-94c0-b7e8d29771fe
+        phoneNumber: '+16479308804'
+        displayName: private Number
+        countryCode: US
+        type: LOCAL
+        isCallingPartyNumber: true
+        accountId: ABCDEF
+        status: INACTIVE
+        statusMessage: Verification needed. Please send the necessary documents to siptrunksupport@avaya.com to activate it.
+        preferredMediaLocation: US-LA
+    ErrorUnauthorized:
+      description: Unauthorized
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#unauthorized
+        title: Unauthorized
+        status: 401
+        detail: This operation requires authentication. See https://developers.avayacloud.com/onecloud-ccaas/docs/how-to-authenticate-with-ccaas-apis
+    ErrorInternalServerError:
+      description: Server Error
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#server-error
+        title: Server Error
+        status: 500
+        detail: An internal server error was encountered.
+    ErrorForbidden:
+      description: Forbidden
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#forbidden
+        title: Forbidden
+        status: 403
+        detail: According to the access control policy the current user does not have permission to access this resource.
+    PhoneNumbersDetailsRequest:
+      description: Get By Phone Numbers Request
+      value:
+      - '+1675904984'
+      - '+1923678899'
+    ErrorConstraintViolation:
+      description: Constraint Violation
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#constraint-violation
+        title: Constraint Violation
+        status: 400
+        detail: A problem that indicates a syntactically correct, yet semantically illegal request. The Server can not process this request until the client resolves the semantic errors described in the violations section.
+        violations:
+        - field: accountId
+          message: must match "^[a-zA-Z]{6}$"
+          code: 20006
     PhoneNumberUpdateRequest:
       description: PhoneNumber update request
       value:
         displayName: private Number
         isCallingPartyNumber: true
         preferredMediaLocation: US-LA
-    PhoneNumberFailedResponse:
-      description: PhoneNumber Failed Response
+    PhoneNumberDisabledResponse:
+      description: PhoneNumber Disabled Response
       value:
         phoneNumberId: c8c2909d-75e9-484a-94c0-b7e8d29771fe
         phoneNumber: '+16479308804'
@@ -624,50 +630,35 @@ components:
         countryCode: US
         type: LOCAL
         accountId: ABCDEF
-        status: FAILED
-        statusMessage: Internal Server Error
+        status: DISABLED
         preferredMediaLocation: US-LA
-    PhoneNumberListRequest:
+    PhoneNumberValidateRequest:
       description: Phone Number List Request
       value:
       - c8c2909d-75e9-484a-94c0-b7e8d29771fe
       - 1f15835f-1365-4913-acf3-0ffd0767ad6e
-    ErrorInternalServerError:
-      description: Server Error
-      value:
-        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#server-error
-        title: Server Error
-        status: 500
-        detail: An internal server error was encountered.
-    PhoneNumberValidateResponse:
-      value:
-        valid:
-        - id: c8c2909d-75e9-484a-94c0-b7e8d29771fe
-        - id: 1f15835f-1365-4913-acf3-0ffd0767ad6e
-        invalid:
-        - id: 1d033683-f1cc-477d-a190-a6d10d8a686d
-          message: Phone number doesn't exist or disabled
-        - id: c96c4d34-57fa-4256-8dc3-5f66252acb99
-          message: Phone number doesn't exist or disabled
-  responses:
-    ErrorConstraintViolation:
+      - 1d033683-f1cc-477d-a190-a6d10d8a686d
+      - c96c4d34-57fa-4256-8dc3-5f66252acb99
+    ErrorPhoneNumberExists:
       description: Constraint Violation
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#conflict
+        title: Conflict
+        status: 409
+        detail: A resource with the same unique constraint values already exists.
+        violations:
+        - field: phoneNumber
+          message: Number already exists
+  responses:
+    NotFound:
+      description: Not Found
       content:
         application/problem+json:
           schema:
             $ref: '#/components/schemas/Problem'
           examples:
             default:
-              $ref: '#/components/examples/ErrorConstraintViolation'
-    InternalServerError:
-      description: All other application errors
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorInternalServerError'
+              $ref: '#/components/examples/ErrorNotFound'
     Unauthorized:
       description: Unauthorized
       content:
@@ -686,15 +677,15 @@ components:
           examples:
             loginId:
               $ref: '#/components/examples/ErrorPhoneNumberExists'
-    NotFound:
-      description: Not Found
+    InternalServerError:
+      description: All other application errors
       content:
         application/problem+json:
           schema:
             $ref: '#/components/schemas/Problem'
           examples:
             default:
-              $ref: '#/components/examples/ErrorNotFound'
+              $ref: '#/components/examples/ErrorInternalServerError'
     Forbidden:
       description: Forbidden
       content:
@@ -704,7 +695,38 @@ components:
           examples:
             default:
               $ref: '#/components/examples/ErrorForbidden'
+    ErrorConstraintViolation:
+      description: Constraint Violation
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorConstraintViolation'
   parameters:
+    phoneNumberId:
+      name: phoneNumberId
+      description: The unique 36 character internal id that represents the phone number.
+      required: true
+      in: path
+      schema:
+        type: string
+        minLength: 36
+        maxLength: 36
+        pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
+        example: c8c2909d-75e9-484a-94c0-b7e8d29771fe
+    pageNumber:
+      name: pageNumber
+      in: query
+      description: The page number of the records to retrieve. Default value is 1.
+      required: false
+      schema:
+        type: integer
+        format: int32
+        example: 1
+        default: 1
+        minimum: 1
     pageSize:
       name: pageSize
       in: query
@@ -728,28 +750,6 @@ components:
         maxLength: 6
         pattern: ^[a-zA-Z]{6}$
         example: ABCDEF
-    phoneNumberId:
-      name: phoneNumberId
-      description: The unique 36 character internal id that represents the phone number.
-      required: true
-      in: path
-      schema:
-        type: string
-        minLength: 36
-        maxLength: 36
-        pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
-        example: c8c2909d-75e9-484a-94c0-b7e8d29771fe
-    pageNumber:
-      name: pageNumber
-      in: query
-      description: The page number of the records to retrieve. Default value is 1.
-      required: false
-      schema:
-        type: integer
-        format: int32
-        example: 1
-        default: 1
-        minimum: 1
   schemas:
     PhoneNumberValidateResponse:
       title: PhoneNumberValidateResponse
@@ -764,6 +764,19 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/ValidatePhoneNumber'
+    ValidatePhoneNumber:
+      title: ValidatePhoneNumber
+      type: object
+      description: Phone Number Id with message
+      properties:
+        id:
+          type: string
+          description: Phone Number Id
+          example: c8c2909d-75e9-484a-94c0-b7e8d29771fe
+        message:
+          type: string
+          example: Doesn't exist in database
+          description: short description about phone number if it is invalid
     PhoneNumberListRequest:
       title: PhoneNumberListRequest
       type: array
@@ -859,16 +872,59 @@ components:
           - field: accountId
             message: must match "^[a-zA-Z]{6}$"
             code: 20006
-    PhoneNumberValidateRequest:
-      title: PhoneNumberValidateRequest
+    Links:
+      type: object
+      properties:
+        prev:
+          type: string
+          description: URL of the previous page. Blank if currently on the first page.
+        next:
+          type: string
+          description: URL of the next page. Blank if currently on the last page.
+    PhoneNumbersDetailsRequest:
+      title: PhoneNumbersDetailsRequest
       type: array
-      description: List of Phone number Ids
+      description: List of Phone numbers
       maxItems: 1000
       items:
         type: string
-        description: The unique 36 character internal id that represents the phone number.
-        format: uuid
-        example: c8c2909d-75e9-484a-94c0-b7e8d29771fe
+        description: Actual phone number.
+        example: '+168739874'
+    Pagination:
+      type: object
+      properties:
+        pageNumber:
+          type: integer
+          description: The current page number.
+        pageSize:
+          type: integer
+          description: The max number of records that can be retrieved on this page.
+        total:
+          type: integer
+          description: The total number of records.
+    PhoneNumberListResponse:
+      title: PhoneNumberListResponse
+      type: array
+      description: List of Phone Number Objects
+      maxItems: 1000
+      items:
+        $ref: '#/components/schemas/PhoneNumber'
+    PhoneNumberPage:
+      description: Paginated Phone Numbers
+      type: object
+      properties:
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+        phoneNumbers:
+          type: array
+          items:
+            $ref: '#/components/schemas/PhoneNumber'
+        links:
+          allOf:
+          - $ref: '#/components/schemas/Links'
+          example:
+            prev: /api/admin/voice/v1/accounts/ABCDEF/phone-numbers?pageNumber=1&pageSize=10
+            next: /api/admin/voice/v1/accounts/ABCDEF/phone-numbers?pageNumber=3&pageSize=10
     PhoneNumber:
       type: object
       description: PhoneNumber of an Account.
@@ -933,28 +989,16 @@ components:
           example: US-LA
           minLength: 1
           maxLength: 7
-    PhoneNumbersDetailsRequest:
-      title: PhoneNumbersDetailsRequest
+    PhoneNumberValidateRequest:
+      title: PhoneNumberValidateRequest
       type: array
-      description: List of Phone numbers
+      description: List of Phone number Ids
       maxItems: 1000
       items:
         type: string
-        description: Actual phone number.
-        example: '+168739874'
-    ValidatePhoneNumber:
-      title: ValidatePhoneNumber
-      type: object
-      description: Phone Number Id with message
-      properties:
-        id:
-          type: string
-          description: Phone Number Id
-          example: c8c2909d-75e9-484a-94c0-b7e8d29771fe
-        message:
-          type: string
-          example: Doesn't exist in database
-          description: short description about phone number if it is invalid
+        description: The unique 36 character internal id that represents the phone number.
+        format: uuid
+        example: c8c2909d-75e9-484a-94c0-b7e8d29771fe
     UpdatePhoneNumber:
       type: object
       description: PhoneNumber Update request.
@@ -974,50 +1018,6 @@ components:
           example: US-LA
           minLength: 1
           maxLength: 7
-    Pagination:
-      type: object
-      properties:
-        pageNumber:
-          type: integer
-          description: The current page number.
-        pageSize:
-          type: integer
-          description: The max number of records that can be retrieved on this page.
-        total:
-          type: integer
-          description: The total number of records.
-    PhoneNumberPage:
-      description: Paginated Phone Numbers
-      type: object
-      properties:
-        pagination:
-          $ref: '#/components/schemas/Pagination'
-        phoneNumbers:
-          type: array
-          items:
-            $ref: '#/components/schemas/PhoneNumber'
-        links:
-          allOf:
-          - $ref: '#/components/schemas/Links'
-          example:
-            prev: /api/admin/voice/v1/accounts/ABCDEF/phone-numbers?pageNumber=1&pageSize=10
-            next: /api/admin/voice/v1/accounts/ABCDEF/phone-numbers?pageNumber=3&pageSize=10
-    Links:
-      type: object
-      properties:
-        prev:
-          type: string
-          description: URL of the previous page. Blank if currently on the first page.
-        next:
-          type: string
-          description: URL of the next page. Blank if currently on the last page.
-    PhoneNumberListResponse:
-      title: PhoneNumberListResponse
-      type: array
-      description: List of Phone Number Objects
-      maxItems: 1000
-      items:
-        $ref: '#/components/schemas/PhoneNumber'
   securitySchemes:
     BearerAuth:
       type: http

@@ -196,7 +196,111 @@ paths:
       operationId: patchGroupsByGroupId
       x-operation-id-source: derived
 components:
+  responses:
+    NotFound:
+      description: Not Found
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          example:
+            type: https://developers.avayacloud.com/errors/resource-not-found
+            title: Resource Not Found
+            status: 404
+            detail: workflowId 'wf_123abc' does not exist
+            requestId: req_xyz789
+            timestamp: '2025-12-08T10:30:05Z'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          example:
+            type: https://developers.avayacloud.com/errors/unauthorized
+            title: Unauthorized
+            status: 401
+            detail: Bearer token expired at 2025-12-08T10:15:00Z. Request a new token.
+            requestId: req_xyz789
+            timestamp: '2025-12-08T10:30:05Z'
+    BadRequest:
+      description: Bad Request
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          example:
+            type: https://developers.avayacloud.com/errors/constraint-violation
+            title: Constraint Violation
+            status: 400
+            detail: Request contains invalid or missing fields
+            violations:
+            - field: accountId
+              message: must match "^[a-zA-Z]{6}$"
+              code: 20006
+    Conflict:
+      description: Conflict
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          example:
+            type: https://developers.avayacloud.com/errors/conflict
+            title: Conflict
+            status: 409
+            detail: A resource with the same unique constraint values already exists
+            violations:
+            - field: name
+              message: A category with this name already exists
+    InternalServerError:
+      description: Internal Server Error
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          example:
+            type: https://developers.avayacloud.com/errors/internal-error
+            title: Internal Server Error
+            status: 500
+            detail: An unexpected error occurred while processing your request
+            requestId: req_xyz789
+            timestamp: '2025-12-08T10:30:05Z'
+    Forbidden:
+      description: Forbidden
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          example:
+            type: https://developers.avayacloud.com/errors/forbidden
+            title: Forbidden
+            status: 403
+            detail: 'Missing required scope: ''workflows:execute''. Your token has: ''workflows:read'''
+            requestId: req_xyz789
+            timestamp: '2025-12-08T10:30:05Z'
+    ConstraintViolation:
+      description: Constraint Violation
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
   schemas:
+    Member:
+      description: Group user object with userId and includeInDashboard flag. Used in members property.
+      type: object
+      required:
+      - userId
+      properties:
+        userId:
+          description: ID of the user to include as a member of the group.
+          $ref: '#/components/schemas/UserId'
+        includeInDashboard:
+          description: Include in team dashboard (for team type groups)
+          type: boolean
+          default: true
+      example:
+        userId: 002507f1e1c8e3e9a8b7c5d4e3f2
+        includeInDashboard: true
     GroupData:
       description: Returned data about a group.
       type: object
@@ -260,71 +364,38 @@ components:
           items:
             $ref: '#/components/schemas/GroupUser'
           readOnly: true
-    FirstName:
-      description: The first name of a user.
+    GroupType:
+      description: Group type
       type: string
-      minLength: 2
-      maxLength: 255
-      pattern: ^[^<>\^@#]*$
-      example: John
-    Violation:
-      type: object
-      properties:
-        field:
-          description: 'The name of the field in the request that caused the violation.
-
-
-            This can be the name of a path parameter, query parameter, or a field within the request body.
-
-            '
-          type: string
-          readOnly: true
-          example: jobName
-        message:
-          description: 'A human-readable explanation specific to this occurrence of the violation.
-
-            '
-          type: string
-          readOnly: true
-          example: must match "^[a-zA-Z]{6}$"
-        code:
-          description: 'The violation code generated by the server for this occurrence of the violation.
-
-
-            Use this code when implementing any error handling logic instead of the message, as the message can change.
-
-            '
-          type: integer
-          format: int32
-          readOnly: true
-          example: 20006
-      required:
-      - field
-      - message
-      - code
-      example:
-      - field: emailAddress
-        message: must not be null
-        code: 20002
-    GroupListPage:
-      description: A page of results from querying groups.
-      type: object
-      properties:
-        pagination:
-          $ref: '#/components/schemas/Pagination'
-          readOnly: true
-        groups:
-          type: array
-          items:
-            $ref: '#/components/schemas/GroupData'
-          readOnly: true
-        links:
-          $ref: '#/components/schemas/Links'
-          readOnly: true
-      required:
-      - pagination
-      - groups
-      - links
+      enum:
+      - team
+    UserId:
+      description: Unique identifier for a user.
+      type: string
+      pattern: ^002[0-9a-f]{23}$
+      example: 002507f1e1c8e3e9a8b7c5d4e3f2
+    NamePrefix:
+      description: The name prefix of a user.
+      type: string
+    NameSuffix:
+      description: The name suffix of a user.
+      type: string
+      enum:
+      - Jr
+      - Sr
+      - I
+      - II
+      - III
+      - IV
+      - V
+      - CLU
+      - CO
+      - CPA
+      - DDS
+      - ESQ
+      - MD
+      - PhD
+      - RN
     QueueId:
       description: Unique identifier for a queue.
       type: string
@@ -332,88 +403,23 @@ components:
       maxLength: 26
       pattern: ^003[0-9a-f]{20,23}$
       example: 00301090301ad8db0f0d4c370
-    UpdateGroupRequest:
-      description: 'Request payload for updating an existing group.
-
-
-        All of the properties are optional, however at least one must be provided.
-
-        '
-      type: object
-      properties:
-        name:
-          description: 'New name of the group.
-
-
-            Note that group names must be unique.
-
-            '
-          $ref: '#/components/schemas/GroupName'
-        isActive:
-          description: Group active status
-          type: boolean
-        members:
-          description: 'Specifies the users to be set as members of the new group.
-
-
-            Notes this replaces all existing members.
-
-            '
-          type: array
-          items:
-            $ref: '#/components/schemas/Member'
-        folderId:
-          description: 'ID of the folder to put the group in.
-
-
-            To remove a group from being in a folder, set this to null.
-
-            '
-          oneOf:
-          - $ref: '#/components/schemas/FolderId'
-          - type: 'null'
-    Extension:
-      description: The extension of an agent user.
+    CreatedAt:
+      description: Timestamp of when the resource was created.
       type: string
-      example: '1001'
-    LastName:
-      description: The last name of a user.
+      format: date-time
+      example: '2025-09-08T06:19:21.561Z'
+    UserTitle:
+      description: The user's job title.
       type: string
-      minLength: 2
-      maxLength: 255
-      pattern: ^[^<>\^@#]*$
-      example: Smith
-    FullName:
-      description: The full name of the user (firstName + lastName).
-      type: string
-      example: John Smith
-    Member:
-      description: Group user object with userId and includeInDashboard flag. Used in members property.
-      type: object
-      required:
-      - userId
-      properties:
-        userId:
-          description: ID of the user to include as a member of the group.
-          $ref: '#/components/schemas/UserId'
-        includeInDashboard:
-          description: Include in team dashboard (for team type groups)
-          type: boolean
-          default: true
-      example:
-        userId: 002507f1e1c8e3e9a8b7c5d4e3f2
-        includeInDashboard: true
+      minLength: 1
+      maxLength: 510
+      example: Supervisor
     GroupUserDetails:
       type: object
       properties:
         teamView:
           $ref: '#/components/schemas/GroupUserTeamView'
           readOnly: true
-    ChatChannelId:
-      description: Associated chat channel ID (for team type)
-      type:
-      - 'null'
-      - string
     Problem:
       type: object
       description: '<b>Problem Detail</b> is a way to carry machine-readable details of errors in an HTTP
@@ -481,6 +487,34 @@ components:
           items:
             $ref: '#/components/schemas/Violation'
           readOnly: true
+    GroupName:
+      description: The name of a group.
+      type: string
+      minLength: 1
+      maxLength: 50
+      pattern: ^[a-zA-Z0-9][a-zA-Z0-9 _-]*$
+      example: Sales Team
+    Links:
+      description: Pagination navigation links
+      type: object
+      required:
+      - prev
+      - next
+      properties:
+        prev:
+          description: URL of the previous page. Blank if currently on the first page.
+          type: string
+          readOnly: true
+          example: ''
+        next:
+          description: URL of the next page. Blank if currently on the last page.
+          type: string
+          readOnly: true
+          example: ''
+    Email:
+      description: A user's email address
+      type: string
+      format: email
     UpdatedBy:
       description: 'ID of the user who last updated the resource.
 
@@ -491,188 +525,18 @@ components:
       allOf:
       - $ref: '#/components/schemas/UserId'
       example: 002d010826307dd6630992437b
-    UpdatedAt:
-      description: 'Timestamp of when the resource was last updated.
-
-
-        This may not be included if the resource has not been updated since it was created.
-
-        '
-      type: string
-      format: date-time
-      example: '2025-09-08T06:19:21.561Z'
-    CreatedAt:
-      description: Timestamp of when the resource was created.
-      type: string
-      format: date-time
-      example: '2025-09-08T06:19:21.561Z'
-    IsAID:
-      description: Whether user is using AID
-      type: boolean
-      example: false
-    UserId:
-      description: Unique identifier for a user.
-      type: string
-      pattern: ^002[0-9a-f]{23}$
-      example: 002507f1e1c8e3e9a8b7c5d4e3f2
-    UserStatus:
-      description: Current user status
-      type: string
-      example: Offline
-    GroupName:
-      description: The name of a group.
-      type: string
-      minLength: 1
-      maxLength: 50
-      pattern: ^[a-zA-Z0-9][a-zA-Z0-9 _-]*$
-      example: Sales Team
-    UserStatusType:
-      description: User status type
-      type: string
-      example: offline
-    CreateGroupRequest:
-      description: Request payload for creating a new group.
-      type: object
-      required:
-      - name
-      properties:
-        name:
-          description: Name for the new group.
-          $ref: '#/components/schemas/GroupName'
-        members:
-          description: Specifies the users to be included as members of the new group.
-          type: array
-          items:
-            $ref: '#/components/schemas/Member'
-        type:
-          $ref: '#/components/schemas/GroupType'
-        folderId:
-          description: Optional ID of folder to organize the new group under.
-          $ref: '#/components/schemas/FolderId'
-        accountIdOverride:
-          description: Master account override (requires special permissions)
-          $ref: '#/components/schemas/AccountId'
-        accountId:
-          description: Target account ID (requires accountIdOverride)
-          $ref: '#/components/schemas/AccountId'
-    GroupType:
-      description: Group type
-      type: string
-      enum:
-      - team
-    FolderId:
-      description: Unique identifier for a folder.
-      type: string
-      pattern: ^073[0-9a-f]{23}$
-      example: 073d010813b941cf7da111d147
-    GroupId:
-      description: Unique identifier for a group.
-      type: string
-      pattern: ^007[0-9a-f]{23}$
-      example: 007a1b2c3d4e5f67890abcdef12
-    NamePrefix:
-      description: The name prefix of a user.
-      type: string
-    UserTitle:
-      description: The user's job title.
-      type: string
-      minLength: 1
-      maxLength: 510
-      example: Supervisor
-    UserQueues:
-      description: Queues configuration for a user or profile.
-      type: object
-      properties:
-        access:
-          type: array
-          items:
-            $ref: '#/components/schemas/QueueId'
-        performance:
-          type: array
-          items:
-            $ref: '#/components/schemas/QueueId'
-        autoLogin:
-          type: array
-          items:
-            $ref: '#/components/schemas/QueueId'
-        proficiency:
-          type: array
-          items:
-            $ref: '#/components/schemas/QueueId'
-        logins:
-          type: array
-          items:
-            $ref: '#/components/schemas/QueueId'
-        defaultOutboundQueue:
-          anyOf:
-          - $ref: '#/components/schemas/QueueId'
-          - type: 'null'
-        outboundQueueId:
-          anyOf:
-          - $ref: '#/components/schemas/QueueId'
-          - type: 'null'
-    AccountId:
-      description: Unique identifier for an account.
-      type: string
-      pattern: ^001[0-9a-f]{23}$
-      example: 001f8e7d6c5b4a39281706f5e4d
     CreatedBy:
       description: ID of the user who created the resource.
       allOf:
       - $ref: '#/components/schemas/UserId'
       example: 002d010826307dd6630992437b
-    Pagination:
-      description: Pagination metadata
-      type: object
-      required:
-      - pageNumber
-      - pageSize
-      - total
-      properties:
-        pageNumber:
-          description: The current page number
-          type: integer
-          minimum: 1
-          readOnly: true
-          example: 1
-        pageSize:
-          description: The maximum number of items per page
-          type: integer
-          minimum: 1
-          readOnly: true
-          example: 10
-        total:
-          description: The total number of items
-          type: integer
-          minimum: 0
-          readOnly: true
-          example: 2
-    GroupUserTeamView:
-      type: object
-      properties:
-        includeInDashboard:
-          description: Whether to include user in team dashboard
-          type: boolean
-          readOnly: true
-    NameSuffix:
-      description: The name suffix of a user.
+    FirstName:
+      description: The first name of a user.
       type: string
-      enum:
-      - Jr
-      - Sr
-      - I
-      - II
-      - III
-      - IV
-      - V
-      - CLU
-      - CO
-      - CPA
-      - DDS
-      - ESQ
-      - MD
-      - PhD
-      - RN
+      minLength: 2
+      maxLength: 255
+      pattern: ^[^<>\^@#]*$
+      example: John
     GroupUser:
       description: Data about an individual user in a group.
       type: object
@@ -736,28 +600,262 @@ components:
           description: Reason for agent logout
           type: string
           readOnly: true
-    Links:
-      description: Pagination navigation links
+    AccountId:
+      description: Unique identifier for an account.
+      type: string
+      pattern: ^001[0-9a-f]{23}$
+      example: 001f8e7d6c5b4a39281706f5e4d
+    ChatChannelId:
+      description: Associated chat channel ID (for team type)
+      type:
+      - 'null'
+      - string
+    FolderId:
+      description: Unique identifier for a folder.
+      type: string
+      pattern: ^073[0-9a-f]{23}$
+      example: 073d010813b941cf7da111d147
+    Pagination:
+      description: Pagination metadata
       type: object
       required:
-      - prev
-      - next
+      - pageNumber
+      - pageSize
+      - total
       properties:
-        prev:
-          description: URL of the previous page. Blank if currently on the first page.
-          type: string
+        pageNumber:
+          description: The current page number
+          type: integer
+          minimum: 1
           readOnly: true
-          example: ''
-        next:
-          description: URL of the next page. Blank if currently on the last page.
-          type: string
+          example: 1
+        pageSize:
+          description: The maximum number of items per page
+          type: integer
+          minimum: 1
           readOnly: true
-          example: ''
-    Email:
-      description: A user's email address
+          example: 10
+        total:
+          description: The total number of items
+          type: integer
+          minimum: 0
+          readOnly: true
+          example: 2
+    GroupId:
+      description: Unique identifier for a group.
       type: string
-      format: email
+      pattern: ^007[0-9a-f]{23}$
+      example: 007a1b2c3d4e5f67890abcdef12
+    UpdatedAt:
+      description: 'Timestamp of when the resource was last updated.
+
+
+        This may not be included if the resource has not been updated since it was created.
+
+        '
+      type: string
+      format: date-time
+      example: '2025-09-08T06:19:21.561Z'
+    UserStatusType:
+      description: User status type
+      type: string
+      example: offline
+    UserQueues:
+      description: Queues configuration for a user or profile.
+      type: object
+      properties:
+        access:
+          type: array
+          items:
+            $ref: '#/components/schemas/QueueId'
+        performance:
+          type: array
+          items:
+            $ref: '#/components/schemas/QueueId'
+        autoLogin:
+          type: array
+          items:
+            $ref: '#/components/schemas/QueueId'
+        proficiency:
+          type: array
+          items:
+            $ref: '#/components/schemas/QueueId'
+        logins:
+          type: array
+          items:
+            $ref: '#/components/schemas/QueueId'
+        defaultOutboundQueue:
+          anyOf:
+          - $ref: '#/components/schemas/QueueId'
+          - type: 'null'
+        outboundQueueId:
+          anyOf:
+          - $ref: '#/components/schemas/QueueId'
+          - type: 'null'
+    Extension:
+      description: The extension of an agent user.
+      type: string
+      example: '1001'
+    GroupListPage:
+      description: A page of results from querying groups.
+      type: object
+      properties:
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+          readOnly: true
+        groups:
+          type: array
+          items:
+            $ref: '#/components/schemas/GroupData'
+          readOnly: true
+        links:
+          $ref: '#/components/schemas/Links'
+          readOnly: true
+      required:
+      - pagination
+      - groups
+      - links
+    Violation:
+      type: object
+      properties:
+        field:
+          description: 'The name of the field in the request that caused the violation.
+
+
+            This can be the name of a path parameter, query parameter, or a field within the request body.
+
+            '
+          type: string
+          readOnly: true
+          example: jobName
+        message:
+          description: 'A human-readable explanation specific to this occurrence of the violation.
+
+            '
+          type: string
+          readOnly: true
+          example: must match "^[a-zA-Z]{6}$"
+        code:
+          description: 'The violation code generated by the server for this occurrence of the violation.
+
+
+            Use this code when implementing any error handling logic instead of the message, as the message can change.
+
+            '
+          type: integer
+          format: int32
+          readOnly: true
+          example: 20006
+      required:
+      - field
+      - message
+      - code
+      example:
+      - field: emailAddress
+        message: must not be null
+        code: 20002
+    IsAID:
+      description: Whether user is using AID
+      type: boolean
+      example: false
+    UserStatus:
+      description: Current user status
+      type: string
+      example: Offline
+    GroupUserTeamView:
+      type: object
+      properties:
+        includeInDashboard:
+          description: Whether to include user in team dashboard
+          type: boolean
+          readOnly: true
+    FullName:
+      description: The full name of the user (firstName + lastName).
+      type: string
+      example: John Smith
+    UpdateGroupRequest:
+      description: 'Request payload for updating an existing group.
+
+
+        All of the properties are optional, however at least one must be provided.
+
+        '
+      type: object
+      properties:
+        name:
+          description: 'New name of the group.
+
+
+            Note that group names must be unique.
+
+            '
+          $ref: '#/components/schemas/GroupName'
+        isActive:
+          description: Group active status
+          type: boolean
+        members:
+          description: 'Specifies the users to be set as members of the new group.
+
+
+            Notes this replaces all existing members.
+
+            '
+          type: array
+          items:
+            $ref: '#/components/schemas/Member'
+        folderId:
+          description: 'ID of the folder to put the group in.
+
+
+            To remove a group from being in a folder, set this to null.
+
+            '
+          oneOf:
+          - $ref: '#/components/schemas/FolderId'
+          - type: 'null'
+    CreateGroupRequest:
+      description: Request payload for creating a new group.
+      type: object
+      required:
+      - name
+      properties:
+        name:
+          description: Name for the new group.
+          $ref: '#/components/schemas/GroupName'
+        members:
+          description: Specifies the users to be included as members of the new group.
+          type: array
+          items:
+            $ref: '#/components/schemas/Member'
+        type:
+          $ref: '#/components/schemas/GroupType'
+        folderId:
+          description: Optional ID of folder to organize the new group under.
+          $ref: '#/components/schemas/FolderId'
+        accountIdOverride:
+          description: Master account override (requires special permissions)
+          $ref: '#/components/schemas/AccountId'
+        accountId:
+          description: Target account ID (requires accountIdOverride)
+          $ref: '#/components/schemas/AccountId'
+    LastName:
+      description: The last name of a user.
+      type: string
+      minLength: 2
+      maxLength: 255
+      pattern: ^[^<>\^@#]*$
+      example: Smith
   parameters:
+    pageNumber:
+      name: pageNumber
+      in: query
+      description: The page number of the records to retrieve.
+      required: false
+      schema:
+        type: integer
+        format: int32
+        default: 1
+        minimum: 1
     pageSize:
       name: pageSize
       in: query
@@ -776,104 +874,6 @@ components:
       required: true
       schema:
         $ref: '#/components/schemas/GroupId'
-    pageNumber:
-      name: pageNumber
-      in: query
-      description: The page number of the records to retrieve.
-      required: false
-      schema:
-        type: integer
-        format: int32
-        default: 1
-        minimum: 1
-  responses:
-    InternalServerError:
-      description: Internal Server Error
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          example:
-            type: https://developers.avayacloud.com/errors/internal-error
-            title: Internal Server Error
-            status: 500
-            detail: An unexpected error occurred while processing your request
-            requestId: req_xyz789
-            timestamp: '2025-12-08T10:30:05Z'
-    Unauthorized:
-      description: Unauthorized
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          example:
-            type: https://developers.avayacloud.com/errors/unauthorized
-            title: Unauthorized
-            status: 401
-            detail: Bearer token expired at 2025-12-08T10:15:00Z. Request a new token.
-            requestId: req_xyz789
-            timestamp: '2025-12-08T10:30:05Z'
-    Conflict:
-      description: Conflict
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          example:
-            type: https://developers.avayacloud.com/errors/conflict
-            title: Conflict
-            status: 409
-            detail: A resource with the same unique constraint values already exists
-            violations:
-            - field: name
-              message: A category with this name already exists
-    ConstraintViolation:
-      description: Constraint Violation
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-    NotFound:
-      description: Not Found
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          example:
-            type: https://developers.avayacloud.com/errors/resource-not-found
-            title: Resource Not Found
-            status: 404
-            detail: workflowId 'wf_123abc' does not exist
-            requestId: req_xyz789
-            timestamp: '2025-12-08T10:30:05Z'
-    BadRequest:
-      description: Bad Request
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          example:
-            type: https://developers.avayacloud.com/errors/constraint-violation
-            title: Constraint Violation
-            status: 400
-            detail: Request contains invalid or missing fields
-            violations:
-            - field: accountId
-              message: must match "^[a-zA-Z]{6}$"
-              code: 20006
-    Forbidden:
-      description: Forbidden
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          example:
-            type: https://developers.avayacloud.com/errors/forbidden
-            title: Forbidden
-            status: 403
-            detail: 'Missing required scope: ''workflows:execute''. Your token has: ''workflows:read'''
-            requestId: req_xyz789
-            timestamp: '2025-12-08T10:30:05Z'
   securitySchemes:
     BearerAuth:
       type: http

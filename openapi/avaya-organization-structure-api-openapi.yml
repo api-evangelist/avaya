@@ -293,32 +293,19 @@ paths:
           $ref: '#/components/responses/InternalServerError'
 components:
   examples:
-    InProgressOrganizationNodeStatuses:
+    FailedOrganizationNodeStatuses:
       description: List of OrganizationNode statuses
       value:
       - action: ADD
-        status: IN_PROGRESS
-        message: Operation is in progress
-        organizationNodeId: AFSDET
+        status: FAILED
+        message: Operation failed
+        organizationNodeId: ADESFR
     OrganizationNodeStatusesRequest:
       description: Request for OrganizationNode Statuses
       value:
         organizationNodeIds:
         - GFADED
         - SWECDR
-    ServerError:
-      description: Internal Server Error
-      value:
-        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#server-error
-        title: Server Error
-        status: 500
-        detail: An internal server error was encountered.
-    OrganizationNodeReqDetails:
-      description: OrganizationNode Details
-      value:
-        name: PuneLocation
-        parentPath: AccountA
-        countryCode: IN
     ConstraintViolationError:
       description: Constraint Violation
       value:
@@ -330,6 +317,13 @@ components:
         - field: accountId
           message: must match "^[a-zA-Z]{6}$"
           code: 20006
+    ForbiddenError:
+      description: Forbidden
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#forbidden
+        title: Forbidden
+        status: 403
+        detail: According to the access control policy the current user and/or accountId does not have permission to access this resource.
     OrganizationNodeDetails:
       description: OrganizationNode Details
       value:
@@ -345,20 +339,6 @@ components:
           url: /api/admin/user/v1/accounts/AVSDER/profiles/ASEDFG
         children:
         - /api/admin/account/v1/accounts/OHOTAT/organization-nodes/AQXSWF
-    OrganizationNodeNotFoundError:
-      description: OrganizationNode not found
-      value:
-        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#resource-not-found
-        title: OrganizationNode Not Found
-        status: 404
-        detail: Organization Node with organizationNodeId:ASDAES not found.
-    FailedOrganizationNodeStatuses:
-      description: List of OrganizationNode statuses
-      value:
-      - action: ADD
-        status: FAILED
-        message: Operation failed
-        organizationNodeId: ADESFR
     OrganizationNodePage:
       description: OrganizationNode list response
       value:
@@ -376,6 +356,13 @@ components:
         links:
           prev: /api/admin/account/v1/accounts/accountId/organization-nodes?pageNumber=1&pageSize=10
           next: /api/admin/account/v1/accounts/accountId/organization-nodes?pageNumber=3&pageSize=10
+    ServerError:
+      description: Internal Server Error
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#server-error
+        title: Server Error
+        status: 500
+        detail: An internal server error was encountered.
     UnauthorizedError:
       description: Forbidden
       value:
@@ -383,20 +370,6 @@ components:
         title: Unauthorized
         status: 401
         detail: This operation requires authentication. See https://developers.avayacloud.com/onecloud-ccaas/docs/how-to-authenticate-with-ccaas-apis
-    ForbiddenError:
-      description: Forbidden
-      value:
-        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#forbidden
-        title: Forbidden
-        status: 403
-        detail: According to the access control policy the current user and/or accountId does not have permission to access this resource.
-    OrganizationNodeConflictError:
-      description: Conlict with the current state of the OrganizationNode
-      value:
-        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#conflict
-        title: Conflict
-        status: 409
-        detail: Organization Node with name:PuneLocation already exists
     OrganizationNodeStatuses:
       description: List of OrganizationNode statuses
       value:
@@ -404,42 +377,89 @@ components:
         status: COMPLETED
         message: Completed successfully
         organizationNodeId: DAERCS
+    OrganizationNodeReqDetails:
+      description: OrganizationNode Details
+      value:
+        name: PuneLocation
+        parentPath: AccountA
+        countryCode: IN
+    InProgressOrganizationNodeStatuses:
+      description: List of OrganizationNode statuses
+      value:
+      - action: ADD
+        status: IN_PROGRESS
+        message: Operation is in progress
+        organizationNodeId: AFSDET
+    OrganizationNodeConflictError:
+      description: Conlict with the current state of the OrganizationNode
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#conflict
+        title: Conflict
+        status: 409
+        detail: Organization Node with name:PuneLocation already exists
+    OrganizationNodeNotFoundError:
+      description: OrganizationNode not found
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#resource-not-found
+        title: OrganizationNode Not Found
+        status: 404
+        detail: Organization Node with organizationNodeId:ASDAES not found.
+  responses:
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/UnauthorizedError'
+    OrganizationNodeNotFound:
+      description: Not Found
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/OrganizationNodeNotFoundError'
+    InternalServerError:
+      description: All other application errors
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ServerError'
+    OrganizationNodeConflict:
+      description: Conflict
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/OrganizationNodeConflictError'
+    Forbidden:
+      description: Forbidden
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ForbiddenError'
+    ErrorConstraintViolation:
+      description: Constraint Violation
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ConstraintViolationError'
   schemas:
-    OrganizationNode:
-      description: A node in Account's organization structure. It is managed by an account administrator. It is an efficient way to manage a large number of users, features and profiles by grouping them into different levels and hierarchical nodes based on regions, lines of business, etc.
-      allOf:
-      - $ref: '#/components/schemas/OrganizationNodeBasic'
-      - type: object
-        properties:
-          children:
-            description: Complete hierarchy of child nodes.
-            type: array
-            items:
-              $ref: '#/components/schemas/ChildNodePath'
-            readOnly: true
-          profiles:
-            type: array
-            items:
-              $ref: '#/components/schemas/Profile'
-          accountId:
-            type: string
-            readOnly: true
-            example: AVSDER
-            minLength: 6
-            maxLength: 6
-            description: Unique Account
-          nodeType:
-            type: string
-            maxLength: 255
-            readOnly: true
-            example: OrganizationNode
-          countryCode:
-            type: string
-            example: IN
-            minLength: 2
-            maxLength: 2
-            description: Country code of the Organization Node
-        title: OrganizationNode
     OrganizationNodePage:
       type: object
       properties:
@@ -456,56 +476,31 @@ components:
             prev: /api/admin/account/v1/accounts/ASDFAE/organization-nodes?pageNumber=1&pageSize=10
             next: /api/admin/account/v1/accounts/ASDFAE/organization-nodes?pageNumber=3&pageSize=10
       title: OrganizationNodePage
-    OrganizationNodeStatusResponse:
-      description: Status of OrganizationNode
+    OrganizationNodeBasic:
       type: object
       properties:
-        organizationNodeId:
-          description: The unique 6 character id that represents the organization node.
+        name:
           type: string
-          example: AFSRFS
+          example: Location 1
+          minLength: 1
+          maxLength: 255
+          pattern: ^(?=.*[a-zA-Z0-9\p{L}])[a-zA-Z0-9\p{L}(){};,'+&\[\]\-\_\.\ ]+$
+        parentPath:
+          description: Fully qualified name of this node's parent node
+          type: string
+          maxLength: 1024
+          example: AccountA
+        organizationNodeId:
+          type: string
           minLength: 6
           maxLength: 6
-        action:
-          type: string
-          enum:
-          - ADD
-          - UPDATE
-          - DELETE
-          example: ADD
-          description: Action done for the account feature
+          example: DFSAWE
           readOnly: true
-        status:
+        url:
           type: string
-          enum:
-          - COMPLETED
-          - IN_PROGRESS
-          - FAILED
-          - DELETED
-          - DELETE_FAILED
-          - DELETE_IN_PROGRESS
-          example: COMPLETED
+          example: /api/admin/account/v1/accounts/accountA-id/organization-nodes/accountA-location1-id
           readOnly: true
-        message:
-          type: string
-          example: Feature added successfully
-          readOnly: true
-    OrganizationNodeIdList:
-      description: List of organization node Ids
-      type: object
-      properties:
-        organizationNodeIds:
-          type: array
-          maxItems: 50
-          items:
-            type: string
-            example: ADFSET
-            minLength: 6
-            maxLength: 6
-          example:
-          - ADFSET
-          - WSFSET
-          description: List of organization node Ids
+      title: OrganizationNodeBasic
     Problem:
       type: object
       description: '<b>Problem Detail</b> as a way to carry machine-readable details of errors in a HTTP response to avoid the need to define new error response formats for HTTP APIs <a href="https://tools.ietf.org/html/rfc7807">RFC 7807</a>
@@ -591,35 +586,55 @@ components:
           - field: accountId
             message: must match "^[a-zA-Z]{6}$"
             code: 20006
+    Links:
+      type: object
+      properties:
+        prev:
+          type: string
+          default: ''
+          description: URL of the previous page. Blank if currently on the first page.
+        next:
+          type: string
+          default: ''
+          description: URL of the next page. Blank if currently on the last page.
     ChildNodePath:
       description: Path of the child of Organization node with the complete hierarchy.
       type: string
       example: account/location1
-    OrganizationNodeBasic:
+    OrganizationNodeStatusResponse:
+      description: Status of OrganizationNode
       type: object
       properties:
-        name:
-          type: string
-          example: Location 1
-          minLength: 1
-          maxLength: 255
-          pattern: ^(?=.*[a-zA-Z0-9\p{L}])[a-zA-Z0-9\p{L}(){};,'+&\[\]\-\_\.\ ]+$
-        parentPath:
-          description: Fully qualified name of this node's parent node
-          type: string
-          maxLength: 1024
-          example: AccountA
         organizationNodeId:
+          description: The unique 6 character id that represents the organization node.
           type: string
+          example: AFSRFS
           minLength: 6
           maxLength: 6
-          example: DFSAWE
-          readOnly: true
-        url:
+        action:
           type: string
-          example: /api/admin/account/v1/accounts/accountA-id/organization-nodes/accountA-location1-id
+          enum:
+          - ADD
+          - UPDATE
+          - DELETE
+          example: ADD
+          description: Action done for the account feature
           readOnly: true
-      title: OrganizationNodeBasic
+        status:
+          type: string
+          enum:
+          - COMPLETED
+          - IN_PROGRESS
+          - FAILED
+          - DELETED
+          - DELETE_FAILED
+          - DELETE_IN_PROGRESS
+          example: COMPLETED
+          readOnly: true
+        message:
+          type: string
+          example: Feature added successfully
+          readOnly: true
     Pagination:
       type: object
       properties:
@@ -632,17 +647,41 @@ components:
         total:
           type: integer
           description: The total number of records.
-    Links:
-      type: object
-      properties:
-        prev:
-          type: string
-          default: ''
-          description: URL of the previous page. Blank if currently on the first page.
-        next:
-          type: string
-          default: ''
-          description: URL of the next page. Blank if currently on the last page.
+    OrganizationNode:
+      description: A node in Account's organization structure. It is managed by an account administrator. It is an efficient way to manage a large number of users, features and profiles by grouping them into different levels and hierarchical nodes based on regions, lines of business, etc.
+      allOf:
+      - $ref: '#/components/schemas/OrganizationNodeBasic'
+      - type: object
+        properties:
+          children:
+            description: Complete hierarchy of child nodes.
+            type: array
+            items:
+              $ref: '#/components/schemas/ChildNodePath'
+            readOnly: true
+          profiles:
+            type: array
+            items:
+              $ref: '#/components/schemas/Profile'
+          accountId:
+            type: string
+            readOnly: true
+            example: AVSDER
+            minLength: 6
+            maxLength: 6
+            description: Unique Account
+          nodeType:
+            type: string
+            maxLength: 255
+            readOnly: true
+            example: OrganizationNode
+          countryCode:
+            type: string
+            example: IN
+            minLength: 2
+            maxLength: 2
+            description: Country code of the Organization Node
+        title: OrganizationNode
     Profile:
       description: Unique ID of User Profile like Basic, Core, Power, Trial, etc.
       type: object
@@ -667,61 +706,33 @@ components:
           minLength: 0
           maxLength: 255
       title: Profile
-  responses:
-    OrganizationNodeConflict:
-      description: Conflict
+    OrganizationNodeIdList:
+      description: List of organization node Ids
+      type: object
+      properties:
+        organizationNodeIds:
+          type: array
+          maxItems: 50
+          items:
+            type: string
+            example: ADFSET
+            minLength: 6
+            maxLength: 6
+          example:
+          - ADFSET
+          - WSFSET
+          description: List of organization node Ids
+  requestBodies:
+    OrganizationNode:
       content:
-        application/problem+json:
+        application/json:
           schema:
-            $ref: '#/components/schemas/Problem'
+            $ref: '#/components/schemas/OrganizationNode'
           examples:
-            default:
-              $ref: '#/components/examples/OrganizationNodeConflictError'
-    ErrorConstraintViolation:
-      description: Constraint Violation
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ConstraintViolationError'
-    InternalServerError:
-      description: All other application errors
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ServerError'
-    OrganizationNodeNotFound:
-      description: Not Found
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/OrganizationNodeNotFoundError'
-    Unauthorized:
-      description: Unauthorized
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/UnauthorizedError'
-    Forbidden:
-      description: Forbidden
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ForbiddenError'
+            OrganizationNodeReqDetails:
+              $ref: '#/components/examples/OrganizationNodeReqDetails'
+      description: Organization node object
+      required: true
   parameters:
     organizationNodeId:
       name: organizationNodeId
@@ -734,6 +745,16 @@ components:
         minLength: 6
         maxLength: 6
         pattern: ^[a-zA-Z]{6}$
+    pageNumber:
+      name: pageNumber
+      in: query
+      description: The page number of the records to retrieve. Default value is 1.
+      schema:
+        type: integer
+        format: int32
+        default: 1
+        minimum: 1
+        example: 2
     accountId:
       name: accountId
       description: The unique 6 character internal id that represents the customer account.
@@ -745,27 +766,6 @@ components:
         maxLength: 6
         pattern: ^[a-zA-Z]{6}$
         example: ABCDEF
-    pageNumber:
-      name: pageNumber
-      in: query
-      description: The page number of the records to retrieve. Default value is 1.
-      schema:
-        type: integer
-        format: int32
-        default: 1
-        minimum: 1
-        example: 2
-  requestBodies:
-    OrganizationNode:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/OrganizationNode'
-          examples:
-            OrganizationNodeReqDetails:
-              $ref: '#/components/examples/OrganizationNodeReqDetails'
-      description: Organization node object
-      required: true
   securitySchemes:
     BearerAuth:
       type: http

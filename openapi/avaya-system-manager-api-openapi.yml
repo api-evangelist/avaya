@@ -265,34 +265,141 @@ paths:
         '500':
           $ref: '#/components/responses/InternalServerError'
 components:
-  responses:
-    MethodNotAllowed:
-      description: Method Not Allowed
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorMethodNotAllowed'
+  examples:
+    SystemManagers:
+      description: Lists all System Managers
+      value:
+        resources:
+        - id: 7700d655-5807-4738-a868-712740a18199
+          name: SMGR123
+          description: Description of the System Manager
+          primaryHostname: dc1-smgr96.avayacloud.stage
+          username: dummyUser
+          password: dummypassword
+          enrollmentPassword: testpassword
+          secondaryHostname: dc2-smgr97.avayacloud.stage
+          activeSystemManager: PRIMARY
+          useForCerts: true
+          status: IN_PROGRESS
+        - id: 8b2ae74d-61e5-48df-8b32-81a7bc726495
+          name: SmgrTest
+          description: Description of the System Manager
+          primaryHostname: dc2-smgr105.avayacloud.stage
+          username: dummyUser
+          password: dummypassword
+          enrollmentPassword: testpassword
+          secondaryHostname: dc1-smgr98.avayacloud.stage
+          activeSystemManager: PRIMARY
+          useForCerts: true
+          status: SUCCESS
+    ErrorConflict:
+      description: Conflict
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#conflict
+        title: Conflict
+        status: 409
+        detail: A resource with the same unique constraint values already exists.
+        violations:
+        - field: name
+          message: Communication Manager with same name already exists.
+        - field: hostname
+          message: Communication Manager with same hostname already exists.
+    UpdateSystemManagerRequest:
+      description: Request model for updating a System Manager.
+      value:
+        name: SMGR123
+        description: Description of the System Manager
+        primaryHostname: dc1-smgr96.avayacloud.stage
+        username: dummyUser
+        password: dummypassword
+        enrollmentPassword: testpassword
+        secondaryHostname: dc2-smgr97.avayacloud.stage
+        activeSystemManager: PRIMARY
+    ErrorMethodNotAllowed:
+      description: Method not allowed
+      value:
+        title: Method not allowed
+        status: 405
+        detail: The request calls an HTTP method that is not supported at the resource.
+    ErrorNotFound:
+      description: Not Found
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#resource-not-found
+        title: Resource Not Found
+        status: 404
+        detail: Either there is no API method associated with the URL path of the request, or the request refers to one or more resources that were not found.
+    ErrorUnauthorized:
+      description: Unauthorized
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#unauthorized
+        title: Unauthorized
+        status: 401
+        detail: This operation requires authentication. See https://developers.avayacloud.com/onecloud-ccaas/docs/how-to-authenticate-with-ccaas-apis
+    ErrorInternalServerError:
+      description: Server Error
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#server-error
+        title: Server Error
+        status: 500
+        detail: An internal server error was encountered.
+    ErrorForbidden:
+      description: Forbidden
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#forbidden
+        title: Forbidden
+        status: 403
+        detail: According to the access control policy the current user does not have permission to access this resource.
     ErrorConstraintViolation:
       description: Constraint Violation
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#constraint-violation
+        title: Constraint Violation
+        status: 400
+        detail: A problem that indicates a syntactically correct, yet semantically illegal request. The Server can not process this request until the client resolves the semantic errors described in the violations section.
+        violations:
+        - field: accountId
+          message: must match "^[a-zA-Z]{6}$"
+          code: 20006
+    SystemManagerAsyncResponse:
+      description: A HATEOAS url response that is a reference to the System Manager under operation.
+      value:
+        url: /api/admin/voice/v1/accounts/NCWBNY/system-managers/5e9be49a-32d3-4927-83c7-7b0952798028
+    SystemManagerRequest:
+      description: Request model for creating a System Manager.
+      value:
+        name: SMGR123
+        description: Description of the System Manager
+        primaryHostname: dc1-smgr96.avayacloud.stage
+        username: dummyUser
+        password: dummypassword
+        enrollmentPassword: testpassword
+        secondaryHostname: dc2-smgr97.avayacloud.stage
+        activeSystemManager: PRIMARY
+        useForCerts: true
+    SystemManagerResponse:
+      description: Details of single System Manager
+      value:
+        id: 7700d655-5807-4738-a868-712740a18199
+        name: SmgrTest
+        description: Description of the System Manager
+        primaryHostname: dc2-smgr105.avayacloud.stage
+        username: dummyUser
+        password: dummypassword
+        enrollmentPassword: testpassword
+        secondaryHostname: dc1-smgr98.avayacloud.stage
+        activeSystemManager: PRIMARY
+        useForCerts: true
+        status: SUCCESS
+  responses:
+    NotFound:
+      description: Not Found
       content:
         application/problem+json:
           schema:
             $ref: '#/components/schemas/Problem'
           examples:
             default:
-              $ref: '#/components/examples/ErrorConstraintViolation'
-    InternalServerError:
-      description: All other application errors
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorInternalServerError'
+              $ref: '#/components/examples/ErrorNotFound'
     Unauthorized:
       description: Unauthorized
       content:
@@ -311,15 +418,15 @@ components:
           examples:
             default:
               $ref: '#/components/examples/ErrorConflict'
-    NotFound:
-      description: Not Found
+    InternalServerError:
+      description: All other application errors
       content:
         application/problem+json:
           schema:
             $ref: '#/components/schemas/Problem'
           examples:
             default:
-              $ref: '#/components/examples/ErrorNotFound'
+              $ref: '#/components/examples/ErrorInternalServerError'
     Forbidden:
       description: Forbidden
       content:
@@ -329,12 +436,36 @@ components:
           examples:
             default:
               $ref: '#/components/examples/ErrorForbidden'
+    MethodNotAllowed:
+      description: Method Not Allowed
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorMethodNotAllowed'
+    ErrorConstraintViolation:
+      description: Constraint Violation
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorConstraintViolation'
   schemas:
-    UpdateSystemManager:
-      title: UpdateSystemManager
+    SystemManagerResponse:
+      title: SystemManagerResponse
       type: object
-      description: System Manager schema for update
+      description: Represents the model used to get details of a single System Manager.
       properties:
+        id:
+          type: string
+          description: The unique id of System Manager
+          readOnly: true
+          format: uuid
+          example: 7700d655-5807-4738-a868-712740a18199
         name:
           type: string
           example: SMGR123
@@ -384,10 +515,14 @@ components:
           type: boolean
           description: This field represents if the System Manager will be used for certificates.
           example: true
-      required:
-      - name
-      - primaryHostname
-      - username
+        status:
+          type: string
+          description: Status of the object under operation
+          enum:
+          - IN_PROGRESS
+          - FAILED
+          - SUCCESS
+          example: IN_PROGRESS
     Problem:
       type: object
       description: '<b>Problem Detail</b> as a way to carry machine-readable details of errors in a HTTP response to avoid the need to define new error response formats for HTTP APIs <a href="https://tools.ietf.org/html/rfc7807">RFC 7807</a>
@@ -473,6 +608,16 @@ components:
           - field: accountId
             message: must match "^[a-zA-Z]{6}$"
             code: 20006
+    SystemManagers:
+      title: SystemManagers
+      type: object
+      description: List of System Manager
+      properties:
+        resources:
+          type: array
+          maxItems: 10
+          items:
+            $ref: '#/components/schemas/SystemManagerResponse'
     SystemManager:
       title: SystemManager
       type: object
@@ -546,27 +691,11 @@ components:
         url:
           type: string
           maxLength: 2048
-    SystemManagers:
-      title: SystemManagers
+    UpdateSystemManager:
+      title: UpdateSystemManager
       type: object
-      description: List of System Manager
+      description: System Manager schema for update
       properties:
-        resources:
-          type: array
-          maxItems: 10
-          items:
-            $ref: '#/components/schemas/SystemManagerResponse'
-    SystemManagerResponse:
-      title: SystemManagerResponse
-      type: object
-      description: Represents the model used to get details of a single System Manager.
-      properties:
-        id:
-          type: string
-          description: The unique id of System Manager
-          readOnly: true
-          format: uuid
-          example: 7700d655-5807-4738-a868-712740a18199
         name:
           type: string
           example: SMGR123
@@ -616,140 +745,20 @@ components:
           type: boolean
           description: This field represents if the System Manager will be used for certificates.
           example: true
-        status:
-          type: string
-          description: Status of the object under operation
-          enum:
-          - IN_PROGRESS
-          - FAILED
-          - SUCCESS
-          example: IN_PROGRESS
-  examples:
-    SystemManagerResponse:
-      description: Details of single System Manager
-      value:
-        id: 7700d655-5807-4738-a868-712740a18199
-        name: SmgrTest
-        description: Description of the System Manager
-        primaryHostname: dc2-smgr105.avayacloud.stage
-        username: dummyUser
-        password: dummypassword
-        enrollmentPassword: testpassword
-        secondaryHostname: dc1-smgr98.avayacloud.stage
-        activeSystemManager: PRIMARY
-        useForCerts: true
-        status: SUCCESS
-    ErrorForbidden:
-      description: Forbidden
-      value:
-        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#forbidden
-        title: Forbidden
-        status: 403
-        detail: According to the access control policy the current user does not have permission to access this resource.
-    SystemManagers:
-      description: Lists all System Managers
-      value:
-        resources:
-        - id: 7700d655-5807-4738-a868-712740a18199
-          name: SMGR123
-          description: Description of the System Manager
-          primaryHostname: dc1-smgr96.avayacloud.stage
-          username: dummyUser
-          password: dummypassword
-          enrollmentPassword: testpassword
-          secondaryHostname: dc2-smgr97.avayacloud.stage
-          activeSystemManager: PRIMARY
-          useForCerts: true
-          status: IN_PROGRESS
-        - id: 8b2ae74d-61e5-48df-8b32-81a7bc726495
-          name: SmgrTest
-          description: Description of the System Manager
-          primaryHostname: dc2-smgr105.avayacloud.stage
-          username: dummyUser
-          password: dummypassword
-          enrollmentPassword: testpassword
-          secondaryHostname: dc1-smgr98.avayacloud.stage
-          activeSystemManager: PRIMARY
-          useForCerts: true
-          status: SUCCESS
-    ErrorConflict:
-      description: Conflict
-      value:
-        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#conflict
-        title: Conflict
-        status: 409
-        detail: A resource with the same unique constraint values already exists.
-        violations:
-        - field: name
-          message: Communication Manager with same name already exists.
-        - field: hostname
-          message: Communication Manager with same hostname already exists.
-    ErrorConstraintViolation:
-      description: Constraint Violation
-      value:
-        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#constraint-violation
-        title: Constraint Violation
-        status: 400
-        detail: A problem that indicates a syntactically correct, yet semantically illegal request. The Server can not process this request until the client resolves the semantic errors described in the violations section.
-        violations:
-        - field: accountId
-          message: must match "^[a-zA-Z]{6}$"
-          code: 20006
-    ErrorNotFound:
-      description: Not Found
-      value:
-        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#resource-not-found
-        title: Resource Not Found
-        status: 404
-        detail: Either there is no API method associated with the URL path of the request, or the request refers to one or more resources that were not found.
-    UpdateSystemManagerRequest:
-      description: Request model for updating a System Manager.
-      value:
-        name: SMGR123
-        description: Description of the System Manager
-        primaryHostname: dc1-smgr96.avayacloud.stage
-        username: dummyUser
-        password: dummypassword
-        enrollmentPassword: testpassword
-        secondaryHostname: dc2-smgr97.avayacloud.stage
-        activeSystemManager: PRIMARY
-    ErrorUnauthorized:
-      description: Unauthorized
-      value:
-        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#unauthorized
-        title: Unauthorized
-        status: 401
-        detail: This operation requires authentication. See https://developers.avayacloud.com/onecloud-ccaas/docs/how-to-authenticate-with-ccaas-apis
-    SystemManagerAsyncResponse:
-      description: A HATEOAS url response that is a reference to the System Manager under operation.
-      value:
-        url: /api/admin/voice/v1/accounts/NCWBNY/system-managers/5e9be49a-32d3-4927-83c7-7b0952798028
-    ErrorMethodNotAllowed:
-      description: Method not allowed
-      value:
-        title: Method not allowed
-        status: 405
-        detail: The request calls an HTTP method that is not supported at the resource.
-    ErrorInternalServerError:
-      description: Server Error
-      value:
-        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#server-error
-        title: Server Error
-        status: 500
-        detail: An internal server error was encountered.
-    SystemManagerRequest:
-      description: Request model for creating a System Manager.
-      value:
-        name: SMGR123
-        description: Description of the System Manager
-        primaryHostname: dc1-smgr96.avayacloud.stage
-        username: dummyUser
-        password: dummypassword
-        enrollmentPassword: testpassword
-        secondaryHostname: dc2-smgr97.avayacloud.stage
-        activeSystemManager: PRIMARY
-        useForCerts: true
+      required:
+      - name
+      - primaryHostname
+      - username
   parameters:
+    systemManagerId:
+      name: systemManagerId
+      description: The unique id of the System Manager server
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+        example: c8c2909d-75e9-484a-94c0-b7e8d29771fe
     accountId:
       name: accountId
       description: The unique 6 character internal id that represents the customer account.
@@ -761,15 +770,6 @@ components:
         maxLength: 6
         pattern: ^[a-zA-Z]{6}$
         example: ABCDEF
-    systemManagerId:
-      name: systemManagerId
-      description: The unique id of the System Manager server
-      in: path
-      required: true
-      schema:
-        type: string
-        format: uuid
-        example: c8c2909d-75e9-484a-94c0-b7e8d29771fe
   securitySchemes:
     BearerAuth:
       type: http

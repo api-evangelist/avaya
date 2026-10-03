@@ -1031,13 +1031,14 @@ paths:
           $ref: '#/components/responses/InternalServerError'
 components:
   schemas:
-    ProfileDescription:
-      type:
-      - string
-      - 'null'
-      description: Optional description of the profile
-      maxLength: 500
-      example: Profile for customer support representatives
+    DefaultOutboundCallerId:
+      type: string
+      description: Default outbound caller ID in E.164 format (international phone number standard)
+      maxLength: 20
+      pattern: ^$|^\\+?[1-9]\\d{0,19}$
+      example: '+1234567890'
+    PredictiveOutbound:
+      type: boolean
     QueueId:
       description: Unique identifier for a queue.
       type: string
@@ -1045,188 +1046,9 @@ components:
       maxLength: 26
       pattern: ^003[0-9a-f]{20,23}$
       example: 00301090301ad8db0f0d4c370
-    AllowAgentEditAutoAnswer:
+    AllowInternalCalls:
       type: boolean
-      description: 'Controls whether the Admin Console UI exposes the Auto Answer Interactions setting (attributes.webRTC.autoAnswer.interaction) as editable in the agent''s own profile view. Defaults to false (UI shows the setting as read-only for the agent). Note: this flag is enforced in the UI only. The API accepts changes to attributes.webRTC.autoAnswer.interaction regardless of this flag''s value.'
-      default: false
-    Groups:
-      type: array
-      description: Array of group identifiers that the user or profile belongs to. Each string is a groupId from the groups table (IDs with a 007 prefix).
-      items:
-        $ref: '#/components/schemas/GroupId'
-      example:
-      - 007d01090301ad8db0f0d4c370
-      - 007d01090301ad8db0f0d4c371
-    ProfilesList:
-      type: object
-      description: Paginated list of profiles
-      required:
-      - pagination
-      - links
-      - profiles
-      properties:
-        pagination:
-          $ref: '#/components/schemas/Pagination'
-        links:
-          $ref: '#/components/schemas/Links'
-        profiles:
-          type: array
-          description: Array of profile items
-          items:
-            $ref: '#/components/schemas/ProfileListItem'
-    ProfileName:
-      type: string
-      description: Name of a profile (must be unique within the account)
-      maxLength: 100
-      minLength: 1
-      example: Customer Support Profile
-    LastName:
-      description: The last name of a user.
-      type: string
-      minLength: 2
-      maxLength: 255
-      pattern: ^[^<>\^@#]*$
-      example: Smith
-    ProfileUsersList:
-      type: object
-      description: List of users assigned to a profile with override status. Includes pagination metadata if pagination parameters were provided.
-      required:
-      - users
-      properties:
-        pagination:
-          $ref: '#/components/schemas/Pagination'
-          description: Pagination metadata (only present when pageNumber and pageSize query parameters are provided)
-        links:
-          $ref: '#/components/schemas/Links'
-          description: Pagination navigation links (only present when pageNumber and pageSize query parameters are provided)
-        users:
-          type: array
-          description: Array of users assigned to the profile
-          items:
-            $ref: '#/components/schemas/ProfileUser'
-    FullName:
-      description: The full name of the user (firstName + lastName).
-      type: string
-      example: John Smith
-    UcPhoneSpaces:
-      description: Number of UC phone interaction spaces.
-      type: integer
-      minimum: 0
-    ProfileDescriptionValue:
-      type: string
-      description: Optional description of the profile
-      maxLength: 500
-      example: Profile for customer support representatives
-    TagsList:
-      type: array
-      items:
-        type: string
-      description: List of tag names associated with the user or profile.
-      example:
-      - APACT
-      - English
-      - NART
-    DefaultOutboundCallerId:
-      type: string
-      description: Default outbound caller ID in E.164 format (international phone number standard)
-      maxLength: 20
-      pattern: ^$|^\\+?[1-9]\\d{0,19}$
-      example: '+1234567890'
-    ProfileUser:
-      type: object
-      description: User assigned to a profile with override status information
-      required:
-      - userId
-      - email
-      - firstName
-      - lastName
-      - fullName
-      - hasOverrides
-      - overriddenFields
-      properties:
-        userId:
-          $ref: '#/components/schemas/UserId'
-          description: Unique identifier of the user
-        email:
-          $ref: '#/components/schemas/Email'
-        firstName:
-          $ref: '#/components/schemas/FirstName'
-        lastName:
-          $ref: '#/components/schemas/LastName'
-        fullName:
-          $ref: '#/components/schemas/FullName'
-        hasOverrides:
-          type: boolean
-          description: Whether the user has any overrides from the profile defaults
-          example: true
-        overriddenFields:
-          type: array
-          description: List of profile field paths that have been overridden by this user. Field paths use dot notation (e.g., 'permissions.app.agent.read', 'queues.access', 'appTheme')
-          items:
-            type: string
-          example:
-          - permissions.app.agent.read
-          - queues.access
-          - appTheme
-          readOnly: true
-        folderId:
-          allOf:
-          - $ref: '#/components/schemas/FolderId'
-          readOnly: true
-          description: Folder ID of the user's assigned profile.
-    FolderId:
-      description: Unique identifier for a folder.
-      type: string
-      pattern: ^073[0-9a-f]{23}$
-      example: 073d010813b941cf7da111d147
-    CrmConfiguration:
-      type: object
-      description: Full CRM configuration object.
-      properties:
-        id:
-          type: string
-          pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
-        accountId:
-          type: string
-        name:
-          type: string
-        clickToDial:
-          type: boolean
-        clickToConsult:
-          type: boolean
-        omnichannelEnabled:
-          type: string
-          enum:
-          - N
-          - S
-        complementaryDefaultStatus:
-          type: string
-        createdBy:
-          $ref: '#/components/schemas/UserId'
-        createdAt:
-          type: string
-          format: date-time
-        updatedBy:
-          allOf:
-          - $ref: '#/components/schemas/UserId'
-          nullable: true
-        updatedAt:
-          type: string
-          format: date-time
-          nullable: true
-    ConsoleTheme:
-      allOf:
-      - $ref: '#/components/schemas/UiTheme'
-      description: Console theme preference
-    CreatedBy:
-      description: ID of the user who created the resource.
-      allOf:
-      - $ref: '#/components/schemas/UserId'
-      example: 002d010826307dd6630992437b
-    AllowAgentEditWebHIDHeadsetControl:
-      type: boolean
-      description: 'Controls whether the Admin Console UI exposes the WebHID Headset Control setting (attributes.webHID.status) as editable in the agent''s own profile view. Defaults to false (UI shows the setting as read-only for the agent). Note: this flag is enforced in the UI only. The API accepts changes to attributes.webHID.status regardless of this flag''s value.'
-      default: false
+      description: Whether the user or profile can make internal calls
     Links:
       description: Pagination navigation links
       type: object
@@ -1244,203 +1066,48 @@ components:
           type: string
           readOnly: true
           example: ''
-    Email:
-      description: A user's email address
-      type: string
-      format: email
-    TimeZone:
-      type: string
-      description: User's timezone preference (IANA timezone)
-      maxLength: 64
-      example: America/New_York
-    EnableErrorTones:
+    AllowAgentEditWebHIDHeadsetControl:
       type: boolean
-      description: Whether error tones are enabled.
-    Permissions:
-      type: object
-      description: The permissions for a user or profile.
-      properties:
-        app:
-          type: object
-        console:
-          type: object
-      example:
-        app:
-          agent:
-            read: false
-          portal:
-            app-web: false
-          homeList:
-            read: false
-          queueList:
-            read: false
-          queueToggling:
-            read: false
-        console:
-          cx:
-            read: true
-          ml:
-            read: true
-          portal:
-            console-web: true
-          queues:
-            read: true
-          account:
-            read: true
-          numbers:
-            read: true
-          integrations:
-            read: false
-    CrmConfigId:
+      description: 'Controls whether the Admin Console UI exposes the WebHID Headset Control setting (attributes.webHID.status) as editable in the agent''s own profile view. Defaults to false (UI shows the setting as read-only for the agent). Note: this flag is enforced in the UI only. The API accepts changes to attributes.webHID.status regardless of this flag''s value.'
+      default: false
+    ProfileName:
       type: string
-      pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
-      minLength: 36
-      maxLength: 36
-    ExternalUCProviderConnectionId:
-      type: string
-      description: UUID of an external UC provider connection
-      pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
-      minLength: 36
-      maxLength: 36
-    LogConfiguration:
+      description: Name of a profile (must be unique within the account)
+      maxLength: 100
+      minLength: 1
+      example: Customer Support Profile
+    CreateProfileRequest:
       type: object
-      description: 'Log configuration settings for controlling logging behavior.
-
-        Used to configure client-side logging for users and profiles.
-
-        '
-      properties:
-        logLevel:
-          type: string
-          enum:
-          - ERROR
-          - WARN
-          - INFO
-          - DEBUG
-          - TRACE
-          description: The minimum log level to capture
-          example: INFO
-        remoteLoggingEnabled:
-          type: boolean
-          description: Whether to send logs to the remote logging service
-          example: true
-        sampleRate:
-          type: number
-          minimum: 0
-          maximum: 1
-          description: Sampling rate for logs (0 to 1, where 1 means log everything)
-          example: 0.5
-        modules:
-          type: array
-          items:
-            type: string
-          description: List of module names to enable logging for
-          example:
-          - auth
-          - api
-          - websocket
-    Attributes:
-      type: object
-      description: Attributes of the user or profile.
-      properties:
-        time:
-          type: object
-          properties:
-            tz:
-              $ref: '#/components/schemas/TimeZone'
-        taskSpaces:
-          type: integer
-          example: 3
-        emailSpaces:
-          type: integer
-          example: 3
-        phoneSpaces:
-          type: integer
-          example: 1
-        videoSpaces:
-          type: integer
-          example: 0
-        messagingSpaces:
-          type: integer
-          example: 3
-        webRTC:
-          type: object
-          description: WebRTC-related settings for the user.
-          properties:
-            autoAnswer:
-              type: object
-              properties:
-                interaction:
-                  type: boolean
-                  description: Whether the agent's interactions are automatically answered. Editability by agents is controlled by the `allowAgentEditAutoAnswer` flag.
-        webHID:
-          type: object
-          description: WebHID headset control settings for the user.
-          properties:
-            status:
-              type: boolean
-              description: Whether WebHID headset control is enabled for the agent. Editability by agents is controlled by the `allowAgentEditWebHIDHeadsetControl` flag.
-        sessionStats:
-          type: object
-          description: Session statistics configuration (obsolete but kept for backward compatibility)
-          properties:
-            enabled:
-              type: boolean
-            frequencyScalar:
-              type: integer
-              example: 5
-            frequencyUnit:
-              type: string
-              example: minutes
-            stats:
-              type: object
-              additionalProperties:
-                type: boolean
-            pingHosts:
-              type: array
-              items:
-                type: string
-              example:
-              - ping.avayacloud.com
-    UpdateProfileRequest:
-      type: object
-      description: Request body for updating an existing profile. All fields are optional - only provided fields will be updated.
+      description: Request body for creating a new profile with license-type-based defaults
+      required:
+      - name
+      - licType
       properties:
         name:
-          type: string
-          description: Name of the profile (must be unique within the account if being changed)
-          maxLength: 100
-          minLength: 1
-          example: Updated Customer Support Profile
+          $ref: '#/components/schemas/ProfileName'
         description:
-          allOf:
-          - $ref: '#/components/schemas/ProfileDescription'
-          example: Updated profile for customer support representatives
+          $ref: '#/components/schemas/ProfileDescription'
         licType:
           $ref: '#/components/schemas/LicenseType'
-          description: License type (will apply new defaults if changed)
         profileFolderId:
-          anyOf:
-          - $ref: '#/components/schemas/FolderId'
-          - type: 'null'
-          description: Move profile to a folder, or send null to remove from current folder.
+          $ref: '#/components/schemas/FolderId'
         locationId:
           $ref: '#/components/schemas/LocationId'
         permissions:
           $ref: '#/components/schemas/ProfilePermissions'
-          description: Profile permissions configuration
+          description: Profile permissions configuration (license-specific defaults applied if not provided)
         queues:
           allOf:
           - $ref: '#/components/schemas/UserQueues'
-          description: Queue configuration for the profile
+          description: Queue configuration for the profile (license-specific defaults applied if not provided)
         spaces:
           $ref: '#/components/schemas/ProfileSpaces'
-          description: Space configuration for the profile
+          description: Space configuration for the profile (license-specific defaults applied if not provided)
         tags:
           $ref: '#/components/schemas/TagsList'
         attributes:
           $ref: '#/components/schemas/ProfileAttributes'
-          description: Profile attributes configuration
+          description: Profile attributes configuration (license-specific defaults applied if not provided)
         groups:
           $ref: '#/components/schemas/Groups'
         defaultOutboundCallerId:
@@ -1456,99 +1123,74 @@ components:
         modifyInteractionViews:
           type: boolean
           description: Whether user can modify interaction views
+          default: true
         timeZone:
-          $ref: '#/components/schemas/TimeZone'
+          allOf:
+          - $ref: '#/components/schemas/TimeZone'
+          description: Optional. If not provided, defaults to the account's configured default timezone.
         commTypeChangeDefaultValue:
           anyOf:
           - $ref: '#/components/schemas/CommTypeChangeDefaultValue'
           - type: 'null'
-        externalUCProviderConnections:
-          type: array
-          description: Array of external UC provider connection IDs to assign to this profile
-          items:
-            $ref: '#/components/schemas/ExternalUCProviderConnectionId'
-          example:
-          - 00261a83d82640d98e000000001
-          - 00261a83d82640d98e000000002
         crmConfigId:
           $ref: '#/components/schemas/CrmConfigId'
+          description: Optional. CRM configuration ID to assign to users in this profile.
         logConfiguration:
           $ref: '#/components/schemas/LogConfiguration'
-          description: Log configuration settings for users in this profile
+          description: Log configuration settings for users created from this profile
         enableWebHID:
           $ref: '#/components/schemas/EnableWebHID'
         enableErrorTones:
-          anyOf:
-          - $ref: '#/components/schemas/EnableErrorTones'
-          - type: 'null'
-          description: Optional. Send null to clear (revert to default).
+          $ref: '#/components/schemas/EnableErrorTones'
         allowInternalCalls:
-          anyOf:
-          - $ref: '#/components/schemas/AllowInternalCalls'
-          - type: 'null'
-          description: Optional. Send null to clear (revert to default).
+          $ref: '#/components/schemas/AllowInternalCalls'
+          description: Optional. Whether users in this profile can make internal calls. Defaults to false when not provided.
         rejectInteractions:
-          anyOf:
-          - $ref: '#/components/schemas/RejectInteractions'
-          - type: 'null'
-          description: Optional. Send null to clear.
+          $ref: '#/components/schemas/RejectInteractions'
         allowAgentEditAutoAnswer:
-          anyOf:
-          - $ref: '#/components/schemas/AllowAgentEditAutoAnswer'
-          - type: 'null'
-          description: Optional. Send null to clear (revert to default).
+          $ref: '#/components/schemas/AllowAgentEditAutoAnswer'
+          description: Optional. Whether agents in this profile can edit their own Auto Answer setting.
         allowAgentEditWebHIDHeadsetControl:
-          anyOf:
-          - $ref: '#/components/schemas/AllowAgentEditWebHIDHeadsetControl'
-          - type: 'null'
-          description: Optional. Send null to clear (revert to default).
-        deferEnabled:
-          anyOf:
-          - type: boolean
-          - type: 'null'
-          description: Whether defer is enabled for this profile. Null means not set at profile level (inherit account or queue behavior).
+          $ref: '#/components/schemas/AllowAgentEditWebHIDHeadsetControl'
+          description: Optional. Whether agents in this profile can edit their own WebHID Headset Control setting.
         previewOutbound:
-          anyOf:
-          - $ref: '#/components/schemas/PreviewOutbound'
-          - type: 'null'
-          description: Optional. Send null to clear.
+          $ref: '#/components/schemas/PreviewOutbound'
+          description: Optional. Whether preview outbound dialing is enabled for users in this profile.
         predictiveOutbound:
-          anyOf:
-          - $ref: '#/components/schemas/PredictiveOutbound'
-          - type: 'null'
-          description: Optional. Send null to clear.
+          $ref: '#/components/schemas/PredictiveOutbound'
+          description: Optional. Whether predictive outbound dialing is enabled for users in this profile.
         persistentMedia:
-          anyOf:
-          - $ref: '#/components/schemas/PersistentMedia'
-          - type: 'null'
-          description: Optional. Send null to clear.
+          $ref: '#/components/schemas/PersistentMedia'
+          description: Optional. Whether persistent media is enabled for users in this profile.
+        deferEnabled:
+          type: boolean
+          description: Optional. Whether defer is enabled for users in this profile.
         dialPlanProfileId:
-          anyOf:
-          - $ref: '#/components/schemas/DialPlanProfileId'
-          - type: 'null'
-          description: Optional. Dial plan profile ID. Send null to clear.
+          $ref: '#/components/schemas/DialPlanProfileId'
+          description: Optional. Dial plan profile ID to assign to users in this profile.
         ucPhoneSpaces:
-          anyOf:
-          - $ref: '#/components/schemas/UcPhoneSpaces'
-          - type: 'null'
-          description: Optional. Number of UC phone interaction spaces (0-3). Send null to clear.
+          $ref: '#/components/schemas/UcPhoneSpaces'
+          description: Optional. Number of UC phone interaction spaces (0-3).
         useUCPhoneSpaceOnCCCall:
-          anyOf:
-          - $ref: '#/components/schemas/UseUCPhoneSpaceOnCCCall'
-          - type: 'null'
-          description: Optional. Send null to clear (revert to default).
+          $ref: '#/components/schemas/UseUCPhoneSpaceOnCCCall'
+          description: Optional. Whether to use UC phone space for contact center calls.
         useCCPhoneSpaceOnUCCall:
-          anyOf:
-          - $ref: '#/components/schemas/UseCCPhoneSpaceOnUCCall'
-          - type: 'null'
-          description: Optional. Send null to clear (revert to default).
+          $ref: '#/components/schemas/UseCCPhoneSpaceOnUCCall'
+          description: Optional. Whether to use contact center phone space for UC calls.
+        externalUCProviderConnections:
+          type: array
+          description: Array of external UC provider connection IDs to assign to this profile.
+          items:
+            $ref: '#/components/schemas/ExternalUCProviderConnectionId'
         infinityElements:
           type: array
           items:
             type: string
-          description: 'Replaces the profile''s entire set of Infinity Elements.
+          description: 'Optional. Array of Infinity Element IDs to assign to this profile.
 
-            Omit to leave unchanged.
+            Only valid for agent license types; requests that set this field for `nonAgent`
+
+            profiles are rejected with a 422 error.
 
             '
     UpdatedAt:
@@ -1561,210 +1203,14 @@ components:
       type: string
       format: date-time
       example: '2025-09-08T06:19:21.561Z'
-    CreatedAt:
-      description: Timestamp of when the resource was created.
+    CommTypeChangeDefaultValue:
       type: string
-      format: date-time
-      example: '2025-09-08T06:19:21.561Z'
-    DefinedInteractionViews:
-      type: array
-      description: List of defined interaction views
-      items:
-        type: string
-    ProfilePermissions:
-      type: object
-      description: Nested permission structure for profile access control
-      properties:
-        app:
-          type: object
-          properties:
-            agent:
-              type: object
-              properties:
-                read:
-                  type: boolean
-            portal:
-              type: object
-              properties:
-                app-web:
-                  type: boolean
-            homeList:
-              type: object
-              properties:
-                read:
-                  type: boolean
-            queueList:
-              type: object
-              properties:
-                read:
-                  type: boolean
-        console:
-          type: object
-          properties:
-            cx:
-              type: object
-              properties:
-                read:
-                  type: boolean
-            ml:
-              type: object
-              properties:
-                read:
-                  type: boolean
-            portal:
-              type: object
-              properties:
-                console-web:
-                  type: boolean
-            queues:
-              type: object
-              properties:
-                read:
-                  type: boolean
-            account:
-              type: object
-              properties:
-                read:
-                  type: boolean
-            numbers:
-              type: object
-              properties:
-                read:
-                  type: boolean
-            integrations:
-              type: object
-              properties:
-                read:
-                  type: boolean
-    JobId:
-      description: Unique ID for a bulk user operation job.
-      type: string
-      format: uuid
-      example: c8c2909d-75e9-484a-94c0-b7e8d30771fe
-    ProfileNumUsersWithOverrides:
-      type: integer
-      minimum: 0
-      description: Number of users currently set to the profile that have an override for at least one field.
-    ProfileAttributes:
-      type: object
-      description: Profile-specific attributes and settings
-      properties:
-        time:
-          type: object
-          properties:
-            tz:
-              type: string
-              example: America/New_York
-              description: Timezone setting
-        queue:
-          type: object
-          properties:
-            outboundPermissions:
-              type: object
-              properties:
-                task:
-                  type: boolean
-                  example: true
-                email:
-                  type: boolean
-                  example: true
-                phone:
-                  type: boolean
-                  example: true
-                video:
-                  type: boolean
-                  example: false
-                messaging:
-                  type: boolean
-                  example: true
-        taskSpaces:
-          type: integer
-          example: 2
-          description: Number of task spaces
-        emailSpaces:
-          type: integer
-          example: 2
-          description: Number of email spaces
-        phoneSpaces:
-          type: integer
-          example: 1
-          description: Number of phone spaces
-        videoSpaces:
-          type: integer
-          example: 0
-          description: Number of video spaces
-        messagingSpaces:
-          type: integer
-          example: 2
-          description: Number of messaging spaces
-        sessionStats:
-          type: object
-          description: Session statistics configuration (obsolete but kept for backward compatibility)
-          properties:
-            enabled:
-              type: boolean
-            frequencyScalar:
-              type: integer
-              example: 5
-            frequencyUnit:
-              type: string
-              example: minutes
-            stats:
-              type: object
-              additionalProperties:
-                type: boolean
-            pingHosts:
-              type: array
-              items:
-                type: string
-              example:
-              - ping.avayacloud.com
-    ExternalUCProviderConnection:
-      type: object
-      description: An external UC provider connection with full details.
-      properties:
-        id:
-          type: string
-          description: Unique identifier of the connection.
-        accountId:
-          type: string
-          description: Account the connection belongs to.
-        name:
-          type: string
-          description: Display name of the connection.
-        provider:
-          type: string
-          description: Provider type (e.g. 'teams', 'zoom').
-        enabled:
-          type: boolean
-          description: Whether the connection is currently enabled.
-        connectionDetails:
-          type: object
-          additionalProperties: true
-          description: Provider-specific connection configuration.
-    AllowInternalCalls:
-      type: boolean
-      description: Whether the user or profile can make internal calls
-    DialPlanProfileId:
-      type: string
-      pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
-      minLength: 36
-      maxLength: 36
-      description: ID of the dial plan profile to use
-    AccountId:
-      description: Unique identifier for an account.
-      type: string
-      pattern: ^001[0-9a-f]{23}$
-      example: 001f8e7d6c5b4a39281706f5e4d
-    InteractionViewsType:
-      type: string
-      description: Type of interaction views to display
+      description: Default value for communication type changes
       enum:
-      - all
-      - defined
-      - none
-      default: all
-      example: all
+      - callback
+      - closeResolved
+      - closeUnresolved
+      example: callback
     Profile:
       type: object
       description: Detailed profile information
@@ -2030,22 +1476,247 @@ components:
           type: boolean
           readOnly: true
           description: Whether messaging interactions can be picked up beyond the configured space multiplicity.
-    FirstName:
-      description: The first name of a user.
+    UserQueues:
+      description: Queues configuration for a user or profile.
+      type: object
+      properties:
+        access:
+          type: array
+          items:
+            $ref: '#/components/schemas/QueueId'
+        performance:
+          type: array
+          items:
+            $ref: '#/components/schemas/QueueId'
+        autoLogin:
+          type: array
+          items:
+            $ref: '#/components/schemas/QueueId'
+        proficiency:
+          type: array
+          items:
+            $ref: '#/components/schemas/QueueId'
+        logins:
+          type: array
+          items:
+            $ref: '#/components/schemas/QueueId'
+        defaultOutboundQueue:
+          anyOf:
+          - $ref: '#/components/schemas/QueueId'
+          - type: 'null'
+        outboundQueueId:
+          anyOf:
+          - $ref: '#/components/schemas/QueueId'
+          - type: 'null'
+    InteractionViewsType:
       type: string
-      minLength: 2
-      maxLength: 255
-      pattern: ^[^<>\^@#]*$
-      example: John
-    ModifyInteractionViews:
+      description: Type of interaction views to display
+      enum:
+      - all
+      - defined
+      - none
+      default: all
+      example: all
+    PersistentMedia:
       type: boolean
-      description: Can modify interaction views
-      example: true
-    DefaultOutboundCallerIdField:
-      description: Default outbound caller ID (nullable for create/update requests)
-      anyOf:
-      - $ref: '#/components/schemas/DefaultOutboundCallerId'
-      - type: 'null'
+    Violation:
+      type: object
+      properties:
+        field:
+          description: 'The name of the field in the request that caused the violation.
+
+
+            This can be the name of a path parameter, query parameter, or a field within the request body.
+
+            '
+          type: string
+          readOnly: true
+          example: jobName
+        message:
+          description: 'A human-readable explanation specific to this occurrence of the violation.
+
+            '
+          type: string
+          readOnly: true
+          example: must match "^[a-zA-Z]{6}$"
+        code:
+          description: 'The violation code generated by the server for this occurrence of the violation.
+
+
+            Use this code when implementing any error handling logic instead of the message, as the message can change.
+
+            '
+          type: integer
+          format: int32
+          readOnly: true
+          example: 20006
+      required:
+      - field
+      - message
+      - code
+      example:
+      - field: emailAddress
+        message: must not be null
+        code: 20002
+    ConsoleTheme:
+      allOf:
+      - $ref: '#/components/schemas/UiTheme'
+      description: Console theme preference
+    UseCCPhoneSpaceOnUCCall:
+      description: Use CC phone space for UC calls.
+      type: boolean
+    LogConfiguration:
+      type: object
+      description: 'Log configuration settings for controlling logging behavior.
+
+        Used to configure client-side logging for users and profiles.
+
+        '
+      properties:
+        logLevel:
+          type: string
+          enum:
+          - ERROR
+          - WARN
+          - INFO
+          - DEBUG
+          - TRACE
+          description: The minimum log level to capture
+          example: INFO
+        remoteLoggingEnabled:
+          type: boolean
+          description: Whether to send logs to the remote logging service
+          example: true
+        sampleRate:
+          type: number
+          minimum: 0
+          maximum: 1
+          description: Sampling rate for logs (0 to 1, where 1 means log everything)
+          example: 0.5
+        modules:
+          type: array
+          items:
+            type: string
+          description: List of module names to enable logging for
+          example:
+          - auth
+          - api
+          - websocket
+    ProfilePermissions:
+      type: object
+      description: Nested permission structure for profile access control
+      properties:
+        app:
+          type: object
+          properties:
+            agent:
+              type: object
+              properties:
+                read:
+                  type: boolean
+            portal:
+              type: object
+              properties:
+                app-web:
+                  type: boolean
+            homeList:
+              type: object
+              properties:
+                read:
+                  type: boolean
+            queueList:
+              type: object
+              properties:
+                read:
+                  type: boolean
+        console:
+          type: object
+          properties:
+            cx:
+              type: object
+              properties:
+                read:
+                  type: boolean
+            ml:
+              type: object
+              properties:
+                read:
+                  type: boolean
+            portal:
+              type: object
+              properties:
+                console-web:
+                  type: boolean
+            queues:
+              type: object
+              properties:
+                read:
+                  type: boolean
+            account:
+              type: object
+              properties:
+                read:
+                  type: boolean
+            numbers:
+              type: object
+              properties:
+                read:
+                  type: boolean
+            integrations:
+              type: object
+              properties:
+                read:
+                  type: boolean
+    CrmConfigId:
+      type: string
+      pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
+      minLength: 36
+      maxLength: 36
+    RejectInteractions:
+      type: boolean
+    CreatedAt:
+      description: Timestamp of when the resource was created.
+      type: string
+      format: date-time
+      example: '2025-09-08T06:19:21.561Z'
+    UseUCPhoneSpaceOnCCCall:
+      description: Use UC phone space for CC calls.
+      type: boolean
+    DefinedInteractionViews:
+      type: array
+      description: List of defined interaction views
+      items:
+        type: string
+    EnableWebHID:
+      type: boolean
+      description: Whether WebHID is enabled for the user
+    UpdatedBy:
+      description: 'ID of the user who last updated the resource.
+
+
+        This may not be included if the resource has not been updated since it was created.
+
+        '
+      allOf:
+      - $ref: '#/components/schemas/UserId'
+      example: 002d010826307dd6630992437b
+    ProfileUsersList:
+      type: object
+      description: List of users assigned to a profile with override status. Includes pagination metadata if pagination parameters were provided.
+      required:
+      - users
+      properties:
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+          description: Pagination metadata (only present when pageNumber and pageSize query parameters are provided)
+        links:
+          $ref: '#/components/schemas/Links'
+          description: Pagination navigation links (only present when pageNumber and pageSize query parameters are provided)
+        users:
+          type: array
+          description: Array of users assigned to the profile
+          items:
+            $ref: '#/components/schemas/ProfileUser'
     ProfileSpaces:
       type: object
       description: Interaction space configuration for the profile
@@ -2075,7 +1746,54 @@ components:
           items:
             type: string
           description: Messaging interaction spaces
-    PersistentMedia:
+    ProfileUser:
+      type: object
+      description: User assigned to a profile with override status information
+      required:
+      - userId
+      - email
+      - firstName
+      - lastName
+      - fullName
+      - hasOverrides
+      - overriddenFields
+      properties:
+        userId:
+          $ref: '#/components/schemas/UserId'
+          description: Unique identifier of the user
+        email:
+          $ref: '#/components/schemas/Email'
+        firstName:
+          $ref: '#/components/schemas/FirstName'
+        lastName:
+          $ref: '#/components/schemas/LastName'
+        fullName:
+          $ref: '#/components/schemas/FullName'
+        hasOverrides:
+          type: boolean
+          description: Whether the user has any overrides from the profile defaults
+          example: true
+        overriddenFields:
+          type: array
+          description: List of profile field paths that have been overridden by this user. Field paths use dot notation (e.g., 'permissions.app.agent.read', 'queues.access', 'appTheme')
+          items:
+            type: string
+          example:
+          - permissions.app.agent.read
+          - queues.access
+          - appTheme
+          readOnly: true
+        folderId:
+          allOf:
+          - $ref: '#/components/schemas/FolderId'
+          readOnly: true
+          description: Folder ID of the user's assigned profile.
+    DefaultOutboundCallerIdField:
+      description: Default outbound caller ID (nullable for create/update requests)
+      anyOf:
+      - $ref: '#/components/schemas/DefaultOutboundCallerId'
+      - type: 'null'
+    PreviewOutbound:
       type: boolean
     ProfileListItem:
       type: object
@@ -2167,50 +1885,452 @@ components:
           type: boolean
           readOnly: true
           description: Whether messaging interactions can be picked up beyond the configured space multiplicity.
-    GroupId:
-      description: Unique identifier for a group.
+    LicenseType:
       type: string
-      pattern: ^007[0-9a-f]{23}$
-      example: 007a1b2c3d4e5f67890abcdef12
-    Violation:
+      description: User license type that determines available features and permissions
+      enum:
+      - nonAgent
+      - voiceOnlyAgent
+      - digitalOnlyAgent
+      - omniChannelAgent
+      - omniChannelAgentEnhanced
+      - hybridVoiceAgent
+      example: hybridVoiceAgent
+    ProfileAttributes:
       type: object
+      description: Profile-specific attributes and settings
       properties:
-        field:
-          description: 'The name of the field in the request that caused the violation.
-
-
-            This can be the name of a path parameter, query parameter, or a field within the request body.
-
-            '
-          type: string
-          readOnly: true
-          example: jobName
-        message:
-          description: 'A human-readable explanation specific to this occurrence of the violation.
-
-            '
-          type: string
-          readOnly: true
-          example: must match "^[a-zA-Z]{6}$"
-        code:
-          description: 'The violation code generated by the server for this occurrence of the violation.
-
-
-            Use this code when implementing any error handling logic instead of the message, as the message can change.
-
-            '
+        time:
+          type: object
+          properties:
+            tz:
+              type: string
+              example: America/New_York
+              description: Timezone setting
+        queue:
+          type: object
+          properties:
+            outboundPermissions:
+              type: object
+              properties:
+                task:
+                  type: boolean
+                  example: true
+                email:
+                  type: boolean
+                  example: true
+                phone:
+                  type: boolean
+                  example: true
+                video:
+                  type: boolean
+                  example: false
+                messaging:
+                  type: boolean
+                  example: true
+        taskSpaces:
           type: integer
-          format: int32
-          readOnly: true
-          example: 20006
+          example: 2
+          description: Number of task spaces
+        emailSpaces:
+          type: integer
+          example: 2
+          description: Number of email spaces
+        phoneSpaces:
+          type: integer
+          example: 1
+          description: Number of phone spaces
+        videoSpaces:
+          type: integer
+          example: 0
+          description: Number of video spaces
+        messagingSpaces:
+          type: integer
+          example: 2
+          description: Number of messaging spaces
+        sessionStats:
+          type: object
+          description: Session statistics configuration (obsolete but kept for backward compatibility)
+          properties:
+            enabled:
+              type: boolean
+            frequencyScalar:
+              type: integer
+              example: 5
+            frequencyUnit:
+              type: string
+              example: minutes
+            stats:
+              type: object
+              additionalProperties:
+                type: boolean
+            pingHosts:
+              type: array
+              items:
+                type: string
+              example:
+              - ping.avayacloud.com
+    LocationId:
+      type: string
+      description: 'Optional location ID to associate with the user or profile. Must be an existing location ID.
+
+
+        **Note:** Location IDs are system-generated 26-character identifiers with prefix "022".
+
+        '
+      maxLength: 26
+      minLength: 26
+      pattern: ^022[0-9a-f]{23}$
+      example: 022d01091776cc88fe6866b7ce
+    ProfilesList:
+      type: object
+      description: Paginated list of profiles
       required:
-      - field
-      - message
-      - code
+      - pagination
+      - links
+      - profiles
+      properties:
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+        links:
+          $ref: '#/components/schemas/Links'
+        profiles:
+          type: array
+          description: Array of profile items
+          items:
+            $ref: '#/components/schemas/ProfileListItem'
+    ExternalUCProviderConnection:
+      type: object
+      description: An external UC provider connection with full details.
+      properties:
+        id:
+          type: string
+          description: Unique identifier of the connection.
+        accountId:
+          type: string
+          description: Account the connection belongs to.
+        name:
+          type: string
+          description: Display name of the connection.
+        provider:
+          type: string
+          description: Provider type (e.g. 'teams', 'zoom').
+        enabled:
+          type: boolean
+          description: Whether the connection is currently enabled.
+        connectionDetails:
+          type: object
+          additionalProperties: true
+          description: Provider-specific connection configuration.
+    DialPlanProfileId:
+      type: string
+      pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
+      minLength: 36
+      maxLength: 36
+      description: ID of the dial plan profile to use
+    ModifyInteractionViews:
+      type: boolean
+      description: Can modify interaction views
+      example: true
+    ExternalUCProviderConnectionId:
+      type: string
+      description: UUID of an external UC provider connection
+      pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
+      minLength: 36
+      maxLength: 36
+    UpdateProfileRequest:
+      type: object
+      description: Request body for updating an existing profile. All fields are optional - only provided fields will be updated.
+      properties:
+        name:
+          type: string
+          description: Name of the profile (must be unique within the account if being changed)
+          maxLength: 100
+          minLength: 1
+          example: Updated Customer Support Profile
+        description:
+          allOf:
+          - $ref: '#/components/schemas/ProfileDescription'
+          example: Updated profile for customer support representatives
+        licType:
+          $ref: '#/components/schemas/LicenseType'
+          description: License type (will apply new defaults if changed)
+        profileFolderId:
+          anyOf:
+          - $ref: '#/components/schemas/FolderId'
+          - type: 'null'
+          description: Move profile to a folder, or send null to remove from current folder.
+        locationId:
+          $ref: '#/components/schemas/LocationId'
+        permissions:
+          $ref: '#/components/schemas/ProfilePermissions'
+          description: Profile permissions configuration
+        queues:
+          allOf:
+          - $ref: '#/components/schemas/UserQueues'
+          description: Queue configuration for the profile
+        spaces:
+          $ref: '#/components/schemas/ProfileSpaces'
+          description: Space configuration for the profile
+        tags:
+          $ref: '#/components/schemas/TagsList'
+        attributes:
+          $ref: '#/components/schemas/ProfileAttributes'
+          description: Profile attributes configuration
+        groups:
+          $ref: '#/components/schemas/Groups'
+        defaultOutboundCallerId:
+          $ref: '#/components/schemas/DefaultOutboundCallerIdField'
+        appTheme:
+          $ref: '#/components/schemas/AppTheme'
+        consoleTheme:
+          $ref: '#/components/schemas/ConsoleTheme'
+        interactionViewsType:
+          $ref: '#/components/schemas/InteractionViewsType'
+        definedInteractionViews:
+          $ref: '#/components/schemas/DefinedInteractionViews'
+        modifyInteractionViews:
+          type: boolean
+          description: Whether user can modify interaction views
+        timeZone:
+          $ref: '#/components/schemas/TimeZone'
+        commTypeChangeDefaultValue:
+          anyOf:
+          - $ref: '#/components/schemas/CommTypeChangeDefaultValue'
+          - type: 'null'
+        externalUCProviderConnections:
+          type: array
+          description: Array of external UC provider connection IDs to assign to this profile
+          items:
+            $ref: '#/components/schemas/ExternalUCProviderConnectionId'
+          example:
+          - 00261a83d82640d98e000000001
+          - 00261a83d82640d98e000000002
+        crmConfigId:
+          $ref: '#/components/schemas/CrmConfigId'
+        logConfiguration:
+          $ref: '#/components/schemas/LogConfiguration'
+          description: Log configuration settings for users in this profile
+        enableWebHID:
+          $ref: '#/components/schemas/EnableWebHID'
+        enableErrorTones:
+          anyOf:
+          - $ref: '#/components/schemas/EnableErrorTones'
+          - type: 'null'
+          description: Optional. Send null to clear (revert to default).
+        allowInternalCalls:
+          anyOf:
+          - $ref: '#/components/schemas/AllowInternalCalls'
+          - type: 'null'
+          description: Optional. Send null to clear (revert to default).
+        rejectInteractions:
+          anyOf:
+          - $ref: '#/components/schemas/RejectInteractions'
+          - type: 'null'
+          description: Optional. Send null to clear.
+        allowAgentEditAutoAnswer:
+          anyOf:
+          - $ref: '#/components/schemas/AllowAgentEditAutoAnswer'
+          - type: 'null'
+          description: Optional. Send null to clear (revert to default).
+        allowAgentEditWebHIDHeadsetControl:
+          anyOf:
+          - $ref: '#/components/schemas/AllowAgentEditWebHIDHeadsetControl'
+          - type: 'null'
+          description: Optional. Send null to clear (revert to default).
+        deferEnabled:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          description: Whether defer is enabled for this profile. Null means not set at profile level (inherit account or queue behavior).
+        previewOutbound:
+          anyOf:
+          - $ref: '#/components/schemas/PreviewOutbound'
+          - type: 'null'
+          description: Optional. Send null to clear.
+        predictiveOutbound:
+          anyOf:
+          - $ref: '#/components/schemas/PredictiveOutbound'
+          - type: 'null'
+          description: Optional. Send null to clear.
+        persistentMedia:
+          anyOf:
+          - $ref: '#/components/schemas/PersistentMedia'
+          - type: 'null'
+          description: Optional. Send null to clear.
+        dialPlanProfileId:
+          anyOf:
+          - $ref: '#/components/schemas/DialPlanProfileId'
+          - type: 'null'
+          description: Optional. Dial plan profile ID. Send null to clear.
+        ucPhoneSpaces:
+          anyOf:
+          - $ref: '#/components/schemas/UcPhoneSpaces'
+          - type: 'null'
+          description: Optional. Number of UC phone interaction spaces (0-3). Send null to clear.
+        useUCPhoneSpaceOnCCCall:
+          anyOf:
+          - $ref: '#/components/schemas/UseUCPhoneSpaceOnCCCall'
+          - type: 'null'
+          description: Optional. Send null to clear (revert to default).
+        useCCPhoneSpaceOnUCCall:
+          anyOf:
+          - $ref: '#/components/schemas/UseCCPhoneSpaceOnUCCall'
+          - type: 'null'
+          description: Optional. Send null to clear (revert to default).
+        infinityElements:
+          type: array
+          items:
+            type: string
+          description: 'Replaces the profile''s entire set of Infinity Elements.
+
+            Omit to leave unchanged.
+
+            '
+    ProfileId:
+      type: string
+      description: The unique identifier of a profile.
+      pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
+      minLength: 36
+      maxLength: 36
+      example: 16a7490f-86a6-4a14-8ce2-11682230adb6
+    ProfileNumUsersWithOverrides:
+      type: integer
+      minimum: 0
+      description: Number of users currently set to the profile that have an override for at least one field.
+    CreatedBy:
+      description: ID of the user who created the resource.
+      allOf:
+      - $ref: '#/components/schemas/UserId'
+      example: 002d010826307dd6630992437b
+    FirstName:
+      description: The first name of a user.
+      type: string
+      minLength: 2
+      maxLength: 255
+      pattern: ^[^<>\^@#]*$
+      example: John
+    FolderId:
+      description: Unique identifier for a folder.
+      type: string
+      pattern: ^073[0-9a-f]{23}$
+      example: 073d010813b941cf7da111d147
+    Pagination:
+      description: Pagination metadata
+      type: object
+      required:
+      - pageNumber
+      - pageSize
+      - total
+      properties:
+        pageNumber:
+          description: The current page number
+          type: integer
+          minimum: 1
+          readOnly: true
+          example: 1
+        pageSize:
+          description: The maximum number of items per page
+          type: integer
+          minimum: 1
+          readOnly: true
+          example: 10
+        total:
+          description: The total number of items
+          type: integer
+          minimum: 0
+          readOnly: true
+          example: 2
+    Groups:
+      type: array
+      description: Array of group identifiers that the user or profile belongs to. Each string is a groupId from the groups table (IDs with a 007 prefix).
+      items:
+        $ref: '#/components/schemas/GroupId'
       example:
-      - field: emailAddress
-        message: must not be null
-        code: 20002
+      - 007d01090301ad8db0f0d4c370
+      - 007d01090301ad8db0f0d4c371
+    TimeZone:
+      type: string
+      description: User's timezone preference (IANA timezone)
+      maxLength: 64
+      example: America/New_York
+    FullName:
+      description: The full name of the user (firstName + lastName).
+      type: string
+      example: John Smith
+    ProfileDescriptionValue:
+      type: string
+      description: Optional description of the profile
+      maxLength: 500
+      example: Profile for customer support representatives
+    UserId:
+      description: Unique identifier for a user.
+      type: string
+      pattern: ^002[0-9a-f]{23}$
+      example: 002507f1e1c8e3e9a8b7c5d4e3f2
+    Attributes:
+      type: object
+      description: Attributes of the user or profile.
+      properties:
+        time:
+          type: object
+          properties:
+            tz:
+              $ref: '#/components/schemas/TimeZone'
+        taskSpaces:
+          type: integer
+          example: 3
+        emailSpaces:
+          type: integer
+          example: 3
+        phoneSpaces:
+          type: integer
+          example: 1
+        videoSpaces:
+          type: integer
+          example: 0
+        messagingSpaces:
+          type: integer
+          example: 3
+        webRTC:
+          type: object
+          description: WebRTC-related settings for the user.
+          properties:
+            autoAnswer:
+              type: object
+              properties:
+                interaction:
+                  type: boolean
+                  description: Whether the agent's interactions are automatically answered. Editability by agents is controlled by the `allowAgentEditAutoAnswer` flag.
+        webHID:
+          type: object
+          description: WebHID headset control settings for the user.
+          properties:
+            status:
+              type: boolean
+              description: Whether WebHID headset control is enabled for the agent. Editability by agents is controlled by the `allowAgentEditWebHIDHeadsetControl` flag.
+        sessionStats:
+          type: object
+          description: Session statistics configuration (obsolete but kept for backward compatibility)
+          properties:
+            enabled:
+              type: boolean
+            frequencyScalar:
+              type: integer
+              example: 5
+            frequencyUnit:
+              type: string
+              example: minutes
+            stats:
+              type: object
+              additionalProperties:
+                type: boolean
+            pingHosts:
+              type: array
+              items:
+                type: string
+              example:
+              - ping.avayacloud.com
     Spaces:
       type: object
       description: Space configuration for a user or profile.
@@ -2235,36 +2355,12 @@ components:
           type: array
           items:
             type: string
-    UseUCPhoneSpaceOnCCCall:
-      description: Use UC phone space for CC calls.
-      type: boolean
-    LicenseType:
-      type: string
-      description: User license type that determines available features and permissions
-      enum:
-      - nonAgent
-      - voiceOnlyAgent
-      - digitalOnlyAgent
-      - omniChannelAgent
-      - omniChannelAgentEnhanced
-      - hybridVoiceAgent
-      example: hybridVoiceAgent
     UiTheme:
       type: string
       enum:
       - light
       - dark
       example: light
-    UpdatedBy:
-      description: 'ID of the user who last updated the resource.
-
-
-        This may not be included if the resource has not been updated since it was created.
-
-        '
-      allOf:
-      - $ref: '#/components/schemas/UserId'
-      example: 002d010826307dd6630992437b
     Problem:
       type: object
       description: '<b>Problem Detail</b> is a way to carry machine-readable details of errors in an HTTP
@@ -2353,20 +2449,125 @@ components:
           type: integer
           readOnly: true
           example: 30
-    UserId:
-      description: Unique identifier for a user.
+    Email:
+      description: A user's email address
       type: string
-      pattern: ^002[0-9a-f]{23}$
-      example: 002507f1e1c8e3e9a8b7c5d4e3f2
-    ProfileId:
-      type: string
-      description: The unique identifier of a profile.
-      pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
-      minLength: 36
-      maxLength: 36
-      example: 16a7490f-86a6-4a14-8ce2-11682230adb6
-    RejectInteractions:
+      format: email
+    UcPhoneSpaces:
+      description: Number of UC phone interaction spaces.
+      type: integer
+      minimum: 0
+    ProfileDescription:
+      type:
+      - string
+      - 'null'
+      description: Optional description of the profile
+      maxLength: 500
+      example: Profile for customer support representatives
+    AllowAgentEditAutoAnswer:
       type: boolean
+      description: 'Controls whether the Admin Console UI exposes the Auto Answer Interactions setting (attributes.webRTC.autoAnswer.interaction) as editable in the agent''s own profile view. Defaults to false (UI shows the setting as read-only for the agent). Note: this flag is enforced in the UI only. The API accepts changes to attributes.webRTC.autoAnswer.interaction regardless of this flag''s value.'
+      default: false
+    AccountId:
+      description: Unique identifier for an account.
+      type: string
+      pattern: ^001[0-9a-f]{23}$
+      example: 001f8e7d6c5b4a39281706f5e4d
+    CrmConfiguration:
+      type: object
+      description: Full CRM configuration object.
+      properties:
+        id:
+          type: string
+          pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
+        accountId:
+          type: string
+        name:
+          type: string
+        clickToDial:
+          type: boolean
+        clickToConsult:
+          type: boolean
+        omnichannelEnabled:
+          type: string
+          enum:
+          - N
+          - S
+        complementaryDefaultStatus:
+          type: string
+        createdBy:
+          $ref: '#/components/schemas/UserId'
+        createdAt:
+          type: string
+          format: date-time
+        updatedBy:
+          allOf:
+          - $ref: '#/components/schemas/UserId'
+          nullable: true
+        updatedAt:
+          type: string
+          format: date-time
+          nullable: true
+    GroupId:
+      description: Unique identifier for a group.
+      type: string
+      pattern: ^007[0-9a-f]{23}$
+      example: 007a1b2c3d4e5f67890abcdef12
+    Permissions:
+      type: object
+      description: The permissions for a user or profile.
+      properties:
+        app:
+          type: object
+        console:
+          type: object
+      example:
+        app:
+          agent:
+            read: false
+          portal:
+            app-web: false
+          homeList:
+            read: false
+          queueList:
+            read: false
+          queueToggling:
+            read: false
+        console:
+          cx:
+            read: true
+          ml:
+            read: true
+          portal:
+            console-web: true
+          queues:
+            read: true
+          account:
+            read: true
+          numbers:
+            read: true
+          integrations:
+            read: false
+    JobId:
+      description: Unique ID for a bulk user operation job.
+      type: string
+      format: uuid
+      example: c8c2909d-75e9-484a-94c0-b7e8d30771fe
+    ProfileSyncStatus:
+      type: string
+      enum:
+      - SYNCED
+      - SYNC_QUEUED
+      - SYNC_IN_PROGRESS
+      - SYNC_FAILED
+      description: "State of the profile with regards to synchronizing changes with users.\nSync jobs are created when a profile is updated (PRFUPD — preserves user overrides)\nor when a force sync is triggered (FSYNC — resets all overrides).\n* SYNCED means all users have been updated with the latest changes to the profile\n* SYNC_QUEUED means a change to properties on the profile has been received,\n  but the process of updating users has yet to start\n* SYNC_IN_PROGRESS means the users are currently being updated for changes to\n  the profile\n* SYNC_FAILED means the sync job ended in failure or was aborted before all\n  users could be updated\n"
+    AppTheme:
+      allOf:
+      - $ref: '#/components/schemas/UiTheme'
+      description: Application theme preference
+    EnableErrorTones:
+      type: boolean
+      description: Whether error tones are enabled.
     ProfileNumUsers:
       type: integer
       minimum: 0
@@ -2378,235 +2579,55 @@ components:
         Profile updates are blocked when this value exceeds 500.
 
         '
-    CreateProfileRequest:
-      type: object
-      description: Request body for creating a new profile with license-type-based defaults
-      required:
-      - name
-      - licType
-      properties:
-        name:
-          $ref: '#/components/schemas/ProfileName'
-        description:
-          $ref: '#/components/schemas/ProfileDescription'
-        licType:
-          $ref: '#/components/schemas/LicenseType'
-        profileFolderId:
-          $ref: '#/components/schemas/FolderId'
-        locationId:
-          $ref: '#/components/schemas/LocationId'
-        permissions:
-          $ref: '#/components/schemas/ProfilePermissions'
-          description: Profile permissions configuration (license-specific defaults applied if not provided)
-        queues:
-          allOf:
-          - $ref: '#/components/schemas/UserQueues'
-          description: Queue configuration for the profile (license-specific defaults applied if not provided)
-        spaces:
-          $ref: '#/components/schemas/ProfileSpaces'
-          description: Space configuration for the profile (license-specific defaults applied if not provided)
-        tags:
-          $ref: '#/components/schemas/TagsList'
-        attributes:
-          $ref: '#/components/schemas/ProfileAttributes'
-          description: Profile attributes configuration (license-specific defaults applied if not provided)
-        groups:
-          $ref: '#/components/schemas/Groups'
-        defaultOutboundCallerId:
-          $ref: '#/components/schemas/DefaultOutboundCallerIdField'
-        appTheme:
-          $ref: '#/components/schemas/AppTheme'
-        consoleTheme:
-          $ref: '#/components/schemas/ConsoleTheme'
-        interactionViewsType:
-          $ref: '#/components/schemas/InteractionViewsType'
-        definedInteractionViews:
-          $ref: '#/components/schemas/DefinedInteractionViews'
-        modifyInteractionViews:
-          type: boolean
-          description: Whether user can modify interaction views
-          default: true
-        timeZone:
-          allOf:
-          - $ref: '#/components/schemas/TimeZone'
-          description: Optional. If not provided, defaults to the account's configured default timezone.
-        commTypeChangeDefaultValue:
-          anyOf:
-          - $ref: '#/components/schemas/CommTypeChangeDefaultValue'
-          - type: 'null'
-        crmConfigId:
-          $ref: '#/components/schemas/CrmConfigId'
-          description: Optional. CRM configuration ID to assign to users in this profile.
-        logConfiguration:
-          $ref: '#/components/schemas/LogConfiguration'
-          description: Log configuration settings for users created from this profile
-        enableWebHID:
-          $ref: '#/components/schemas/EnableWebHID'
-        enableErrorTones:
-          $ref: '#/components/schemas/EnableErrorTones'
-        allowInternalCalls:
-          $ref: '#/components/schemas/AllowInternalCalls'
-          description: Optional. Whether users in this profile can make internal calls. Defaults to false when not provided.
-        rejectInteractions:
-          $ref: '#/components/schemas/RejectInteractions'
-        allowAgentEditAutoAnswer:
-          $ref: '#/components/schemas/AllowAgentEditAutoAnswer'
-          description: Optional. Whether agents in this profile can edit their own Auto Answer setting.
-        allowAgentEditWebHIDHeadsetControl:
-          $ref: '#/components/schemas/AllowAgentEditWebHIDHeadsetControl'
-          description: Optional. Whether agents in this profile can edit their own WebHID Headset Control setting.
-        previewOutbound:
-          $ref: '#/components/schemas/PreviewOutbound'
-          description: Optional. Whether preview outbound dialing is enabled for users in this profile.
-        predictiveOutbound:
-          $ref: '#/components/schemas/PredictiveOutbound'
-          description: Optional. Whether predictive outbound dialing is enabled for users in this profile.
-        persistentMedia:
-          $ref: '#/components/schemas/PersistentMedia'
-          description: Optional. Whether persistent media is enabled for users in this profile.
-        deferEnabled:
-          type: boolean
-          description: Optional. Whether defer is enabled for users in this profile.
-        dialPlanProfileId:
-          $ref: '#/components/schemas/DialPlanProfileId'
-          description: Optional. Dial plan profile ID to assign to users in this profile.
-        ucPhoneSpaces:
-          $ref: '#/components/schemas/UcPhoneSpaces'
-          description: Optional. Number of UC phone interaction spaces (0-3).
-        useUCPhoneSpaceOnCCCall:
-          $ref: '#/components/schemas/UseUCPhoneSpaceOnCCCall'
-          description: Optional. Whether to use UC phone space for contact center calls.
-        useCCPhoneSpaceOnUCCall:
-          $ref: '#/components/schemas/UseCCPhoneSpaceOnUCCall'
-          description: Optional. Whether to use contact center phone space for UC calls.
-        externalUCProviderConnections:
-          type: array
-          description: Array of external UC provider connection IDs to assign to this profile.
-          items:
-            $ref: '#/components/schemas/ExternalUCProviderConnectionId'
-        infinityElements:
-          type: array
-          items:
-            type: string
-          description: 'Optional. Array of Infinity Element IDs to assign to this profile.
-
-            Only valid for agent license types; requests that set this field for `nonAgent`
-
-            profiles are rejected with a 422 error.
-
-            '
-    CommTypeChangeDefaultValue:
+    LastName:
+      description: The last name of a user.
       type: string
-      description: Default value for communication type changes
-      enum:
-      - callback
-      - closeResolved
-      - closeUnresolved
-      example: callback
-    PredictiveOutbound:
-      type: boolean
-    LocationId:
-      type: string
-      description: 'Optional location ID to associate with the user or profile. Must be an existing location ID.
-
-
-        **Note:** Location IDs are system-generated 26-character identifiers with prefix "022".
-
-        '
-      maxLength: 26
-      minLength: 26
-      pattern: ^022[0-9a-f]{23}$
-      example: 022d01091776cc88fe6866b7ce
-    PreviewOutbound:
-      type: boolean
-    UserQueues:
-      description: Queues configuration for a user or profile.
-      type: object
-      properties:
-        access:
-          type: array
-          items:
-            $ref: '#/components/schemas/QueueId'
-        performance:
-          type: array
-          items:
-            $ref: '#/components/schemas/QueueId'
-        autoLogin:
-          type: array
-          items:
-            $ref: '#/components/schemas/QueueId'
-        proficiency:
-          type: array
-          items:
-            $ref: '#/components/schemas/QueueId'
-        logins:
-          type: array
-          items:
-            $ref: '#/components/schemas/QueueId'
-        defaultOutboundQueue:
-          anyOf:
-          - $ref: '#/components/schemas/QueueId'
-          - type: 'null'
-        outboundQueueId:
-          anyOf:
-          - $ref: '#/components/schemas/QueueId'
-          - type: 'null'
-    UseCCPhoneSpaceOnUCCall:
-      description: Use CC phone space for UC calls.
-      type: boolean
-    ProfileSyncStatus:
-      type: string
-      enum:
-      - SYNCED
-      - SYNC_QUEUED
-      - SYNC_IN_PROGRESS
-      - SYNC_FAILED
-      description: "State of the profile with regards to synchronizing changes with users.\nSync jobs are created when a profile is updated (PRFUPD — preserves user overrides)\nor when a force sync is triggered (FSYNC — resets all overrides).\n* SYNCED means all users have been updated with the latest changes to the profile\n* SYNC_QUEUED means a change to properties on the profile has been received,\n  but the process of updating users has yet to start\n* SYNC_IN_PROGRESS means the users are currently being updated for changes to\n  the profile\n* SYNC_FAILED means the sync job ended in failure or was aborted before all\n  users could be updated\n"
-    Pagination:
-      description: Pagination metadata
-      type: object
-      required:
-      - pageNumber
-      - pageSize
-      - total
-      properties:
-        pageNumber:
-          description: The current page number
-          type: integer
-          minimum: 1
-          readOnly: true
-          example: 1
-        pageSize:
-          description: The maximum number of items per page
-          type: integer
-          minimum: 1
-          readOnly: true
-          example: 10
-        total:
-          description: The total number of items
-          type: integer
-          minimum: 0
-          readOnly: true
-          example: 2
-    AppTheme:
-      allOf:
-      - $ref: '#/components/schemas/UiTheme'
-      description: Application theme preference
-    EnableWebHID:
-      type: boolean
-      description: Whether WebHID is enabled for the user
+      minLength: 2
+      maxLength: 255
+      pattern: ^[^<>\^@#]*$
+      example: Smith
+    TagsList:
+      type: array
+      items:
+        type: string
+      description: List of tag names associated with the user or profile.
+      example:
+      - APACT
+      - English
+      - NART
   responses:
-    InternalServerError:
-      description: Internal Server Error
+    BadRequest:
+      description: Bad Request
       content:
         application/problem+json:
           schema:
             $ref: '#/components/schemas/Problem'
           example:
-            type: https://developers.avayacloud.com/avaya-infinity/docs/errors#internal-error
-            title: Internal Server Error
-            status: 500
-            detail: An unexpected error occurred while processing your request
+            type: https://developers.avayacloud.com/avaya-infinity/docs/errors#constraint-violation
+            title: Constraint Violation
+            status: 400
+            detail: Request contains invalid or missing fields
+            violations:
+            - field: accountId
+              message: must match "^[a-zA-Z]{6}$"
+              code: 20006
+    ConstraintViolation:
+      description: Constraint Violation
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+    NotFound:
+      description: Not Found
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          example:
+            type: https://developers.avayacloud.com/avaya-infinity/docs/errors#not-found
+            title: Not Found
+            status: 404
+            detail: workflowId 'wf_123abc' does not exist
             requestId: req_xyz789
             timestamp: '2025-12-08T10:30:05Z'
     Forbidden:
@@ -2635,12 +2656,19 @@ components:
             detail: Bearer token expired at 2025-12-08T10:15:00Z. Request a new token.
             requestId: req_xyz789
             timestamp: '2025-12-08T10:30:05Z'
-    ConstraintViolation:
-      description: Constraint Violation
+    InternalServerError:
+      description: Internal Server Error
       content:
         application/problem+json:
           schema:
             $ref: '#/components/schemas/Problem'
+          example:
+            type: https://developers.avayacloud.com/avaya-infinity/docs/errors#internal-error
+            title: Internal Server Error
+            status: 500
+            detail: An unexpected error occurred while processing your request
+            requestId: req_xyz789
+            timestamp: '2025-12-08T10:30:05Z'
     ProfileNameExists:
       description: Conflict - Profile name already exists
       content:
@@ -2652,42 +2680,7 @@ components:
             title: Conflict
             status: 409
             detail: Profile name already exists in this account
-    BadRequest:
-      description: Bad Request
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          example:
-            type: https://developers.avayacloud.com/avaya-infinity/docs/errors#constraint-violation
-            title: Constraint Violation
-            status: 400
-            detail: Request contains invalid or missing fields
-            violations:
-            - field: accountId
-              message: must match "^[a-zA-Z]{6}$"
-              code: 20006
-    NotFound:
-      description: Not Found
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          example:
-            type: https://developers.avayacloud.com/avaya-infinity/docs/errors#not-found
-            title: Not Found
-            status: 404
-            detail: workflowId 'wf_123abc' does not exist
-            requestId: req_xyz789
-            timestamp: '2025-12-08T10:30:05Z'
   parameters:
-    profileId:
-      name: profileId
-      in: path
-      description: The unique identifier of a profile.
-      required: true
-      schema:
-        $ref: '#/components/schemas/ProfileId'
     pageNumber:
       name: pageNumber
       in: query
@@ -2698,6 +2691,13 @@ components:
         format: int32
         default: 1
         minimum: 1
+    profileId:
+      name: profileId
+      in: path
+      description: The unique identifier of a profile.
+      required: true
+      schema:
+        $ref: '#/components/schemas/ProfileId'
     pageSize:
       name: pageSize
       in: query

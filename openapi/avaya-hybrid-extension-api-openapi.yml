@@ -167,24 +167,6 @@ paths:
           $ref: '#/components/responses/InternalServerError'
 components:
   responses:
-    InternalServerError:
-      description: All other application errors
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorInternalServerError'
-    Unauthorized:
-      description: Unauthorized
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorUnauthorized'
     NotFound:
       description: Not Found
       content:
@@ -194,6 +176,24 @@ components:
           examples:
             default:
               $ref: '#/components/examples/ErrorNotFound'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorUnauthorized'
+    InternalServerError:
+      description: All other application errors
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorInternalServerError'
     Forbidden:
       description: Forbidden
       content:
@@ -204,31 +204,6 @@ components:
             default:
               $ref: '#/components/examples/ErrorForbidden'
   examples:
-    ErrorForbidden:
-      description: Forbidden
-      value:
-        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#forbidden
-        title: Forbidden
-        status: 403
-        detail: According to the access control policy the current user does not have permission to access this resource.
-    ErrorConstraintViolation:
-      description: Constraint Violation
-      value:
-        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#constraint-violation
-        title: Constraint Violation
-        status: 400
-        detail: A problem that indicates a syntactically correct, yet semantically illegal request. The Server can not process this request until the client resolves the semantic errors described in the violations section.
-        violations:
-        - field: accountId
-          message: must match "^[a-zA-Z]{6}$"
-          code: 20006
-    ErrorNotFound:
-      description: Not Found
-      value:
-        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#resource-not-found
-        title: Resource Not Found
-        status: 404
-        detail: Either there is no API method associated with the URL path of the request, or the request refers to one or more resources that were not found.
     ExtensionPage:
       description: 'Paginated extension response
 
@@ -247,6 +222,13 @@ components:
         links:
           prev: /api/admin/voice/v1/accounts/ASDJGE/communication-managers/a4c2c9b5-0e47-491d-b139-dc48cccdea72/extensions?pageNumber=1&pageSize=10
           next: /api/admin/voice/v1/accounts/ASDJGE/communication-managers/a4c2c9b5-0e47-491d-b139-dc48cccdea72/extensions?pageNumber=2&pageSize=10
+    ErrorNotFound:
+      description: Not Found
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#resource-not-found
+        title: Resource Not Found
+        status: 404
+        detail: Either there is no API method associated with the URL path of the request, or the request refers to one or more resources that were not found.
     ErrorUnauthorized:
       description: Unauthorized
       value:
@@ -261,7 +243,93 @@ components:
         title: Server Error
         status: 500
         detail: An internal server error was encountered.
+    ErrorForbidden:
+      description: Forbidden
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#forbidden
+        title: Forbidden
+        status: 403
+        detail: According to the access control policy the current user does not have permission to access this resource.
+    ErrorConstraintViolation:
+      description: Constraint Violation
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#constraint-violation
+        title: Constraint Violation
+        status: 400
+        detail: A problem that indicates a syntactically correct, yet semantically illegal request. The Server can not process this request until the client resolves the semantic errors described in the violations section.
+        violations:
+        - field: accountId
+          message: must match "^[a-zA-Z]{6}$"
+          code: 20006
+  parameters:
+    communicationManagerId:
+      name: communicationManagerId
+      description: The unique id of the Communication Manager
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+        example: 2ec20580-d204-43f3-ae0b-34795439137f
+    pageNumber:
+      name: pageNumber
+      in: query
+      description: The page number of the records to retrieve. Default value is 1.
+      required: false
+      schema:
+        type: integer
+        format: int32
+        example: 1
+        default: 1
+        minimum: 1
+    extensionId:
+      name: extensionId
+      in: path
+      description: The unique 36 character internal id for the extension
+      required: true
+      schema:
+        type: string
+        format: uuid
+        example: 123e4567-e89b-12d3-a456-426614174000
+    accountId:
+      name: accountId
+      description: The unique 6 character internal id that represents the customer account.
+      required: true
+      in: path
+      schema:
+        type: string
+        minLength: 6
+        maxLength: 6
+        pattern: ^[a-zA-Z]{6}$
+        example: ABCDEF
   schemas:
+    ExtensionResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique Extension uuid.
+          example: 1f15835f-1365-4913-acf3-0ffd0767ad6e
+          readOnly: true
+        number:
+          type: integer
+          format: int64
+          description: Extension number
+          example: 50003456
+          minimum: 1
+          maximum: 10000000000000000
+        name:
+          type: string
+          description: Extension name
+          example: Jon Extension
+          maxLength: 27
+        loginId:
+          type: array
+          items:
+            type: string
+            description: Extension to user id association.
+            example: user@avaya.com
     Problem:
       type: object
       description: '<b>Problem Detail</b> as a way to carry machine-readable details of errors in a HTTP response to avoid the need to define new error response formats for HTTP APIs <a href="https://tools.ietf.org/html/rfc7807">RFC 7807</a>
@@ -347,6 +415,27 @@ components:
           - field: accountId
             message: must match "^[a-zA-Z]{6}$"
             code: 20006
+    Links:
+      type: object
+      properties:
+        prev:
+          type: string
+          description: URL of the previous page. Blank if currently on the first page.
+        next:
+          type: string
+          description: URL of the next page. Blank if currently on the last page.
+    Pagination:
+      type: object
+      properties:
+        pageNumber:
+          type: integer
+          description: The current page number.
+        pageSize:
+          type: integer
+          description: The max number of records that can be retrieved on this page.
+        total:
+          type: integer
+          description: The total number of records.
     ExtensionPage:
       type: object
       description: Extension filtered response
@@ -363,95 +452,6 @@ components:
           example:
             prev: /api/admin/voice/v1/accounts/ASDJGE/communication-managers/a4c2c9b5-0e47-491d-b139-dc48cccdea72/extensions?pageNumber=1&pageSize=10
             next: /api/admin/voice/v1/accounts/ASDJGE/communication-managers/a4c2c9b5-0e47-491d-b139-dc48cccdea72/extensions?pageNumber=2&pageSize=10
-    ExtensionResponse:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-          description: Unique Extension uuid.
-          example: 1f15835f-1365-4913-acf3-0ffd0767ad6e
-          readOnly: true
-        number:
-          type: integer
-          format: int64
-          description: Extension number
-          example: 50003456
-          minimum: 1
-          maximum: 10000000000000000
-        name:
-          type: string
-          description: Extension name
-          example: Jon Extension
-          maxLength: 27
-        loginId:
-          type: array
-          items:
-            type: string
-            description: Extension to user id association.
-            example: user@avaya.com
-    Pagination:
-      type: object
-      properties:
-        pageNumber:
-          type: integer
-          description: The current page number.
-        pageSize:
-          type: integer
-          description: The max number of records that can be retrieved on this page.
-        total:
-          type: integer
-          description: The total number of records.
-    Links:
-      type: object
-      properties:
-        prev:
-          type: string
-          description: URL of the previous page. Blank if currently on the first page.
-        next:
-          type: string
-          description: URL of the next page. Blank if currently on the last page.
-  parameters:
-    accountId:
-      name: accountId
-      description: The unique 6 character internal id that represents the customer account.
-      required: true
-      in: path
-      schema:
-        type: string
-        minLength: 6
-        maxLength: 6
-        pattern: ^[a-zA-Z]{6}$
-        example: ABCDEF
-    communicationManagerId:
-      name: communicationManagerId
-      description: The unique id of the Communication Manager
-      in: path
-      required: true
-      schema:
-        type: string
-        format: uuid
-        example: 2ec20580-d204-43f3-ae0b-34795439137f
-    extensionId:
-      name: extensionId
-      in: path
-      description: The unique 36 character internal id for the extension
-      required: true
-      schema:
-        type: string
-        format: uuid
-        example: 123e4567-e89b-12d3-a456-426614174000
-    pageNumber:
-      name: pageNumber
-      in: query
-      description: The page number of the records to retrieve. Default value is 1.
-      required: false
-      schema:
-        type: integer
-        format: int32
-        example: 1
-        default: 1
-        minimum: 1
   securitySchemes:
     BearerAuth:
       type: http

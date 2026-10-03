@@ -92,6 +92,20 @@ paths:
       deprecated: false
 components:
   examples:
+    ErrorUnauthorized:
+      description: Unauthorized
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#unauthorized
+        title: Unauthorized
+        status: 401
+        detail: This operation requires authentication. See https://developers.avayacloud.com/onecloud-ccaas/docs/how-to-authenticate-with-ccaas-apis
+    ErrorInternalServerError:
+      description: Internal Server Error
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#internal-error
+        title: Internal Server Error
+        status: 500
+        detail: An internal server error was encountered.
     ErrorForbidden:
       description: Forbidden
       value:
@@ -109,86 +123,11 @@ components:
         violations:
         - field: accountId
           message: must match "^[a-zA-Z]{6}$"
-    ErrorUnauthorized:
-      description: Unauthorized
-      value:
-        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#unauthorized
-        title: Unauthorized
-        status: 401
-        detail: This operation requires authentication. See https://developers.avayacloud.com/onecloud-ccaas/docs/how-to-authenticate-with-ccaas-apis
     TypingIndicator:
       value:
         channelProviderId: 4af56dfe-9d07-46dc-b1d2-60bdd179bcd9
         businessAccountName: e94e278d-72e7-48cc-80fc-dba9f8dd1c36
         correlationId: zc38400d-c44f-4451-8316-e75c4efbt779
-    ErrorInternalServerError:
-      description: Internal Server Error
-      value:
-        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#internal-error
-        title: Internal Server Error
-        status: 500
-        detail: An internal server error was encountered.
-  responses:
-    Unauthorized:
-      description: Unauthorized.
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorUnauthorized'
-    BadRequest:
-      description: Bad Request
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorConstraintViolation'
-    Forbidden:
-      description: Forbidden.
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorForbidden'
-    InternalServerError:
-      description: Internal Server Error
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorInternalServerError'
-  parameters:
-    providerDialogId:
-      name: providerDialogId
-      description: 'The provider side identifier for a Contact Center dialog.  Messages with same ''providerDialogId'' value are considered part of same conversation.  If no or blank value is passed while sending a message, a new individual dialog  will be created. For integrating third party providers, provide the identifier that represents an individual conversation in the third party provider.
-
-        '
-      required: true
-      in: path
-      schema:
-        type: string
-        minLength: 3
-        maxLength: 256
-        example: ed7e49dc8458c71d1d2f1e31
-    accountId:
-      name: accountId
-      description: The unique 6 character internal id that represents the customer account.
-      required: true
-      in: path
-      schema:
-        type: string
-        minLength: 6
-        maxLength: 6
-        pattern: ^[a-zA-Z]{6}$
-        example: ABCDEF
   schemas:
     Problem:
       type: object
@@ -296,6 +235,67 @@ components:
           type: string
           description: The correlation id can be used to uniquely identify the client request. This is an optional field but when specified it will be included in any callback events and can be used to correlate the callback event with the original API request.
           maxLength: 256
+  responses:
+    Unauthorized:
+      description: Unauthorized.
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorUnauthorized'
+    InternalServerError:
+      description: Internal Server Error
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorInternalServerError'
+    BadRequest:
+      description: Bad Request
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorConstraintViolation'
+    Forbidden:
+      description: Forbidden.
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorForbidden'
+  parameters:
+    accountId:
+      name: accountId
+      description: The unique 6 character internal id that represents the customer account.
+      required: true
+      in: path
+      schema:
+        type: string
+        minLength: 6
+        maxLength: 6
+        pattern: ^[a-zA-Z]{6}$
+        example: ABCDEF
+    providerDialogId:
+      name: providerDialogId
+      description: 'The provider side identifier for a Contact Center dialog.  Messages with same ''providerDialogId'' value are considered part of same conversation.  If no or blank value is passed while sending a message, a new individual dialog  will be created. For integrating third party providers, provide the identifier that represents an individual conversation in the third party provider.
+
+        '
+      required: true
+      in: path
+      schema:
+        type: string
+        minLength: 3
+        maxLength: 256
+        example: ed7e49dc8458c71d1d2f1e31
   securitySchemes:
     BearerAuth:
       type: http

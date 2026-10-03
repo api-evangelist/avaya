@@ -115,31 +115,6 @@ paths:
           $ref: '#/components/responses/InternalServerError'
 components:
   examples:
-    ErrorForbidden:
-      description: Forbidden
-      value:
-        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#forbidden
-        title: Forbidden
-        status: 403
-        detail: According to the access control policy the current user and/or accountId does not have permission to access this resource.
-    ErrorNotFound:
-      description: Not Found
-      value:
-        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#resource-not-found
-        title: Resource Not Found
-        status: 404
-        detail: Either there is no API method associated with the URL path of the request, or the request refers to one or more resources that were not found.
-    ErrorConstraintViolation:
-      description: Constraint Violation
-      value:
-        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#constraint-violation
-        title: Constraint Violation
-        status: 400
-        detail: A problem that indicates a syntactically correct, yet semantically illegal request. The Server can not process this request until the client resolves the semantic errors described in the violations section.
-        violations:
-        - field: accountId
-          message: must match "^[a-zA-Z]{6}$"
-          code: 20006
     ErrorUnauthorized:
       description: Unauthorized
       value:
@@ -154,6 +129,24 @@ components:
         title: Server Error
         status: 500
         detail: An internal server error was encountered.
+    ErrorForbidden:
+      description: Forbidden
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#forbidden
+        title: Forbidden
+        status: 403
+        detail: According to the access control policy the current user and/or accountId does not have permission to access this resource.
+    ErrorConstraintViolation:
+      description: Constraint Violation
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#constraint-violation
+        title: Constraint Violation
+        status: 400
+        detail: A problem that indicates a syntactically correct, yet semantically illegal request. The Server can not process this request until the client resolves the semantic errors described in the violations section.
+        violations:
+        - field: accountId
+          message: must match "^[a-zA-Z]{6}$"
+          code: 20006
     ElementPage:
       description: Paginated Element Data
       value:
@@ -185,71 +178,48 @@ components:
         links:
           prev: /api/admin/inventory/v1/elements?pageNumber=1&pageSize=10
           next: /api/admin/inventory/v1/elements?pageNumber=3&pageSize=10
-  responses:
-    Unauthorized:
-      description: Unauthorized
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorUnauthorized'
-    Forbidden:
-      description: Forbidden
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorForbidden'
-    ErrorConstraintViolation:
-      description: Constraint Violation
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorConstraintViolation'
-    InternalServerError:
-      description: All other application errors
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorInternalServerError'
-    NotFound:
+    ErrorNotFound:
       description: Not Found
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorNotFound'
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#resource-not-found
+        title: Resource Not Found
+        status: 404
+        detail: Either there is no API method associated with the URL path of the request, or the request refers to one or more resources that were not found.
+  parameters:
+    pageNumber:
+      name: pageNumber
+      in: query
+      description: The page number of the records to retrieve. Default value is 1.
+      schema:
+        type: integer
+        format: int32
+        default: 1
+        minimum: 1
+        example: 2
+    accountId:
+      name: accountId
+      description: The unique 6 character internal id that represents the customer account.
+      required: true
+      in: path
+      schema:
+        type: string
+        minLength: 6
+        maxLength: 6
+        pattern: ^[a-zA-Z]{6}$
+        example: ABCDEF
   schemas:
-    ElementPage:
-      description: 'Paginated Element Data
-
-        '
+    Pagination:
       type: object
       properties:
-        pagination:
-          $ref: '#/components/schemas/Pagination'
-        elements:
-          type: array
-          items:
-            $ref: '#/components/schemas/Element'
-        links:
-          allOf:
-          - $ref: '#/components/schemas/Links'
-          example:
-            prev: /api/admin/inventory/v1/elements?pageNumber=1&pageSize=10
-            next: /api/admin/inventory/v1/elements?pageNumber=3&pageSize=10
+        pageNumber:
+          type: integer
+          description: The current page number.
+        pageSize:
+          type: integer
+          description: The max number of records that can be retrieved on this page.
+        total:
+          type: integer
+          description: The total number of records.
     Problem:
       type: object
       description: '<b>Problem Detail</b> as a way to carry machine-readable details of errors in a HTTP response to avoid the need to define new error response formats for HTTP APIs <a href="https://tools.ietf.org/html/rfc7807">RFC 7807</a>
@@ -387,18 +357,6 @@ components:
       required:
       - elementData
       - elementType
-    Pagination:
-      type: object
-      properties:
-        pageNumber:
-          type: integer
-          description: The current page number.
-        pageSize:
-          type: integer
-          description: The max number of records that can be retrieved on this page.
-        total:
-          type: integer
-          description: The total number of records.
     Links:
       type: object
       properties:
@@ -410,28 +368,70 @@ components:
           type: string
           default: ''
           description: URL of the next page. Blank if currently on the last page.
-  parameters:
-    accountId:
-      name: accountId
-      description: The unique 6 character internal id that represents the customer account.
-      required: true
-      in: path
-      schema:
-        type: string
-        minLength: 6
-        maxLength: 6
-        pattern: ^[a-zA-Z]{6}$
-        example: ABCDEF
-    pageNumber:
-      name: pageNumber
-      in: query
-      description: The page number of the records to retrieve. Default value is 1.
-      schema:
-        type: integer
-        format: int32
-        default: 1
-        minimum: 1
-        example: 2
+    ElementPage:
+      description: 'Paginated Element Data
+
+        '
+      type: object
+      properties:
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+        elements:
+          type: array
+          items:
+            $ref: '#/components/schemas/Element'
+        links:
+          allOf:
+          - $ref: '#/components/schemas/Links'
+          example:
+            prev: /api/admin/inventory/v1/elements?pageNumber=1&pageSize=10
+            next: /api/admin/inventory/v1/elements?pageNumber=3&pageSize=10
+  responses:
+    ErrorConstraintViolation:
+      description: Constraint Violation
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorConstraintViolation'
+    NotFound:
+      description: Not Found
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorNotFound'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorUnauthorized'
+    InternalServerError:
+      description: All other application errors
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorInternalServerError'
+    Forbidden:
+      description: Forbidden
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorForbidden'
   securitySchemes:
     BearerAuth:
       type: http

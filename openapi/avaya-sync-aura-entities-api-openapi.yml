@@ -81,41 +81,6 @@ paths:
           $ref: '#/components/responses/InternalServerError'
 components:
   examples:
-    ErrorForbidden:
-      description: Forbidden
-      value:
-        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#forbidden
-        title: Forbidden
-        status: 403
-        detail: According to the access control policy the current user does not have permission to access this resource.
-    AuraSyncRequest:
-      description: 'Aura Synchronization request example
-
-        '
-      value:
-        entities:
-        - AGENT
-        name: Test_Full_Sync
-    AuraSyncResponse:
-      description: 'Aura Sync response example
-
-        '
-      value:
-        jobId: 55b1dc7f-38c3-48cf-9146-8cbed5622735
-        url: /api/admin/voice/v1/accounts/HGEOAV/communication-managers/90b1dc7f-38c3-98cf-8672-8cbed5698690/jobs/55b1dc7f-38c3-48cf-9146-8cbed5622735
-    ErrorNotFound:
-      description: Not Found
-      value:
-        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#resource-not-found
-        title: Resource Not Found
-        status: 404
-        detail: Either there is no API method associated with the URL path of the request, or the request refers to one or more resources that were not found.
-    ErrorMethodNotAllowed:
-      description: Method not allowed
-      value:
-        title: Method not allowed
-        status: 405
-        detail: The request calls an HTTP method that is not supported at the resource.
     ErrorUnauthorized:
       description: Unauthorized
       value:
@@ -130,64 +95,80 @@ components:
         title: Server Error
         status: 500
         detail: An internal server error was encountered.
-  responses:
-    Unauthorized:
-      description: Unauthorized
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorUnauthorized'
-    MethodNotAllowed:
-      description: Method Not Allowed
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorMethodNotAllowed'
-    Forbidden:
+    ErrorForbidden:
       description: Forbidden
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorForbidden'
-    InternalServerError:
-      description: All other application errors
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorInternalServerError'
-    NotFound:
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#forbidden
+        title: Forbidden
+        status: 403
+        detail: According to the access control policy the current user does not have permission to access this resource.
+    ErrorMethodNotAllowed:
+      description: Method not allowed
+      value:
+        title: Method not allowed
+        status: 405
+        detail: The request calls an HTTP method that is not supported at the resource.
+    AuraSyncResponse:
+      description: 'Aura Sync response example
+
+        '
+      value:
+        jobId: 55b1dc7f-38c3-48cf-9146-8cbed5622735
+        url: /api/admin/voice/v1/accounts/HGEOAV/communication-managers/90b1dc7f-38c3-98cf-8672-8cbed5698690/jobs/55b1dc7f-38c3-48cf-9146-8cbed5622735
+    AuraSyncRequest:
+      description: 'Aura Synchronization request example
+
+        '
+      value:
+        entities:
+        - AGENT
+        name: Test_Full_Sync
+    ErrorNotFound:
       description: Not Found
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorNotFound'
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#resource-not-found
+        title: Resource Not Found
+        status: 404
+        detail: Either there is no API method associated with the URL path of the request, or the request refers to one or more resources that were not found.
+  parameters:
+    communicationManagerId:
+      name: communicationManagerId
+      description: The unique id of the Communication Manager
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+        example: 2ec20580-d204-43f3-ae0b-34795439137f
+    accountId:
+      name: accountId
+      description: The unique 6 character internal id that represents the customer account.
+      required: true
+      in: path
+      schema:
+        type: string
+        minLength: 6
+        maxLength: 6
+        pattern: ^[a-zA-Z]{6}$
+        example: ABCDEF
   schemas:
-    AuraEntity:
-      type: string
-      enum:
-      - AGENT
-      - EXTENSION
-      - VDN
-      - REASONCODE_AUX
-      - REASONCODE_LOGOUT
-      - SYSTEM_PARAMETER_FEATURES
-      description: Name of entity that need to be synchronized from Communication Manager.
-      example: AGENT
+    AuraSyncResponse:
+      description: Aura Synchronization response to notify that sync request accepted.
+      type: object
+      properties:
+        jobId:
+          description: An unique id mapped to each Aura Synchronization job.
+          type: string
+          example: 55b1dc7f-38c3-48cf-9146-8cbed5622735
+          minLength: 36
+          maxLength: 36
+          pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
+        url:
+          description: Details of Aura Synchronization job
+          type: string
+          example: /api/admin/voice/v1/accounts/HGEOAV/communication-managers/90b1dc7f-38c3-98cf-8672-8cbed5698690/jobs/55b1dc7f-38c3-48cf-9146-8cbed5622735
+          maxLength: 2048
+      title: AuraSyncResponse
     AuraSyncRequest:
       type: object
       description: Aura Synchronization request.
@@ -289,44 +270,63 @@ components:
           - field: accountId
             message: must match "^[a-zA-Z]{6}$"
             code: 20006
-    AuraSyncResponse:
-      description: Aura Synchronization response to notify that sync request accepted.
-      type: object
-      properties:
-        jobId:
-          description: An unique id mapped to each Aura Synchronization job.
-          type: string
-          example: 55b1dc7f-38c3-48cf-9146-8cbed5622735
-          minLength: 36
-          maxLength: 36
-          pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
-        url:
-          description: Details of Aura Synchronization job
-          type: string
-          example: /api/admin/voice/v1/accounts/HGEOAV/communication-managers/90b1dc7f-38c3-98cf-8672-8cbed5698690/jobs/55b1dc7f-38c3-48cf-9146-8cbed5622735
-          maxLength: 2048
-      title: AuraSyncResponse
-  parameters:
-    communicationManagerId:
-      name: communicationManagerId
-      description: The unique id of the Communication Manager
-      in: path
-      required: true
-      schema:
-        type: string
-        format: uuid
-        example: 2ec20580-d204-43f3-ae0b-34795439137f
-    accountId:
-      name: accountId
-      description: The unique 6 character internal id that represents the customer account.
-      required: true
-      in: path
-      schema:
-        type: string
-        minLength: 6
-        maxLength: 6
-        pattern: ^[a-zA-Z]{6}$
-        example: ABCDEF
+    AuraEntity:
+      type: string
+      enum:
+      - AGENT
+      - EXTENSION
+      - VDN
+      - REASONCODE_AUX
+      - REASONCODE_LOGOUT
+      - SYSTEM_PARAMETER_FEATURES
+      description: Name of entity that need to be synchronized from Communication Manager.
+      example: AGENT
+  responses:
+    MethodNotAllowed:
+      description: Method Not Allowed
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorMethodNotAllowed'
+    NotFound:
+      description: Not Found
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorNotFound'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorUnauthorized'
+    InternalServerError:
+      description: All other application errors
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorInternalServerError'
+    Forbidden:
+      description: Forbidden
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorForbidden'
   securitySchemes:
     BearerAuth:
       type: http

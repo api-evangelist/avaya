@@ -1197,30 +1197,19 @@ paths:
           default: '80'
 components:
   schemas:
-    WorkflowSessionResponse:
+    ErrorResponse:
       type: object
       properties:
-        session:
-          type: object
-          properties:
-            id:
-              type: string
-              description: Unique workflow session identifier (use to query session status)
-              example: 028d01111220a063d64b039dad
-            engagementId:
-              type: string
-              description: Associated engagement ID (if applicable)
-              example: d71bbdbf-c840-4de2-a0d9-ef8ade9ab382
-            workflowId:
-              type: string
-              description: Workflow that was executed
-              example: 025d0111114ed33c55731a7cb0
-            workflowName:
-              type: string
-              description: Human-readable workflow name
-              example: Customer Support Workflow
-          required:
-          - id
+        error:
+          type: string
+          description: A brief description of the error
+          example: workflowId is required
+        message:
+          type: string
+          description: Detailed error message
+          example: No published version found for the specified workflow
+      required:
+      - error
     WorkflowSessionStatus:
       type: object
       properties:
@@ -1258,19 +1247,30 @@ components:
       - status
       - currentModule
       - outputVariables
-    ErrorResponse:
+    WorkflowSessionResponse:
       type: object
       properties:
-        error:
-          type: string
-          description: A brief description of the error
-          example: workflowId is required
-        message:
-          type: string
-          description: Detailed error message
-          example: No published version found for the specified workflow
-      required:
-      - error
+        session:
+          type: object
+          properties:
+            id:
+              type: string
+              description: Unique workflow session identifier (use to query session status)
+              example: 028d01111220a063d64b039dad
+            engagementId:
+              type: string
+              description: Associated engagement ID (if applicable)
+              example: d71bbdbf-c840-4de2-a0d9-ef8ade9ab382
+            workflowId:
+              type: string
+              description: Workflow that was executed
+              example: 025d0111114ed33c55731a7cb0
+            workflowName:
+              type: string
+              description: Human-readable workflow name
+              example: Customer Support Workflow
+          required:
+          - id
     Error:
       type: object
       properties:
@@ -1292,30 +1292,19 @@ components:
         requestId:
           type: string
           description: Unique identifier for this request (for support purposes)
-    WorkflowSessionResponse_2:
+    ErrorResponse_2:
       type: object
       properties:
-        session:
-          type: object
-          properties:
-            id:
-              type: string
-              description: Unique identifier for the workflow session
-              example: wfs_abc123def456
-            engagementId:
-              type: string
-              description: Engagement identifier associated with the session
-              example: eng_789xyz012
-            workflowId:
-              type: string
-              description: The workflow ID that was started
-              example: wf_025d010627e3314fa905c5484c
-            workflowName:
-              type: string
-              description: Human-readable name of the workflow
-              example: Customer Support Flow
-          required:
-          - id
+        error:
+          type: string
+          description: A brief description of the error
+          example: workflowId is required
+        message:
+          type: string
+          description: Detailed error message
+          example: Missing required parameter workflowId in request body
+      required:
+      - error
     WorkflowSessionStatus_2:
       type: object
       properties:
@@ -1353,19 +1342,30 @@ components:
       - status
       - currentModule
       - outputVariables
-    ErrorResponse_2:
+    WorkflowSessionResponse_2:
       type: object
       properties:
-        error:
-          type: string
-          description: A brief description of the error
-          example: workflowId is required
-        message:
-          type: string
-          description: Detailed error message
-          example: Missing required parameter workflowId in request body
-      required:
-      - error
+        session:
+          type: object
+          properties:
+            id:
+              type: string
+              description: Unique identifier for the workflow session
+              example: wfs_abc123def456
+            engagementId:
+              type: string
+              description: Engagement identifier associated with the session
+              example: eng_789xyz012
+            workflowId:
+              type: string
+              description: The workflow ID that was started
+              example: wf_025d010627e3314fa905c5484c
+            workflowName:
+              type: string
+              description: Human-readable name of the workflow
+              example: Customer Support Flow
+          required:
+          - id
   securitySchemes:
     BearerAuth:
       type: http

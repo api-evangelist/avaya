@@ -103,34 +103,53 @@ paths:
         '500':
           $ref: '#/components/responses/InternalServerError'
 components:
+  parameters:
+    type:
+      name: type
+      description: The type of phone number. Acceptable values are LOCAL or TOLLFREE.
+      required: true
+      in: query
+      schema:
+        type: string
+        enum:
+        - LOCAL
+        - TOLLFREE
+        example: LOCAL
+    pageNumber:
+      name: pageNumber
+      in: query
+      description: The page number of the records to retrieve. Default value is 1.
+      required: false
+      schema:
+        type: integer
+        format: int32
+        example: 1
+        default: 1
+        minimum: 1
+    pageSize:
+      name: pageSize
+      in: query
+      description: The max number of records to retrieve per page. Default value is 5, Any value like 5,10,15,20,25,30 is allowed. If value comes more than 1000 then max 1000 records will be returned.
+      required: false
+      schema:
+        type: integer
+        format: int32
+        example: 5
+        default: 5
+        minimum: 1
+        maximum: 50
+    accountId:
+      name: accountId
+      description: The unique 6 character internal id that represents the customer account.
+      required: true
+      in: path
+      schema:
+        type: string
+        minLength: 6
+        maxLength: 6
+        pattern: ^[a-zA-Z]{6}$
+        example: ABCDEF
   responses:
-    ErrorConstraintViolation:
-      description: Constraint Violation
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorConstraintViolation'
-    InternalServerError:
-      description: All other application errors
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorInternalServerError'
-    Unauthorized:
-      description: Unauthorized
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorUnauthorized'
     NotFound:
       description: Not Found
       content:
@@ -140,6 +159,24 @@ components:
           examples:
             default:
               $ref: '#/components/examples/ErrorNotFound'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorUnauthorized'
+    InternalServerError:
+      description: All other application errors
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorInternalServerError'
     Forbidden:
       description: Forbidden
       content:
@@ -149,33 +186,71 @@ components:
           examples:
             default:
               $ref: '#/components/examples/ErrorForbidden'
+    ErrorConstraintViolation:
+      description: Constraint Violation
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorConstraintViolation'
+  examples:
+    AvailablePhoneNumberPage:
+      description: "Paginated Phone Number Data\n Notice from response, the field documentationRequired indicates if the activation of this number will be required. If required, you should send necessary documents to siptrunksupport@avaya.com to activate it.\n"
+      value:
+        pagination:
+          pageNumber: 2
+          pageSize: 10
+          total: 45
+        phoneNumbers:
+        - phoneNumber: '+16479308804'
+          countryCode: US
+          type: LOCAL
+          documentationRequired: true
+        links:
+          prev: /api/admin/voice/v1/accounts/ABCDEF/available-phone-numbers?pageNumber=1&pageSize=10
+          next: /api/admin/voice/v1/accounts/ABCDEF/available-phone-numbers?pageNumber=3&pageSize=10
+    ErrorNotFound:
+      description: Not Found
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#resource-not-found
+        title: Resource Not Found
+        status: 404
+        detail: Either there is no API method associated with the URL path of the request, or the request refers to one or more resources that were not found.
+    ErrorUnauthorized:
+      description: Unauthorized
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#unauthorized
+        title: Unauthorized
+        status: 401
+        detail: This operation requires authentication. See https://developers.avayacloud.com/onecloud-ccaas/docs/how-to-authenticate-with-ccaas-apis
+    ErrorInternalServerError:
+      description: Server Error
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#server-error
+        title: Server Error
+        status: 500
+        detail: An internal server error was encountered.
+    ErrorForbidden:
+      description: Forbidden
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#forbidden
+        title: Forbidden
+        status: 403
+        detail: According to the access control policy the current user does not have permission to access this resource.
+    ErrorConstraintViolation:
+      description: Constraint Violation
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#constraint-violation
+        title: Constraint Violation
+        status: 400
+        detail: A problem that indicates a syntactically correct, yet semantically illegal request. The Server can not process this request until the client resolves the semantic errors described in the violations section.
+        violations:
+        - field: accountId
+          message: must match "^[a-zA-Z]{6}$"
+          code: 20006
   schemas:
-    AvailablePhoneNumber:
-      type: object
-      description: Available PhoneNumber to assign.
-      properties:
-        phoneNumber:
-          type: string
-          description: The phone number in the E.164 format
-          example: '+16479308804'
-          readOnly: true
-        countryCode:
-          type: string
-          description: ISO Country code for number.
-          example: US
-          readOnly: true
-        type:
-          type: string
-          description: Phone number type.
-          readOnly: true
-          enum:
-          - LOCAL
-          - TOLLFREE
-        documentationRequired:
-          type: boolean
-          description: If true it indicates that additional documentation is required for phone number.
-          readOnly: true
-          example: true
     AvailablePhoneNumberPage:
       description: Paginated Available Phone Numbers
       type: object
@@ -277,6 +352,15 @@ components:
           - field: accountId
             message: must match "^[a-zA-Z]{6}$"
             code: 20006
+    Links:
+      type: object
+      properties:
+        prev:
+          type: string
+          description: URL of the previous page. Blank if currently on the first page.
+        next:
+          type: string
+          description: URL of the next page. Blank if currently on the last page.
     Pagination:
       type: object
       properties:
@@ -289,116 +373,32 @@ components:
         total:
           type: integer
           description: The total number of records.
-    Links:
+    AvailablePhoneNumber:
       type: object
+      description: Available PhoneNumber to assign.
       properties:
-        prev:
+        phoneNumber:
           type: string
-          description: URL of the previous page. Blank if currently on the first page.
-        next:
+          description: The phone number in the E.164 format
+          example: '+16479308804'
+          readOnly: true
+        countryCode:
           type: string
-          description: URL of the next page. Blank if currently on the last page.
-  parameters:
-    pageSize:
-      name: pageSize
-      in: query
-      description: The max number of records to retrieve per page. Default value is 5, Any value like 5,10,15,20,25,30 is allowed. If value comes more than 1000 then max 1000 records will be returned.
-      required: false
-      schema:
-        type: integer
-        format: int32
-        example: 5
-        default: 5
-        minimum: 1
-        maximum: 50
-    accountId:
-      name: accountId
-      description: The unique 6 character internal id that represents the customer account.
-      required: true
-      in: path
-      schema:
-        type: string
-        minLength: 6
-        maxLength: 6
-        pattern: ^[a-zA-Z]{6}$
-        example: ABCDEF
-    type:
-      name: type
-      description: The type of phone number. Acceptable values are LOCAL or TOLLFREE.
-      required: true
-      in: query
-      schema:
-        type: string
-        enum:
-        - LOCAL
-        - TOLLFREE
-        example: LOCAL
-    pageNumber:
-      name: pageNumber
-      in: query
-      description: The page number of the records to retrieve. Default value is 1.
-      required: false
-      schema:
-        type: integer
-        format: int32
-        example: 1
-        default: 1
-        minimum: 1
-  examples:
-    AvailablePhoneNumberPage:
-      description: "Paginated Phone Number Data\n Notice from response, the field documentationRequired indicates if the activation of this number will be required. If required, you should send necessary documents to siptrunksupport@avaya.com to activate it.\n"
-      value:
-        pagination:
-          pageNumber: 2
-          pageSize: 10
-          total: 45
-        phoneNumbers:
-        - phoneNumber: '+16479308804'
-          countryCode: US
-          type: LOCAL
-          documentationRequired: true
-        links:
-          prev: /api/admin/voice/v1/accounts/ABCDEF/available-phone-numbers?pageNumber=1&pageSize=10
-          next: /api/admin/voice/v1/accounts/ABCDEF/available-phone-numbers?pageNumber=3&pageSize=10
-    ErrorForbidden:
-      description: Forbidden
-      value:
-        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#forbidden
-        title: Forbidden
-        status: 403
-        detail: According to the access control policy the current user does not have permission to access this resource.
-    ErrorConstraintViolation:
-      description: Constraint Violation
-      value:
-        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#constraint-violation
-        title: Constraint Violation
-        status: 400
-        detail: A problem that indicates a syntactically correct, yet semantically illegal request. The Server can not process this request until the client resolves the semantic errors described in the violations section.
-        violations:
-        - field: accountId
-          message: must match "^[a-zA-Z]{6}$"
-          code: 20006
-    ErrorNotFound:
-      description: Not Found
-      value:
-        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#resource-not-found
-        title: Resource Not Found
-        status: 404
-        detail: Either there is no API method associated with the URL path of the request, or the request refers to one or more resources that were not found.
-    ErrorUnauthorized:
-      description: Unauthorized
-      value:
-        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#unauthorized
-        title: Unauthorized
-        status: 401
-        detail: This operation requires authentication. See https://developers.avayacloud.com/onecloud-ccaas/docs/how-to-authenticate-with-ccaas-apis
-    ErrorInternalServerError:
-      description: Server Error
-      value:
-        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#server-error
-        title: Server Error
-        status: 500
-        detail: An internal server error was encountered.
+          description: ISO Country code for number.
+          example: US
+          readOnly: true
+        type:
+          type: string
+          description: Phone number type.
+          readOnly: true
+          enum:
+          - LOCAL
+          - TOLLFREE
+        documentationRequired:
+          type: boolean
+          description: If true it indicates that additional documentation is required for phone number.
+          readOnly: true
+          example: true
   securitySchemes:
     BearerAuth:
       type: http

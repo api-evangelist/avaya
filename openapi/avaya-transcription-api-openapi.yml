@@ -699,6 +699,19 @@ paths:
                     message: An unexpected error occurred while retrieving the email transcript
 components:
   schemas:
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+          description: A brief description of the error
+          example: Invalid interaction ID
+        message:
+          type: string
+          description: Detailed error message
+          example: The specified interaction ID does not exist or is invalid
+      required:
+      - error
     TranscriptMessage:
       type: object
       required:
@@ -746,19 +759,6 @@ components:
           format: date-time
           description: Timestamp when the message was created (ISO 8601 format)
           example: '2024-10-17T10:30:56.789Z'
-    ErrorResponse:
-      type: object
-      properties:
-        error:
-          type: string
-          description: A brief description of the error
-          example: Invalid interaction ID
-        message:
-          type: string
-          description: Detailed error message
-          example: The specified interaction ID does not exist or is invalid
-      required:
-      - error
   securitySchemes:
     BearerAuth:
       type: http

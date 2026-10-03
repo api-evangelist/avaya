@@ -268,143 +268,7 @@ paths:
         '500':
           $ref: '#/components/responses/InternalServerError'
 components:
-  responses:
-    MethodNotAllowed:
-      description: Method Not Allowed
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorMethodNotAllowed'
-    ErrorConstraintViolation:
-      description: Constraint Violation
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorConstraintViolation'
-    InternalServerError:
-      description: All other application errors
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorInternalServerError'
-    Unauthorized:
-      description: Unauthorized
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorUnauthorized'
-    Conflict:
-      description: Conflict
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorConflict'
-    NotFound:
-      description: Not Found
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorNotFound'
-    Forbidden:
-      description: Forbidden
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorForbidden'
-  parameters:
-    pageSize:
-      name: pageSize
-      in: query
-      description: The max number of records to retrieve per page. Default value is 5, Any value like 5,10,15,20,25,30 is allowed. If value comes more than 1000 then max 1000 records will be returned.
-      required: false
-      schema:
-        type: integer
-        format: int32
-        example: 5
-        default: 5
-        minimum: 1
-        maximum: 50
-    locationProfileId:
-      name: locationProfileId
-      description: The unique id of the location Profile
-      in: path
-      required: true
-      schema:
-        type: string
-        format: uuid
-        example: c8c2909d-75e9-484a-94c0-b7e8d29771fe
-    accountId:
-      name: accountId
-      description: The unique 6 character internal id that represents the customer account.
-      required: true
-      in: path
-      schema:
-        type: string
-        minLength: 6
-        maxLength: 6
-        pattern: ^[a-zA-Z]{6}$
-        example: ABCDEF
-    forceDelete:
-      name: forceDelete
-      description: To delete forcefully, set this parameter to true
-      required: false
-      in: query
-      schema:
-        type: boolean
-        example: true
-    pageNumber:
-      name: pageNumber
-      in: query
-      description: The page number of the records to retrieve. Default value is 1.
-      required: false
-      schema:
-        type: integer
-        format: int32
-        example: 1
-        default: 1
-        minimum: 1
   examples:
-    LocationProfileResponse:
-      description: Response model for get an Location Profile
-      value:
-        id: 18e4f754-5e42-4387-ae13-e9b4fe4aed29
-        name: Location Profile US
-        description: Location Profile for US
-        locationCode: IN-MH
-        sipServerAddressList:
-        - sm1906.avaya.com
-        - sm-stage224.avaya.com
-        - sm_prod2201.avaya.com
-        isMediaLatchingEnabled: true
-        status: FAILED
-    ErrorForbidden:
-      description: Forbidden
-      value:
-        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#forbidden
-        title: Forbidden
-        status: 403
-        detail: According to the access control policy the current user does not have permission to access this resource.
     ErrorConflict:
       description: Conflict
       value:
@@ -417,6 +281,16 @@ components:
           message: Communication Manager with same name already exists.
         - field: hostname
           message: Communication Manager with same hostname already exists.
+    ErrorMethodNotAllowed:
+      description: Method not allowed
+      value:
+        title: Method not allowed
+        status: 405
+        detail: The request calls an HTTP method that is not supported at the resource.
+    LocationProfileAsyncResponse:
+      description: A url response that is a reference to the Location Profile under operation.
+      value:
+        url: /api/admin/voice/v1/accounts/NCWBNY/location-profiles/5e9be49a-32d3-4927-83c7-7b0952798028
     ErrorNotFound:
       description: Not Found
       value:
@@ -424,17 +298,6 @@ components:
         title: Resource Not Found
         status: 404
         detail: Either there is no API method associated with the URL path of the request, or the request refers to one or more resources that were not found.
-    ErrorConstraintViolation:
-      description: Constraint Violation
-      value:
-        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#constraint-violation
-        title: Constraint Violation
-        status: 400
-        detail: A problem that indicates a syntactically correct, yet semantically illegal request. The Server can not process this request until the client resolves the semantic errors described in the violations section.
-        violations:
-        - field: accountId
-          message: must match "^[a-zA-Z]{6}$"
-          code: 20006
     ErrorUnauthorized:
       description: Unauthorized
       value:
@@ -453,12 +316,6 @@ components:
         - sm-stage224.avaya.com
         - sm_prod2201.avaya.com
         isMediaLatchingEnabled: true
-    ErrorMethodNotAllowed:
-      description: Method not allowed
-      value:
-        title: Method not allowed
-        status: 405
-        detail: The request calls an HTTP method that is not supported at the resource.
     LocationProfiles:
       description: Location Profiles List Example
       value:
@@ -500,6 +357,13 @@ components:
         links:
           prev: /api/admin/v1/accounts/ASDJGE/location-profiles?pageNumber=1&pageSize=3
           next: /api/admin/v1/accounts/ASDJGE/location-profiles?pageNumber=3&pageSize=3
+    ErrorForbidden:
+      description: Forbidden
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#forbidden
+        title: Forbidden
+        status: 403
+        detail: According to the access control policy the current user does not have permission to access this resource.
     ErrorInternalServerError:
       description: Server Error
       value:
@@ -507,10 +371,146 @@ components:
         title: Server Error
         status: 500
         detail: An internal server error was encountered.
-    LocationProfileAsyncResponse:
-      description: A url response that is a reference to the Location Profile under operation.
+    ErrorConstraintViolation:
+      description: Constraint Violation
       value:
-        url: /api/admin/voice/v1/accounts/NCWBNY/location-profiles/5e9be49a-32d3-4927-83c7-7b0952798028
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#constraint-violation
+        title: Constraint Violation
+        status: 400
+        detail: A problem that indicates a syntactically correct, yet semantically illegal request. The Server can not process this request until the client resolves the semantic errors described in the violations section.
+        violations:
+        - field: accountId
+          message: must match "^[a-zA-Z]{6}$"
+          code: 20006
+    LocationProfileResponse:
+      description: Response model for get an Location Profile
+      value:
+        id: 18e4f754-5e42-4387-ae13-e9b4fe4aed29
+        name: Location Profile US
+        description: Location Profile for US
+        locationCode: IN-MH
+        sipServerAddressList:
+        - sm1906.avaya.com
+        - sm-stage224.avaya.com
+        - sm_prod2201.avaya.com
+        isMediaLatchingEnabled: true
+        status: FAILED
+  responses:
+    NotFound:
+      description: Not Found
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorNotFound'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorUnauthorized'
+    Conflict:
+      description: Conflict
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorConflict'
+    InternalServerError:
+      description: All other application errors
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorInternalServerError'
+    Forbidden:
+      description: Forbidden
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorForbidden'
+    MethodNotAllowed:
+      description: Method Not Allowed
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorMethodNotAllowed'
+    ErrorConstraintViolation:
+      description: Constraint Violation
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorConstraintViolation'
+  parameters:
+    forceDelete:
+      name: forceDelete
+      description: To delete forcefully, set this parameter to true
+      required: false
+      in: query
+      schema:
+        type: boolean
+        example: true
+    pageNumber:
+      name: pageNumber
+      in: query
+      description: The page number of the records to retrieve. Default value is 1.
+      required: false
+      schema:
+        type: integer
+        format: int32
+        example: 1
+        default: 1
+        minimum: 1
+    pageSize:
+      name: pageSize
+      in: query
+      description: The max number of records to retrieve per page. Default value is 5, Any value like 5,10,15,20,25,30 is allowed. If value comes more than 1000 then max 1000 records will be returned.
+      required: false
+      schema:
+        type: integer
+        format: int32
+        example: 5
+        default: 5
+        minimum: 1
+        maximum: 50
+    locationProfileId:
+      name: locationProfileId
+      description: The unique id of the location Profile
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+        example: c8c2909d-75e9-484a-94c0-b7e8d29771fe
+    accountId:
+      name: accountId
+      description: The unique 6 character internal id that represents the customer account.
+      required: true
+      in: path
+      schema:
+        type: string
+        minLength: 6
+        maxLength: 6
+        pattern: ^[a-zA-Z]{6}$
+        example: ABCDEF
   schemas:
     Problem:
       type: object
@@ -597,22 +597,27 @@ components:
           - field: accountId
             message: must match "^[a-zA-Z]{6}$"
             code: 20006
-    LocationProfiles:
+    Links:
       type: object
-      description: List of Location Profile
       properties:
-        pagination:
-          $ref: '#/components/schemas/Pagination'
-        profiles:
-          type: array
-          items:
-            $ref: '#/components/schemas/LocationProfile'
-        links:
-          allOf:
-          - $ref: '#/components/schemas/Links'
-          example:
-            prev: /api/admin/v1/accounts/ASDJGE/location-profiles?pageNumber=1&pageSize=3
-            next: /api/admin/v1/accounts/ASDJGE/location-profiles?pageNumber=3&pageSize=3
+        prev:
+          type: string
+          description: URL of the previous page. Blank if currently on the first page.
+        next:
+          type: string
+          description: URL of the next page. Blank if currently on the last page.
+    Pagination:
+      type: object
+      properties:
+        pageNumber:
+          type: integer
+          description: The current page number.
+        pageSize:
+          type: integer
+          description: The max number of records that can be retrieved on this page.
+        total:
+          type: integer
+          description: The total number of records.
     LocationProfile:
       description: Location Profile
       type: object
@@ -671,6 +676,22 @@ components:
       required:
       - name
       - locationCode
+    LocationProfiles:
+      type: object
+      description: List of Location Profile
+      properties:
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+        profiles:
+          type: array
+          items:
+            $ref: '#/components/schemas/LocationProfile'
+        links:
+          allOf:
+          - $ref: '#/components/schemas/Links'
+          example:
+            prev: /api/admin/v1/accounts/ASDJGE/location-profiles?pageNumber=1&pageSize=3
+            next: /api/admin/v1/accounts/ASDJGE/location-profiles?pageNumber=3&pageSize=3
     AsynchronousOperationResponse:
       type: object
       description: Represents the response for an asynchronous operation that simply returns a HATEOAS url, that provides a reference to the object under operation
@@ -678,27 +699,6 @@ components:
         url:
           type: string
           maxLength: 2048
-    Pagination:
-      type: object
-      properties:
-        pageNumber:
-          type: integer
-          description: The current page number.
-        pageSize:
-          type: integer
-          description: The max number of records that can be retrieved on this page.
-        total:
-          type: integer
-          description: The total number of records.
-    Links:
-      type: object
-      properties:
-        prev:
-          type: string
-          description: URL of the previous page. Blank if currently on the first page.
-        next:
-          type: string
-          description: URL of the next page. Blank if currently on the last page.
   securitySchemes:
     BearerAuth:
       type: http

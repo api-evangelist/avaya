@@ -259,24 +259,6 @@ components:
       title: SignedMediaDownloadResponse
       description: Signed Media Download Response
   responses:
-    InternalServerError:
-      description: Internal Server Error
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorInternalServerError'
-    Unauthorized:
-      description: Unauthorized.
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorUnauthorized'
     NotFound:
       description: Not Found
       content:
@@ -286,6 +268,15 @@ components:
           examples:
             default:
               $ref: '#/components/examples/ErrorNotFound'
+    Unauthorized:
+      description: Unauthorized.
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorUnauthorized'
     BadRequest:
       description: Bad Request
       content:
@@ -297,6 +288,15 @@ components:
               $ref: '#/components/examples/ErrorConstraintViolation'
             invalid-media-id:
               $ref: '#/components/examples/ErrorConstraintViolationForMediaId'
+    InternalServerError:
+      description: Internal Server Error
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorInternalServerError'
     Forbidden:
       description: Forbidden.
       content:
@@ -306,74 +306,6 @@ components:
           examples:
             default:
               $ref: '#/components/examples/ErrorForbidden'
-  examples:
-    SignedMediaUploadRequest:
-      value:
-        mediaName: MyFile.png
-        mediaContentType: image/png
-        mediaSize: 100000
-    ErrorForbidden:
-      description: Forbidden
-      value:
-        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#forbidden
-        title: Forbidden
-        status: 403
-        detail: According to the access control policy the current user and/or accountId does not have permission to access this resource.
-    ErrorConstraintViolation:
-      description: Constraint Violation
-      value:
-        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#constraint-violation
-        title: Constraint Violation
-        status: 400
-        detail: A problem that indicates a syntactically correct, yet semantically illegal request. The Server can not process this request until the client resolves the semantic errors described in the violations section.
-        violations:
-        - field: mediaId
-          message: must not be null
-    ErrorNotFound:
-      description: Not Found
-      value:
-        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#internal-error
-        title: Internal Server Error
-        status: 404
-        detail: No data found for given Id
-    SignedMediaUploadResponse:
-      value:
-        mediaName: MyFile.png
-        mediaContentType: image/png
-        mediaSize: 100000
-        mediaId: b03976ea-7e8b-11ea-bc55-0242ac130003
-        uploadSignedUri: https://HOST-REGION.api.avayacloud.com/api/media-store/v1/media/b03976ea-7e8b-11ea-bc55-0242ac130003?ttl=1672839427123&signature=8ac27e8f48f997d1a889b4b6111c3ad9fb92974a7efa4913dca92ffa43ac709f
-    ErrorConstraintViolationForMediaId:
-      description: Constraint Violation
-      value:
-        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#constraint-violation
-        title: Constraint Violation
-        status: 400
-        detail: A problem that indicates a syntactically correct, yet semantically illegal request. The Server can not process this request until the client resolves the semantic errors described in the violations section.
-        violations:
-        - field: mediaId
-          message: is not valid
-    ErrorUnauthorized:
-      description: Unauthorized
-      value:
-        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#unauthorized
-        title: Unauthorized
-        status: 401
-        detail: This operation requires authentication. See https://developers.avayacloud.com/onecloud-ccaas/docs/how-to-authenticate-with-ccaas-apis
-    ErrorInternalServerError:
-      description: Internal Server Error
-      value:
-        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#internal-error
-        title: Internal Server Error
-        status: 500
-        detail: An internal server error was encountered.
-    SignedMediaDownloadResponse:
-      value:
-        mediaName: MyFile.png
-        mediaContentType: image/png
-        mediaSize: 100000
-        mediaId: b03976ea-7e8b-11ea-bc55-0242ac130003
-        downloadSignedUri: /v1/media/b03976ea-7e8b-11ea-bc55-0242ac130003?ttl=1672839427321&signature=8ac27e8f48f997d1a889b4b6111c3ad9fb92974a7efa4913dca92ffa43ac709f
   parameters:
     mediaId:
       in: path
@@ -397,6 +329,74 @@ components:
         pattern: ^[a-zA-Z]{6}$
         example: ABCDEF
       description: Account ID for which this operation is to be performed.
+  examples:
+    SignedMediaUploadRequest:
+      value:
+        mediaName: MyFile.png
+        mediaContentType: image/png
+        mediaSize: 100000
+    SignedMediaDownloadResponse:
+      value:
+        mediaName: MyFile.png
+        mediaContentType: image/png
+        mediaSize: 100000
+        mediaId: b03976ea-7e8b-11ea-bc55-0242ac130003
+        downloadSignedUri: /v1/media/b03976ea-7e8b-11ea-bc55-0242ac130003?ttl=1672839427321&signature=8ac27e8f48f997d1a889b4b6111c3ad9fb92974a7efa4913dca92ffa43ac709f
+    ErrorNotFound:
+      description: Not Found
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#internal-error
+        title: Internal Server Error
+        status: 404
+        detail: No data found for given Id
+    ErrorUnauthorized:
+      description: Unauthorized
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#unauthorized
+        title: Unauthorized
+        status: 401
+        detail: This operation requires authentication. See https://developers.avayacloud.com/onecloud-ccaas/docs/how-to-authenticate-with-ccaas-apis
+    ErrorInternalServerError:
+      description: Internal Server Error
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#internal-error
+        title: Internal Server Error
+        status: 500
+        detail: An internal server error was encountered.
+    ErrorForbidden:
+      description: Forbidden
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#forbidden
+        title: Forbidden
+        status: 403
+        detail: According to the access control policy the current user and/or accountId does not have permission to access this resource.
+    ErrorConstraintViolation:
+      description: Constraint Violation
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#constraint-violation
+        title: Constraint Violation
+        status: 400
+        detail: A problem that indicates a syntactically correct, yet semantically illegal request. The Server can not process this request until the client resolves the semantic errors described in the violations section.
+        violations:
+        - field: mediaId
+          message: must not be null
+    SignedMediaUploadResponse:
+      value:
+        mediaName: MyFile.png
+        mediaContentType: image/png
+        mediaSize: 100000
+        mediaId: b03976ea-7e8b-11ea-bc55-0242ac130003
+        uploadSignedUri: https://HOST-REGION.api.avayacloud.com/api/media-store/v1/media/b03976ea-7e8b-11ea-bc55-0242ac130003?ttl=1672839427123&signature=8ac27e8f48f997d1a889b4b6111c3ad9fb92974a7efa4913dca92ffa43ac709f
+    ErrorConstraintViolationForMediaId:
+      description: Constraint Violation
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#constraint-violation
+        title: Constraint Violation
+        status: 400
+        detail: A problem that indicates a syntactically correct, yet semantically illegal request. The Server can not process this request until the client resolves the semantic errors described in the violations section.
+        violations:
+        - field: mediaId
+          message: is not valid
   securitySchemes:
     BearerAuth:
       type: http

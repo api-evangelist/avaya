@@ -320,43 +320,6 @@ paths:
           $ref: '#/components/responses/InternalServer'
 components:
   examples:
-    journey-create-1:
-      value:
-        identifiers:
-          accountIds:
-          - d1482af8-d865-4df0-932d-f9559f25086d
-          emailAddresses:
-          - melinda14@example.org
-    journey-query-with-agent:
-      value:
-        agentId: 4dd8a4a4-09f4-4dab-a503-91cefc4604e0
-    unlink-email-address-response:
-      value:
-        identifiers:
-          accountIds:
-          - d1482af8-d865-4df0-932d-f9559f25086d
-          phoneNumbers:
-          - 087 12345
-    journey-query-with-conversation:
-      value:
-        conversation: Mortgage Application
-        identifiers:
-          emailAddresses:
-          - melinda14@example.org
-    journey-query-within-date-time:
-      value:
-        startDate: '2019-07-23T17:45:21.001Z'
-        endDate: '2020-07-23T17:45:21.001Z'
-        identifiers:
-          emailAddresses:
-          - melinda14@example.org
-    ErrorForbidden:
-      description: Forbidden
-      value:
-        type: https://developers.avayacloud.com/avaya-experience-platform/docs/error-handling#forbidden
-        title: Forbidden
-        status: 403
-        detail: According to the access control policy the current user and/or accountId does not have permission to access this resource.
     unlink-email-address-request:
       value:
         identifiers:
@@ -368,41 +331,6 @@ components:
           - 087 12345
         unlinkIdentifier:
           emailAddresses: melinda14@example.org
-    journey-query-after-date-time:
-      value:
-        startDate: '2019-07-23T17:45:21.001Z'
-        identifiers:
-          emailAddresses:
-          - melinda14@example.org
-    list-agents-response:
-      value:
-      - agentId: 0f28895a-2855-4e02-b00c-52fe93d671f2
-        channelProviderId: aba84546-1ac2-478e-b225-cadc7e8a2862
-        leftAt: '2020-07-26T13:24:52.130Z'
-      - agentId: c5e92685-921e-4dd3-b856-66b9fdadaca1
-        channelProviderId: aba84546-1ac2-478e-b225-cadc7e8a2862
-        leftAt: '2020-07-23T18:12:34.246Z'
-      - agentId: faa542cb-1611-4ba5-a3db-1b6b1f560325
-        channelProviderId: aba84546-1ac2-478e-b225-cadc7e8a2862
-        leftAt: '2020-07-19T10:45:22.589Z'
-    unlink-account-id-request:
-      value:
-        identifiers:
-          accountIds:
-          - d1482af8-d865-4df0-932d-f9559f25086d
-          emailAddresses:
-          - melinda14@example.org
-          phoneNumbers:
-          - 087 12345
-        unlinkIdentifier:
-          accountIds: d1482af8-d865-4df0-932d-f9559f25086d
-    ErrorNotFound:
-      description: Not Found
-      value:
-        type: https://developers.avayacloud.com/avaya-experience-platform/docs/error-handling#resource-not-found
-        title: Resource Not Found
-        status: 404
-        detail: Resource not found.
     list-agents-query-1:
       value:
         identifiers:
@@ -410,37 +338,25 @@ components:
           - '+35387643526236'
         startDate: '2019-07-23T17:45:21.001Z'
         channelId: VOICE
-    unlink-account-id-response:
+    journey-query-within-date-time:
+      value:
+        startDate: '2019-07-23T17:45:21.001Z'
+        endDate: '2020-07-23T17:45:21.001Z'
+        identifiers:
+          emailAddresses:
+          - melinda14@example.org
+    journey-query-with-identifiers:
       value:
         identifiers:
           emailAddresses:
           - melinda14@example.org
-          phoneNumbers:
-          - 087 12345
-    journey-query-with-channels:
-      value:
-        channelIds:
-        - Voice
-        - Chat
-        - Email
-    ErrorConstraintViolation:
-      description: Constraint Violation
-      value:
-        type: https://developers.avayacloud.com/avaya-experience-platform/docs/error-handling#constraint-violation
-        title: Constraint Violation
-        status: 400
-        detail: A problem that indicates a syntactically correct, yet semantically illegal request. The Server can not process this request until the client resolves the semantic errors described in the violations section.
-        violations:
-        - field: accountId
-          message: must match "^[a-zA-Z]{6}$"
-          code: 20006
-    unlink-phone-number-response:
+    unlink-email-address-response:
       value:
         identifiers:
           accountIds:
           - d1482af8-d865-4df0-932d-f9559f25086d
-          emailAddresses:
-          - melinda14@example.org
+          phoneNumbers:
+          - 087 12345
     unlink-phone-number-request:
       value:
         identifiers:
@@ -452,39 +368,6 @@ components:
           - 087 12345
         unlinkIdentifier:
           phoneNumbers: 087 12345
-    journey-query-before-date-time:
-      value:
-        endDate: '2020-07-23T17:45:21.001Z'
-        identifiers:
-          emailAddresses:
-          - melinda14@example.org
-    ErrorUnauthorized:
-      description: Unauthorized
-      value:
-        type: https://developers.avayacloud.com/avaya-experience-platform/docs/error-handling#unauthorized
-        title: Unauthorized
-        status: 401
-        detail: This operation requires authentication. See https://developers.avayacloud.com/avaya-experience-platform/docs/how-to-authenticate-with-ccaas-apis
-    journey-query-advanced:
-      value:
-        conversation: Mortgage Application
-        startDate: '2019-07-23T17:45:21.001Z'
-        endDate: '2020-07-23T17:45:21.001Z'
-        identifiers:
-          emailAddresses:
-          - melinda14@example.org
-          phoneNumbers:
-          - 019 718 0171
-          - +353 019 718 9999
-        agentId: 4dd8a4a4-09f4-4dab-a503-91cefc4604e0
-        channelIds:
-        - Voice
-        - Email
-    journey-query-with-identifiers:
-      value:
-        identifiers:
-          emailAddresses:
-          - melinda14@example.org
     journey-search-response:
       summary: Journey search response
       value:
@@ -649,6 +532,33 @@ components:
           - cmartin@example.org
           universalIds:
           - 7fdf89aa-70e6-4de9-8d7a-e1bbc4edcbaf
+    journey-query-before-date-time:
+      value:
+        endDate: '2020-07-23T17:45:21.001Z'
+        identifiers:
+          emailAddresses:
+          - melinda14@example.org
+    unlink-account-id-response:
+      value:
+        identifiers:
+          emailAddresses:
+          - melinda14@example.org
+          phoneNumbers:
+          - 087 12345
+    ErrorNotFound:
+      description: Not Found
+      value:
+        type: https://developers.avayacloud.com/avaya-experience-platform/docs/error-handling#resource-not-found
+        title: Resource Not Found
+        status: 404
+        detail: Resource not found.
+    ErrorUnauthorized:
+      description: Unauthorized
+      value:
+        type: https://developers.avayacloud.com/avaya-experience-platform/docs/error-handling#unauthorized
+        title: Unauthorized
+        status: 401
+        detail: This operation requires authentication. See https://developers.avayacloud.com/avaya-experience-platform/docs/how-to-authenticate-with-ccaas-apis
     ErrorInternalServerError:
       description: Server Error
       value:
@@ -656,438 +566,134 @@ components:
         title: Server Error
         status: 500
         detail: An internal server error was encountered.
-  schemas:
-    Queue:
-      type: object
-      title: Queue
-      description: The queue details part of an engagement.
-      required:
-      - queueId
-      - channelId
-      - priority
-      properties:
-        queueId:
-          description: The unique case sensitive id of the queue. Only valid Contact Center Queue Id's are accepted. See Queue Admin List API.
-          type: string
-          minLength: 36
-          maxLength: 36
-          pattern: ^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}$
-        queueName:
-          type: string
-          description: The Queue name for the queue.
-          example: Default
-        channelId:
-          description: The id representing the Contact Center Channel. Only valid Contact Center Channel Id's are accepted. See Channel page in Avaya Experience Platform Fundamentals section of Developer Guides for a list of supported Channel Id's.
-          type: string
-          minLength: 3
-          maxLength: 256
-        priority:
-          description: The priority of this queue request. The smaller the number meaning the higher the priority.
-          type: integer
-          format: int32
-          minimum: 1
-          maximum: 10
-        rank:
-          description: This is the rank of this queue in the context of a match request, when the match request contains multiple queues.
-          type: integer
-          format: int32
-          minimum: 1
-          maximum: 2147483647
-        proficiencyRangeMin:
-          description: Agents who have a proficiency equal or greater than this for the required queue will be preferred. The smaller the number meaning the highest ranked or best agent. The larger the number meaning the lower the agent ranking.
-          type: integer
-          format: int32
-          minimum: 1
-          maximum: 16
-        proficiencyRangeMax:
-          description: Agents who have a proficiency equal or less than this for the required queue will be preferred. The smaller the number meaning the highest ranked or best agent. The larger the number meaning the lower the agent ranking.
-          type: integer
-          format: int32
-          minimum: 1
-          maximum: 16
-        queuedAt:
-          type: string
-          format: date-time
-          readOnly: true
-          description: The datetime of when the engagement offered into a queue in ISO 8601 format, for example 2018-11-13T20:27:12+00:00
-          example: '2018-11-13T20:27:12+00:00'
-        agentId:
-          type: string
-          description: The unique 36 character internal id that represents the agent that accepted the queued engagement.
-          minLength: 36
-          maxLength: 36
-          pattern: ^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}$
-          example: bb4f5cf8-5bfc-4bf3-ac43-153c43671f0e
-        acceptedAt:
-          type: string
-          format: date-time
-          readOnly: true
-          description: The datetime of when the agent accepted the queued engagement in ISO 8601 format, for example 2018-11-13T20:27:12+00:00
-          example: '2018-11-13T20:27:12+00:00'
-    Transfer:
-      type: object
-      title: Transfer
-      description: The Transfer details part of an engagement.
-      required:
-      - channelProviderId
-      - transferType
-      properties:
-        initiatingAgentId:
-          description: The unique case sensitive id of the initiating Agent Id. Only valid Contact Center Agent Id's are accepted. See Agent Admin List API.
-          type: string
-          minLength: 36
-          maxLength: 36
-          pattern: ^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}$
-        queueId:
-          description: The unique case sensitive id of the queue. Only valid Contact Center Queue Id's are accepted. See Queue Admin List API.
-          type: string
-          minLength: 36
-          maxLength: 36
-          pattern: ^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}$
-        queueName:
-          type: string
-          description: The Queue name for the queue.
-          example: Default
-        channelProviderId:
-          description: The unique case sensitive id of the channel provider. Only valid Contact Center provider Id's are accepted. See Admin channel List API.
-          type: string
-          minLength: 36
-          maxLength: 36
-          pattern: ^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}$
-        channelId:
-          type: string
-          description: The unique id representing the Contact Center Channel. Only valid Contact Center Channel Ids are accepted. See Contact Center Channel list in Developers guide for further details.
-          example: Voice
-        connectionId:
-          description: The unique case sensitive id of the connection. Only valid Contact Center connection Id's are accepted. See Queue Admin connection List API.
-          type: string
-          minLength: 36
-          maxLength: 36
-          pattern: ^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}$
-        dialogId:
-          description: The unique case sensitive id of the dialog. Only valid Contact Center dialog Id's are accepted. See Dialog Admin List API.
-          type: string
-          minLength: 36
-          maxLength: 36
-          pattern: ^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}$
-        providerDialogId:
-          description: The unique case sensitive id of the dialog. Only valid Contact Center dialog provider Id's are accepted. See Dialog Admin List API.
-          type: string
-          minLength: 36
-          maxLength: 36
-          pattern: ^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}$
-        correlationId:
-          description: The unique case sensitive id of the Correlation. Only valid Contact Center Queue Id's are accepted. See Queue Admin List API.
-          type: string
-          minLength: 36
-          maxLength: 36
-          pattern: ^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}$
-        fallbackQueueId:
-          description: The unique case sensitive id of the queue. Only valid Contact Center Fall back Queue Id's are accepted. See Queue Admin List API.
-          type: string
-          minLength: 36
-          maxLength: 36
-          pattern: ^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}$
-        timestamp:
-          type: string
-          format: date-time
-          readOnly: true
-          description: The datetime of when the engagement transfer offered into a queue in ISO 8601 format, for example 2018-11-13T20:27:12+00:00
-          example: '2018-11-13T20:27:12+00:00'
-        destinationAgentId:
-          description: The unique case sensitive id of the Agent. Only valid Contact Center Agent Id's are accepted. See Agent Admin List API.
-          type: string
-          minLength: 36
-          maxLength: 36
-          pattern: ^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}$
-        destinationAgentName:
-          type: string
-          description: The engagement transfer agent name for the Agents.
-          example: Jone Smith
-        destinationExternalNumber:
-          type: string
-          description: When the engagement is transferred to external numbers.
-          example: +1 123 123 1234
-        destinationAgentJoinedAt:
-          type: string
-          format: date-time
-          readOnly: true
-          description: The datetime of when the engagement offered into a Agent in ISO 8601 format, for example 2018-11-13T20:27:12+00:00
-          example: '2018-11-13T20:27:12+00:00'
-        description:
-          type: string
-          description: The dialog description incase of any.
-          example: New Car inquiry
-        transferType:
-          type: string
-          description: The type of Transfers, for example TRANSFER_TO_AGENT, TRANSFER_TO_QUEUE or CONSULT_TRANSFER_TO_QUEUE.
-          enum:
-          - TRANSFER_TO_AGENT
-          - TRANSFER_TO_QUEUE
-          - TRANSFER_TO_EXTERNAL
-          - CONSULT_TRANSFER_TO_QUEUE
-    JourneyQueryResponse:
-      title: JourneyQueryResponse
-      description: Customer Journey query response.
-      required:
-      - identifiers
-      allOf:
-      - $ref: '#/components/schemas/Identifiers'
-      - type: object
-        additionalProperties: true
-        properties:
-          engagements:
-            type: array
-            description: The engagements returned as the result of a query
-            items:
-              $ref: '#/components/schemas/EngagementResponse'
-          pagination:
-            $ref: '#/components/schemas/Pagination'
-    JourneyQuery:
-      title: JourneyQuery
-      description: Customer Journey query criteria.
-      allOf:
-      - $ref: '#/components/schemas/Identifiers'
-      - type: object
-        additionalProperties: true
-        properties:
-          startDate:
-            description: The start date in ISO 8601 format, for example 2018-11-13T20:20:39+00:00. The returned results will be inclusive of this datetime.
-            example: '2018-11-13T20:20:39+00:00'
-            type:
-            - string
-            - 'null'
-            format: date-time
-          endDate:
-            description: The end date in ISO 8601 format, for example 2018-11-13T20:20:39+00:00. The returned results will be inclusive of this datetime.
-            example: '2018-11-13T20:20:39+00:00'
-            type:
-            - string
-            - 'null'
-            format: date-time
-          conversation:
-            type:
-            - string
-            - 'null'
-            description: The conversation to filter by.
-            minLength: 3
-            maxLength: 256
-            example: Mortgage Application
-          agentId:
-            type: string
-            description: The agent id to filter by.
-            minLength: 3
-            maxLength: 36
-            example: 4dd8a4a4-09f4-4dab-a503-91cefc4604e0
-          channelIds:
-            type: array
-            description: The list of channel Ids to filter by.
-            items:
-              type: string
-              minLength: 3
-              maxLength: 20
-            minItems: 1
-            maxItems: 10
-            uniqueItems: true
-            example:
-            - Voice
-            - Chat
-    AgentNoteResponse:
-      title: AgentNoteResponse
-      description: Response for Get Agent Note.
-      type: object
-      properties:
-        id:
-          type: string
-          description: The unique 36 character internal id that represents the Agent Note Id.
-        engagementId:
-          type: string
-          description: The unique 36 character internal id that represents the Engagement Id.
-        createdBy:
-          $ref: '#/components/schemas/AgentDetails'
-        updatedBy:
-          $ref: '#/components/schemas/AgentDetails'
-        note:
-          type: string
-          description: Text of the current Agent Note.
-        readOnly:
-          type: boolean
-          description: Indicates if the note is read only.
-        createdAt:
-          type: string
-          format: date-time
-          description: The creation datetime of the Engagement in ISO 8601 format, for example 2018-11-13T20:20:39+00:00
-          example: '2018-11-13T20:20:39+00:00'
-        updatedAt:
-          type: string
-          format: date-time
-          description: The creation datetime of the Engagement in ISO 8601 format, for example 2018-11-13T20:20:39+00:00
-          example: '2018-11-13T20:20:39+00:00'
-    UnlinkJourney:
-      description: Unlinks an identifier from a customer journey.
-      type: object
-      required:
-      - identifiers
-      - unlinkIdentifier
-      properties:
+    ErrorForbidden:
+      description: Forbidden
+      value:
+        type: https://developers.avayacloud.com/avaya-experience-platform/docs/error-handling#forbidden
+        title: Forbidden
+        status: 403
+        detail: According to the access control policy the current user and/or accountId does not have permission to access this resource.
+    journey-create-1:
+      value:
         identifiers:
-          $ref: '#/components/schemas/Identifiers'
-        unlinkIdentifier:
-          type: object
-          minProperties: 1
-          maxProperties: 1
-          description: Identifier to be unlinked from the Customer Journey.
-          additionalProperties:
-            type: string
-            minLength: 1
-            maxLength: 256
-            description: 'Identifiers related to the Customer. The maximum length of an identifer key is 50 characters and must be a valid "name" of a pre-configured identifier in Customer Journey.
-
-              '
-    Journey:
-      description: Customer Journey.
-      type: object
-      required:
-      - identifiers
-      allOf:
-      - $ref: '#/components/schemas/Identifiers'
-    Problem:
-      type: object
-      description: '<b>Problem Detail</b> as a way to carry machine-readable details of errors in a HTTP response to avoid the need to define new error response formats for HTTP APIs <a href="https://tools.ietf.org/html/rfc7807">RFC 7807</a>
-
-        '
-      properties:
-        type:
-          type: string
-          format: uri
-          description: 'An absolute URI that identifies the problem type. When dereferenced, it SHOULD provide human-readable documentation for the problem type (e.g., using HTML).
-
-            '
-          default: about:blank
-          example: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#constraint-violation
-        title:
-          type:
-          - string
-          - 'null'
-          description: 'A short, summary of the problem type. Written in english and readable for engineers (usually not suited for non technical stakeholders and not localized).
-
-            '
-          example: Service Unavailable
-        status:
-          type:
-          - integer
-          - 'null'
-          format: int32
-          description: 'The HTTP status code generated by the origin server for this occurrence of the problem.
-
-            '
-          minimum: 100
-          example: 503
-          exclusiveMaximum: 600
-        detail:
-          type:
-          - string
-          - 'null'
-          description: 'A human readable explanation specific to this occurrence of the problem.
-
-            '
-          example: Connection to database timed out
-        instance:
-          type:
-          - string
-          - 'null'
-          format: uri
-          description: 'An absolute URI that identifies the specific occurrence of the problem. It may or may not yield further information if dereferenced.
-
-            '
+          accountIds:
+          - d1482af8-d865-4df0-932d-f9559f25086d
+          emailAddresses:
+          - melinda14@example.org
+    ErrorConstraintViolation:
+      description: Constraint Violation
+      value:
+        type: https://developers.avayacloud.com/avaya-experience-platform/docs/error-handling#constraint-violation
+        title: Constraint Violation
+        status: 400
+        detail: A problem that indicates a syntactically correct, yet semantically illegal request. The Server can not process this request until the client resolves the semantic errors described in the violations section.
         violations:
-          type:
-          - array
-          - 'null'
-          description: 'A list of violations that occurred as a result of invalid data provided as part of a request.
-
-            '
-          items:
-            type: object
-            properties:
-              field:
-                type: string
-                description: 'The name of the field in the request that caused the violation. This can be the name of a path parameter, query parameter, or a field within the request body.
-
-                  '
-                example: accountId
-              message:
-                type: string
-                description: 'A human readable explanation specific to this occurrence of the violation.
-
-                  '
-                example: must match "^[a-zA-Z]{6}$"
-              code:
-                type: integer
-                format: int32
-                description: 'The violation code generated by the server for this occurrence of the violation. Use this code when implementing any error handling logic instead of the message, as the message can change.
-
-                  '
-                example: 20006
-          example:
-          - field: emailAddress
-            message: must not be null
-            code: 20002
-          - field: accountId
-            message: must match "^[a-zA-Z]{6}$"
-            code: 20006
-    Channel:
-      title: Channel
-      description: Identifies the specific type of channel such as VOICE, WEBCHAT, EMAIL, SMS, or SOCIAL.
-      type: object
-      properties:
-        id:
-          type: string
-          description: The unique identifier for the channel.
-          example: Voice
-        type:
-          type: string
-          description: The type of channel, such as VOICE, or VIDEO.
-          example: VOICE
-    ListAgentResponse:
-      type: object
-      title: ListAgentResponse
-      description: An Agent from a Customer's Journey that matches the search criteria.
-      properties:
-        agentId:
-          type: string
-          description: The unique 36 character internal id that represents the Agent.
-        channelProviderId:
-          type: string
-          description: The unique internal id that represents the Channel Provider.
-        leftAt:
-          type: string
-          description: The datetime of when the Agent was removed from the Customer's Journey in ISO 8601 format, for example 2018-11-13T20:27:12+00:00
-          format: date-time
-    ListAgentsQuery:
-      allOf:
-      - $ref: '#/components/schemas/Identifiers'
-      - type: object
-        additionalProperties: true
-        required:
-        - identifiers
-        - channelId
-        properties:
-          startDate:
-            description: The start date in ISO 8601 format, for example 2018-11-13T20:20:39+00:00. The returned results will be inclusive of this datetime. If omitted, defaults to the last 30 days.
-            example: '2018-11-13T20:20:39+00:00'
-            type:
-            - string
-            - 'null'
-            format: date-time
-          channelId:
-            type: string
-            description: The unique identifier for the Agent's channel.
-            minLength: 3
-            maxLength: 50
-            example: Voice
-      title: ListAgentsQuery
-      description: The list Agents search criteria.
+        - field: accountId
+          message: must match "^[a-zA-Z]{6}$"
+          code: 20006
+    list-agents-response:
+      value:
+      - agentId: 0f28895a-2855-4e02-b00c-52fe93d671f2
+        channelProviderId: aba84546-1ac2-478e-b225-cadc7e8a2862
+        leftAt: '2020-07-26T13:24:52.130Z'
+      - agentId: c5e92685-921e-4dd3-b856-66b9fdadaca1
+        channelProviderId: aba84546-1ac2-478e-b225-cadc7e8a2862
+        leftAt: '2020-07-23T18:12:34.246Z'
+      - agentId: faa542cb-1611-4ba5-a3db-1b6b1f560325
+        channelProviderId: aba84546-1ac2-478e-b225-cadc7e8a2862
+        leftAt: '2020-07-19T10:45:22.589Z'
+    journey-query-with-agent:
+      value:
+        agentId: 4dd8a4a4-09f4-4dab-a503-91cefc4604e0
+    journey-query-with-channels:
+      value:
+        channelIds:
+        - Voice
+        - Chat
+        - Email
+    journey-query-with-conversation:
+      value:
+        conversation: Mortgage Application
+        identifiers:
+          emailAddresses:
+          - melinda14@example.org
+    journey-query-advanced:
+      value:
+        conversation: Mortgage Application
+        startDate: '2019-07-23T17:45:21.001Z'
+        endDate: '2020-07-23T17:45:21.001Z'
+        identifiers:
+          emailAddresses:
+          - melinda14@example.org
+          phoneNumbers:
+          - 019 718 0171
+          - +353 019 718 9999
+        agentId: 4dd8a4a4-09f4-4dab-a503-91cefc4604e0
+        channelIds:
+        - Voice
+        - Email
+    unlink-phone-number-response:
+      value:
+        identifiers:
+          accountIds:
+          - d1482af8-d865-4df0-932d-f9559f25086d
+          emailAddresses:
+          - melinda14@example.org
+    unlink-account-id-request:
+      value:
+        identifiers:
+          accountIds:
+          - d1482af8-d865-4df0-932d-f9559f25086d
+          emailAddresses:
+          - melinda14@example.org
+          phoneNumbers:
+          - 087 12345
+        unlinkIdentifier:
+          accountIds: d1482af8-d865-4df0-932d-f9559f25086d
+    journey-query-after-date-time:
+      value:
+        startDate: '2019-07-23T17:45:21.001Z'
+        identifiers:
+          emailAddresses:
+          - melinda14@example.org
+  responses:
+    NotFound:
+      description: Not Found
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorNotFound'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorUnauthorized'
+    InternalServer:
+      description: Internal Server Error
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorInternalServerError'
+    Forbidden:
+      description: Forbidden
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorForbidden'
+  schemas:
     EngagementResponse:
       title: EngagementResponse
       description: A Customer Engagement with the Contact Center
@@ -1198,6 +804,450 @@ components:
             items:
               $ref: '#/components/schemas/Transfer'
             description: List of Transfer on the Engagement
+    JourneyQueryResponse:
+      title: JourneyQueryResponse
+      description: Customer Journey query response.
+      required:
+      - identifiers
+      allOf:
+      - $ref: '#/components/schemas/Identifiers'
+      - type: object
+        additionalProperties: true
+        properties:
+          engagements:
+            type: array
+            description: The engagements returned as the result of a query
+            items:
+              $ref: '#/components/schemas/EngagementResponse'
+          pagination:
+            $ref: '#/components/schemas/Pagination'
+    Channel:
+      title: Channel
+      description: Identifies the specific type of channel such as VOICE, WEBCHAT, EMAIL, SMS, or SOCIAL.
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique identifier for the channel.
+          example: Voice
+        type:
+          type: string
+          description: The type of channel, such as VOICE, or VIDEO.
+          example: VOICE
+    Problem:
+      type: object
+      description: '<b>Problem Detail</b> as a way to carry machine-readable details of errors in a HTTP response to avoid the need to define new error response formats for HTTP APIs <a href="https://tools.ietf.org/html/rfc7807">RFC 7807</a>
+
+        '
+      properties:
+        type:
+          type: string
+          format: uri
+          description: 'An absolute URI that identifies the problem type. When dereferenced, it SHOULD provide human-readable documentation for the problem type (e.g., using HTML).
+
+            '
+          default: about:blank
+          example: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#constraint-violation
+        title:
+          type:
+          - string
+          - 'null'
+          description: 'A short, summary of the problem type. Written in english and readable for engineers (usually not suited for non technical stakeholders and not localized).
+
+            '
+          example: Service Unavailable
+        status:
+          type:
+          - integer
+          - 'null'
+          format: int32
+          description: 'The HTTP status code generated by the origin server for this occurrence of the problem.
+
+            '
+          minimum: 100
+          example: 503
+          exclusiveMaximum: 600
+        detail:
+          type:
+          - string
+          - 'null'
+          description: 'A human readable explanation specific to this occurrence of the problem.
+
+            '
+          example: Connection to database timed out
+        instance:
+          type:
+          - string
+          - 'null'
+          format: uri
+          description: 'An absolute URI that identifies the specific occurrence of the problem. It may or may not yield further information if dereferenced.
+
+            '
+        violations:
+          type:
+          - array
+          - 'null'
+          description: 'A list of violations that occurred as a result of invalid data provided as part of a request.
+
+            '
+          items:
+            type: object
+            properties:
+              field:
+                type: string
+                description: 'The name of the field in the request that caused the violation. This can be the name of a path parameter, query parameter, or a field within the request body.
+
+                  '
+                example: accountId
+              message:
+                type: string
+                description: 'A human readable explanation specific to this occurrence of the violation.
+
+                  '
+                example: must match "^[a-zA-Z]{6}$"
+              code:
+                type: integer
+                format: int32
+                description: 'The violation code generated by the server for this occurrence of the violation. Use this code when implementing any error handling logic instead of the message, as the message can change.
+
+                  '
+                example: 20006
+          example:
+          - field: emailAddress
+            message: must not be null
+            code: 20002
+          - field: accountId
+            message: must match "^[a-zA-Z]{6}$"
+            code: 20006
+    Transfer:
+      type: object
+      title: Transfer
+      description: The Transfer details part of an engagement.
+      required:
+      - channelProviderId
+      - transferType
+      properties:
+        initiatingAgentId:
+          description: The unique case sensitive id of the initiating Agent Id. Only valid Contact Center Agent Id's are accepted. See Agent Admin List API.
+          type: string
+          minLength: 36
+          maxLength: 36
+          pattern: ^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}$
+        queueId:
+          description: The unique case sensitive id of the queue. Only valid Contact Center Queue Id's are accepted. See Queue Admin List API.
+          type: string
+          minLength: 36
+          maxLength: 36
+          pattern: ^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}$
+        queueName:
+          type: string
+          description: The Queue name for the queue.
+          example: Default
+        channelProviderId:
+          description: The unique case sensitive id of the channel provider. Only valid Contact Center provider Id's are accepted. See Admin channel List API.
+          type: string
+          minLength: 36
+          maxLength: 36
+          pattern: ^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}$
+        channelId:
+          type: string
+          description: The unique id representing the Contact Center Channel. Only valid Contact Center Channel Ids are accepted. See Contact Center Channel list in Developers guide for further details.
+          example: Voice
+        connectionId:
+          description: The unique case sensitive id of the connection. Only valid Contact Center connection Id's are accepted. See Queue Admin connection List API.
+          type: string
+          minLength: 36
+          maxLength: 36
+          pattern: ^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}$
+        dialogId:
+          description: The unique case sensitive id of the dialog. Only valid Contact Center dialog Id's are accepted. See Dialog Admin List API.
+          type: string
+          minLength: 36
+          maxLength: 36
+          pattern: ^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}$
+        providerDialogId:
+          description: The unique case sensitive id of the dialog. Only valid Contact Center dialog provider Id's are accepted. See Dialog Admin List API.
+          type: string
+          minLength: 36
+          maxLength: 36
+          pattern: ^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}$
+        correlationId:
+          description: The unique case sensitive id of the Correlation. Only valid Contact Center Queue Id's are accepted. See Queue Admin List API.
+          type: string
+          minLength: 36
+          maxLength: 36
+          pattern: ^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}$
+        fallbackQueueId:
+          description: The unique case sensitive id of the queue. Only valid Contact Center Fall back Queue Id's are accepted. See Queue Admin List API.
+          type: string
+          minLength: 36
+          maxLength: 36
+          pattern: ^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}$
+        timestamp:
+          type: string
+          format: date-time
+          readOnly: true
+          description: The datetime of when the engagement transfer offered into a queue in ISO 8601 format, for example 2018-11-13T20:27:12+00:00
+          example: '2018-11-13T20:27:12+00:00'
+        destinationAgentId:
+          description: The unique case sensitive id of the Agent. Only valid Contact Center Agent Id's are accepted. See Agent Admin List API.
+          type: string
+          minLength: 36
+          maxLength: 36
+          pattern: ^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}$
+        destinationAgentName:
+          type: string
+          description: The engagement transfer agent name for the Agents.
+          example: Jone Smith
+        destinationExternalNumber:
+          type: string
+          description: When the engagement is transferred to external numbers.
+          example: +1 123 123 1234
+        destinationAgentJoinedAt:
+          type: string
+          format: date-time
+          readOnly: true
+          description: The datetime of when the engagement offered into a Agent in ISO 8601 format, for example 2018-11-13T20:27:12+00:00
+          example: '2018-11-13T20:27:12+00:00'
+        description:
+          type: string
+          description: The dialog description incase of any.
+          example: New Car inquiry
+        transferType:
+          type: string
+          description: The type of Transfers, for example TRANSFER_TO_AGENT, TRANSFER_TO_QUEUE or CONSULT_TRANSFER_TO_QUEUE.
+          enum:
+          - TRANSFER_TO_AGENT
+          - TRANSFER_TO_QUEUE
+          - TRANSFER_TO_EXTERNAL
+          - CONSULT_TRANSFER_TO_QUEUE
+    Queue:
+      type: object
+      title: Queue
+      description: The queue details part of an engagement.
+      required:
+      - queueId
+      - channelId
+      - priority
+      properties:
+        queueId:
+          description: The unique case sensitive id of the queue. Only valid Contact Center Queue Id's are accepted. See Queue Admin List API.
+          type: string
+          minLength: 36
+          maxLength: 36
+          pattern: ^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}$
+        queueName:
+          type: string
+          description: The Queue name for the queue.
+          example: Default
+        channelId:
+          description: The id representing the Contact Center Channel. Only valid Contact Center Channel Id's are accepted. See Channel page in Avaya Experience Platform Fundamentals section of Developer Guides for a list of supported Channel Id's.
+          type: string
+          minLength: 3
+          maxLength: 256
+        priority:
+          description: The priority of this queue request. The smaller the number meaning the higher the priority.
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 10
+        rank:
+          description: This is the rank of this queue in the context of a match request, when the match request contains multiple queues.
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 2147483647
+        proficiencyRangeMin:
+          description: Agents who have a proficiency equal or greater than this for the required queue will be preferred. The smaller the number meaning the highest ranked or best agent. The larger the number meaning the lower the agent ranking.
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 16
+        proficiencyRangeMax:
+          description: Agents who have a proficiency equal or less than this for the required queue will be preferred. The smaller the number meaning the highest ranked or best agent. The larger the number meaning the lower the agent ranking.
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 16
+        queuedAt:
+          type: string
+          format: date-time
+          readOnly: true
+          description: The datetime of when the engagement offered into a queue in ISO 8601 format, for example 2018-11-13T20:27:12+00:00
+          example: '2018-11-13T20:27:12+00:00'
+        agentId:
+          type: string
+          description: The unique 36 character internal id that represents the agent that accepted the queued engagement.
+          minLength: 36
+          maxLength: 36
+          pattern: ^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}$
+          example: bb4f5cf8-5bfc-4bf3-ac43-153c43671f0e
+        acceptedAt:
+          type: string
+          format: date-time
+          readOnly: true
+          description: The datetime of when the agent accepted the queued engagement in ISO 8601 format, for example 2018-11-13T20:27:12+00:00
+          example: '2018-11-13T20:27:12+00:00'
+    Pagination:
+      type: object
+      properties:
+        pageNumber:
+          type: integer
+          description: The current page number.
+        pageSize:
+          type: integer
+          description: The max number of records that can be retrieved on this page.
+        total:
+          type: integer
+          description: The total number of records.
+    ListAgentResponse:
+      type: object
+      title: ListAgentResponse
+      description: An Agent from a Customer's Journey that matches the search criteria.
+      properties:
+        agentId:
+          type: string
+          description: The unique 36 character internal id that represents the Agent.
+        channelProviderId:
+          type: string
+          description: The unique internal id that represents the Channel Provider.
+        leftAt:
+          type: string
+          description: The datetime of when the Agent was removed from the Customer's Journey in ISO 8601 format, for example 2018-11-13T20:27:12+00:00
+          format: date-time
+    AgentDetails:
+      title: AgentDetails
+      description: Agent Details.
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique 36 character internal id that represents the Agent Id.
+          minLength: 3
+          maxLength: 100
+        name:
+          type: string
+          description: The Agent/Supervisor Name.
+          minLength: 3
+          maxLength: 100
+    UnlinkJourney:
+      description: Unlinks an identifier from a customer journey.
+      type: object
+      required:
+      - identifiers
+      - unlinkIdentifier
+      properties:
+        identifiers:
+          $ref: '#/components/schemas/Identifiers'
+        unlinkIdentifier:
+          type: object
+          minProperties: 1
+          maxProperties: 1
+          description: Identifier to be unlinked from the Customer Journey.
+          additionalProperties:
+            type: string
+            minLength: 1
+            maxLength: 256
+            description: 'Identifiers related to the Customer. The maximum length of an identifer key is 50 characters and must be a valid "name" of a pre-configured identifier in Customer Journey.
+
+              '
+    Identifiers:
+      type: object
+      description: Unique Customer ids used during an Engagement.
+      properties:
+        identifiers:
+          type: object
+          minProperties: 1
+          maxProperties: 10
+          description: Unique identifiers for identifying the customer during an Engagement such as phoneNumbers or emailAddresses.
+          additionalProperties:
+            type: array
+            description: 'Additional identifiers related to the Customer. The maximum length of an identifer key is 50 characters and must be a valid "name" of a pre-configured identifier in Customer Journey.
+
+              '
+            minItems: 0
+            maxItems: 5
+            items:
+              type: string
+              minLength: 1
+              maxLength: 256
+          properties:
+            phoneNumbers:
+              type: array
+              description: List of phone numbers.
+              minItems: 0
+              maxItems: 5
+              items:
+                type: string
+                minLength: 3
+                maxLength: 256
+            emailAddresses:
+              type: array
+              description: List of email addresses.
+              minItems: 0
+              maxItems: 5
+              items:
+                type: string
+                minLength: 3
+                maxLength: 256
+            accountIds:
+              type: array
+              description: List of customer account id's.
+              minItems: 0
+              maxItems: 5
+              items:
+                type: string
+                minLength: 3
+                maxLength: 256
+    JourneyQuery:
+      title: JourneyQuery
+      description: Customer Journey query criteria.
+      allOf:
+      - $ref: '#/components/schemas/Identifiers'
+      - type: object
+        additionalProperties: true
+        properties:
+          startDate:
+            description: The start date in ISO 8601 format, for example 2018-11-13T20:20:39+00:00. The returned results will be inclusive of this datetime.
+            example: '2018-11-13T20:20:39+00:00'
+            type:
+            - string
+            - 'null'
+            format: date-time
+          endDate:
+            description: The end date in ISO 8601 format, for example 2018-11-13T20:20:39+00:00. The returned results will be inclusive of this datetime.
+            example: '2018-11-13T20:20:39+00:00'
+            type:
+            - string
+            - 'null'
+            format: date-time
+          conversation:
+            type:
+            - string
+            - 'null'
+            description: The conversation to filter by.
+            minLength: 3
+            maxLength: 256
+            example: Mortgage Application
+          agentId:
+            type: string
+            description: The agent id to filter by.
+            minLength: 3
+            maxLength: 36
+            example: 4dd8a4a4-09f4-4dab-a503-91cefc4604e0
+          channelIds:
+            type: array
+            description: The list of channel Ids to filter by.
+            items:
+              type: string
+              minLength: 3
+              maxLength: 20
+            minItems: 1
+            maxItems: 10
+            uniqueItems: true
+            example:
+            - Voice
+            - Chat
     ParticipantResponse:
       type: object
       description: Any External, Agent or Treatment participant as returned by a query for a customer journey
@@ -1262,82 +1312,80 @@ components:
           description: 'the source address is intended to represent the address from which the Avaya Experience Platform engagement was created. It might represent a mailbox, a twitter account, a Facebook account, a chat integration will be the same as the (To) address '
           readOnly: true
           example: '@someSocialMediaAccount'
-    AgentDetails:
-      title: AgentDetails
-      description: Agent Details.
+    AgentNoteResponse:
+      title: AgentNoteResponse
+      description: Response for Get Agent Note.
       type: object
       properties:
         id:
           type: string
-          description: The unique 36 character internal id that represents the Agent Id.
-          minLength: 3
-          maxLength: 100
-        name:
+          description: The unique 36 character internal id that represents the Agent Note Id.
+        engagementId:
           type: string
-          description: The Agent/Supervisor Name.
-          minLength: 3
-          maxLength: 100
-    Pagination:
+          description: The unique 36 character internal id that represents the Engagement Id.
+        createdBy:
+          $ref: '#/components/schemas/AgentDetails'
+        updatedBy:
+          $ref: '#/components/schemas/AgentDetails'
+        note:
+          type: string
+          description: Text of the current Agent Note.
+        readOnly:
+          type: boolean
+          description: Indicates if the note is read only.
+        createdAt:
+          type: string
+          format: date-time
+          description: The creation datetime of the Engagement in ISO 8601 format, for example 2018-11-13T20:20:39+00:00
+          example: '2018-11-13T20:20:39+00:00'
+        updatedAt:
+          type: string
+          format: date-time
+          description: The creation datetime of the Engagement in ISO 8601 format, for example 2018-11-13T20:20:39+00:00
+          example: '2018-11-13T20:20:39+00:00'
+    Journey:
+      description: Customer Journey.
       type: object
-      properties:
-        pageNumber:
-          type: integer
-          description: The current page number.
-        pageSize:
-          type: integer
-          description: The max number of records that can be retrieved on this page.
-        total:
-          type: integer
-          description: The total number of records.
-    Identifiers:
-      type: object
-      description: Unique Customer ids used during an Engagement.
-      properties:
-        identifiers:
-          type: object
-          minProperties: 1
-          maxProperties: 10
-          description: Unique identifiers for identifying the customer during an Engagement such as phoneNumbers or emailAddresses.
-          additionalProperties:
-            type: array
-            description: 'Additional identifiers related to the Customer. The maximum length of an identifer key is 50 characters and must be a valid "name" of a pre-configured identifier in Customer Journey.
-
-              '
-            minItems: 0
-            maxItems: 5
-            items:
-              type: string
-              minLength: 1
-              maxLength: 256
-          properties:
-            phoneNumbers:
-              type: array
-              description: List of phone numbers.
-              minItems: 0
-              maxItems: 5
-              items:
-                type: string
-                minLength: 3
-                maxLength: 256
-            emailAddresses:
-              type: array
-              description: List of email addresses.
-              minItems: 0
-              maxItems: 5
-              items:
-                type: string
-                minLength: 3
-                maxLength: 256
-            accountIds:
-              type: array
-              description: List of customer account id's.
-              minItems: 0
-              maxItems: 5
-              items:
-                type: string
-                minLength: 3
-                maxLength: 256
+      required:
+      - identifiers
+      allOf:
+      - $ref: '#/components/schemas/Identifiers'
+    ListAgentsQuery:
+      allOf:
+      - $ref: '#/components/schemas/Identifiers'
+      - type: object
+        additionalProperties: true
+        required:
+        - identifiers
+        - channelId
+        properties:
+          startDate:
+            description: The start date in ISO 8601 format, for example 2018-11-13T20:20:39+00:00. The returned results will be inclusive of this datetime. If omitted, defaults to the last 30 days.
+            example: '2018-11-13T20:20:39+00:00'
+            type:
+            - string
+            - 'null'
+            format: date-time
+          channelId:
+            type: string
+            description: The unique identifier for the Agent's channel.
+            minLength: 3
+            maxLength: 50
+            example: Voice
+      title: ListAgentsQuery
+      description: The list Agents search criteria.
   parameters:
+    pageNumber:
+      name: pageNumber
+      description: The target page of results.
+      required: false
+      in: query
+      example: 34
+      schema:
+        type: integer
+        format: int32
+        default: 1
+        minimum: 1
     pageSize:
       name: pageSize
       description: The maximum number of results per page.
@@ -1361,54 +1409,6 @@ components:
         maxLength: 6
         pattern: ^[a-zA-Z]{6}$
         example: ABCDEF
-    pageNumber:
-      name: pageNumber
-      description: The target page of results.
-      required: false
-      in: query
-      example: 34
-      schema:
-        type: integer
-        format: int32
-        default: 1
-        minimum: 1
-  responses:
-    Unauthorized:
-      description: Unauthorized
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorUnauthorized'
-    InternalServer:
-      description: Internal Server Error
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorInternalServerError'
-    NotFound:
-      description: Not Found
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorNotFound'
-    Forbidden:
-      description: Forbidden
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorForbidden'
   securitySchemes:
     BearerAuth:
       type: http

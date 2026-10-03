@@ -59,80 +59,6 @@ paths:
       operationId: patchGroupsByGroupIdUsers
       x-operation-id-source: derived
 components:
-  responses:
-    Unauthorized:
-      description: Unauthorized
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          example:
-            type: https://developers.avayacloud.com/errors/unauthorized
-            title: Unauthorized
-            status: 401
-            detail: Bearer token expired at 2025-12-08T10:15:00Z. Request a new token.
-            requestId: req_xyz789
-            timestamp: '2025-12-08T10:30:05Z'
-    BadRequest:
-      description: Bad Request
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          example:
-            type: https://developers.avayacloud.com/errors/constraint-violation
-            title: Constraint Violation
-            status: 400
-            detail: Request contains invalid or missing fields
-            violations:
-            - field: accountId
-              message: must match "^[a-zA-Z]{6}$"
-              code: 20006
-    Forbidden:
-      description: Forbidden
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          example:
-            type: https://developers.avayacloud.com/errors/forbidden
-            title: Forbidden
-            status: 403
-            detail: 'Missing required scope: ''workflows:execute''. Your token has: ''workflows:read'''
-            requestId: req_xyz789
-            timestamp: '2025-12-08T10:30:05Z'
-    ConstraintViolation:
-      description: Constraint Violation
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-    InternalServerError:
-      description: Internal Server Error
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          example:
-            type: https://developers.avayacloud.com/errors/internal-error
-            title: Internal Server Error
-            status: 500
-            detail: An unexpected error occurred while processing your request
-            requestId: req_xyz789
-            timestamp: '2025-12-08T10:30:05Z'
-    NotFound:
-      description: Not Found
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          example:
-            type: https://developers.avayacloud.com/errors/resource-not-found
-            title: Resource Not Found
-            status: 404
-            detail: workflowId 'wf_123abc' does not exist
-            requestId: req_xyz789
-            timestamp: '2025-12-08T10:30:05Z'
   schemas:
     AddUsersToGroupRequest:
       description: Payload object for adding multiple users to a group in a single operation.
@@ -155,27 +81,22 @@ components:
         accountId:
           description: Target account ID
           $ref: '#/components/schemas/AccountId'
-    Member:
-      description: Group user object with userId and includeInDashboard flag. Used in members property.
-      type: object
-      required:
-      - userId
-      properties:
-        userId:
-          description: ID of the user to include as a member of the group.
-          $ref: '#/components/schemas/UserId'
-        includeInDashboard:
-          description: Include in team dashboard (for team type groups)
-          type: boolean
-          default: true
-      example:
-        userId: 002507f1e1c8e3e9a8b7c5d4e3f2
-        includeInDashboard: true
-    AccountId:
-      description: Unique identifier for an account.
-      type: string
-      pattern: ^001[0-9a-f]{23}$
-      example: 001f8e7d6c5b4a39281706f5e4d
+    AddUsersToGroupResponse:
+      description: Brief list of the group's members after the update.
+      type: array
+      items:
+        type: object
+        required:
+        - userId
+        properties:
+          userId:
+            description: ID of the user to include as a member of the group.
+            $ref: '#/components/schemas/UserId'
+            readOnly: true
+          includeInDashboard:
+            description: Is this user to be included in team dashboard (for team type groups)
+            type: boolean
+            readOnly: true
     Problem:
       type: object
       description: '<b>Problem Detail</b> is a way to carry machine-readable details of errors in an HTTP
@@ -243,32 +164,37 @@ components:
           items:
             $ref: '#/components/schemas/Violation'
           readOnly: true
-    UserId:
-      description: Unique identifier for a user.
-      type: string
-      pattern: ^002[0-9a-f]{23}$
-      example: 002507f1e1c8e3e9a8b7c5d4e3f2
+    Member:
+      description: Group user object with userId and includeInDashboard flag. Used in members property.
+      type: object
+      required:
+      - userId
+      properties:
+        userId:
+          description: ID of the user to include as a member of the group.
+          $ref: '#/components/schemas/UserId'
+        includeInDashboard:
+          description: Include in team dashboard (for team type groups)
+          type: boolean
+          default: true
+      example:
+        userId: 002507f1e1c8e3e9a8b7c5d4e3f2
+        includeInDashboard: true
     GroupId:
       description: Unique identifier for a group.
       type: string
       pattern: ^007[0-9a-f]{23}$
       example: 007a1b2c3d4e5f67890abcdef12
-    AddUsersToGroupResponse:
-      description: Brief list of the group's members after the update.
-      type: array
-      items:
-        type: object
-        required:
-        - userId
-        properties:
-          userId:
-            description: ID of the user to include as a member of the group.
-            $ref: '#/components/schemas/UserId'
-            readOnly: true
-          includeInDashboard:
-            description: Is this user to be included in team dashboard (for team type groups)
-            type: boolean
-            readOnly: true
+    UserId:
+      description: Unique identifier for a user.
+      type: string
+      pattern: ^002[0-9a-f]{23}$
+      example: 002507f1e1c8e3e9a8b7c5d4e3f2
+    AccountId:
+      description: Unique identifier for an account.
+      type: string
+      pattern: ^001[0-9a-f]{23}$
+      example: 001f8e7d6c5b4a39281706f5e4d
     Violation:
       type: object
       properties:
@@ -308,6 +234,80 @@ components:
       - field: emailAddress
         message: must not be null
         code: 20002
+  responses:
+    NotFound:
+      description: Not Found
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          example:
+            type: https://developers.avayacloud.com/errors/resource-not-found
+            title: Resource Not Found
+            status: 404
+            detail: workflowId 'wf_123abc' does not exist
+            requestId: req_xyz789
+            timestamp: '2025-12-08T10:30:05Z'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          example:
+            type: https://developers.avayacloud.com/errors/unauthorized
+            title: Unauthorized
+            status: 401
+            detail: Bearer token expired at 2025-12-08T10:15:00Z. Request a new token.
+            requestId: req_xyz789
+            timestamp: '2025-12-08T10:30:05Z'
+    InternalServerError:
+      description: Internal Server Error
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          example:
+            type: https://developers.avayacloud.com/errors/internal-error
+            title: Internal Server Error
+            status: 500
+            detail: An unexpected error occurred while processing your request
+            requestId: req_xyz789
+            timestamp: '2025-12-08T10:30:05Z'
+    BadRequest:
+      description: Bad Request
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          example:
+            type: https://developers.avayacloud.com/errors/constraint-violation
+            title: Constraint Violation
+            status: 400
+            detail: Request contains invalid or missing fields
+            violations:
+            - field: accountId
+              message: must match "^[a-zA-Z]{6}$"
+              code: 20006
+    Forbidden:
+      description: Forbidden
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          example:
+            type: https://developers.avayacloud.com/errors/forbidden
+            title: Forbidden
+            status: 403
+            detail: 'Missing required scope: ''workflows:execute''. Your token has: ''workflows:read'''
+            requestId: req_xyz789
+            timestamp: '2025-12-08T10:30:05Z'
+    ConstraintViolation:
+      description: Constraint Violation
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
   parameters:
     groupId:
       name: groupId

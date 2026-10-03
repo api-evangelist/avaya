@@ -344,71 +344,57 @@ paths:
         '500':
           $ref: '#/components/responses/InternalServerError'
 components:
-  responses:
-    MethodNotAllowed:
-      description: Method Not Allowed
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorMethodNotAllowed'
-    ErrorConstraintViolation:
-      description: Constraint Violation
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorConstraintViolation'
-    InternalServerError:
-      description: All other application errors
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorInternalServerError'
-    Unauthorized:
-      description: Unauthorized
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorUnauthorized'
-    Conflict:
-      description: Conflict
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorConflict'
-    NotFound:
-      description: Not Found
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorNotFound'
-    Forbidden:
-      description: Forbidden
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorForbidden'
   examples:
+    HybridCloudGatewayRequest:
+      description: Request model for creating an Avaya Hybrid Cloud Gateway
+      value:
+        name: AHCG123
+        description: Description of the Avaya Hybrid Cloud Gateway
+        systemId: fa703a3a-3dfb-4606-ae79-fd0fe0be3e64
+        publicKey: MIIBOgIBAAJBAKj34GkxFhD90vcNLYLInFEX6Ppy1tPf9Cnzj4p4WGeKLs1Pt8QuKUpRKfFLfRYC9AIKjbJTWit+CqvjWYzvQwECAwEAAQJAIJLixBy2qpFoS4DSmoEm
+        publicKeyAlgorithm: ES256
+        locationCode: IN-MH
+        sessionManagerFqdnList:
+        - sm1906.avaya.com
+        - sm-stage224.avaya.com
+        - sm_prod2201.avaya.com
+        isMediaLatchingEnable: true
+        isTermsAndConditionsAccepted: true
+    ErrorConflict:
+      description: Conflict
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#conflict
+        title: Conflict
+        status: 409
+        detail: A resource with the same unique constraint values already exists.
+        violations:
+        - field: name
+          message: Communication Manager with same name already exists.
+        - field: hostname
+          message: Communication Manager with same hostname already exists.
+    ErrorMethodNotAllowed:
+      description: Method not allowed
+      value:
+        title: Method not allowed
+        status: 405
+        detail: The request calls an HTTP method that is not supported at the resource.
+    HybridCloudGateway:
+      description: Details of a single Avaya Hybrid Cloud Gateway
+      value:
+        id: 41c6ef0d-5470-406e-ace2-6dc442b99318
+        name: AHCG123
+        description: Description of the Avaya Hybrid Cloud Gateway
+        systemId: fa703a3a-3dfb-4606-ae79-fd0fe0be3e64
+        publicKey: MIIBOgIBAAJBAKj34GkxFhD90vcNLYLInFEX6Ppy1tPf9Cnzj4p4WGeKLs1Pt8QuKUpRKfFLfRYC9AIKjbJTWit+CqvjWYzvQwECAwEAAQJAIJLixBy2qpFoS4DSmoEm
+        publicKeyAlgorithm: ES256
+        locationCode: IN-MH
+        sessionManagerFqdnList":
+        - sm1906.avaya.com
+        - sm-stage224.avaya.com
+        - sm_prod2201.avaya.com
+        isMediaLatchingEnable: true
+        isTermsAndConditionsAccepted: true
+        status: IN_PROGRESS
     HybridCloudGateways:
       description: List of all Avaya Hybrid Cloud Gateways
       value:
@@ -439,11 +425,59 @@ components:
           isMediaLatchingEnable: true
           isTermsAndConditionsAccepted: true
           status: IN_PROGRESS
+    ErrorNotFound:
+      description: Not Found
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#resource-not-found
+        title: Resource Not Found
+        status: 404
+        detail: Either there is no API method associated with the URL path of the request, or the request refers to one or more resources that were not found.
+    ErrorUnauthorized:
+      description: Unauthorized
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#unauthorized
+        title: Unauthorized
+        status: 401
+        detail: This operation requires authentication. See https://developers.avayacloud.com/onecloud-ccaas/docs/how-to-authenticate-with-ccaas-apis
+    UpdateHybridCloudGatewaySystemConfig:
+      description: Request model for updating an Avaya Hybrid Cloud Gateway Config
+      value:
+        publicKey: MIIBOgIBAAJBAKj34GkxFhD90vcNLYLInFEX6Ppy1tPf9Cnzj4p4WGeKLs1Pt8QuKUpRKfFLfRYC9AIKjbJTWit+CqvjWYzvQwECAwEAAQJAIJLixBy2qpFoS4DSmoEm
+        publicKeyAlgorithm: ES256
+    ErrorInternalServerError:
+      description: Server Error
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#server-error
+        title: Server Error
+        status: 500
+        detail: An internal server error was encountered.
+    ErrorForbidden:
+      description: Forbidden
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#forbidden
+        title: Forbidden
+        status: 403
+        detail: According to the access control policy the current user does not have permission to access this resource.
+    ErrorConstraintViolation:
+      description: Constraint Violation
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#constraint-violation
+        title: Constraint Violation
+        status: 400
+        detail: A problem that indicates a syntactically correct, yet semantically illegal request. The Server can not process this request until the client resolves the semantic errors described in the violations section.
+        violations:
+        - field: accountId
+          message: must match "^[a-zA-Z]{6}$"
+          code: 20006
     HybridCloudGatewaySystemResponse:
       description: Response model for updating an Avaya Hybrid Cloud Gateway Config
       value:
         status: SUCCESS
         message: Successfully updated the system configuration
+    AvayaHybridCloudGatewayAsyncResponse:
+      description: A HATEOAS url that is a reference to the Avaya Hybrid Cloud Gateway under operation.
+      value:
+        url: /api/admin/voice/v1/accounts/NCWBNY/hybrid-cloud-gateways/5e9be49a-32d3-4927-83c7-7b0952798028
     UpdateHybridCloudGatewayRequest:
       description: Request model for updating an Avaya Hybrid Cloud Gateway
       value:
@@ -457,105 +491,148 @@ components:
         - sm-stage224.avaya.com
         isMediaLatchingEnable: true
         isTermsAndConditionsAccepted: true
-    ErrorForbidden:
-      description: Forbidden
-      value:
-        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#forbidden
-        title: Forbidden
-        status: 403
-        detail: According to the access control policy the current user does not have permission to access this resource.
-    ErrorConflict:
+  responses:
+    NotFound:
+      description: Not Found
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorNotFound'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorUnauthorized'
+    Conflict:
       description: Conflict
-      value:
-        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#conflict
-        title: Conflict
-        status: 409
-        detail: A resource with the same unique constraint values already exists.
-        violations:
-        - field: name
-          message: Communication Manager with same name already exists.
-        - field: hostname
-          message: Communication Manager with same hostname already exists.
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorConflict'
+    InternalServerError:
+      description: All other application errors
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorInternalServerError'
+    Forbidden:
+      description: Forbidden
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorForbidden'
+    MethodNotAllowed:
+      description: Method Not Allowed
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorMethodNotAllowed'
     ErrorConstraintViolation:
       description: Constraint Violation
-      value:
-        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#constraint-violation
-        title: Constraint Violation
-        status: 400
-        detail: A problem that indicates a syntactically correct, yet semantically illegal request. The Server can not process this request until the client resolves the semantic errors described in the violations section.
-        violations:
-        - field: accountId
-          message: must match "^[a-zA-Z]{6}$"
-          code: 20006
-    ErrorNotFound:
-      description: Not Found
-      value:
-        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#resource-not-found
-        title: Resource Not Found
-        status: 404
-        detail: Either there is no API method associated with the URL path of the request, or the request refers to one or more resources that were not found.
-    HybridCloudGateway:
-      description: Details of a single Avaya Hybrid Cloud Gateway
-      value:
-        id: 41c6ef0d-5470-406e-ace2-6dc442b99318
-        name: AHCG123
-        description: Description of the Avaya Hybrid Cloud Gateway
-        systemId: fa703a3a-3dfb-4606-ae79-fd0fe0be3e64
-        publicKey: MIIBOgIBAAJBAKj34GkxFhD90vcNLYLInFEX6Ppy1tPf9Cnzj4p4WGeKLs1Pt8QuKUpRKfFLfRYC9AIKjbJTWit+CqvjWYzvQwECAwEAAQJAIJLixBy2qpFoS4DSmoEm
-        publicKeyAlgorithm: ES256
-        locationCode: IN-MH
-        sessionManagerFqdnList":
-        - sm1906.avaya.com
-        - sm-stage224.avaya.com
-        - sm_prod2201.avaya.com
-        isMediaLatchingEnable: true
-        isTermsAndConditionsAccepted: true
-        status: IN_PROGRESS
-    ErrorUnauthorized:
-      description: Unauthorized
-      value:
-        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#unauthorized
-        title: Unauthorized
-        status: 401
-        detail: This operation requires authentication. See https://developers.avayacloud.com/onecloud-ccaas/docs/how-to-authenticate-with-ccaas-apis
-    HybridCloudGatewayRequest:
-      description: Request model for creating an Avaya Hybrid Cloud Gateway
-      value:
-        name: AHCG123
-        description: Description of the Avaya Hybrid Cloud Gateway
-        systemId: fa703a3a-3dfb-4606-ae79-fd0fe0be3e64
-        publicKey: MIIBOgIBAAJBAKj34GkxFhD90vcNLYLInFEX6Ppy1tPf9Cnzj4p4WGeKLs1Pt8QuKUpRKfFLfRYC9AIKjbJTWit+CqvjWYzvQwECAwEAAQJAIJLixBy2qpFoS4DSmoEm
-        publicKeyAlgorithm: ES256
-        locationCode: IN-MH
-        sessionManagerFqdnList:
-        - sm1906.avaya.com
-        - sm-stage224.avaya.com
-        - sm_prod2201.avaya.com
-        isMediaLatchingEnable: true
-        isTermsAndConditionsAccepted: true
-    AvayaHybridCloudGatewayAsyncResponse:
-      description: A HATEOAS url that is a reference to the Avaya Hybrid Cloud Gateway under operation.
-      value:
-        url: /api/admin/voice/v1/accounts/NCWBNY/hybrid-cloud-gateways/5e9be49a-32d3-4927-83c7-7b0952798028
-    UpdateHybridCloudGatewaySystemConfig:
-      description: Request model for updating an Avaya Hybrid Cloud Gateway Config
-      value:
-        publicKey: MIIBOgIBAAJBAKj34GkxFhD90vcNLYLInFEX6Ppy1tPf9Cnzj4p4WGeKLs1Pt8QuKUpRKfFLfRYC9AIKjbJTWit+CqvjWYzvQwECAwEAAQJAIJLixBy2qpFoS4DSmoEm
-        publicKeyAlgorithm: ES256
-    ErrorMethodNotAllowed:
-      description: Method not allowed
-      value:
-        title: Method not allowed
-        status: 405
-        detail: The request calls an HTTP method that is not supported at the resource.
-    ErrorInternalServerError:
-      description: Server Error
-      value:
-        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#server-error
-        title: Server Error
-        status: 500
-        detail: An internal server error was encountered.
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorConstraintViolation'
   schemas:
+    HybridCloudGatewayResponse:
+      title: HybridCloudGatewayResponse
+      type: object
+      description: Represents the model used to get details of a single Avaya Hybrid Cloud Gateway.
+      properties:
+        id:
+          type: string
+          description: The unique id of Avaya Hybrid Cloud Gateway
+          readOnly: true
+          format: uuid
+          example: 41c6ef0d-5470-406e-ace2-6dc442b99318
+        name:
+          type: string
+          example: AHCG123
+          minLength: 3
+          maxLength: 255
+          pattern: ^[a-zA-Z0-9\p{L}\-\_\.\ ]+$
+        description:
+          type: string
+          example: Description of the Avaya Hybrid Cloud Gateway
+          maxLength: 1024
+          pattern: (^$|^[a-zA-Z0-9\p{L}\(\)\-\_\.\ \n]+$)
+        systemId:
+          type: string
+          description: System-Id of Avaya Hybrid Cloud Gateway
+          format: uuid
+          example: fa703a3a-3dfb-4606-ae79-fd0fe0be3e64
+        publicKey:
+          type: string
+          example: MIIBOgIBAAJBAKj34GkxFhD90vcNLYLInFEX6Ppy1tPf9Cnzj4p4WGeKLs1Pt8QuKUpRKfFLfRYC9AIKjbJTWit+CqvjWYzvQwECAwEAAQJAIJLixBy2qpFoS4DSmoEm
+          description: Public key of the Avaya Hybrid Cloud Gateway.
+          minLength: 1
+          maxLength: 4096
+        publicKeyAlgorithm:
+          type: string
+          description: Algorithm for the public key. This is a mandatory field for configuring a Hyrbid Cloud Gateway. Currently it is internally set to ES256, if not specified.
+          enum:
+          - ES256
+          default: ES256
+          example: ES256
+        locationCode:
+          type: string
+          example: IN-MH
+          description: 'ISO 3166-2 location code for country and region. For various country and region codes, check : https://www.iso.org/obp/ui/#search'
+          minLength: 1
+          maxLength: 7
+        sessionManagerFqdnList:
+          type: array
+          items:
+            type: string
+            maxLength: 255
+            pattern: ^[a-zA-Z0-9\p{L}\-\_\/\:\.\ ]+$
+          minItems: 1
+          maxItems: 50
+          description: List of Fully-Qualified Domain-Name (FQDN) of all the deployed Session Managers for the tenant.
+          example:
+          - sm1906.avaya.com
+          - sm-stage224.avaya.com
+          - sm_prod2201.avaya.com
+        isMediaLatchingEnable:
+          type: boolean
+          description: ''
+          example: true
+          default: true
+        isTermsAndConditionsAccepted:
+          type: boolean
+          description: Avaya cloud solutions are designed to scale while maintaining deep security and high availability. This cloud solution supports secure media, which is recommended by Avaya. If secure media is disabled on your existing system, media traffic will flow on the internet and through Avaya servers unencrypted. The security benefits of encrypted traffic will not be available. For more information, please see https://www.avaya.com/en/trust-center-cloud-security/
+          example: true
+          default: false
+        status:
+          type: string
+          description: Status of the object under operation
+          enum:
+          - IN_PROGRESS
+          - FAILED
+          - SUCCESS
+          example: IN_PROGRESS
     HybridCloudGateway:
       title: HybridCloudGateway
       type: object
@@ -717,108 +794,6 @@ components:
           - field: accountId
             message: must match "^[a-zA-Z]{6}$"
             code: 20006
-    HybridCloudGatewayResponse:
-      title: HybridCloudGatewayResponse
-      type: object
-      description: Represents the model used to get details of a single Avaya Hybrid Cloud Gateway.
-      properties:
-        id:
-          type: string
-          description: The unique id of Avaya Hybrid Cloud Gateway
-          readOnly: true
-          format: uuid
-          example: 41c6ef0d-5470-406e-ace2-6dc442b99318
-        name:
-          type: string
-          example: AHCG123
-          minLength: 3
-          maxLength: 255
-          pattern: ^[a-zA-Z0-9\p{L}\-\_\.\ ]+$
-        description:
-          type: string
-          example: Description of the Avaya Hybrid Cloud Gateway
-          maxLength: 1024
-          pattern: (^$|^[a-zA-Z0-9\p{L}\(\)\-\_\.\ \n]+$)
-        systemId:
-          type: string
-          description: System-Id of Avaya Hybrid Cloud Gateway
-          format: uuid
-          example: fa703a3a-3dfb-4606-ae79-fd0fe0be3e64
-        publicKey:
-          type: string
-          example: MIIBOgIBAAJBAKj34GkxFhD90vcNLYLInFEX6Ppy1tPf9Cnzj4p4WGeKLs1Pt8QuKUpRKfFLfRYC9AIKjbJTWit+CqvjWYzvQwECAwEAAQJAIJLixBy2qpFoS4DSmoEm
-          description: Public key of the Avaya Hybrid Cloud Gateway.
-          minLength: 1
-          maxLength: 4096
-        publicKeyAlgorithm:
-          type: string
-          description: Algorithm for the public key. This is a mandatory field for configuring a Hyrbid Cloud Gateway. Currently it is internally set to ES256, if not specified.
-          enum:
-          - ES256
-          default: ES256
-          example: ES256
-        locationCode:
-          type: string
-          example: IN-MH
-          description: 'ISO 3166-2 location code for country and region. For various country and region codes, check : https://www.iso.org/obp/ui/#search'
-          minLength: 1
-          maxLength: 7
-        sessionManagerFqdnList:
-          type: array
-          items:
-            type: string
-            maxLength: 255
-            pattern: ^[a-zA-Z0-9\p{L}\-\_\/\:\.\ ]+$
-          minItems: 1
-          maxItems: 50
-          description: List of Fully-Qualified Domain-Name (FQDN) of all the deployed Session Managers for the tenant.
-          example:
-          - sm1906.avaya.com
-          - sm-stage224.avaya.com
-          - sm_prod2201.avaya.com
-        isMediaLatchingEnable:
-          type: boolean
-          description: ''
-          example: true
-          default: true
-        isTermsAndConditionsAccepted:
-          type: boolean
-          description: Avaya cloud solutions are designed to scale while maintaining deep security and high availability. This cloud solution supports secure media, which is recommended by Avaya. If secure media is disabled on your existing system, media traffic will flow on the internet and through Avaya servers unencrypted. The security benefits of encrypted traffic will not be available. For more information, please see https://www.avaya.com/en/trust-center-cloud-security/
-          example: true
-          default: false
-        status:
-          type: string
-          description: Status of the object under operation
-          enum:
-          - IN_PROGRESS
-          - FAILED
-          - SUCCESS
-          example: IN_PROGRESS
-    AsynchronousOperationResponse:
-      type: object
-      description: Represents the response for an asynchronous operation that simply returns a HATEOAS url, that provides a reference to the object under operation
-      properties:
-        url:
-          type: string
-          maxLength: 2048
-    HybridCloudGateways:
-      title: HybridCloudGateways
-      type: object
-      description: List of Hybrid Cloud Gateways
-      properties:
-        resources:
-          type: array
-          maxItems: 50
-          items:
-            $ref: '#/components/schemas/HybridCloudGatewayResponse'
-    HybridCloudGatewaySystemResponse:
-      type: object
-      description: Hybrid Cloud Gateway Systems Response
-      properties:
-        status:
-          type: string
-        message:
-          type: string
     UpdateHybridCloudGatewayRequest:
       title: UpdateHybridCloudGatewayRequest
       type: object
@@ -887,6 +862,21 @@ components:
       - locationCode
       - sessionManagerFqdnList
       - isTermsAndConditionsAccepted
+    HybridCloudGatewaySystemResponse:
+      type: object
+      description: Hybrid Cloud Gateway Systems Response
+      properties:
+        status:
+          type: string
+        message:
+          type: string
+    AsynchronousOperationResponse:
+      type: object
+      description: Represents the response for an asynchronous operation that simply returns a HATEOAS url, that provides a reference to the object under operation
+      properties:
+        url:
+          type: string
+          maxLength: 2048
     UpdateHybridCloudGatewaySystemConfig:
       title: UpdateHybridCloudGatewaySystemConfig
       type: object
@@ -907,6 +897,16 @@ components:
           example: ES256
       required:
       - publicKey
+    HybridCloudGateways:
+      title: HybridCloudGateways
+      type: object
+      description: List of Hybrid Cloud Gateways
+      properties:
+        resources:
+          type: array
+          maxItems: 50
+          items:
+            $ref: '#/components/schemas/HybridCloudGatewayResponse'
   parameters:
     hybridCloudGatewayId:
       name: hybridCloudGatewayId
