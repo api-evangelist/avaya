@@ -3296,6 +3296,9 @@ apis:
   - type: Postman
     url: https://www.postman.com/avaya-axp/avaya-experience-platform
 common:
+- type: CapabilityMap
+  url: capabilities/avaya-capability-edges.yml
+  name: Avaya Business Capability Map
 - type: Website
   url: https://www.avaya.com/en/
 - type: DeveloperPortal

@@ -1,0 +1,160 @@
+slug: avaya
+provider: Avaya
+generated_by: planning/capability-mapping/scripts/classify_capabilities.py
+model: claude-opus-5
+frame:
+- Software & Technology
+min_confidence: 0.7
+capability_model:
+  source: https://github.com/vincentmakes/turbo-ea-capabilities
+  license: CC-BY-4.0
+  attribution: Turbo EA Capabilities by Vincent Verdet — Turbo EA, https://github.com/vincentmakes/turbo-ea-capabilities,
+    CC BY 4.0
+  notice: NOTICE
+edge_count: 14
+edges:
+- tag: Subscriptions
+  spec_file: avaya-subscriptions-api-openapi.yml
+  capability_id: BC-4270.80
+  capability_id_l1: BC-4270
+  capability_name: Webhook & Event Subscription Management
+  confidence: 0.85
+  evidence: POST /accounts/{accountId}/subscriptions  createDigitalWebhookSubscription  "Create Subscription";
+    schemas SubscriptionEventType, EngagementCreatedEvent, EventData
+  reason: Despite the commercial-sounding tag, the operations manage outbound webhook/event-notification
+    subscriptions (create, renew, delete, event types), which is exactly BC-4270.80 Webhook & Event Subscription
+    Management. No billing or commercial subscription semantics present.
+- tag: Queue
+  spec_file: avaya-queue-api-openapi.yml
+  capability_id: BC-430.30
+  capability_id_l1: BC-430
+  capability_name: Contact Centre Operations Management
+  confidence: 0.8
+  evidence: '"Queue''s are used to identify a pool of contact center agents for which Customer engagements
+    can be matched and routed"'
+  reason: Explicit contact-centre queue administration for agent pools and engagement routing — core contact-centre
+    operations management.
+- tag: Agents
+  spec_file: avaya-agents-api-openapi.yml
+  capability_id: BC-430.30
+  capability_id_l1: BC-430
+  capability_name: Contact Centre Operations Management
+  confidence: 0.75
+  evidence: POST /AgentStatusHistory Get agent status history; PUT /UpdateAgentStatus Update agent status
+  reason: Operations read and update contact-centre agent states and activity within an outbound campaign
+    platform — this is contact-centre operations (agent state/workforce monitoring), not HR or sales-agent
+    management.
+- tag: Engagements
+  spec_file: avaya-engagements-api-openapi.yml
+  capability_id: BC-430.10
+  capability_id_l1: BC-430
+  capability_name: Customer Inquiry Management
+  confidence: 0.75
+  evidence: '''This API facilitates session-based communication. Only "Chat" channel is supported now.'';
+    sendDigitalMessage ''Send Message''; joinDigitalEngagement ''Join Engagement'''
+  reason: Creation, joining, messaging and disconnection of digital chat engagements between customers
+    and agents is inbound customer contact handling.
+- tag: Queues
+  spec_file: avaya-queues-api-openapi.yml
+  capability_id: BC-430.30
+  capability_id_l1: BC-430
+  capability_name: Contact Centre Operations Management
+  confidence: 0.75
+  evidence: '"The Queue Management API allows for the programmatic creation, retrieval, updating, and
+    deletion of queues"; schemas "EnableWrapUp", "AgentAssistEnabled", "PostCallModalVoiceCallbackEnabled"'
+  reason: Queue configuration including wrap-up, agent assist and post-call handling — contact-centre
+    operational setup.
+- tag: User Password Policy
+  spec_file: avaya-user-password-policy-api-openapi.yml
+  capability_id: BC-620.20
+  capability_id_l1: BC-620
+  capability_name: Identity & Access Management
+  confidence: 0.74
+  evidence: GET /accounts/{accountId}/password-policy  getPasswordPolicy ... PUT updatePasswordPolicy  Update
+    Password Policy
+  reason: Reads and updates the account's credential policy (PasswordPolicy schema). Credential rules
+    for user accounts sit squarely in identity & access management; could alternatively be read as security
+    governance, hence moderate confidence.
+- tag: User
+  spec_file: avaya-user-api-openapi.yml
+  capability_id: BC-620.20
+  capability_id_l1: BC-620
+  capability_name: Identity & Access Management
+  confidence: 0.72
+  evidence: 'POST /accounts/{accountId}/users  createUser  Create User ... schemas: Role, UserFeatures,
+    UserResourcePartition'
+  reason: Full CRUD plus search over platform user accounts, roles and resource partitions — administrative
+    user provisioning and access scoping, i.e. identity & access management for the CCaaS tenant rather
+    than any customer-facing business process.
+- tag: Agent Location
+  spec_file: avaya-agent-location-api-openapi.yml
+  capability_id: BC-430.30
+  capability_id_l1: BC-430
+  capability_name: Contact Centre Operations Management
+  confidence: 0.7
+  evidence: 'POST /accounts/{accountId}/agent-locations  Create Agent Location; schemas: AgentLocationOutboundRoutingRule,
+    AgentLocationUser'
+  reason: Administration of contact-centre voice agent locations and their outbound routing rules — configuration
+    supporting contact-centre telephony operations rather than any other candidate.
+- tag: Dimensions
+  spec_file: avaya-dimensions-api-openapi.yml
+  capability_id: BC-610.50
+  capability_id_l1: BC-610
+  capability_name: Analytics & BI Management
+  confidence: 0.7
+  evidence: '''Listing the Dimension names for an Account... Listing the Report names for an Account.
+    - Retrieving the content of a specific Report.'''
+  reason: Exposes historical analytics dimensions and reports — reporting and BI delivery over contact-centre
+    data.
+- tag: Skills
+  spec_file: avaya-skills-api-openapi.yml
+  capability_id: BC-430.30
+  capability_id_l1: BC-430
+  capability_name: Contact Centre Operations Management
+  confidence: 0.7
+  evidence: '"Outbound API allows you to manage outbound call campaigns, records, agents, skills, and
+    Do Not Call lists"; "Add or edit a user in a skill"'
+  reason: Skill definitions with agent (user) and campaign-initiative assignment are the skills-based
+    routing/agent-allocation configuration of a contact centre, which falls under contact centre operations
+    management. Not HR skills management — the entities are call-campaign routing constructs.
+- tag: Timetable
+  spec_file: avaya-timetable-api-openapi.yml
+  capability_id: BC-430.30
+  capability_id_l1: BC-430
+  capability_name: Contact Centre Operations Management
+  confidence: 0.7
+  evidence: '"Timetable is a configuration of working hours for a specific Contact Center account ...
+    as well as holidays, which are non-working days"'
+  reason: Configuration of contact-centre hours of operation and holiday schedules is an operational-running
+    concern of the contact centre, covered by BC-430.30 Contact Centre Operations Management.
+- tag: Transcript
+  spec_file: avaya-transcript-api-openapi.yml
+  capability_id: BC-430
+  capability_id_l1: BC-430
+  capability_name: Customer Service Management
+  confidence: 0.7
+  evidence: '"API to save transcript of a dialog that captures messages exchanged between different participants";
+    schemas Sentiment, Intent, Participant'
+  reason: Persisting transcripts of customer engagements/dialogs (with sentiment and intent metadata)
+    is part of customer service interaction handling and record-keeping. L1 only, since it spans inquiry
+    handling, contact-centre operations and feedback analysis.
+- tag: Transcription
+  spec_file: avaya-transcription-api-openapi.yml
+  capability_id: BC-430
+  capability_id_l1: BC-430
+  capability_name: Customer Service Management
+  confidence: 0.7
+  evidence: '"These APIs allow you to programmatically manage conversation transcripts and create interactions
+    in Avaya Infinity"; "Retrieve email transcript"'
+  reason: Managing conversation transcripts attached to contact-centre interactions is customer service
+    interaction record management. L1 only because the surface does not pin a single sub-capability.
+- tag: Transcripts
+  spec_file: avaya-transcripts-api-openapi.yml
+  capability_id: BC-430
+  capability_id_l1: BC-430
+  capability_name: Customer Service Management
+  confidence: 0.7
+  evidence: '"enables you to send and retrieve transcript messages associated with interactions or workflow
+    sessions in the Avaya Infinity contact center platform"'
+  reason: Transcript messages tied to contact-centre interactions are customer service interaction records.
+    Mapped at L1 given the sub-capability is not clearly determined.
