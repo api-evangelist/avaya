@@ -86,20 +86,6 @@ paths:
           $ref: '#/components/responses/InternalServer'
 components:
   examples:
-    ErrorUnauthorized:
-      description: Unauthorized
-      value:
-        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#unauthorized
-        title: Unauthorized
-        status: 401
-        detail: This operation requires authentication. See https://developers.avayacloud.com/onecloud-ccaas/docs/how-to-authenticate-with-ccaas-apis
-    ErrorInternalServerError:
-      description: Server Error
-      value:
-        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#server-error
-        title: Server Error
-        status: 500
-        detail: An internal server error was encountered.
     ErrorForbidden:
       description: Forbidden
       value:
@@ -107,6 +93,20 @@ components:
         title: Forbidden
         status: 403
         detail: According to the access control policy the current user and/or accountId does not have permission to access this resource.
+    ErrorNotFound:
+      description: Not Found
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#resource-not-found
+        title: Resource Not Found
+        status: 404
+        detail: Resource not found.
+    ErrorUnauthorized:
+      description: Unauthorized
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#unauthorized
+        title: Unauthorized
+        status: 401
+        detail: This operation requires authentication. See https://developers.avayacloud.com/onecloud-ccaas/docs/how-to-authenticate-with-ccaas-apis
     ErrorConstraintViolation:
       description: Constraint Violation
       value:
@@ -117,13 +117,13 @@ components:
         violations:
         - field: accountId
           message: must not be null
-    ErrorNotFound:
-      description: Not Found
+    ErrorInternalServerError:
+      description: Server Error
       value:
-        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#resource-not-found
-        title: Resource Not Found
-        status: 404
-        detail: Resource not found.
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#server-error
+        title: Server Error
+        status: 500
+        detail: An internal server error was encountered.
   responses:
     NotFound:
       description: Not Found
@@ -134,15 +134,6 @@ components:
           examples:
             default:
               $ref: '#/components/examples/ErrorNotFound'
-    Unauthorized:
-      description: Unauthorized
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorUnauthorized'
     BadRequest:
       description: BadRequest
       content:
@@ -152,15 +143,15 @@ components:
           examples:
             default:
               $ref: '#/components/examples/ErrorConstraintViolation'
-    Forbidden:
-      description: Forbidden
+    Unauthorized:
+      description: Unauthorized
       content:
         application/problem+json:
           schema:
             $ref: '#/components/schemas/Problem'
           examples:
             default:
-              $ref: '#/components/examples/ErrorForbidden'
+              $ref: '#/components/examples/ErrorUnauthorized'
     InternalServer:
       description: Internal Server Error
       content:
@@ -170,6 +161,37 @@ components:
           examples:
             default:
               $ref: '#/components/examples/ErrorInternalServerError'
+    Forbidden:
+      description: Forbidden
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorForbidden'
+  parameters:
+    measureProducerId:
+      in: path
+      name: measureProducerId
+      description: MeasureProducer unique Id.
+      required: true
+      schema:
+        type: string
+        minLength: 1
+        maxLength: 36
+        example: Queue_itd_1.0.0
+    accountId:
+      in: path
+      name: accountId
+      description: The unique 6 character internal id that represents the customer account.
+      required: true
+      schema:
+        type: string
+        minLength: 6
+        maxLength: 6
+        pattern: ^[a-zA-Z]{6}$
+        example: ABCDEF
   schemas:
     Problem:
       type: object
@@ -256,28 +278,6 @@ components:
           - field: accountId
             message: must match "^[a-zA-Z]{6}$"
             code: 20006
-  parameters:
-    accountId:
-      in: path
-      name: accountId
-      description: The unique 6 character internal id that represents the customer account.
-      required: true
-      schema:
-        type: string
-        minLength: 6
-        maxLength: 6
-        pattern: ^[a-zA-Z]{6}$
-        example: ABCDEF
-    measureProducerId:
-      in: path
-      name: measureProducerId
-      description: MeasureProducer unique Id.
-      required: true
-      schema:
-        type: string
-        minLength: 1
-        maxLength: 36
-        example: Queue_itd_1.0.0
   securitySchemes:
     BearerAuth:
       type: http

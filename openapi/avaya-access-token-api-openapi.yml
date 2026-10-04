@@ -228,27 +228,6 @@ paths:
           description: Your Infinity instance subdomain (e.g., avaya1234, acme-corp-prod)
 components:
   examples:
-    ErrorUnauthorized:
-      description: Unauthorized
-      value:
-        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#unauthorized
-        title: Unauthorized
-        status: 401
-        detail: This operation requires authentication. See https://developers.avayacloud.com/onecloud-ccaas/docs/how-to-authenticate-with-ccaas-apis
-    ErrorConflict:
-      description: Conflict
-      value:
-        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#conflict
-        title: Conflict
-        status: 409
-        detail: Indicates that the resource the client is trying to create already exists or some conflict when processing the request.
-    ErrorInternalServerError:
-      description: Server Error
-      value:
-        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#server-error
-        title: Server Error
-        status: 500
-        detail: An internal server error was encountered.
     ErrorForbidden:
       description: Forbidden
       value:
@@ -256,20 +235,13 @@ components:
         title: Forbidden
         status: 403
         detail: According to the access control policy the current user and/or accountId does not have permission to access this resource.
-    ErrorConstraintViolation:
-      description: Constraint Violation
-      value:
-        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#constraint-violation
-        title: Constraint Violation
-        status: 400
-        detail: A problem that indicates a syntactically correct, yet semantically illegal request. The Server can not process this request until the client resolves the semantic errors described in the violations section.
-    ErrorUnsupportedMediaType:
-      description: Unsupported Media Type
+    ErrorConflict:
+      description: Conflict
       value:
         type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#conflict
         title: Conflict
-        status: 415
-        detail: The media-type in Content-type of the request is not supported by the server.
+        status: 409
+        detail: Indicates that the resource the client is trying to create already exists or some conflict when processing the request.
     ErrorNotFound:
       description: Not Found
       value:
@@ -277,11 +249,34 @@ components:
         title: Not Found
         status: 404
         detail: Either there is no API method associated with the URL path of the request, or the request refers to one or more resources that were not found.
-    ErrorUnauthorized_2:
-      summary: Invalid credentials
+    ErrorUnauthorized:
+      description: Unauthorized
       value:
-        error: invalid_client
-        error_description: Invalid client or Invalid client credentials
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#unauthorized
+        title: Unauthorized
+        status: 401
+        detail: This operation requires authentication. See https://developers.avayacloud.com/onecloud-ccaas/docs/how-to-authenticate-with-ccaas-apis
+    ErrorUnsupportedMediaType:
+      description: Unsupported Media Type
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#conflict
+        title: Conflict
+        status: 415
+        detail: The media-type in Content-type of the request is not supported by the server.
+    ErrorConstraintViolation:
+      description: Constraint Violation
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#constraint-violation
+        title: Constraint Violation
+        status: 400
+        detail: A problem that indicates a syntactically correct, yet semantically illegal request. The Server can not process this request until the client resolves the semantic errors described in the violations section.
+    ErrorInternalServerError:
+      description: Server Error
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#server-error
+        title: Server Error
+        status: 500
+        detail: An internal server error was encountered.
     GenerateAccessTokenResponse:
       summary: Successful token generation
       value:
@@ -289,18 +284,106 @@ components:
         expires_in: 900
         token_type: Bearer
         scope: email profile
+    ErrorUnauthorized_2:
+      summary: Invalid credentials
+      value:
+        error: invalid_client
+        error_description: Invalid client or Invalid client credentials
+    ErrorConstraintViolation_2:
+      summary: Unsupported grant type
+      value:
+        error: unsupported_grant_type
+        error_description: Unsupported grant type. Only 'client_credentials' is supported.
     GenerateAccessToken:
       summary: Generate access token request
       value:
         grant_type: client_credentials
         client_id: messaging-api-123e4567-e89b-12d3-a456-426614174000
         client_secret: dFdiohFsZXCamxUmRS680KiQBqmnu6Y9
-    ErrorConstraintViolation_2:
-      summary: Unsupported grant type
-      value:
-        error: unsupported_grant_type
-        error_description: Unsupported grant type. Only 'client_credentials' is supported.
   schemas:
+    GenerateTokenResponse:
+      description: Generate token response.
+      type: object
+      properties:
+        access_token:
+          description: Access tokens are used in token-based authentication to allow an application to access an API
+          type: string
+          example: eett4g66678jgde....
+        expires_in:
+          description: It displayes time in sec
+          type: integer
+          format: int32
+          example: 900
+        refresh_token:
+          description: Displays new refresh token
+          type: string
+          example: eyJhbGciOiJIUzI1...
+    GenerateTokenRequest:
+      type: object
+      description: reuest payload
+      properties:
+        grant_type:
+          type: string
+          example: client_credentials
+        client_id:
+          type: string
+          example: client_id
+        client_secret:
+          type: string
+          example: client_secret
+      required:
+      - grant_type
+      - client_id
+      - client_secret
+    RefreshTokenRequest:
+      type: object
+      description: request payload
+      properties:
+        grant_type:
+          type: string
+          example: refresh_token
+        client_id:
+          type: string
+          example: client_id
+        client_secret:
+          type: string
+          example: client_secret
+        refresh_token:
+          description: Input refresh token acquired from previous generate access token response
+          type: string
+          example: eyJhbGciOiJIUzI1...
+      required:
+      - grant_type
+      - client_id
+      - client_secret
+      - refresh_token
+    ResourceOwnerPasswordRequest:
+      type: object
+      description: request payload
+      properties:
+        grant_type:
+          type: string
+          example: password
+        client_id:
+          type: string
+          example: client_id
+        client_secret:
+          type: string
+          example: client_secret
+        username:
+          type: string
+          format: string
+          example: user-account
+        password:
+          type: string
+          format: string
+          example: password1
+      required:
+      - grant_type
+      - client_id
+      - client_secret
+      - username
+      - password
     Problem:
       type: object
       description: '<b>Problem Detail</b> as a way to carry machine-readable details of errors in a HTTP response to avoid the need to define new error response formats for HTTP APIs <a href="https://tools.ietf.org/html/rfc7807">RFC 7807</a>
@@ -386,89 +469,20 @@ components:
           - field: accountId
             message: must match "^[a-zA-Z]{6}$"
             code: 20006
-    RefreshTokenRequest:
+    ErrorResponse:
       type: object
-      description: request payload
-      properties:
-        grant_type:
-          type: string
-          example: refresh_token
-        client_id:
-          type: string
-          example: client_id
-        client_secret:
-          type: string
-          example: client_secret
-        refresh_token:
-          description: Input refresh token acquired from previous generate access token response
-          type: string
-          example: eyJhbGciOiJIUzI1...
+      description: Error response
       required:
-      - grant_type
-      - client_id
-      - client_secret
-      - refresh_token
-    GenerateTokenResponse:
-      description: Generate token response.
-      type: object
+      - error
       properties:
-        access_token:
-          description: Access tokens are used in token-based authentication to allow an application to access an API
+        error:
           type: string
-          example: eett4g66678jgde....
-        expires_in:
-          description: It displayes time in sec
-          type: integer
-          format: int32
-          example: 900
-        refresh_token:
-          description: Displays new refresh token
+          description: Error code
+          example: invalid_client
+        error_description:
           type: string
-          example: eyJhbGciOiJIUzI1...
-    ResourceOwnerPasswordRequest:
-      type: object
-      description: request payload
-      properties:
-        grant_type:
-          type: string
-          example: password
-        client_id:
-          type: string
-          example: client_id
-        client_secret:
-          type: string
-          example: client_secret
-        username:
-          type: string
-          format: string
-          example: user-account
-        password:
-          type: string
-          format: string
-          example: password1
-      required:
-      - grant_type
-      - client_id
-      - client_secret
-      - username
-      - password
-    GenerateTokenRequest:
-      type: object
-      description: reuest payload
-      properties:
-        grant_type:
-          type: string
-          example: client_credentials
-        client_id:
-          type: string
-          example: client_id
-        client_secret:
-          type: string
-          example: client_secret
-      required:
-      - grant_type
-      - client_id
-      - client_secret
+          description: Human-readable error description
+          example: Invalid client or Invalid client credentials
     AccessTokenResponse:
       type: object
       description: Successful access token response
@@ -493,20 +507,6 @@ components:
           type: string
           description: OAuth scopes granted with this token
           example: email profile
-    ErrorResponse:
-      type: object
-      description: Error response
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          description: Error code
-          example: invalid_client
-        error_description:
-          type: string
-          description: Human-readable error description
-          example: Invalid client or Invalid client credentials
   parameters:
     accountId:
       name: accountId
@@ -520,15 +520,6 @@ components:
         pattern: ^[a-zA-Z]{6}$
         example: ABCDEF
   responses:
-    Unauthorized:
-      description: Unauthorized - Invalid client credentials
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          examples:
-            Invalid Credentials:
-              $ref: '#/components/examples/ErrorUnauthorized_2'
     BadRequest:
       description: Bad Request - Invalid request format or unsupported grant type
       content:
@@ -538,6 +529,15 @@ components:
           examples:
             Unsupported Grant Type:
               $ref: '#/components/examples/ErrorConstraintViolation_2'
+    Unauthorized:
+      description: Unauthorized - Invalid client credentials
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            Invalid Credentials:
+              $ref: '#/components/examples/ErrorUnauthorized_2'
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

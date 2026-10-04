@@ -161,71 +161,71 @@ paths:
         '500':
           $ref: '#/components/responses/InternalServer'
 components:
-  responses:
-    NotFound:
-      description: Not Found
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorNotFound'
-    Unauthorized:
-      description: Unauthorized
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorUnauthorized'
-    BadRequest:
-      description: BadRequest
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorConstraintViolation'
-    InternalServer:
-      description: Internal Server Error
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorInternalServerError'
-    HolidayResponse:
-      description: Holiday Response
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Holiday'
-          examples:
-            Holiday-Response:
-              $ref: '#/components/examples/HolidayResponse'
-    Forbidden:
-      description: Forbidden
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorForbidden'
-    HolidaysPageResponse:
-      description: Holiday Page Response
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/HolidaysPage'
-          examples:
-            Holiday-Page-Response:
-              $ref: '#/components/examples/HolidayPageResponse'
+  parameters:
+    timetableId:
+      name: timetableId
+      in: path
+      required: true
+      description: The unique 36 character internal id that represents the timetable.
+      schema:
+        type: string
+        minLength: 36
+        maxLength: 36
+        pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
+        example: 8c872648-2b50-11ec-8d3d-0242ac130003
+    pageSize:
+      name: pageSize
+      description: The maximum number of results per page.
+      required: false
+      in: query
+      schema:
+        type: integer
+        format: int32
+        default: 5
+        minimum: 5
+        maximum: 50
+        example: 5
+    holidayId:
+      name: holidayId
+      in: path
+      required: true
+      description: The unique 36 character internal id that represents the holiday.
+      schema:
+        type: string
+        minLength: 36
+        maxLength: 36
+        pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
+        example: 72f456b0-2b50-11ec-8d3d-0242ac130003
+    pageNumber:
+      name: pageNumber
+      description: The target page of results.
+      required: false
+      in: query
+      schema:
+        type: integer
+        format: int32
+        default: 1
+        minimum: 1
+        example: 1
+    accountId:
+      name: accountId
+      description: The unique 6 character internal id that represents the customer account.
+      required: true
+      in: path
+      schema:
+        type: string
+        minLength: 6
+        maxLength: 6
+        pattern: ^[a-zA-Z]{6}$
+        example: ABCDEF
   examples:
+    ErrorForbidden:
+      description: Forbidden
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#forbidden
+        title: Forbidden
+        status: 403
+        detail: According to the access control policy the current user and/or accountId does not have permission to access this resource.
     HolidayPageResponse:
       value:
         pagination:
@@ -250,6 +250,14 @@ components:
         links:
           prev: /api/business-hours/v1/accounts/JDBUTC/timetables/8c872648-2b50-11ec-8d3d-0242ac130003/holidays?pageNumber=2&pageSize=10
           next: ''
+    HolidayCreate:
+      value:
+        name: Christmas Holidays
+        description: Christmas holidays
+        dates:
+        - '2021-12-24'
+        - '2021-12-25'
+        - '2021-12-26'
     HolidayResponse:
       value:
         holidayId: 72f456b0-2b50-11ec-8d3d-0242ac130003
@@ -273,20 +281,6 @@ components:
         title: Unauthorized
         status: 401
         detail: This operation requires authentication. See https://developers.avayacloud.com/onecloud-ccaas/docs/how-to-authenticate-with-ccaas-apis
-    ErrorInternalServerError:
-      description: Server Error
-      value:
-        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#server-error
-        title: Server Error
-        status: 500
-        detail: An internal server error was encountered.
-    ErrorForbidden:
-      description: Forbidden
-      value:
-        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#forbidden
-        title: Forbidden
-        status: 403
-        detail: According to the access control policy the current user and/or accountId does not have permission to access this resource.
     ErrorConstraintViolation:
       description: Constraint Violation
       value:
@@ -298,72 +292,123 @@ components:
         - field: accountId
           message: must match "^[a-zA-Z]{6}$"
           code: 20006
-    HolidayCreate:
+    ErrorInternalServerError:
+      description: Server Error
       value:
-        name: Christmas Holidays
-        description: Christmas holidays
-        dates:
-        - '2021-12-24'
-        - '2021-12-25'
-        - '2021-12-26'
-  parameters:
-    timetableId:
-      name: timetableId
-      in: path
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#server-error
+        title: Server Error
+        status: 500
+        detail: An internal server error was encountered.
+  responses:
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorUnauthorized'
+    HolidaysPageResponse:
+      description: Holiday Page Response
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/HolidaysPage'
+          examples:
+            Holiday-Page-Response:
+              $ref: '#/components/examples/HolidayPageResponse'
+    HolidayResponse:
+      description: Holiday Response
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Holiday'
+          examples:
+            Holiday-Response:
+              $ref: '#/components/examples/HolidayResponse'
+    Forbidden:
+      description: Forbidden
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorForbidden'
+    NotFound:
+      description: Not Found
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorNotFound'
+    BadRequest:
+      description: BadRequest
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorConstraintViolation'
+    InternalServer:
+      description: Internal Server Error
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorInternalServerError'
+  requestBodies:
+    HolidayRequestBody:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Holiday'
+          examples:
+            CreateOrUpdate-Holiday:
+              $ref: '#/components/examples/HolidayCreate'
       required: true
-      description: The unique 36 character internal id that represents the timetable.
-      schema:
-        type: string
-        minLength: 36
-        maxLength: 36
-        pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
-        example: 8c872648-2b50-11ec-8d3d-0242ac130003
-    pageNumber:
-      name: pageNumber
-      description: The target page of results.
-      required: false
-      in: query
-      schema:
-        type: integer
-        format: int32
-        default: 1
-        minimum: 1
-        example: 1
-    pageSize:
-      name: pageSize
-      description: The maximum number of results per page.
-      required: false
-      in: query
-      schema:
-        type: integer
-        format: int32
-        default: 5
-        minimum: 5
-        maximum: 50
-        example: 5
-    holidayId:
-      name: holidayId
-      in: path
-      required: true
-      description: The unique 36 character internal id that represents the holiday.
-      schema:
-        type: string
-        minLength: 36
-        maxLength: 36
-        pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
-        example: 72f456b0-2b50-11ec-8d3d-0242ac130003
-    accountId:
-      name: accountId
-      description: The unique 6 character internal id that represents the customer account.
-      required: true
-      in: path
-      schema:
-        type: string
-        minLength: 6
-        maxLength: 6
-        pattern: ^[a-zA-Z]{6}$
-        example: ABCDEF
+      description: Create/Update Holiday request
   schemas:
+    HolidaysPage:
+      description: A paginated list of holidays
+      type: object
+      properties:
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+        holidays:
+          type: array
+          description: List of holidays
+          items:
+            $ref: '#/components/schemas/Holiday'
+        links:
+          $ref: '#/components/schemas/Links'
+    Pagination:
+      type: object
+      properties:
+        pageNumber:
+          type: integer
+          description: The current page number.
+        pageSize:
+          type: integer
+          description: The max number of records that can be retrieved on this page.
+        total:
+          type: integer
+          description: The total number of records.
+    Links:
+      type: object
+      properties:
+        prev:
+          type: string
+          description: URL of the previous page. Blank if currently on the first page.
+        next:
+          type: string
+          description: URL of the next page. Blank if currently on the last page.
     Holiday:
       type: object
       required:
@@ -486,51 +531,6 @@ components:
           - field: accountId
             message: must match "^[a-zA-Z]{6}$"
             code: 20006
-    Links:
-      type: object
-      properties:
-        prev:
-          type: string
-          description: URL of the previous page. Blank if currently on the first page.
-        next:
-          type: string
-          description: URL of the next page. Blank if currently on the last page.
-    HolidaysPage:
-      description: A paginated list of holidays
-      type: object
-      properties:
-        pagination:
-          $ref: '#/components/schemas/Pagination'
-        holidays:
-          type: array
-          description: List of holidays
-          items:
-            $ref: '#/components/schemas/Holiday'
-        links:
-          $ref: '#/components/schemas/Links'
-    Pagination:
-      type: object
-      properties:
-        pageNumber:
-          type: integer
-          description: The current page number.
-        pageSize:
-          type: integer
-          description: The max number of records that can be retrieved on this page.
-        total:
-          type: integer
-          description: The total number of records.
-  requestBodies:
-    HolidayRequestBody:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Holiday'
-          examples:
-            CreateOrUpdate-Holiday:
-              $ref: '#/components/examples/HolidayCreate'
-      required: true
-      description: Create/Update Holiday request
   securitySchemes:
     BearerAuth:
       type: http

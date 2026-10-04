@@ -198,13 +198,16 @@ paths:
           $ref: '#/components/responses/InternalServerError'
 components:
   examples:
-    ErrorUnauthorized:
-      description: Unauthorized
+    ErrorACOExists:
+      description: Constraint Violation
       value:
-        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#unauthorized
-        title: Unauthorized
-        status: 401
-        detail: This operation requires authentication. See https://developers.avayacloud.com/onecloud-ccaas/docs/how-to-authenticate-with-ccaas-apis
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#conflict
+        title: Conflict
+        status: 409
+        detail: A resource with the same unique constraint values already exists.
+        violations:
+        - field: name
+          message: An Avaya Cloud Office with this name already exists
     ACORequest:
       value:
         name: Avaya Cloud Office
@@ -216,23 +219,6 @@ components:
         isChatEnabled: true
         isExtensionCalling: false
         presenceApplicationType: AVAYA_CLOUD_OFFICE
-    ErrorACOExists:
-      description: Constraint Violation
-      value:
-        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#conflict
-        title: Conflict
-        status: 409
-        detail: A resource with the same unique constraint values already exists.
-        violations:
-        - field: name
-          message: An Avaya Cloud Office with this name already exists
-    ErrorInternalServerError:
-      description: Server Error
-      value:
-        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#server-error
-        title: Server Error
-        status: 500
-        detail: An internal server error was encountered.
     ErrorForbidden:
       description: Forbidden
       value:
@@ -240,24 +226,6 @@ components:
         title: Forbidden
         status: 403
         detail: According to the access control policy the current user does not have permission to access this resource.
-    ErrorConstraintViolation:
-      description: Constraint Violation
-      value:
-        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#constraint-violation
-        title: Constraint Violation
-        status: 400
-        detail: A problem that indicates a syntactically correct, yet semantically illegal request. The Server can not process this request until the client resolves the semantic errors described in the violations section.
-        violations:
-        - field: accountId
-          message: must match "^[a-zA-Z]{6}$"
-          code: 20006
-    ErrorNotFound:
-      description: Not Found
-      value:
-        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#resource-not-found
-        title: Resource Not Found
-        status: 404
-        detail: Either there is no API method associated with the URL path of the request, or the request refers to one or more resources that were not found.
     ACOResponse:
       value:
         elementId: c8c2909d-75e9-484a-94c0-b7e8d29771fe
@@ -272,62 +240,114 @@ components:
         elementType: ACO
         status: SUCCESS
         presenceApplicationType: AVAYA_CLOUD_OFFICE
-  responses:
-    NotFound:
+    ErrorNotFound:
       description: Not Found
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorNotFound'
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#resource-not-found
+        title: Resource Not Found
+        status: 404
+        detail: Either there is no API method associated with the URL path of the request, or the request refers to one or more resources that were not found.
+    ErrorUnauthorized:
+      description: Unauthorized
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#unauthorized
+        title: Unauthorized
+        status: 401
+        detail: This operation requires authentication. See https://developers.avayacloud.com/onecloud-ccaas/docs/how-to-authenticate-with-ccaas-apis
     ErrorConstraintViolation:
       description: Constraint Violation
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorConstraintViolation'
-    Unauthorized:
-      description: Unauthorized
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorUnauthorized'
-    InternalServerError:
-      description: All other application errors
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorInternalServerError'
-    Forbidden:
-      description: Forbidden
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorForbidden'
-    ErrorACOExists:
-      description: Conflict
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            loginId:
-              $ref: '#/components/examples/ErrorACOExists'
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#constraint-violation
+        title: Constraint Violation
+        status: 400
+        detail: A problem that indicates a syntactically correct, yet semantically illegal request. The Server can not process this request until the client resolves the semantic errors described in the violations section.
+        violations:
+        - field: accountId
+          message: must match "^[a-zA-Z]{6}$"
+          code: 20006
+    ErrorInternalServerError:
+      description: Server Error
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#server-error
+        title: Server Error
+        status: 500
+        detail: An internal server error was encountered.
   schemas:
+    ACOElement:
+      type: object
+      description: 'Avaya Cloud Office Element Details
+
+        '
+      properties:
+        elementId:
+          type: string
+          readOnly: true
+          example: ce8042a2-12f8-406f-5fd3-86c1c16d3a77
+        name:
+          type: string
+          example: Avaya Cloud Office
+          minLength: 1
+          maxLength: 255
+          pattern: ^[a-zA-Z0-9\p{L}\-\_\.\ ]+$
+        environment:
+          type: string
+          enum:
+          - Production
+          - Development
+          example: Production
+        description:
+          type: string
+          maxLength: 1024
+          pattern: (^$|^[a-zA-Z0-9\p{L}\(\)\-\_\.\ ]+$)
+        didNumbers:
+          description: The did numbers in the E.164 format
+          type: array
+          maxItems: 2000
+          items:
+            type: string
+            maxLength: 13
+          example:
+          - '+16062128688'
+          - '+12702289911'
+        isChatEnabled:
+          type: boolean
+          description: Indicates whether the chat is enabled for any given ACO element.
+          default: true
+          example: true
+        isExtensionCalling:
+          type: boolean
+          description: Indicates whether the extension calling is disabled for any given ACO element.
+          default: false
+          example: false
+        elementType:
+          type: string
+          readOnly: true
+          example: ACO
+          minLength: 1
+          maxLength: 255
+          pattern: ^[a-zA-Z0-9\-\_\.\ ]+$
+        status:
+          type: string
+          description: "This field indicates the current status of an Element.\n\nAn explanation of the values is listed below:\n  * SUCCESS - An Element was created/updated successfully.\n  * FAILED - operation on Element was failed.\n  * IN_PROGRESS - operation performed on an Element is in progress.\n"
+          enum:
+          - SUCCESS
+          - FAILED
+          - IN_PROGRESS
+        statusMessage:
+          type: string
+          readOnly: true
+          example: cannot create element due to database failure
+        presenceApplicationType:
+          type: string
+          enum:
+          - AVAYA_CLOUD_OFFICE
+          - AVAYA_CLOUD_PHONE
+          x-enum-varnames:
+          - AVAYA_CLOUD_OFFICE
+          - AVAYA_CLOUD_PHONE
+      required:
+      - name
+      - environment
     Problem:
       type: object
       description: '<b>Problem Detail</b> as a way to carry machine-readable details of errors in a HTTP response to avoid the need to define new error response formats for HTTP APIs <a href="https://tools.ietf.org/html/rfc7807">RFC 7807</a>
@@ -413,93 +433,62 @@ components:
           - field: accountId
             message: must match "^[a-zA-Z]{6}$"
             code: 20006
-    ACOElement:
-      type: object
-      description: 'Avaya Cloud Office Element Details
-
-        '
-      properties:
-        elementId:
-          type: string
-          readOnly: true
-          example: ce8042a2-12f8-406f-5fd3-86c1c16d3a77
-        name:
-          type: string
-          example: Avaya Cloud Office
-          minLength: 1
-          maxLength: 255
-          pattern: ^[a-zA-Z0-9\p{L}\-\_\.\ ]+$
-        environment:
-          type: string
-          enum:
-          - Production
-          - Development
-          example: Production
-        description:
-          type: string
-          maxLength: 1024
-          pattern: (^$|^[a-zA-Z0-9\p{L}\(\)\-\_\.\ ]+$)
-        didNumbers:
-          description: The did numbers in the E.164 format
-          type: array
-          maxItems: 2000
-          items:
-            type: string
-            maxLength: 13
-          example:
-          - '+16062128688'
-          - '+12702289911'
-        isChatEnabled:
-          type: boolean
-          description: Indicates whether the chat is enabled for any given ACO element.
-          default: true
-          example: true
-        isExtensionCalling:
-          type: boolean
-          description: Indicates whether the extension calling is disabled for any given ACO element.
-          default: false
-          example: false
-        elementType:
-          type: string
-          readOnly: true
-          example: ACO
-          minLength: 1
-          maxLength: 255
-          pattern: ^[a-zA-Z0-9\-\_\.\ ]+$
-        status:
-          type: string
-          description: "This field indicates the current status of an Element.\n\nAn explanation of the values is listed below:\n  * SUCCESS - An Element was created/updated successfully.\n  * FAILED - operation on Element was failed.\n  * IN_PROGRESS - operation performed on an Element is in progress.\n"
-          enum:
-          - SUCCESS
-          - FAILED
-          - IN_PROGRESS
-        statusMessage:
-          type: string
-          readOnly: true
-          example: cannot create element due to database failure
-        presenceApplicationType:
-          type: string
-          enum:
-          - AVAYA_CLOUD_OFFICE
-          - AVAYA_CLOUD_PHONE
-          x-enum-varnames:
-          - AVAYA_CLOUD_OFFICE
-          - AVAYA_CLOUD_PHONE
-      required:
-      - name
-      - environment
+  responses:
+    NotFound:
+      description: Not Found
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorNotFound'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorUnauthorized'
+    InternalServerError:
+      description: All other application errors
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorInternalServerError'
+    ErrorACOExists:
+      description: Conflict
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            loginId:
+              $ref: '#/components/examples/ErrorACOExists'
+    Forbidden:
+      description: Forbidden
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorForbidden'
+    ErrorConstraintViolation:
+      description: Constraint Violation
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorConstraintViolation'
   parameters:
-    accountId:
-      name: accountId
-      description: The unique 6 character internal id that represents the customer account.
-      required: true
-      in: path
-      schema:
-        type: string
-        minLength: 6
-        maxLength: 6
-        pattern: ^[a-zA-Z]{6}$
-        example: ABCDEF
     elementId:
       name: elementId
       in: path
@@ -511,6 +500,17 @@ components:
         minLength: 36
         maxLength: 36
         pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
+    accountId:
+      name: accountId
+      description: The unique 6 character internal id that represents the customer account.
+      required: true
+      in: path
+      schema:
+        type: string
+        minLength: 6
+        maxLength: 6
+        pattern: ^[a-zA-Z]{6}$
+        example: ABCDEF
   securitySchemes:
     BearerAuth:
       type: http

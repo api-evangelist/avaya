@@ -289,18 +289,26 @@ paths:
           $ref: '#/components/responses/InternalServerError'
 components:
   examples:
-    ErrorConflict:
-      description: Conflict
+    ErrorForbidden:
+      description: Forbidden
       value:
-        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#conflict
-        title: Conflict
-        status: 409
-        detail: A resource with the same unique constraint values already exists.
-        violations:
-        - field: name
-          message: Communication Manager with same name already exists.
-        - field: hostname
-          message: Communication Manager with same hostname already exists.
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#forbidden
+        title: Forbidden
+        status: 403
+        detail: According to the access control policy the current user does not have permission to access this resource.
+    SystemRangeResponse:
+      description: Model for a System Range Plan model for System
+      value:
+        voicePlanId: a5ed735d-0688-47c5-872d-366a84b23536
+        name: VoicePlan2
+        type: SYSTEM
+        userProfileId: ASEDFG
+        description: Voice plan for Communication Manager
+        reasonCodeNotReadyRange:
+        - '1:20'
+        - 50:99
+        reasonCodeLogOutRange:
+        - '1:9'
     ErrorMethodNotAllowed:
       description: Method not allowed
       value:
@@ -320,19 +328,18 @@ components:
         extensionDialPlanRange:
         - 30000:30100
         - 8000000:9000000
-    SystemRangeResponse:
-      description: Model for a System Range Plan model for System
+    ErrorConflict:
+      description: Conflict
       value:
-        voicePlanId: a5ed735d-0688-47c5-872d-366a84b23536
-        name: VoicePlan2
-        type: SYSTEM
-        userProfileId: ASEDFG
-        description: Voice plan for Communication Manager
-        reasonCodeNotReadyRange:
-        - '1:20'
-        - 50:99
-        reasonCodeLogOutRange:
-        - '1:9'
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#conflict
+        title: Conflict
+        status: 409
+        detail: A resource with the same unique constraint values already exists.
+        violations:
+        - field: name
+          message: Communication Manager with same name already exists.
+        - field: hostname
+          message: Communication Manager with same hostname already exists.
     VoicePlanPage:
       description: List of all Voice Plans
       value:
@@ -364,6 +371,18 @@ components:
         links:
           next: /api/admin/voice/v1/accounts/GHFDWE/communication-managers/18e4f754-5e42-4387-ae13-e9b4fe4aed29/voice-plans?pageNumber=3&pageSize=10
           previous: /api/admin/voice/v1/accounts/GHFDWE/communication-managers/18e4f754-5e42-4387-ae13-e9b4fe4aed29/voice-plans?pageNumber=1&pageSize=10
+    SystemRangeRequest:
+      description: Model for a System Range Plan model for System
+      value:
+        name: VoicePlan2
+        type: SYSTEM
+        userProfileId: ASEDFG
+        description: Voice plan for Communication Manager
+        reasonCodeNotReadyRange:
+        - '1:20'
+        - 50:99
+        reasonCodeLogOutRange:
+        - '1:9'
     ErrorNotFound:
       description: Not Found
       value:
@@ -378,20 +397,6 @@ components:
         title: Unauthorized
         status: 401
         detail: This operation requires authentication. See https://developers.avayacloud.com/onecloud-ccaas/docs/how-to-authenticate-with-ccaas-apis
-    ErrorInternalServerError:
-      description: Server Error
-      value:
-        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#server-error
-        title: Server Error
-        status: 500
-        detail: An internal server error was encountered.
-    ErrorForbidden:
-      description: Forbidden
-      value:
-        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#forbidden
-        title: Forbidden
-        status: 403
-        detail: According to the access control policy the current user does not have permission to access this resource.
     ErrorConstraintViolation:
       description: Constraint Violation
       value:
@@ -415,28 +420,14 @@ components:
         extensionDialPlanRange:
         - 30000:30100
         - 8000000:9000000
-    SystemRangeRequest:
-      description: Model for a System Range Plan model for System
+    ErrorInternalServerError:
+      description: Server Error
       value:
-        name: VoicePlan2
-        type: SYSTEM
-        userProfileId: ASEDFG
-        description: Voice plan for Communication Manager
-        reasonCodeNotReadyRange:
-        - '1:20'
-        - 50:99
-        reasonCodeLogOutRange:
-        - '1:9'
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#server-error
+        title: Server Error
+        status: 500
+        detail: An internal server error was encountered.
   responses:
-    NotFound:
-      description: Not Found
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorNotFound'
     Unauthorized:
       description: Unauthorized
       content:
@@ -446,15 +437,15 @@ components:
           examples:
             default:
               $ref: '#/components/examples/ErrorUnauthorized'
-    Conflict:
-      description: Conflict
+    ErrorConstraintViolation:
+      description: Constraint Violation
       content:
         application/problem+json:
           schema:
             $ref: '#/components/schemas/Problem'
           examples:
             default:
-              $ref: '#/components/examples/ErrorConflict'
+              $ref: '#/components/examples/ErrorConstraintViolation'
     InternalServerError:
       description: All other application errors
       content:
@@ -473,6 +464,15 @@ components:
           examples:
             default:
               $ref: '#/components/examples/ErrorForbidden'
+    Conflict:
+      description: Conflict
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorConflict'
     MethodNotAllowed:
       description: Method Not Allowed
       content:
@@ -482,15 +482,15 @@ components:
           examples:
             default:
               $ref: '#/components/examples/ErrorMethodNotAllowed'
-    ErrorConstraintViolation:
-      description: Constraint Violation
+    NotFound:
+      description: Not Found
       content:
         application/problem+json:
           schema:
             $ref: '#/components/schemas/Problem'
           examples:
             default:
-              $ref: '#/components/examples/ErrorConstraintViolation'
+              $ref: '#/components/examples/ErrorNotFound'
   schemas:
     VoicePlanPage:
       title: VoicePlanPage
@@ -510,6 +510,27 @@ components:
           example:
             prev: /api/admin/voice/v1/accounts/{accountId}/communication-managers/{communicationManagerId}/voice-plans?pageNumber=1&pageSize=10
             next: /api/admin/voice/v1/accounts/{accountId}/communication-managers/{communicationManagerId}/voice-plans?pageNumber=3&pageSize=10
+    Pagination:
+      type: object
+      properties:
+        pageNumber:
+          type: integer
+          description: The current page number.
+        pageSize:
+          type: integer
+          description: The max number of records that can be retrieved on this page.
+        total:
+          type: integer
+          description: The total number of records.
+    Links:
+      type: object
+      properties:
+        prev:
+          type: string
+          description: URL of the previous page. Blank if currently on the first page.
+        next:
+          type: string
+          description: URL of the next page. Blank if currently on the last page.
     VoicePlan:
       type: object
       description: Represents ranges of entities for configured Communication Manager.
@@ -678,37 +699,7 @@ components:
           - field: accountId
             message: must match "^[a-zA-Z]{6}$"
             code: 20006
-    Links:
-      type: object
-      properties:
-        prev:
-          type: string
-          description: URL of the previous page. Blank if currently on the first page.
-        next:
-          type: string
-          description: URL of the next page. Blank if currently on the last page.
-    Pagination:
-      type: object
-      properties:
-        pageNumber:
-          type: integer
-          description: The current page number.
-        pageSize:
-          type: integer
-          description: The max number of records that can be retrieved on this page.
-        total:
-          type: integer
-          description: The total number of records.
   parameters:
-    communicationManagerId:
-      name: communicationManagerId
-      description: The unique id of the Communication Manager
-      in: path
-      required: true
-      schema:
-        type: string
-        format: uuid
-        example: 2ec20580-d204-43f3-ae0b-34795439137f
     voicePlanId:
       name: voicePlanId
       in: path
@@ -740,6 +731,15 @@ components:
         maxLength: 6
         pattern: ^[a-zA-Z]{6}$
         example: ABCDEF
+    communicationManagerId:
+      name: communicationManagerId
+      description: The unique id of the Communication Manager
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+        example: 2ec20580-d204-43f3-ae0b-34795439137f
   securitySchemes:
     BearerAuth:
       type: http

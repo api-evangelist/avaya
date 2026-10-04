@@ -292,16 +292,90 @@ paths:
           $ref: '#/components/responses/InternalServer'
       deprecated: false
 components:
-  responses:
-    NotFound:
+  examples:
+    ErrorForbidden:
+      description: Forbidden
+      value:
+        type: https://developers.avayacloud.com/avaya-experience-platform/docs/error-handling#forbidden
+        title: Forbidden
+        status: 403
+        detail: According to the access control policy the current user and/or accountId does not have permission to access this resource.
+    updateIdentifier:
+      value:
+        identifierStrength: STRONG
+        name: emailAddresses
+        displayName: E-Mail addresses
+    updateIdentifierResponse:
+      value:
+        identifierId: feb2cc8d-696f-409e-97ce-4d122a685a42
+        identifierStrength: STRONG
+        name: emailAddresses
+        displayName: E-Mail addresses
+        url: /api/journey/v1/accounts/JDBUTC/identifiers/feb2cc8d-696f-409e-97ce-4d122a685a42
+    createIdentifier:
+      value:
+        name: phoneNumbers
+        displayName: Phone Numbers
+        identifierStrength: WEAK
+    createIdentifierResponse:
+      value:
+        identifierId: 09c03db4-1015-42a7-b776-9527b80bfbb0
+        displayName: Phone Numbers
+        name: phoneNumbers
+        identifierStrength: WEAK
+        url: /api/journey/v1/accounts/JDBUTC/identifiers/09c03db4-1015-42a7-b776-9527b80bfbb0
+    getIdentifierResponse:
+      value:
+        identifierId: 23aafae6-5d7e-40cd-8825-27313a5af3e8
+        identifierStrength: STRONG
+        name: universalIds
+        displayName: Universal ids
+        url: /api/journey/v1/accounts/JDBUTC/identifiers/23aafae6-5d7e-40cd-8825-27313a5af3e8
+    ErrorNotFound:
       description: Not Found
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorNotFound'
+      value:
+        type: https://developers.avayacloud.com/avaya-experience-platform/docs/error-handling#resource-not-found
+        title: Resource Not Found
+        status: 404
+        detail: Resource not found.
+    getIdentifiers:
+      value:
+      - identifierId: 09c03db4-1015-42a7-b776-9527b80bfbb0
+        displayName: Phone Numbers
+        name: phoneNumbers
+        identifierStrength: WEAK
+        url: /api/journey/v1/accounts/JDBUTC/identifiers/09c03db4-1015-42a7-b776-9527b80bfbb0
+      - identifierId: feb2cc8d-696f-409e-97ce-4d122a685a42
+        displayName: Twitter Handles
+        name: twitterHandles
+        identifierStrength: STRONG
+        url: /api/journey/v1/accounts/JDBUTC/identifiers/feb2cc8d-696f-409e-97ce-4d122a685a42
+    ErrorUnauthorized:
+      description: Unauthorized
+      value:
+        type: https://developers.avayacloud.com/avaya-experience-platform/docs/error-handling#unauthorized
+        title: Unauthorized
+        status: 401
+        detail: This operation requires authentication. See https://developers.avayacloud.com/avaya-experience-platform/docs/how-to-authenticate-with-ccaas-apis
+    ErrorConstraintViolation:
+      description: Constraint Violation
+      value:
+        type: https://developers.avayacloud.com/avaya-experience-platform/docs/error-handling#constraint-violation
+        title: Constraint Violation
+        status: 400
+        detail: A problem that indicates a syntactically correct, yet semantically illegal request. The Server can not process this request until the client resolves the semantic errors described in the violations section.
+        violations:
+        - field: accountId
+          message: must match "^[a-zA-Z]{6}$"
+          code: 20006
+    ErrorInternalServerError:
+      description: Server Error
+      value:
+        type: https://developers.avayacloud.com/avaya-experience-platform/docs/error-handling#server-error
+        title: Server Error
+        status: 500
+        detail: An internal server error was encountered.
+  responses:
     Unauthorized:
       description: Unauthorized
       content:
@@ -311,15 +385,6 @@ components:
           examples:
             default:
               $ref: '#/components/examples/ErrorUnauthorized'
-    InternalServer:
-      description: Internal Server Error
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorInternalServerError'
     Forbidden:
       description: Forbidden
       content:
@@ -329,6 +394,47 @@ components:
           examples:
             default:
               $ref: '#/components/examples/ErrorForbidden'
+    NotFound:
+      description: Not Found
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorNotFound'
+    InternalServer:
+      description: Internal Server Error
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorInternalServerError'
+  parameters:
+    accountId:
+      name: accountId
+      description: The unique 6 character internal id that represents the customer account.
+      required: true
+      in: path
+      schema:
+        type: string
+        minLength: 6
+        maxLength: 6
+        pattern: ^[a-zA-Z]{6}$
+        example: ABCDEF
+    identifierId:
+      name: identifierId
+      description: The unique 36 character internal id that represents the identifier.
+      required: true
+      in: path
+      schema:
+        type: string
+        minLength: 36
+        maxLength: 36
+        pattern: ^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}$
+        example: 9b07057b-1e15-4436-a605-280d9f030149
   schemas:
     IdentifierType:
       type: object
@@ -451,112 +557,6 @@ components:
           - field: accountId
             message: must match "^[a-zA-Z]{6}$"
             code: 20006
-  parameters:
-    identifierId:
-      name: identifierId
-      description: The unique 36 character internal id that represents the identifier.
-      required: true
-      in: path
-      schema:
-        type: string
-        minLength: 36
-        maxLength: 36
-        pattern: ^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}$
-        example: 9b07057b-1e15-4436-a605-280d9f030149
-    accountId:
-      name: accountId
-      description: The unique 6 character internal id that represents the customer account.
-      required: true
-      in: path
-      schema:
-        type: string
-        minLength: 6
-        maxLength: 6
-        pattern: ^[a-zA-Z]{6}$
-        example: ABCDEF
-  examples:
-    updateIdentifierResponse:
-      value:
-        identifierId: feb2cc8d-696f-409e-97ce-4d122a685a42
-        identifierStrength: STRONG
-        name: emailAddresses
-        displayName: E-Mail addresses
-        url: /api/journey/v1/accounts/JDBUTC/identifiers/feb2cc8d-696f-409e-97ce-4d122a685a42
-    getIdentifiers:
-      value:
-      - identifierId: 09c03db4-1015-42a7-b776-9527b80bfbb0
-        displayName: Phone Numbers
-        name: phoneNumbers
-        identifierStrength: WEAK
-        url: /api/journey/v1/accounts/JDBUTC/identifiers/09c03db4-1015-42a7-b776-9527b80bfbb0
-      - identifierId: feb2cc8d-696f-409e-97ce-4d122a685a42
-        displayName: Twitter Handles
-        name: twitterHandles
-        identifierStrength: STRONG
-        url: /api/journey/v1/accounts/JDBUTC/identifiers/feb2cc8d-696f-409e-97ce-4d122a685a42
-    ErrorNotFound:
-      description: Not Found
-      value:
-        type: https://developers.avayacloud.com/avaya-experience-platform/docs/error-handling#resource-not-found
-        title: Resource Not Found
-        status: 404
-        detail: Resource not found.
-    ErrorUnauthorized:
-      description: Unauthorized
-      value:
-        type: https://developers.avayacloud.com/avaya-experience-platform/docs/error-handling#unauthorized
-        title: Unauthorized
-        status: 401
-        detail: This operation requires authentication. See https://developers.avayacloud.com/avaya-experience-platform/docs/how-to-authenticate-with-ccaas-apis
-    getIdentifierResponse:
-      value:
-        identifierId: 23aafae6-5d7e-40cd-8825-27313a5af3e8
-        identifierStrength: STRONG
-        name: universalIds
-        displayName: Universal ids
-        url: /api/journey/v1/accounts/JDBUTC/identifiers/23aafae6-5d7e-40cd-8825-27313a5af3e8
-    ErrorInternalServerError:
-      description: Server Error
-      value:
-        type: https://developers.avayacloud.com/avaya-experience-platform/docs/error-handling#server-error
-        title: Server Error
-        status: 500
-        detail: An internal server error was encountered.
-    ErrorForbidden:
-      description: Forbidden
-      value:
-        type: https://developers.avayacloud.com/avaya-experience-platform/docs/error-handling#forbidden
-        title: Forbidden
-        status: 403
-        detail: According to the access control policy the current user and/or accountId does not have permission to access this resource.
-    ErrorConstraintViolation:
-      description: Constraint Violation
-      value:
-        type: https://developers.avayacloud.com/avaya-experience-platform/docs/error-handling#constraint-violation
-        title: Constraint Violation
-        status: 400
-        detail: A problem that indicates a syntactically correct, yet semantically illegal request. The Server can not process this request until the client resolves the semantic errors described in the violations section.
-        violations:
-        - field: accountId
-          message: must match "^[a-zA-Z]{6}$"
-          code: 20006
-    updateIdentifier:
-      value:
-        identifierStrength: STRONG
-        name: emailAddresses
-        displayName: E-Mail addresses
-    createIdentifierResponse:
-      value:
-        identifierId: 09c03db4-1015-42a7-b776-9527b80bfbb0
-        displayName: Phone Numbers
-        name: phoneNumbers
-        identifierStrength: WEAK
-        url: /api/journey/v1/accounts/JDBUTC/identifiers/09c03db4-1015-42a7-b776-9527b80bfbb0
-    createIdentifier:
-      value:
-        name: phoneNumbers
-        displayName: Phone Numbers
-        identifierStrength: WEAK
   securitySchemes:
     BearerAuth:
       type: http

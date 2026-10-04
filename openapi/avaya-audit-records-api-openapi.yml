@@ -238,595 +238,166 @@ paths:
         basePath:
           default: /api/admin/account/v1
 components:
-  responses:
-    NotFound:
-      description: Not Found
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/NotFoundError'
-    Unauthorized:
-      description: Unauthorized
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/UnauthorizedError'
-    InternalServerError:
-      description: All other application errors
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ServerError'
-    Forbidden:
-      description: Forbidden
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ForbiddenError'
-    ErrorConstraintViolation:
-      description: Constraint Violation
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ConstraintViolationError'
-    NotFound_2:
-      description: Not Found
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorNotFound'
-    Unauthorized_2:
-      description: Unauthorized
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorUnauthorized'
-    InternalServerError_2:
-      description: All other application errors
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorInternalServerError'
-    Forbidden_2:
-      description: Forbidden
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorForbidden'
-    ErrorConstraintViolation_2:
-      description: Constraint Violation
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorConstraintViolation'
-    Not_Found:
-      description: Not Found
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/NotFoundError_2'
-    NotFound_3:
-      description: Not Found.
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorNotFound'
-    Unauthorized_3:
-      description: Unauthorized.
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorUnauthorized'
-    BadRequest:
-      description: Bad Request
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorConstraintViolation'
-    InternalServerError_3:
-      description: Internal Server Error
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorInternalServerError'
-    Forbidden_3:
-      description: Forbidden.
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorForbidden'
-    NotFound_4:
-      description: Not Found
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorNotFound_2'
-    Unauthorized_4:
-      description: Unauthorized
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorUnauthorized'
-    BadRequest_2:
-      description: BadRequest
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorConstraintViolation'
-    InternalServer:
-      description: Internal Server Error
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorInternalServerError'
-    Forbidden_4:
-      description: Forbidden
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorForbidden'
-    NotFound_5:
-      description: Not Found
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorNotFound_3'
-    Unauthorized_5:
-      description: Unauthorized
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorUnauthorized_2'
-    InternalServer_2:
-      description: Request processing failed
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorInternalServerError_2'
-    Forbidden_5:
-      description: Forbidden
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorForbidden_2'
-    ErrorConstraintViolation_3:
-      description: Constraint Violation
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorConstraintViolation_2'
-  examples:
-    SearchAuditRecordsRequest:
-      value:
-        startDate: '2021-11-13T20:25:39.534Z'
-        endDate: '2021-11-15T16:07:12.723Z'
-        event: CREATED
-        author: jsmith@example.com
-        type: ACCOUNT
-        ipAddress: 165.225.72.60
-        searchKeyword: Chris Dunbar
-    ConstraintViolationError:
-      description: Constraint Violation
-      value:
-        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#constraint-violation
-        title: Constraint Violation
-        status: 400
-        detail: A problem that indicates a syntactically correct, yet semantically illegal request. The Server can not process this request until the client resolves the semantic errors described in the violations section.
-        violations:
-        - field: accountId
-          message: must match "^[a-zA-Z]{6}$"
-          code: 20006
-    NotFoundError:
-      description: Resource not found
-      value:
-        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#resource-not-found
-        title: Resource Not Found
-        status: 404
-        detail: Account with AccountId:ASDAES not found.
-    ForbiddenError:
-      description: Forbidden
-      value:
-        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#forbidden
-        title: Forbidden
-        status: 403
-        detail: According to the access control policy the current user and/or accountId does not have permission to access this resource.
-    SearchAuditRecordsResponse:
-      value:
-        pagination:
-          pageNumber: 1
-          pageSize: 5
-          total: 1
-        auditRecords:
-        - date: '2021-11-14T09:24:05.234Z'
-          event: CREATED
-          author: jsmith@example.com
-          ipAddress: 165.225.72.60
-          type: ACCOUNT
-          auditData:
-            name: AricentAccount
-            type: ACCOUNT
-            enabled: true
-            accountSize: 10
-        links:
-          next: /api/admin/account/v1/accounts/ASDJGE/audit-records:search?pageNumber=2&pageSize=5
-          prev: /api/admin/account/v1/accounts/ASDJGE/audit-records:search?pageNumber=1&pageSize=5
-    ServerError:
-      description: Internal Server Error
-      value:
-        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#server-error
-        title: Server Error
-        status: 500
-        detail: An internal server error was encountered.
-    ErrorTooManyRecords:
-      description: Constraint Violation
-      value:
-        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#constraint-violation
-        title: Constraint Violation
-        status: 400
-        detail: A problem that indicates a syntactically correct, yet semantically illegal request. The Server can not process this request until the client resolves the semantic errors described in the violations section.
-        violations:
-        - field: interval
-          message: Too many records within the requested time interval.
-          code: 20007
-    UnauthorizedError:
-      description: Forbidden
-      value:
-        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#unauthorized
-        title: Unauthorized
-        status: 401
-        detail: This operation requires authentication. See https://developers.avayacloud.com/onecloud-ccaas/docs/how-to-authenticate-with-ccaas-apis
-    SearchAuditRecordsRequest_2:
-      value:
-        startDate: '2021-11-13T20:25:39.534Z'
-        endDate: '2021-11-15T16:07:12.723Z'
-        event: CREATED
-        author: jsmith@example.com
-        type: ELEMENT
-        ipAddress: 165.225.72.60
-        searchKeyword: Out-of-Office
-    SearchAuditRecordsResponse_2:
-      value:
-        pagination:
-          pageNumber: 1
-          pageSize: 5
-          total: 1
-        auditRecords:
-        - date: '2021-11-14T09:24:05.234Z'
-          event: CREATED
-          author: jsmith@example.com
-          ipAddress: 165.225.72.60
-          type: ELEMENT
-          auditData:
-            name: Avaya Cloud Office
-            didNumbers:
-            - '+16062128688'
-            - '+12702289911'
-            elementType: ACO
-            environment: Production
-            description: An Avaya Cloud Office Element
-            sipServerHostName: sip://platform.ringcentral.com/restapi/v1
-        links:
-          next: /api/admin/inventory/v1/accounts/ASDJGE/audit-records:search?pageNumber=2&pageSize=5
-          prev: /api/admin/inventory/v1/accounts/ASDJGE/audit-records:search?pageNumber=1&pageSize=5
-    ErrorNotFound:
-      description: Not Found
-      value:
-        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#resource-not-found
-        title: Resource Not Found
-        status: 404
-        detail: Either there is no API method associated with the URL path of the request, or the request refers to one or more resources that were not found.
-    ErrorUnauthorized:
-      description: Unauthorized
-      value:
-        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#unauthorized
-        title: Unauthorized
-        status: 401
-        detail: This operation requires authentication. See https://developers.avayacloud.com/onecloud-ccaas/docs/how-to-authenticate-with-ccaas-apis
-    ErrorInternalServerError:
-      description: Server Error
-      value:
-        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#server-error
-        title: Server Error
-        status: 500
-        detail: An internal server error was encountered.
-    ErrorForbidden:
-      description: Forbidden
-      value:
-        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#forbidden
-        title: Forbidden
-        status: 403
-        detail: According to the access control policy the current user and/or accountId does not have permission to access this resource.
-    ErrorConstraintViolation:
-      description: Constraint Violation
-      value:
-        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#constraint-violation
-        title: Constraint Violation
-        status: 400
-        detail: A problem that indicates a syntactically correct, yet semantically illegal request. The Server can not process this request until the client resolves the semantic errors described in the violations section.
-        violations:
-        - field: accountId
-          message: must match "^[a-zA-Z]{6}$"
-          code: 20006
-    SearchAuditRecordsRequest_3:
-      value:
-        startDate: '2021-11-13T20:25:39.534Z'
-        endDate: '2021-11-15T16:07:12.723Z'
-        event: CREATED
-        author: jsmith@example.com
-        type: GROUP
-        ipAddress: 165.225.72.60
-        searchKeyword: Out-of-Office
-    NotFoundError_2:
-      description: Resource not found
-      value:
-        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#resource-not-found
-        title: Resource Not Found
-        status: 404
-        detail: Group with id:7b711203-03fe-425c-8503-25826f2b579e not found.
-    ErrorTooManyRecords_2:
-      description: Constraint Violation
-      value:
-        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#constraint-violation
-        title: Constraint Violation
-        status: 400
-        detail: A problem that indicates a syntactically correct, yet semantically illegal request. The Server can not process this request until the client resolves the semantic errors described in the violations section.
-        violations:
-        - field: endDate
-          message: Too many records within the requested time interval.
-          code: 20007
-    GroupSearchAuditRecordsResponse:
-      value:
-        pagination:
-          pageNumber: 1
-          pageSize: 5
-          total: 1
-        auditRecords:
-        - date: '2021-11-14T09:24:05.234Z'
-          event: CREATED
-          author: jsmith@example.com
-          ipAddress: 165.225.72.60
-          type: GROUP
-          auditData:
-            groupId: rt3e4567-e89b-12d3-a456-556642440000
-            name: CreditCardAgentGroup
-            description: Credit Card Agent Group
-            resources:
-            - type: User
-              resourceIds:
-              - 04703a3a-3dfb-4606-ae79-fd0fe0be3e64
-        links:
-          next: /api/admin/group/v1/accounts/ASDJGE/audit-records:search?pageNumber=2&pageSize=5
-          prev: /api/admin/group/v1/accounts/ASDJGE/audit-records:search?pageNumber=1&pageSize=5
-    SearchAuditRecordsRequest_4:
-      value:
-        startDate: '2021-11-13T20:25:39.534Z'
-        endDate: '2021-11-15T16:07:12.723Z'
-        event: CREATED
-        author: jsmith@example.com
-        type: QUEUE
-        ipAddress: 165.225.72.60
-        searchKeyword: Support
-    SearchAuditRecordsResponse_3:
-      value:
-        pagination:
-          pageNumber: 1
-          pageSize: 5
-          total: 1
-        auditRecords:
-        - date: '2021-11-14T09:24:05.234Z'
-          event: CREATED
-          author: admin
-          ipAddress: 165.225.72.60
-          type: QUEUE
-          auditData:
-            queueId: d62d5178-9920-415a-a5d9-066716384750
-            name: NA Support
-            description: Route enagements to support agents in the NA Region
-            timetableId: 7893b4a3-c952-43f5-87c7-8cefa1f49685
-            defaultAccountQueue: false
-            afterContactWork: true
-        links:
-          next: /api/admin/match/v1/accounts/ABCDEF/audit-records:search?pageNumber=2&pageSize=5
-          prev: /api/admin/match/v1/accounts/ABCDEF/audit-records:search?pageNumber=1&pageSize=5
-    SearchAuditRecordsRequest_5:
-      value:
-        startDate: '2021-11-13T20:25:39.534Z'
-        endDate: '2021-11-15T16:07:12.723Z'
-        event: CREATED
-        author: jsmith@example.com
-        type: TIMETABLE
-        ipAddress: 165.225.72.60
-        searchKeyword: timetable
-    SearchAuditRecordsResponse_4:
-      value:
-        pagination:
-          pageNumber: 2
-          pageSize: 5
-          total: 20
-        auditRecords:
-        - date: '2021-11-14T09:24:05.234Z'
-          event: CREATED
-          author: jsmith@example.com
-          ipAddress: 165.225.72.60
-          type: TIMETABLE
-          auditData:
-            autoDaylightSavingTime: false
-            description: Test Timetable
-            name: TestTimetable
-            timeZone: Pacific/Midway
-            timetableId: 5702a5be-51f9-4493-a83e-c09e768059e5
-        links:
-          next: /api/business-hours/v1/accounts/ASDJGE/audit-records:search?pageNumber=3&pageSize=5
-          prev: /api/business-hours/v1/accounts/ASDJGE/audit-records:search?pageNumber=1&pageSize=5
-    ErrorNotFound_2:
-      description: Not Found
-      value:
-        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#resource-not-found
-        title: Resource Not Found
-        status: 404
-        detail: Resource not found.
-    SearchAuditRecordsRequest_6:
-      value:
-        startDate: '2021-11-13T20:25:39.534Z'
-        endDate: '2021-11-15T16:07:12.723Z'
-        event: CREATED
-        author: jsmith@example.com
-        type: PROFILE
-        ipAddress: 165.225.72.60
-        searchKeyword: Chris Dunbar
-    SearchAuditRecordsResponse_5:
-      value:
-        pagination:
-          pageNumber: 2
-          pageSize: 5
-          total: 30
-        auditRecords:
-        - date: '2021-11-14T09:24:05.234Z'
-          event: CREATED
-          author: jsmith@example.com
-          ipAddress: 165.225.72.60
-          type: PROFILE
-          auditData:
-            profileId: W6D1JQ
-            profileName: Advanced
-            description: A profile with all the features
-            uxProfileId: 6f482dcd-54a9-445f-ba6d-8ca5ebd5261a
-            roles:
-            - Agent
-            memberOfGroups:
-            - 04703a3a-3dfb-4606-ae79-fd0fe0be3e64
-        links:
-          next: /api/admin/user/v1/accounts/ASDJGE/audit-records:search?pageNumber=1&pageSize=5
-          prev: /api/admin/user/v1/accounts/ASDJGE/audit-records:search?pageNumber=3&pageSize=5
-    ErrorNotFound_3:
-      description: Not Found
-      value:
-        type: https://developers.avayacloud.com/avaya-experience-platform/docs/error-handling#resource-not-found
-        title: Resource Not Found
-        status: 404
-        detail: Either there is no API method associated with the URL path of the request, or the request refers to one or more resources that were not found.
-    ErrorUnauthorized_2:
-      description: Unauthorized
-      value:
-        type: https://developers.avayacloud.com/avaya-experience-platform/docs/error-handling#unauthorized
-        title: Unauthorized
-        status: 401
-        detail: This operation requires authentication. See https://developers.avayacloud.com/avaya-experience-platform/docs/how-to-authenticate-with-ccaas-apis
-    ErrorInternalServerError_2:
-      description: Server Error
-      value:
-        type: https://developers.avayacloud.com/avaya-experience-platform/docs/error-handling#server-error
-        title: Server Error
-        status: 500
-        detail: An internal server error was encountered.
-    ErrorForbidden_2:
-      description: Forbidden
-      value:
-        type: https://developers.avayacloud.com/avaya-experience-platform/docs/error-handling#forbidden
-        title: Forbidden
-        status: 403
-        detail: According to the access control policy the current user and/or accountId does not have permission to access this resource.
-    ErrorTooManyRecords_3:
-      description: Constraint Violation
-      value:
-        type: https://developers.avayacloud.com/avaya-experience-platform/docs/error-handling#constraint-violation
-        title: Constraint Violation
-        status: 400
-        detail: A problem that indicates a syntactically correct, yet semantically illegal request. The Server can not process this request until the client resolves the semantic errors described in the violations section.
-        violations:
-        - field: interval
-          message: Too many records within the requested time interval.
-          code: 20007
-    ErrorConstraintViolation_2:
-      description: Constraint Violation
-      value:
-        type: https://developers.avayacloud.com/avaya-experience-platform/docs/error-handling#constraint-violation
-        title: Constraint Violation
-        status: 400
-        detail: A problem that indicates a syntactically correct, yet semantically illegal request. The Server can not process this request until the client resolves the semantic errors described in the violations section.
-        violations:
-        - field: accountId
-          message: must match "^[a-zA-Z]{6}$"
-          code: 20006
   schemas:
+    AuditRecords:
+      description: 'A collection of audit records.
+
+        '
+      type: object
+      properties:
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+        auditRecords:
+          type: array
+          items:
+            $ref: '#/components/schemas/AuditRecord'
+        links:
+          allOf:
+          - $ref: '#/components/schemas/Links'
+          example:
+            prev: /api/admin/account/v1/accounts/ASDJGE/audit-records:search?pageNumber=1&pageSize=10
+            next: /api/admin/account/v1/accounts/ASDJGE/audit-records:search?pageNumber=2&pageSize=10
+    AuditSearchFilter:
+      type: object
+      description: 'The filter to be applied when searching for audit records.
+
+        '
+      properties:
+        startDate:
+          type: string
+          format: date-time
+          description: 'The starting datetime to use when searching for audit records (in ISO 8601 format including timezone, ''yyyy-MM-dd''T''HH:mm:ss[.SSS]Z'').
+
+            '
+          example: '2021-11-13T20:25:39.534Z'
+        endDate:
+          type: string
+          format: date-time
+          description: 'The ending datetime to use when searching for audit records (in ISO 8601 format including timezone, ''yyyy-MM-dd''T''HH:mm:ss[.SSS]Z'').
+
+            '
+          example: '2021-11-15T16:07:12.723Z'
+        author:
+          type: string
+          description: 'The ID of the author who changed the auditable object. This can be a user within the system or an automated app.
+
+            '
+          maxLength: 255
+          pattern: ^[a-zA-Z0-9@._-]+$
+          example: jsmith@example.com
+        event:
+          type: string
+          description: "This field indicates the type of event that occurred on the auditable object.\n\nAn explanation of the values is listed below:\n  * CREATED - A new auditable object was created.\n  * UPDATED - An existing auditable object was updated.\n  * DELETED - An existing auditable object was deleted.\n"
+          enum:
+          - CREATED
+          - UPDATED
+          - DELETED
+        type:
+          description: 'The type of auditable object.
+
+
+            Accepted values:
+
+            * ACCOUNT
+
+            '
+          type: string
+          enum:
+          - ACCOUNT
+          example: ACCOUNT
+        ipAddress:
+          description: 'The originating IP Address of the author who changed the auditable object.
+
+            '
+          type: string
+          maxLength: 15
+          example: 165.225.72.60
+        searchKeyword:
+          description: 'Keyword to search for across all the audit records.
+
+            '
+          type: string
+          maxLength: 255
+      required:
+      - startDate
+      - endDate
+      - type
+    JsonNode:
+      type: object
+      title: JsonNode
+      description: 'Contains the state of the auditable object at the time the audit record was created.
+
+        '
+    Pagination:
+      type: object
+      properties:
+        pageNumber:
+          type: integer
+          description: The current page number.
+        pageSize:
+          type: integer
+          description: The max number of records that can be retrieved on this page.
+        total:
+          type: integer
+          description: The total number of records.
+    Links:
+      type: object
+      properties:
+        prev:
+          type: string
+          default: ''
+          description: URL of the previous page. Blank if currently on the first page.
+        next:
+          type: string
+          default: ''
+          description: URL of the next page. Blank if currently on the last page.
+    AuditRecord:
+      type: object
+      description: 'An audit record. Captures who, what, and when an auditable object changed within the system.
+
+        '
+      properties:
+        date:
+          type: string
+          description: 'The date and time of when the audit record was created.
+
+            '
+          example: '2021-06-24T19:03:01.463+00:00'
+        event:
+          type: string
+          description: "This field indicates the type of event that occurred on the auditable object.\n\nAn explanation of the values is listed below:\n  * CREATED - A new auditable object was created.\n  * UPDATED - An existing auditable object was updated.\n  * DELETED - An existing auditable object was deleted.\n  * ENABLED - An existing auditabled object was enabled.\n  * DISABLED - An existing auditabled object was disabled.\n"
+          enum:
+          - CREATED
+          - UPDATED
+          - DELETED
+          - ENABLED
+          - DISABLED
+        author:
+          type: string
+          example: jsmith@example.com
+          description: 'The ID of the author who changed the auditable object. This can be a user within the system or an automated app.
+
+            '
+        type:
+          description: 'The type of auditable object.
+
+
+            Accepted values:
+
+            * ACCOUNT
+
+            '
+          type: string
+          enum:
+          - ACCOUNT
+        ipAddress:
+          description: 'The originating IP Address of the author who changed the auditable object.
+
+            '
+          type: string
+          example: 165.225.72.60
+        auditData:
+          $ref: '#/components/schemas/JsonNode'
     Problem:
       type: object
       description: '<b>Problem Detail</b> as a way to carry machine-readable details of errors in a HTTP response to avoid the need to define new error response formats for HTTP APIs <a href="https://tools.ietf.org/html/rfc7807">RFC 7807</a>
@@ -912,165 +483,6 @@ components:
           - field: accountId
             message: must match "^[a-zA-Z]{6}$"
             code: 20006
-    Links:
-      type: object
-      properties:
-        prev:
-          type: string
-          default: ''
-          description: URL of the previous page. Blank if currently on the first page.
-        next:
-          type: string
-          default: ''
-          description: URL of the next page. Blank if currently on the last page.
-    AuditRecords:
-      description: 'A collection of audit records.
-
-        '
-      type: object
-      properties:
-        pagination:
-          $ref: '#/components/schemas/Pagination'
-        auditRecords:
-          type: array
-          items:
-            $ref: '#/components/schemas/AuditRecord'
-        links:
-          allOf:
-          - $ref: '#/components/schemas/Links'
-          example:
-            prev: /api/admin/account/v1/accounts/ASDJGE/audit-records:search?pageNumber=1&pageSize=10
-            next: /api/admin/account/v1/accounts/ASDJGE/audit-records:search?pageNumber=2&pageSize=10
-    Pagination:
-      type: object
-      properties:
-        pageNumber:
-          type: integer
-          description: The current page number.
-        pageSize:
-          type: integer
-          description: The max number of records that can be retrieved on this page.
-        total:
-          type: integer
-          description: The total number of records.
-    AuditSearchFilter:
-      type: object
-      description: 'The filter to be applied when searching for audit records.
-
-        '
-      properties:
-        startDate:
-          type: string
-          format: date-time
-          description: 'The starting datetime to use when searching for audit records (in ISO 8601 format including timezone, ''yyyy-MM-dd''T''HH:mm:ss[.SSS]Z'').
-
-            '
-          example: '2021-11-13T20:25:39.534Z'
-        endDate:
-          type: string
-          format: date-time
-          description: 'The ending datetime to use when searching for audit records (in ISO 8601 format including timezone, ''yyyy-MM-dd''T''HH:mm:ss[.SSS]Z'').
-
-            '
-          example: '2021-11-15T16:07:12.723Z'
-        author:
-          type: string
-          description: 'The ID of the author who changed the auditable object. This can be a user within the system or an automated app.
-
-            '
-          maxLength: 255
-          pattern: ^[a-zA-Z0-9@._-]+$
-          example: jsmith@example.com
-        event:
-          type: string
-          description: "This field indicates the type of event that occurred on the auditable object.\n\nAn explanation of the values is listed below:\n  * CREATED - A new auditable object was created.\n  * UPDATED - An existing auditable object was updated.\n  * DELETED - An existing auditable object was deleted.\n"
-          enum:
-          - CREATED
-          - UPDATED
-          - DELETED
-        type:
-          description: 'The type of auditable object.
-
-
-            Accepted values:
-
-            * ACCOUNT
-
-            '
-          type: string
-          enum:
-          - ACCOUNT
-          example: ACCOUNT
-        ipAddress:
-          description: 'The originating IP Address of the author who changed the auditable object.
-
-            '
-          type: string
-          maxLength: 15
-          example: 165.225.72.60
-        searchKeyword:
-          description: 'Keyword to search for across all the audit records.
-
-            '
-          type: string
-          maxLength: 255
-      required:
-      - startDate
-      - endDate
-      - type
-    JsonNode:
-      type: object
-      title: JsonNode
-      description: 'Contains the state of the auditable object at the time the audit record was created.
-
-        '
-    AuditRecord:
-      type: object
-      description: 'An audit record. Captures who, what, and when an auditable object changed within the system.
-
-        '
-      properties:
-        date:
-          type: string
-          description: 'The date and time of when the audit record was created.
-
-            '
-          example: '2021-06-24T19:03:01.463+00:00'
-        event:
-          type: string
-          description: "This field indicates the type of event that occurred on the auditable object.\n\nAn explanation of the values is listed below:\n  * CREATED - A new auditable object was created.\n  * UPDATED - An existing auditable object was updated.\n  * DELETED - An existing auditable object was deleted.\n  * ENABLED - An existing auditabled object was enabled.\n  * DISABLED - An existing auditabled object was disabled.\n"
-          enum:
-          - CREATED
-          - UPDATED
-          - DELETED
-          - ENABLED
-          - DISABLED
-        author:
-          type: string
-          example: jsmith@example.com
-          description: 'The ID of the author who changed the auditable object. This can be a user within the system or an automated app.
-
-            '
-        type:
-          description: 'The type of auditable object.
-
-
-            Accepted values:
-
-            * ACCOUNT
-
-            '
-          type: string
-          enum:
-          - ACCOUNT
-        ipAddress:
-          description: 'The originating IP Address of the author who changed the auditable object.
-
-            '
-          type: string
-          example: 165.225.72.60
-        auditData:
-          $ref: '#/components/schemas/JsonNode'
     AuditRecords_2:
       description: 'A collection of audit records.
 
@@ -1315,15 +727,6 @@ components:
           example: 165.225.72.60
         auditData:
           $ref: '#/components/schemas/JsonNode'
-    Links_2:
-      type: object
-      properties:
-        prev:
-          type: string
-          description: URL of the previous page. Blank if currently on the first page.
-        next:
-          type: string
-          description: URL of the next page. Blank if currently on the last page.
     AuditRecords_4:
       description: 'A collection of audit records.
 
@@ -1403,6 +806,15 @@ components:
       - startDate
       - endDate
       - type
+    Links_2:
+      type: object
+      properties:
+        prev:
+          type: string
+          description: URL of the previous page. Blank if currently on the first page.
+        next:
+          type: string
+          description: URL of the next page. Blank if currently on the last page.
     AuditRecord_4:
       type: object
       description: 'An audit record. Captures who, what, and when an auditable object changed within the system.
@@ -1445,15 +857,6 @@ components:
           example: 165.225.72.60
         auditData:
           $ref: '#/components/schemas/JsonNode'
-    Links_3:
-      type: object
-      properties:
-        prev:
-          type: string
-          description: URL of the previous page. Blank if currently on the first page.
-        next:
-          type: string
-          description: URL of the next page. Blank if currently on the last page.
     AuditRecords_5:
       description: A collection of audit records.
       type: object
@@ -1519,6 +922,15 @@ components:
       - startDate
       - endDate
       - type
+    Links_3:
+      type: object
+      properties:
+        prev:
+          type: string
+          description: URL of the previous page. Blank if currently on the first page.
+        next:
+          type: string
+          description: URL of the next page. Blank if currently on the last page.
     AuditRecord_5:
       type: object
       description: An audit record. Captures who, what, and when an auditable object changed within the system.
@@ -1585,21 +997,6 @@ components:
           example:
             prev: /api/admin/user/v1/accounts/ASDJGE/audit-records:search?pageNumber=1&pageSize=10
             next: /api/admin/user/v1/accounts/ASDJGE/audit-records:search?pageNumber=3&pageSize=10
-    Pagination_2:
-      type: object
-      properties:
-        pageNumber:
-          type: integer
-          description: The current page number.
-          example: 2
-        pageSize:
-          type: integer
-          description: The max number of records that can be retrieved on this page.
-          example: 10
-        total:
-          type: integer
-          description: The total number of records.
-          example: 100
     AuditSearchFilter_6:
       type: object
       description: 'The filter to be applied when searching for audit records.
@@ -1661,6 +1058,21 @@ components:
             '
           type: string
           maxLength: 255
+    Pagination_2:
+      type: object
+      properties:
+        pageNumber:
+          type: integer
+          description: The current page number.
+          example: 2
+        pageSize:
+          type: integer
+          description: The max number of records that can be retrieved on this page.
+          example: 10
+        total:
+          type: integer
+          description: The total number of records.
+          example: 100
     AuditRecord_6:
       type: object
       description: 'An audit record. Captures who, what, and when an auditable object changed within the system.
@@ -1705,6 +1117,594 @@ components:
           $ref: '#/components/schemas/JsonNode'
         previousData:
           $ref: '#/components/schemas/JsonNode'
+  responses:
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/UnauthorizedError'
+    ErrorConstraintViolation:
+      description: Constraint Violation
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ConstraintViolationError'
+    InternalServerError:
+      description: All other application errors
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ServerError'
+    Forbidden:
+      description: Forbidden
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ForbiddenError'
+    NotFound:
+      description: Not Found
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/NotFoundError'
+    Unauthorized_2:
+      description: Unauthorized
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorUnauthorized'
+    ErrorConstraintViolation_2:
+      description: Constraint Violation
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorConstraintViolation'
+    InternalServerError_2:
+      description: All other application errors
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorInternalServerError'
+    Forbidden_2:
+      description: Forbidden
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorForbidden'
+    NotFound_2:
+      description: Not Found
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorNotFound'
+    Not_Found:
+      description: Not Found
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/NotFoundError_2'
+    Unauthorized_3:
+      description: Unauthorized.
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorUnauthorized'
+    InternalServerError_3:
+      description: Internal Server Error
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorInternalServerError'
+    Forbidden_3:
+      description: Forbidden.
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorForbidden'
+    NotFound_3:
+      description: Not Found.
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorNotFound'
+    BadRequest:
+      description: Bad Request
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorConstraintViolation'
+    Unauthorized_4:
+      description: Unauthorized
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorUnauthorized'
+    Forbidden_4:
+      description: Forbidden
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorForbidden'
+    NotFound_4:
+      description: Not Found
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorNotFound_2'
+    BadRequest_2:
+      description: BadRequest
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorConstraintViolation'
+    InternalServer:
+      description: Internal Server Error
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorInternalServerError'
+    Unauthorized_5:
+      description: Unauthorized
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorUnauthorized_2'
+    ErrorConstraintViolation_3:
+      description: Constraint Violation
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorConstraintViolation_2'
+    Forbidden_5:
+      description: Forbidden
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorForbidden_2'
+    NotFound_5:
+      description: Not Found
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorNotFound_3'
+    InternalServer_2:
+      description: Request processing failed
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorInternalServerError_2'
+  examples:
+    SearchAuditRecordsResponse:
+      value:
+        pagination:
+          pageNumber: 1
+          pageSize: 5
+          total: 1
+        auditRecords:
+        - date: '2021-11-14T09:24:05.234Z'
+          event: CREATED
+          author: jsmith@example.com
+          ipAddress: 165.225.72.60
+          type: ACCOUNT
+          auditData:
+            name: AricentAccount
+            type: ACCOUNT
+            enabled: true
+            accountSize: 10
+        links:
+          next: /api/admin/account/v1/accounts/ASDJGE/audit-records:search?pageNumber=2&pageSize=5
+          prev: /api/admin/account/v1/accounts/ASDJGE/audit-records:search?pageNumber=1&pageSize=5
+    ServerError:
+      description: Internal Server Error
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#server-error
+        title: Server Error
+        status: 500
+        detail: An internal server error was encountered.
+    ConstraintViolationError:
+      description: Constraint Violation
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#constraint-violation
+        title: Constraint Violation
+        status: 400
+        detail: A problem that indicates a syntactically correct, yet semantically illegal request. The Server can not process this request until the client resolves the semantic errors described in the violations section.
+        violations:
+        - field: accountId
+          message: must match "^[a-zA-Z]{6}$"
+          code: 20006
+    UnauthorizedError:
+      description: Forbidden
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#unauthorized
+        title: Unauthorized
+        status: 401
+        detail: This operation requires authentication. See https://developers.avayacloud.com/onecloud-ccaas/docs/how-to-authenticate-with-ccaas-apis
+    SearchAuditRecordsRequest:
+      value:
+        startDate: '2021-11-13T20:25:39.534Z'
+        endDate: '2021-11-15T16:07:12.723Z'
+        event: CREATED
+        author: jsmith@example.com
+        type: ACCOUNT
+        ipAddress: 165.225.72.60
+        searchKeyword: Chris Dunbar
+    ErrorTooManyRecords:
+      description: Constraint Violation
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#constraint-violation
+        title: Constraint Violation
+        status: 400
+        detail: A problem that indicates a syntactically correct, yet semantically illegal request. The Server can not process this request until the client resolves the semantic errors described in the violations section.
+        violations:
+        - field: interval
+          message: Too many records within the requested time interval.
+          code: 20007
+    ForbiddenError:
+      description: Forbidden
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#forbidden
+        title: Forbidden
+        status: 403
+        detail: According to the access control policy the current user and/or accountId does not have permission to access this resource.
+    NotFoundError:
+      description: Resource not found
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#resource-not-found
+        title: Resource Not Found
+        status: 404
+        detail: Account with AccountId:ASDAES not found.
+    ErrorForbidden:
+      description: Forbidden
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#forbidden
+        title: Forbidden
+        status: 403
+        detail: According to the access control policy the current user and/or accountId does not have permission to access this resource.
+    SearchAuditRecordsResponse_2:
+      value:
+        pagination:
+          pageNumber: 1
+          pageSize: 5
+          total: 1
+        auditRecords:
+        - date: '2021-11-14T09:24:05.234Z'
+          event: CREATED
+          author: jsmith@example.com
+          ipAddress: 165.225.72.60
+          type: ELEMENT
+          auditData:
+            name: Avaya Cloud Office
+            didNumbers:
+            - '+16062128688'
+            - '+12702289911'
+            elementType: ACO
+            environment: Production
+            description: An Avaya Cloud Office Element
+            sipServerHostName: sip://platform.ringcentral.com/restapi/v1
+        links:
+          next: /api/admin/inventory/v1/accounts/ASDJGE/audit-records:search?pageNumber=2&pageSize=5
+          prev: /api/admin/inventory/v1/accounts/ASDJGE/audit-records:search?pageNumber=1&pageSize=5
+    SearchAuditRecordsRequest_2:
+      value:
+        startDate: '2021-11-13T20:25:39.534Z'
+        endDate: '2021-11-15T16:07:12.723Z'
+        event: CREATED
+        author: jsmith@example.com
+        type: ELEMENT
+        ipAddress: 165.225.72.60
+        searchKeyword: Out-of-Office
+    ErrorNotFound:
+      description: Not Found
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#resource-not-found
+        title: Resource Not Found
+        status: 404
+        detail: Either there is no API method associated with the URL path of the request, or the request refers to one or more resources that were not found.
+    ErrorUnauthorized:
+      description: Unauthorized
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#unauthorized
+        title: Unauthorized
+        status: 401
+        detail: This operation requires authentication. See https://developers.avayacloud.com/onecloud-ccaas/docs/how-to-authenticate-with-ccaas-apis
+    ErrorConstraintViolation:
+      description: Constraint Violation
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#constraint-violation
+        title: Constraint Violation
+        status: 400
+        detail: A problem that indicates a syntactically correct, yet semantically illegal request. The Server can not process this request until the client resolves the semantic errors described in the violations section.
+        violations:
+        - field: accountId
+          message: must match "^[a-zA-Z]{6}$"
+          code: 20006
+    ErrorInternalServerError:
+      description: Server Error
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#server-error
+        title: Server Error
+        status: 500
+        detail: An internal server error was encountered.
+    SearchAuditRecordsRequest_3:
+      value:
+        startDate: '2021-11-13T20:25:39.534Z'
+        endDate: '2021-11-15T16:07:12.723Z'
+        event: CREATED
+        author: jsmith@example.com
+        type: GROUP
+        ipAddress: 165.225.72.60
+        searchKeyword: Out-of-Office
+    GroupSearchAuditRecordsResponse:
+      value:
+        pagination:
+          pageNumber: 1
+          pageSize: 5
+          total: 1
+        auditRecords:
+        - date: '2021-11-14T09:24:05.234Z'
+          event: CREATED
+          author: jsmith@example.com
+          ipAddress: 165.225.72.60
+          type: GROUP
+          auditData:
+            groupId: rt3e4567-e89b-12d3-a456-556642440000
+            name: CreditCardAgentGroup
+            description: Credit Card Agent Group
+            resources:
+            - type: User
+              resourceIds:
+              - 04703a3a-3dfb-4606-ae79-fd0fe0be3e64
+        links:
+          next: /api/admin/group/v1/accounts/ASDJGE/audit-records:search?pageNumber=2&pageSize=5
+          prev: /api/admin/group/v1/accounts/ASDJGE/audit-records:search?pageNumber=1&pageSize=5
+    ErrorTooManyRecords_2:
+      description: Constraint Violation
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#constraint-violation
+        title: Constraint Violation
+        status: 400
+        detail: A problem that indicates a syntactically correct, yet semantically illegal request. The Server can not process this request until the client resolves the semantic errors described in the violations section.
+        violations:
+        - field: endDate
+          message: Too many records within the requested time interval.
+          code: 20007
+    NotFoundError_2:
+      description: Resource not found
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#resource-not-found
+        title: Resource Not Found
+        status: 404
+        detail: Group with id:7b711203-03fe-425c-8503-25826f2b579e not found.
+    SearchAuditRecordsResponse_3:
+      value:
+        pagination:
+          pageNumber: 1
+          pageSize: 5
+          total: 1
+        auditRecords:
+        - date: '2021-11-14T09:24:05.234Z'
+          event: CREATED
+          author: admin
+          ipAddress: 165.225.72.60
+          type: QUEUE
+          auditData:
+            queueId: d62d5178-9920-415a-a5d9-066716384750
+            name: NA Support
+            description: Route enagements to support agents in the NA Region
+            timetableId: 7893b4a3-c952-43f5-87c7-8cefa1f49685
+            defaultAccountQueue: false
+            afterContactWork: true
+        links:
+          next: /api/admin/match/v1/accounts/ABCDEF/audit-records:search?pageNumber=2&pageSize=5
+          prev: /api/admin/match/v1/accounts/ABCDEF/audit-records:search?pageNumber=1&pageSize=5
+    SearchAuditRecordsRequest_4:
+      value:
+        startDate: '2021-11-13T20:25:39.534Z'
+        endDate: '2021-11-15T16:07:12.723Z'
+        event: CREATED
+        author: jsmith@example.com
+        type: QUEUE
+        ipAddress: 165.225.72.60
+        searchKeyword: Support
+    SearchAuditRecordsResponse_4:
+      value:
+        pagination:
+          pageNumber: 2
+          pageSize: 5
+          total: 20
+        auditRecords:
+        - date: '2021-11-14T09:24:05.234Z'
+          event: CREATED
+          author: jsmith@example.com
+          ipAddress: 165.225.72.60
+          type: TIMETABLE
+          auditData:
+            autoDaylightSavingTime: false
+            description: Test Timetable
+            name: TestTimetable
+            timeZone: Pacific/Midway
+            timetableId: 5702a5be-51f9-4493-a83e-c09e768059e5
+        links:
+          next: /api/business-hours/v1/accounts/ASDJGE/audit-records:search?pageNumber=3&pageSize=5
+          prev: /api/business-hours/v1/accounts/ASDJGE/audit-records:search?pageNumber=1&pageSize=5
+    SearchAuditRecordsRequest_5:
+      value:
+        startDate: '2021-11-13T20:25:39.534Z'
+        endDate: '2021-11-15T16:07:12.723Z'
+        event: CREATED
+        author: jsmith@example.com
+        type: TIMETABLE
+        ipAddress: 165.225.72.60
+        searchKeyword: timetable
+    ErrorNotFound_2:
+      description: Not Found
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#resource-not-found
+        title: Resource Not Found
+        status: 404
+        detail: Resource not found.
+    ErrorForbidden_2:
+      description: Forbidden
+      value:
+        type: https://developers.avayacloud.com/avaya-experience-platform/docs/error-handling#forbidden
+        title: Forbidden
+        status: 403
+        detail: According to the access control policy the current user and/or accountId does not have permission to access this resource.
+    SearchAuditRecordsResponse_5:
+      value:
+        pagination:
+          pageNumber: 2
+          pageSize: 5
+          total: 30
+        auditRecords:
+        - date: '2021-11-14T09:24:05.234Z'
+          event: CREATED
+          author: jsmith@example.com
+          ipAddress: 165.225.72.60
+          type: PROFILE
+          auditData:
+            profileId: W6D1JQ
+            profileName: Advanced
+            description: A profile with all the features
+            uxProfileId: 6f482dcd-54a9-445f-ba6d-8ca5ebd5261a
+            roles:
+            - Agent
+            memberOfGroups:
+            - 04703a3a-3dfb-4606-ae79-fd0fe0be3e64
+        links:
+          next: /api/admin/user/v1/accounts/ASDJGE/audit-records:search?pageNumber=1&pageSize=5
+          prev: /api/admin/user/v1/accounts/ASDJGE/audit-records:search?pageNumber=3&pageSize=5
+    SearchAuditRecordsRequest_6:
+      value:
+        startDate: '2021-11-13T20:25:39.534Z'
+        endDate: '2021-11-15T16:07:12.723Z'
+        event: CREATED
+        author: jsmith@example.com
+        type: PROFILE
+        ipAddress: 165.225.72.60
+        searchKeyword: Chris Dunbar
+    ErrorNotFound_3:
+      description: Not Found
+      value:
+        type: https://developers.avayacloud.com/avaya-experience-platform/docs/error-handling#resource-not-found
+        title: Resource Not Found
+        status: 404
+        detail: Either there is no API method associated with the URL path of the request, or the request refers to one or more resources that were not found.
+    ErrorTooManyRecords_3:
+      description: Constraint Violation
+      value:
+        type: https://developers.avayacloud.com/avaya-experience-platform/docs/error-handling#constraint-violation
+        title: Constraint Violation
+        status: 400
+        detail: A problem that indicates a syntactically correct, yet semantically illegal request. The Server can not process this request until the client resolves the semantic errors described in the violations section.
+        violations:
+        - field: interval
+          message: Too many records within the requested time interval.
+          code: 20007
+    ErrorUnauthorized_2:
+      description: Unauthorized
+      value:
+        type: https://developers.avayacloud.com/avaya-experience-platform/docs/error-handling#unauthorized
+        title: Unauthorized
+        status: 401
+        detail: This operation requires authentication. See https://developers.avayacloud.com/avaya-experience-platform/docs/how-to-authenticate-with-ccaas-apis
+    ErrorConstraintViolation_2:
+      description: Constraint Violation
+      value:
+        type: https://developers.avayacloud.com/avaya-experience-platform/docs/error-handling#constraint-violation
+        title: Constraint Violation
+        status: 400
+        detail: A problem that indicates a syntactically correct, yet semantically illegal request. The Server can not process this request until the client resolves the semantic errors described in the violations section.
+        violations:
+        - field: accountId
+          message: must match "^[a-zA-Z]{6}$"
+          code: 20006
+    ErrorInternalServerError_2:
+      description: Server Error
+      value:
+        type: https://developers.avayacloud.com/avaya-experience-platform/docs/error-handling#server-error
+        title: Server Error
+        status: 500
+        detail: An internal server error was encountered.
   parameters:
     pageNumber:
       name: pageNumber
@@ -1758,29 +1758,6 @@ components:
         maxLength: 6
         pattern: ^[a-zA-Z]{6}$
         example: ABCDEF
-    pageNumber_4:
-      name: pageNumber
-      description: The target page of results.
-      required: false
-      in: query
-      schema:
-        type: integer
-        format: int32
-        default: 1
-        minimum: 1
-        example: 1
-    pageSize:
-      name: pageSize
-      description: The maximum number of results per page.
-      required: false
-      in: query
-      schema:
-        type: integer
-        format: int32
-        default: 5
-        minimum: 5
-        maximum: 50
-        example: 5
     orderBy:
       name: orderBy
       in: query
@@ -1800,6 +1777,29 @@ components:
         minLength: 4
         maxLength: 23
         example: date desc
+    pageSize:
+      name: pageSize
+      description: The maximum number of results per page.
+      required: false
+      in: query
+      schema:
+        type: integer
+        format: int32
+        default: 5
+        minimum: 5
+        maximum: 50
+        example: 5
+    pageNumber_4:
+      name: pageNumber
+      description: The target page of results.
+      required: false
+      in: query
+      schema:
+        type: integer
+        format: int32
+        default: 1
+        minimum: 1
+        example: 1
   securitySchemes:
     BearerAuth:
       type: http

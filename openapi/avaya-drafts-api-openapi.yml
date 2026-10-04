@@ -291,6 +291,69 @@ paths:
           default: '80'
 components:
   examples:
+    ErrorForbidden:
+      description: Forbidden
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#forbidden
+        title: Forbidden
+        status: 403
+        detail: According to the access control policy the current user and/or accountId does not have permission to access this resource.
+    MessageDraftResponse:
+      value:
+        draftId: b3c49e7e-b2ea-43f5-b911-17eb36974095
+        engagementId: ecc1b913-c351-461d-947b-00fb91586b25
+        dialogId: bafba69d-5220-4cb8-9f02-82fe4f57f825
+        parentMessageId: e1e3d642-4200-4c1f-b010-b8ac46957ebd
+        channelProviderId: 8252111c-4798-4fbf-bef7-44ddc671b2b0
+        channelId: Email
+        body:
+          elementType: text
+          elementText:
+            text: string
+            textFormat: PLAINTEXT
+          payload: this is message body
+        headers:
+          priority: high
+          sensitivity: high
+          encoding: Optional[HTML]
+          subject: 'Re: Regarding car enquiry'
+          from: test_dev1_02@outlook.com
+          to:
+          - customer@abc.com
+          cc:
+          - customer@abc.com
+          bcc:
+          - customer@abc.com
+          replyTo: customer@abc.com
+          clientDeviceTag: android
+          messageSourceServerTag: connector01
+          providerTimestamp: '2023-10-25T16:38:56.691Z'
+          additionalHeaders:
+            Content-Language: en
+        attachments:
+        - attachmentId: 7200ca37-7356-11ee-b8a9-41cf9e26c986
+          name: test.txt
+          size: 1353
+          contentType: text/plain
+          url: https://service-domain.com/file.png
+          captionText: test logs
+          contentId: company-logo-cid
+          thumbnailUrl: https://somedomain.com/thumb.png
+          additionalProperties:
+            tags: '["logo-small"]'
+        customData:
+          sentiment: neutral
+        messageType: REPLY
+        correlationId: e5a3d414-a9dd-4297-964c-e048efd250b5
+        lastUpdatedBy: 8fac92b8-5335-44b9-8347-efe484ca569a
+        lastUpdatedAt: '2023-10-25T16:38:56.692Z'
+    ErrorNotFound:
+      description: Not Found
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#not-found
+        title: Not Found
+        status: 404
+        detail: Either there is no API method associated with the URL path of the request, or the request refers to one or more resources that were not found.
     MessageDraftListResponse:
       value:
         pagination:
@@ -348,13 +411,6 @@ components:
         links:
           prev: ''
           next: /api/digital/draft/query/v1/accounts/ABCDEF/engagements/10494b78-710c-11eb-9439-0242ac130002/drafts?pageSize=1&pageNumber=2
-    ErrorNotFound:
-      description: Not Found
-      value:
-        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#not-found
-        title: Not Found
-        status: 404
-        detail: Either there is no API method associated with the URL path of the request, or the request refers to one or more resources that were not found.
     ErrorUnauthorized:
       description: Unauthorized
       value:
@@ -362,69 +418,6 @@ components:
         title: Unauthorized
         status: 401
         detail: This operation requires authentication. See https://developers.avayacloud.com/onecloud-ccaas/docs/how-to-authenticate-with-ccaas-apis
-    ErrorInternalServerError:
-      description: Server Error
-      value:
-        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#server-error
-        title: Server Error
-        status: 500
-        detail: An internal server error was encountered.
-    ErrorForbidden:
-      description: Forbidden
-      value:
-        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#forbidden
-        title: Forbidden
-        status: 403
-        detail: According to the access control policy the current user and/or accountId does not have permission to access this resource.
-    MessageDraftResponse:
-      value:
-        draftId: b3c49e7e-b2ea-43f5-b911-17eb36974095
-        engagementId: ecc1b913-c351-461d-947b-00fb91586b25
-        dialogId: bafba69d-5220-4cb8-9f02-82fe4f57f825
-        parentMessageId: e1e3d642-4200-4c1f-b010-b8ac46957ebd
-        channelProviderId: 8252111c-4798-4fbf-bef7-44ddc671b2b0
-        channelId: Email
-        body:
-          elementType: text
-          elementText:
-            text: string
-            textFormat: PLAINTEXT
-          payload: this is message body
-        headers:
-          priority: high
-          sensitivity: high
-          encoding: Optional[HTML]
-          subject: 'Re: Regarding car enquiry'
-          from: test_dev1_02@outlook.com
-          to:
-          - customer@abc.com
-          cc:
-          - customer@abc.com
-          bcc:
-          - customer@abc.com
-          replyTo: customer@abc.com
-          clientDeviceTag: android
-          messageSourceServerTag: connector01
-          providerTimestamp: '2023-10-25T16:38:56.691Z'
-          additionalHeaders:
-            Content-Language: en
-        attachments:
-        - attachmentId: 7200ca37-7356-11ee-b8a9-41cf9e26c986
-          name: test.txt
-          size: 1353
-          contentType: text/plain
-          url: https://service-domain.com/file.png
-          captionText: test logs
-          contentId: company-logo-cid
-          thumbnailUrl: https://somedomain.com/thumb.png
-          additionalProperties:
-            tags: '["logo-small"]'
-        customData:
-          sentiment: neutral
-        messageType: REPLY
-        correlationId: e5a3d414-a9dd-4297-964c-e048efd250b5
-        lastUpdatedBy: 8fac92b8-5335-44b9-8347-efe484ca569a
-        lastUpdatedAt: '2023-10-25T16:38:56.692Z'
     ErrorConstraintViolation:
       description: Constraint Violation
       value:
@@ -436,6 +429,13 @@ components:
         - field: engagementId
           message: must match "^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}$"
           code: 20006
+    ErrorInternalServerError:
+      description: Server Error
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#server-error
+        title: Server Error
+        status: 500
+        detail: An internal server error was encountered.
     MessageDraftRequest:
       value:
         dialogId: bafba69d-5220-4cb8-9f02-82fe4f57f825
@@ -483,15 +483,6 @@ components:
         correlationId: e5a3d414-a9dd-4297-964c-e048efd250b5
         updatedBy: 8fac92b8-5335-44b9-8347-efe484ca569a
   responses:
-    NotFound:
-      description: Not Found.
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorNotFound'
     Unauthorized:
       description: Unauthorized.
       content:
@@ -501,15 +492,6 @@ components:
           examples:
             default:
               $ref: '#/components/examples/ErrorUnauthorized'
-    BadRequest:
-      description: Bad Request
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorConstraintViolation'
     InternalServerError:
       description: Internal Server Error
       content:
@@ -528,28 +510,25 @@ components:
           examples:
             default:
               $ref: '#/components/examples/ErrorForbidden'
+    NotFound:
+      description: Not Found.
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorNotFound'
+    BadRequest:
+      description: Bad Request
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorConstraintViolation'
   parameters:
-    engagementId:
-      name: engagementId
-      description: The unique 36 character internal id that represents the engagement.
-      required: true
-      in: path
-      schema:
-        type: string
-        minLength: 36
-        maxLength: 36
-        pattern: ^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}$
-        example: 8d7cf5b8-70ad-11eb-9439-0242ac130002
-    pageNumber:
-      name: pageNumber
-      in: query
-      description: Page number of messages. Default value is 1
-      schema:
-        type: integer
-        format: int32
-        default: 1
-        minimum: 1
-        example: 1
     pageSize:
       name: pageSize
       in: query
@@ -561,6 +540,17 @@ components:
         minimum: 1
         maximum: 50
         example: 10
+    engagementId:
+      name: engagementId
+      description: The unique 36 character internal id that represents the engagement.
+      required: true
+      in: path
+      schema:
+        type: string
+        minLength: 36
+        maxLength: 36
+        pattern: ^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}$
+        example: 8d7cf5b8-70ad-11eb-9439-0242ac130002
     draftId:
       name: draftId
       description: The unique 36 character internal id that represents the draft.
@@ -572,6 +562,16 @@ components:
         maxLength: 36
         pattern: ^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}$
         example: dfd117d7-73e3-4436-8bd7-3ce8f1a008ed
+    pageNumber:
+      name: pageNumber
+      in: query
+      description: Page number of messages. Default value is 1
+      schema:
+        type: integer
+        format: int32
+        default: 1
+        minimum: 1
+        example: 1
     accountId:
       name: accountId
       description: The unique 6 character internal id that represents the customer account.
@@ -584,6 +584,93 @@ components:
         pattern: ^[a-zA-Z]{6}$
         example: ABCDEF
   schemas:
+    TextFormat:
+      description: The message text format
+      example: PLAINTEXT
+      type: string
+      enum:
+      - PLAINTEXT
+      - HTML
+      - MARKDOWN
+    BodyElement:
+      type: object
+      description: Definition of the body element such as the type of element, the message text and format
+      required:
+      - elementType
+      - elementText
+      properties:
+        elementType:
+          type: string
+          minLength: 1
+          maxLength: 50
+          description: The type of the body element such as text, image, file, postback, carousel, location
+          example: text
+        elementText:
+          $ref: '#/components/schemas/ElementText'
+        payload:
+          type: string
+          description: Data required to help render the message on end clients
+          maxLength: 4096
+    Attachment:
+      type: object
+      description: Meta information about the media
+      required:
+      - attachmentId
+      - name
+      - size
+      - contentType
+      - url
+      properties:
+        attachmentId:
+          type: string
+          description: The unique 36 character internal id for the attachment
+          minLength: 36
+          maxLength: 36
+          pattern: ^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}$
+        name:
+          type: string
+          maxLength: 256
+          description: The name of the attachment
+        size:
+          type: integer
+          format: int64
+          description: The size of the attachment in bytes
+        contentType:
+          type: string
+          maxLength: 256
+          description: The content type of the attachment
+        contentId:
+          type: string
+          maxLength: 256
+          description: The content id of the attachment
+        url:
+          type: string
+          maxLength: 2048
+          description: The URL link to retrieve the attachment
+        captionText:
+          type: string
+          maxLength: 256
+          description: The text describing the caption of the attachment
+        thumbnailUrl:
+          type: string
+          maxLength: 2048
+          description: The URL link to retrieve the thumbnail of the attachment
+        additionalProperties:
+          type: object
+          maxProperties: 10
+          description: Any additional properties of the attachment like labels, tags, revision numbers, display properties, etc.
+          additionalProperties:
+            type: string
+            maxLength: 256
+    MessageType:
+      description: 'Type of message, NEW is a new email received/sent by contact center, REPLY is email replied to/by contact center, FORWARD is email forwarded to/by contact center).
+
+        '
+      type: string
+      enum:
+      - NEW
+      - REPLY
+      - FORWARD
     Problem:
       type: object
       description: '<b>Problem Detail</b> as a way to carry machine-readable details of errors in a HTTP response to avoid the need to define new error response formats for HTTP APIs <a href="https://tools.ietf.org/html/rfc7807">RFC 7807</a>
@@ -669,23 +756,6 @@ components:
           - field: accountId
             message: must match "^[a-zA-Z]{6}$"
             code: 20006
-    Links:
-      type: object
-      properties:
-        prev:
-          type: string
-          description: URL of the previous page. Blank if currently on the first page.
-        next:
-          type: string
-          description: URL of the next page. Blank if currently on the last page.
-    TextFormat:
-      description: The message text format
-      example: PLAINTEXT
-      type: string
-      enum:
-      - PLAINTEXT
-      - HTML
-      - MARKDOWN
     ElementText:
       type: object
       description: The message text and format of the message body
@@ -698,97 +768,6 @@ components:
           description: The message text
         textFormat:
           $ref: '#/components/schemas/TextFormat'
-    MessageDraftPage:
-      type: object
-      description: A message page that is sent in response of request to retrieving messages
-      properties:
-        pagination:
-          $ref: '#/components/schemas/Pagination'
-        messages:
-          type: array
-          items:
-            $ref: '#/components/schemas/MessageDraft'
-        links:
-          $ref: '#/components/schemas/Links'
-    Pagination:
-      type: object
-      properties:
-        pageNumber:
-          type: integer
-          description: The current page number.
-        pageSize:
-          type: integer
-          description: The max number of records that can be retrieved on this page.
-        total:
-          type: integer
-          description: The total number of records.
-    MessageHeaders:
-      type: object
-      properties:
-        priority:
-          type: string
-          maxLength: 32
-          description: The priority of the message set by the provider
-        sensitivity:
-          type: string
-          maxLength: 32
-          description: The sensitivity of the message set by the provider
-        encoding:
-          type: string
-          maxLength: 32
-          description: The encoding used for the body of the message
-        subject:
-          type: string
-          maxLength: 256
-          description: The subject of the message set by the provider
-        from:
-          type: string
-          maxLength: 256
-          description: The sender of the message set by the provider
-        to:
-          type: array
-          description: The To (recipients) of the message set by the provider
-          maxItems: 50
-          items:
-            type: string
-            maxLength: 256
-        cc:
-          type: array
-          maxItems: 50
-          description: The Cc (recipients) of the message set by the provider. This field is mainly used for email messages
-          items:
-            type: string
-            maxLength: 256
-        bcc:
-          type: array
-          maxItems: 50
-          description: The Bcc (recipients) of the message set by the provider. This field is mainly used for email messages
-          items:
-            type: string
-            maxLength: 256
-        replyTo:
-          type: string
-          maxLength: 256
-          description: The address to use when replying.
-        clientDeviceTag:
-          type: string
-          maxLength: 256
-          description: The tag used to identify the client device that was used to send the message.
-        messageSourceServerTag:
-          type: string
-          maxLength: 256
-          description: The tag used by a service to identify that this message was sent by itself.
-        providerTimestamp:
-          type: string
-          format: date-time
-          description: The date time when the message was captured by the provider (in ISO 8601 format including timezone, 'yyyy-MM-dd'T'HH:mm:ss[.SSS]Z')
-        additionalHeaders:
-          type: object
-          description: The additional header fields of the message. For example if the payload is of a specific version that the clients rendering the payload need to be aware of that information can be sent here. Total size is limited to 256KB (including keys and values).
-          additionalProperties:
-            type: string
-          x-disable-custom-linter-rules:
-          - request-body-validation
     MessageDraft:
       type: object
       description: Message Draft
@@ -876,85 +855,106 @@ components:
           type: string
           format: date-time
           description: The datetime when the draft was last updated (in ISO 8601 format including timezone, 'yyyy-MM-dd'T'HH:mm:ss[.SSS]Z')
-    Attachment:
+    Pagination:
       type: object
-      description: Meta information about the media
-      required:
-      - attachmentId
-      - name
-      - size
-      - contentType
-      - url
       properties:
-        attachmentId:
-          type: string
-          description: The unique 36 character internal id for the attachment
-          minLength: 36
-          maxLength: 36
-          pattern: ^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}$
-        name:
-          type: string
-          maxLength: 256
-          description: The name of the attachment
-        size:
+        pageNumber:
           type: integer
-          format: int64
-          description: The size of the attachment in bytes
-        contentType:
+          description: The current page number.
+        pageSize:
+          type: integer
+          description: The max number of records that can be retrieved on this page.
+        total:
+          type: integer
+          description: The total number of records.
+    Links:
+      type: object
+      properties:
+        prev:
+          type: string
+          description: URL of the previous page. Blank if currently on the first page.
+        next:
+          type: string
+          description: URL of the next page. Blank if currently on the last page.
+    MessageDraftPage:
+      type: object
+      description: A message page that is sent in response of request to retrieving messages
+      properties:
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+        messages:
+          type: array
+          items:
+            $ref: '#/components/schemas/MessageDraft'
+        links:
+          $ref: '#/components/schemas/Links'
+    MessageHeaders:
+      type: object
+      properties:
+        priority:
+          type: string
+          maxLength: 32
+          description: The priority of the message set by the provider
+        sensitivity:
+          type: string
+          maxLength: 32
+          description: The sensitivity of the message set by the provider
+        encoding:
+          type: string
+          maxLength: 32
+          description: The encoding used for the body of the message
+        subject:
           type: string
           maxLength: 256
-          description: The content type of the attachment
-        contentId:
+          description: The subject of the message set by the provider
+        from:
           type: string
           maxLength: 256
-          description: The content id of the attachment
-        url:
-          type: string
-          maxLength: 2048
-          description: The URL link to retrieve the attachment
-        captionText:
-          type: string
-          maxLength: 256
-          description: The text describing the caption of the attachment
-        thumbnailUrl:
-          type: string
-          maxLength: 2048
-          description: The URL link to retrieve the thumbnail of the attachment
-        additionalProperties:
-          type: object
-          maxProperties: 10
-          description: Any additional properties of the attachment like labels, tags, revision numbers, display properties, etc.
-          additionalProperties:
+          description: The sender of the message set by the provider
+        to:
+          type: array
+          description: The To (recipients) of the message set by the provider
+          maxItems: 50
+          items:
             type: string
             maxLength: 256
-    MessageType:
-      description: 'Type of message, NEW is a new email received/sent by contact center, REPLY is email replied to/by contact center, FORWARD is email forwarded to/by contact center).
-
-        '
-      type: string
-      enum:
-      - NEW
-      - REPLY
-      - FORWARD
-    BodyElement:
-      type: object
-      description: Definition of the body element such as the type of element, the message text and format
-      required:
-      - elementType
-      - elementText
-      properties:
-        elementType:
+        cc:
+          type: array
+          maxItems: 50
+          description: The Cc (recipients) of the message set by the provider. This field is mainly used for email messages
+          items:
+            type: string
+            maxLength: 256
+        bcc:
+          type: array
+          maxItems: 50
+          description: The Bcc (recipients) of the message set by the provider. This field is mainly used for email messages
+          items:
+            type: string
+            maxLength: 256
+        replyTo:
           type: string
-          minLength: 1
-          maxLength: 50
-          description: The type of the body element such as text, image, file, postback, carousel, location
-          example: text
-        elementText:
-          $ref: '#/components/schemas/ElementText'
-        payload:
+          maxLength: 256
+          description: The address to use when replying.
+        clientDeviceTag:
           type: string
-          description: Data required to help render the message on end clients
-          maxLength: 4096
+          maxLength: 256
+          description: The tag used to identify the client device that was used to send the message.
+        messageSourceServerTag:
+          type: string
+          maxLength: 256
+          description: The tag used by a service to identify that this message was sent by itself.
+        providerTimestamp:
+          type: string
+          format: date-time
+          description: The date time when the message was captured by the provider (in ISO 8601 format including timezone, 'yyyy-MM-dd'T'HH:mm:ss[.SSS]Z')
+        additionalHeaders:
+          type: object
+          description: The additional header fields of the message. For example if the payload is of a specific version that the clients rendering the payload need to be aware of that information can be sent here. Total size is limited to 256KB (including keys and values).
+          additionalProperties:
+            type: string
+          x-disable-custom-linter-rules:
+          - request-body-validation
   securitySchemes:
     BearerAuth:
       type: http

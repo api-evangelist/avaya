@@ -276,44 +276,110 @@ paths:
         '500':
           $ref: '#/components/responses/InternalServer'
 components:
-  responses:
-    NotFound:
-      description: Not Found
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorNotFound'
-    Unauthorized:
-      description: Unauthorized
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorUnauthorized'
-    InternalServer:
-      description: Internal Server Error
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorInternalServerError'
-    Forbidden:
-      description: Forbidden
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorForbidden'
   schemas:
+    AgentDetails:
+      title: AgentDetails
+      description: Agent Details.
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique 36 character internal id that represents the Agent Id.
+          minLength: 3
+          maxLength: 100
+        name:
+          type: string
+          description: The Agent/Supervisor Name.
+          minLength: 3
+          maxLength: 100
+    ParticipantResponse:
+      type: object
+      description: Any External, Agent or Treatment participant as returned by a query for a customer journey
+      properties:
+        type:
+          type: string
+          description: The type of Participant, for example EXTERNAL, AGENT or TREATMENT.
+          enum:
+          - EXTERNAL
+          - AGENT
+          - TREATMENT
+        id:
+          type: string
+          description: The unique id that represents the participant.
+        agentDisplayName:
+          type: string
+          description: This value defines the internal participants name as it will be displayed to Avaya Experience Platform user.
+          readOnly: true
+          example: John Smith
+        dialogId:
+          type: string
+          description: The unique 36 character internal id that represents the Dialog.
+        channelId:
+          type: string
+          description: The unique id representing the Contact Center Channel. Only valid Contact Center Channel Ids are accepted. See Contact Center Channel list in Developers guide for further details.
+          example: Voice
+        channelType:
+          type: string
+          description: The Contact Center Channel Type. Only valid Contact Center Channel Types are accepted. See Contact Center Channel list in Developers guide for further details.
+          example: VOICE
+        joinedAt:
+          type: string
+          description: The datetime of when the Participant was added to the Engagement in ISO 8601 format, for example 2018-11-13T20:27:12+00:00
+          format: date-time
+        leftAt:
+          type: string
+          description: The datetime of when the Participant was removed from the Engagement in ISO 8601 format, for example 2018-11-13T20:27:12+00:00
+          format: date-time
+        callingNumber:
+          type: string
+          description: The calling number of the Participant.
+        dialledNumber:
+          type: string
+          description: The original dialled number for the Engagement.
+        extension:
+          type: string
+          description: The agents extension.
+        automationType:
+          type: string
+          enum:
+          - SELF_SERVICE
+          - TREATMENT
+          - CHATBOT
+          description: The automation type, such as SELF_SERVICE, TREATMENT, or CHATBOT.
+        sourceType:
+          type: string
+          description: This value defines the external system that was the source of the engagement that is being generated into Avaya Experience Platform
+          readOnly: true
+          example: Facebook
+        sourceAddress:
+          type: string
+          description: 'the source address is intended to represent the address from which the Avaya Experience Platform engagement was created. It might represent a mailbox, a twitter account, a Facebook account, a chat integration will be the same as the (To) address '
+          readOnly: true
+          example: '@someSocialMediaAccount'
+    Channel:
+      title: Channel
+      description: Identifies the specific type of channel such as VOICE, WEBCHAT, EMAIL, SMS, or SOCIAL.
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique identifier for the channel.
+          example: Voice
+        type:
+          type: string
+          description: The type of channel, such as VOICE, or VIDEO.
+          example: VOICE
+    ListEngagementsResponse:
+      type: object
+      description: A paginated list of Engagements with the Contact Center
+      properties:
+        engagements:
+          type: array
+          description: The engagements returned as the result
+          items:
+            $ref: '#/components/schemas/EngagementResponse'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
     EngagementResponse:
       title: EngagementResponse
       description: A Customer Engagement with the Contact Center
@@ -424,160 +490,6 @@ components:
             items:
               $ref: '#/components/schemas/Transfer'
             description: List of Transfer on the Engagement
-    ListEngagementsResponse:
-      type: object
-      description: A paginated list of Engagements with the Contact Center
-      properties:
-        engagements:
-          type: array
-          description: The engagements returned as the result
-          items:
-            $ref: '#/components/schemas/EngagementResponse'
-        pagination:
-          $ref: '#/components/schemas/Pagination'
-    Channel:
-      title: Channel
-      description: Identifies the specific type of channel such as VOICE, WEBCHAT, EMAIL, SMS, or SOCIAL.
-      type: object
-      properties:
-        id:
-          type: string
-          description: The unique identifier for the channel.
-          example: Voice
-        type:
-          type: string
-          description: The type of channel, such as VOICE, or VIDEO.
-          example: VOICE
-    Problem:
-      type: object
-      description: '<b>Problem Detail</b> as a way to carry machine-readable details of errors in a HTTP response to avoid the need to define new error response formats for HTTP APIs <a href="https://tools.ietf.org/html/rfc7807">RFC 7807</a>
-
-        '
-      properties:
-        type:
-          type: string
-          format: uri
-          description: 'An absolute URI that identifies the problem type. When dereferenced, it SHOULD provide human-readable documentation for the problem type (e.g., using HTML).
-
-            '
-          default: about:blank
-          example: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#constraint-violation
-        title:
-          type:
-          - string
-          - 'null'
-          description: 'A short, summary of the problem type. Written in english and readable for engineers (usually not suited for non technical stakeholders and not localized).
-
-            '
-          example: Service Unavailable
-        status:
-          type:
-          - integer
-          - 'null'
-          format: int32
-          description: 'The HTTP status code generated by the origin server for this occurrence of the problem.
-
-            '
-          minimum: 100
-          example: 503
-          exclusiveMaximum: 600
-        detail:
-          type:
-          - string
-          - 'null'
-          description: 'A human readable explanation specific to this occurrence of the problem.
-
-            '
-          example: Connection to database timed out
-        instance:
-          type:
-          - string
-          - 'null'
-          format: uri
-          description: 'An absolute URI that identifies the specific occurrence of the problem. It may or may not yield further information if dereferenced.
-
-            '
-        violations:
-          type:
-          - array
-          - 'null'
-          description: 'A list of violations that occurred as a result of invalid data provided as part of a request.
-
-            '
-          items:
-            type: object
-            properties:
-              field:
-                type: string
-                description: 'The name of the field in the request that caused the violation. This can be the name of a path parameter, query parameter, or a field within the request body.
-
-                  '
-                example: accountId
-              message:
-                type: string
-                description: 'A human readable explanation specific to this occurrence of the violation.
-
-                  '
-                example: must match "^[a-zA-Z]{6}$"
-              code:
-                type: integer
-                format: int32
-                description: 'The violation code generated by the server for this occurrence of the violation. Use this code when implementing any error handling logic instead of the message, as the message can change.
-
-                  '
-                example: 20006
-          example:
-          - field: emailAddress
-            message: must not be null
-            code: 20002
-          - field: accountId
-            message: must match "^[a-zA-Z]{6}$"
-            code: 20006
-    EngagementUpdate:
-      title: EngagementUpdate
-      description: A Customer Engagement with the Contact Center
-      allOf:
-      - $ref: '#/components/schemas/Identifiers'
-      - type: object
-        additionalProperties: true
-        description: A Customer Engagement with the Contact Center
-        required:
-        - timestamp
-        properties:
-          timestamp:
-            type: string
-            format: date-time
-            description: The datetime of the Engagement being updated in ISO 8601 format, for example 2018-11-13T20:20:39+00:00
-            example: '2018-11-13T20:20:39+00:00'
-          conversations:
-            type: array
-            minItems: 0
-            maxItems: 10
-            items:
-              type: string
-              minLength: 3
-              maxLength: 256
-            description: The conversation (or purpose) of the Engagement.
-          data:
-            type: object
-            description: 'Optional, generic key-value pair data stored with the Engagement. The maximum length of a key is 64 characters and the maximum length of a value is 1024 characters.
-
-
-              This is useful for storing custom information against an Engagement, Customer Journey itself does not take any action beyond basic validation on this data.
-
-
-              If the key already exists the value will be replaced by the new value provided.
-
-              '
-            minProperties: 0
-            maxProperties: 20
-            additionalProperties:
-              type: string
-              minLength: 3
-              maxLength: 1024
-            example:
-              ticketId: ticket-4652f066-39f2-43e1-a5ae-d8f8d210fe66
-              applicationStatus: In Review
     Engagement:
       title: Engagement
       description: A Customer Engagement with the Contact Center
@@ -820,64 +732,6 @@ components:
           readOnly: true
           description: The datetime of when the agent accepted the queued engagement in ISO 8601 format, for example 2018-11-13T20:27:12+00:00
           example: '2018-11-13T20:27:12+00:00'
-    Pagination:
-      type: object
-      properties:
-        pageNumber:
-          type: integer
-          description: The current page number.
-        pageSize:
-          type: integer
-          description: The max number of records that can be retrieved on this page.
-        total:
-          type: integer
-          description: The total number of records.
-    AgentNoteResponse:
-      title: AgentNoteResponse
-      description: Response for Get Agent Note.
-      type: object
-      properties:
-        id:
-          type: string
-          description: The unique 36 character internal id that represents the Agent Note Id.
-        engagementId:
-          type: string
-          description: The unique 36 character internal id that represents the Engagement Id.
-        createdBy:
-          $ref: '#/components/schemas/AgentDetails'
-        updatedBy:
-          $ref: '#/components/schemas/AgentDetails'
-        note:
-          type: string
-          description: Text of the current Agent Note.
-        readOnly:
-          type: boolean
-          description: Indicates if the note is read only.
-        createdAt:
-          type: string
-          format: date-time
-          description: The creation datetime of the Engagement in ISO 8601 format, for example 2018-11-13T20:20:39+00:00
-          example: '2018-11-13T20:20:39+00:00'
-        updatedAt:
-          type: string
-          format: date-time
-          description: The creation datetime of the Engagement in ISO 8601 format, for example 2018-11-13T20:20:39+00:00
-          example: '2018-11-13T20:20:39+00:00'
-    AgentDetails:
-      title: AgentDetails
-      description: Agent Details.
-      type: object
-      properties:
-        id:
-          type: string
-          description: The unique 36 character internal id that represents the Agent Id.
-          minLength: 3
-          maxLength: 100
-        name:
-          type: string
-          description: The Agent/Supervisor Name.
-          minLength: 3
-          maxLength: 100
     Identifiers:
       type: object
       description: Unique Customer ids used during an Engagement.
@@ -926,75 +780,199 @@ components:
                 type: string
                 minLength: 3
                 maxLength: 256
-    ParticipantResponse:
+    EngagementUpdate:
+      title: EngagementUpdate
+      description: A Customer Engagement with the Contact Center
+      allOf:
+      - $ref: '#/components/schemas/Identifiers'
+      - type: object
+        additionalProperties: true
+        description: A Customer Engagement with the Contact Center
+        required:
+        - timestamp
+        properties:
+          timestamp:
+            type: string
+            format: date-time
+            description: The datetime of the Engagement being updated in ISO 8601 format, for example 2018-11-13T20:20:39+00:00
+            example: '2018-11-13T20:20:39+00:00'
+          conversations:
+            type: array
+            minItems: 0
+            maxItems: 10
+            items:
+              type: string
+              minLength: 3
+              maxLength: 256
+            description: The conversation (or purpose) of the Engagement.
+          data:
+            type: object
+            description: 'Optional, generic key-value pair data stored with the Engagement. The maximum length of a key is 64 characters and the maximum length of a value is 1024 characters.
+
+
+              This is useful for storing custom information against an Engagement, Customer Journey itself does not take any action beyond basic validation on this data.
+
+
+              If the key already exists the value will be replaced by the new value provided.
+
+              '
+            minProperties: 0
+            maxProperties: 20
+            additionalProperties:
+              type: string
+              minLength: 3
+              maxLength: 1024
+            example:
+              ticketId: ticket-4652f066-39f2-43e1-a5ae-d8f8d210fe66
+              applicationStatus: In Review
+    Pagination:
       type: object
-      description: Any External, Agent or Treatment participant as returned by a query for a customer journey
+      properties:
+        pageNumber:
+          type: integer
+          description: The current page number.
+        pageSize:
+          type: integer
+          description: The max number of records that can be retrieved on this page.
+        total:
+          type: integer
+          description: The total number of records.
+    AgentNoteResponse:
+      title: AgentNoteResponse
+      description: Response for Get Agent Note.
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique 36 character internal id that represents the Agent Note Id.
+        engagementId:
+          type: string
+          description: The unique 36 character internal id that represents the Engagement Id.
+        createdBy:
+          $ref: '#/components/schemas/AgentDetails'
+        updatedBy:
+          $ref: '#/components/schemas/AgentDetails'
+        note:
+          type: string
+          description: Text of the current Agent Note.
+        readOnly:
+          type: boolean
+          description: Indicates if the note is read only.
+        createdAt:
+          type: string
+          format: date-time
+          description: The creation datetime of the Engagement in ISO 8601 format, for example 2018-11-13T20:20:39+00:00
+          example: '2018-11-13T20:20:39+00:00'
+        updatedAt:
+          type: string
+          format: date-time
+          description: The creation datetime of the Engagement in ISO 8601 format, for example 2018-11-13T20:20:39+00:00
+          example: '2018-11-13T20:20:39+00:00'
+    Problem:
+      type: object
+      description: '<b>Problem Detail</b> as a way to carry machine-readable details of errors in a HTTP response to avoid the need to define new error response formats for HTTP APIs <a href="https://tools.ietf.org/html/rfc7807">RFC 7807</a>
+
+        '
       properties:
         type:
           type: string
-          description: The type of Participant, for example EXTERNAL, AGENT or TREATMENT.
-          enum:
-          - EXTERNAL
-          - AGENT
-          - TREATMENT
-        id:
-          type: string
-          description: The unique id that represents the participant.
-        agentDisplayName:
-          type: string
-          description: This value defines the internal participants name as it will be displayed to Avaya Experience Platform user.
-          readOnly: true
-          example: John Smith
-        dialogId:
-          type: string
-          description: The unique 36 character internal id that represents the Dialog.
-        channelId:
-          type: string
-          description: The unique id representing the Contact Center Channel. Only valid Contact Center Channel Ids are accepted. See Contact Center Channel list in Developers guide for further details.
-          example: Voice
-        channelType:
-          type: string
-          description: The Contact Center Channel Type. Only valid Contact Center Channel Types are accepted. See Contact Center Channel list in Developers guide for further details.
-          example: VOICE
-        joinedAt:
-          type: string
-          description: The datetime of when the Participant was added to the Engagement in ISO 8601 format, for example 2018-11-13T20:27:12+00:00
-          format: date-time
-        leftAt:
-          type: string
-          description: The datetime of when the Participant was removed from the Engagement in ISO 8601 format, for example 2018-11-13T20:27:12+00:00
-          format: date-time
-        callingNumber:
-          type: string
-          description: The calling number of the Participant.
-        dialledNumber:
-          type: string
-          description: The original dialled number for the Engagement.
-        extension:
-          type: string
-          description: The agents extension.
-        automationType:
-          type: string
-          enum:
-          - SELF_SERVICE
-          - TREATMENT
-          - CHATBOT
-          description: The automation type, such as SELF_SERVICE, TREATMENT, or CHATBOT.
-        sourceType:
-          type: string
-          description: This value defines the external system that was the source of the engagement that is being generated into Avaya Experience Platform
-          readOnly: true
-          example: Facebook
-        sourceAddress:
-          type: string
-          description: 'the source address is intended to represent the address from which the Avaya Experience Platform engagement was created. It might represent a mailbox, a twitter account, a Facebook account, a chat integration will be the same as the (To) address '
-          readOnly: true
-          example: '@someSocialMediaAccount'
+          format: uri
+          description: 'An absolute URI that identifies the problem type. When dereferenced, it SHOULD provide human-readable documentation for the problem type (e.g., using HTML).
+
+            '
+          default: about:blank
+          example: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#constraint-violation
+        title:
+          type:
+          - string
+          - 'null'
+          description: 'A short, summary of the problem type. Written in english and readable for engineers (usually not suited for non technical stakeholders and not localized).
+
+            '
+          example: Service Unavailable
+        status:
+          type:
+          - integer
+          - 'null'
+          format: int32
+          description: 'The HTTP status code generated by the origin server for this occurrence of the problem.
+
+            '
+          minimum: 100
+          example: 503
+          exclusiveMaximum: 600
+        detail:
+          type:
+          - string
+          - 'null'
+          description: 'A human readable explanation specific to this occurrence of the problem.
+
+            '
+          example: Connection to database timed out
+        instance:
+          type:
+          - string
+          - 'null'
+          format: uri
+          description: 'An absolute URI that identifies the specific occurrence of the problem. It may or may not yield further information if dereferenced.
+
+            '
+        violations:
+          type:
+          - array
+          - 'null'
+          description: 'A list of violations that occurred as a result of invalid data provided as part of a request.
+
+            '
+          items:
+            type: object
+            properties:
+              field:
+                type: string
+                description: 'The name of the field in the request that caused the violation. This can be the name of a path parameter, query parameter, or a field within the request body.
+
+                  '
+                example: accountId
+              message:
+                type: string
+                description: 'A human readable explanation specific to this occurrence of the violation.
+
+                  '
+                example: must match "^[a-zA-Z]{6}$"
+              code:
+                type: integer
+                format: int32
+                description: 'The violation code generated by the server for this occurrence of the violation. Use this code when implementing any error handling logic instead of the message, as the message can change.
+
+                  '
+                example: 20006
+          example:
+          - field: emailAddress
+            message: must not be null
+            code: 20002
+          - field: accountId
+            message: must match "^[a-zA-Z]{6}$"
+            code: 20006
   examples:
-    engagement-create-1:
+    ErrorForbidden:
+      description: Forbidden
       value:
-        id: dbf2aca9-b905-4ef1-a181-fa85133ae441
+        type: https://developers.avayacloud.com/avaya-experience-platform/docs/error-handling#forbidden
+        title: Forbidden
+        status: 403
+        detail: According to the access control policy the current user and/or accountId does not have permission to access this resource.
+    engagement-response:
+      summary: Engagement response
+      value:
+        id: 8e557fd6-580a-43b3-8cf9-db8169f4af5a
+        status: COMPLETED
+        direction: INBOUND
         startDate: '2019-07-23T17:45:21.002Z'
+        updateDate: '2019-07-23T17:47:21.002Z'
+        endDate: '2019-07-23T17:50:21.002Z'
+        channels:
+        - id: Voice
+          type: VOICE
         identifiers:
           phoneNumbers:
           - 019 718 0171
@@ -1003,12 +981,61 @@ components:
           emailAddresses:
           - melinda14@example.org
           - cmartin@example.org
+        participants:
+        - id: 443f413f-75f4-4ee4-a261-275e2c4a4c6f
+          joinedAt: '2019-07-23T17:45:21.002Z'
+          leftAt: '2019-07-23T17:58:32.002Z'
+          type: EXTERNAL
+          channelId: Voice
+          channelType: VOICE
+          callingNumber: 087 12345
+          dialledNumber: 1590 12345
+          dialogId: 67ec5131-259c-4924-bb08-d87cf315e5e3
+        - id: e5e8b989-c0d3-493e-9c6c-a1e482c42946
+          agentDisplayName: John Smith
+          joinedAt: '2019-07-23T17:46:42.002Z'
+          leftAt: '2019-07-23T18:00:32.002Z'
+          type: AGENT
+          channelId: Voice
+          channelType: VOICE
+          extension: ext/1234
+          dialogId: 67ec5131-259c-4924-bb08-d87cf315e5e3
         conversations:
         - Mortgage Application
         - First-time Buyer
         data:
           referenceNumber: ref-4bf68d57-c189-4ad9-986f-e56ede9cdc32
           currentStatus: Under review
+        attributes:
+        - Broadband.billing
+        queues:
+        - queueId: a12d14a2-99ad-4aed-8f55-5e87d18e9b9c
+          channelId: Voice
+          queueName: Default
+          priority: 1
+          rank: 2147483647
+          proficiencyRangeMin: 4
+          proficiencyRangeMax: 10
+          queuedAt: '2021-04-09T17:00:00.1Z'
+          agentId: 93649e2e-f576-44b6-b002-fe61379cc4e5
+          acceptedAt: '2021-04-09T17:00:00.1Z'
+        transfers:
+        - initiatingAgentId: 3228e28c-e992-4933-943e-6681b7bfe934
+          queueId: 3fb467ed-9136-4542-898d-988a0c3028af
+          queueName: Default
+          channelProviderId: 4db6bf64-1684-4841-9446-a5fa2d186e6d
+          connectionId: 9a42578a-b883-4b9d-9da0-9e4096334503
+          dialogId: cb127356-134f-49ad-b5e0-37baaa400bfc
+          providerDialogId: caa30030-89f1-4b0c-a8f0-93230f92a96c
+          channelId: Chat
+          correlationId: 2d721d22-d020-4297-8180-fe86c0848cbd
+          fallbackQueueId: 3fb467ed-9136-4542-898d-988a0c3028af
+          timestamp: '2023-08-25T06:53:15.743Z'
+          destinationAgentId: 3228e28c-e992-4933-943e-6681b7bfe934
+          destinationAgentName: John Smith
+          destinationAgentJoinedAt: '2023-08-25T07:07:49.652Z'
+          description: New Car inquiry
+          transferType: TRANSFER_TO_AGENT
     multi-engagement-response:
       summary: Engagement list response
       value:
@@ -1116,34 +1143,13 @@ components:
           - Car Loan
           data:
             referenceNumber: ref-2a6470e5-40b2-44fa-986d-31afa512dcd8
-    ErrorNotFound:
-      description: Not Found
+    appendIdentifiers:
       value:
-        type: https://developers.avayacloud.com/avaya-experience-platform/docs/error-handling#resource-not-found
-        title: Resource Not Found
-        status: 404
-        detail: Resource not found.
-    ErrorUnauthorized:
-      description: Unauthorized
-      value:
-        type: https://developers.avayacloud.com/avaya-experience-platform/docs/error-handling#unauthorized
-        title: Unauthorized
-        status: 401
-        detail: This operation requires authentication. See https://developers.avayacloud.com/avaya-experience-platform/docs/how-to-authenticate-with-ccaas-apis
-    ErrorInternalServerError:
-      description: Server Error
-      value:
-        type: https://developers.avayacloud.com/avaya-experience-platform/docs/error-handling#server-error
-        title: Server Error
-        status: 500
-        detail: An internal server error was encountered.
-    ErrorForbidden:
-      description: Forbidden
-      value:
-        type: https://developers.avayacloud.com/avaya-experience-platform/docs/error-handling#forbidden
-        title: Forbidden
-        status: 403
-        detail: According to the access control policy the current user and/or accountId does not have permission to access this resource.
+        identifiers:
+          phoneNumbers:
+          - 019 718 0171
+          emailAddresses:
+          - melinda14@example.org
     engagement-update-1:
       value:
         timestamp: '2019-07-23T17:48:21.002Z'
@@ -1156,6 +1162,29 @@ components:
         data:
           referenceNumber: ref-4bf68d57-c189-4ad9-986f-e56ede9cdc32
           currentStatus: Under review
+    ErrorNotFound:
+      description: Not Found
+      value:
+        type: https://developers.avayacloud.com/avaya-experience-platform/docs/error-handling#resource-not-found
+        title: Resource Not Found
+        status: 404
+        detail: Resource not found.
+    engagement-create-2:
+      value:
+        id: 8b23981b-69b4-446f-ace7-b4ad22715979
+        startDate: '2019-07-23T17:45:21.002Z'
+        identifiers:
+          universalIds:
+          - 7fdf89aa-70e6-4de9-8d7a-e1bbc4edcbaf
+        data:
+          referenceNumber: ref-4bf68d57-c189-4ad9-986f-e56ede9cdc32
+    ErrorUnauthorized:
+      description: Unauthorized
+      value:
+        type: https://developers.avayacloud.com/avaya-experience-platform/docs/error-handling#unauthorized
+        title: Unauthorized
+        status: 401
+        detail: This operation requires authentication. See https://developers.avayacloud.com/avaya-experience-platform/docs/how-to-authenticate-with-ccaas-apis
     ErrorConstraintViolation:
       description: Constraint Violation
       value:
@@ -1167,34 +1196,10 @@ components:
         - field: accountId
           message: must match "^[a-zA-Z]{6}$"
           code: 20006
-    engagement-create-2:
+    engagement-create-1:
       value:
-        id: 8b23981b-69b4-446f-ace7-b4ad22715979
+        id: dbf2aca9-b905-4ef1-a181-fa85133ae441
         startDate: '2019-07-23T17:45:21.002Z'
-        identifiers:
-          universalIds:
-          - 7fdf89aa-70e6-4de9-8d7a-e1bbc4edcbaf
-        data:
-          referenceNumber: ref-4bf68d57-c189-4ad9-986f-e56ede9cdc32
-    appendIdentifiers:
-      value:
-        identifiers:
-          phoneNumbers:
-          - 019 718 0171
-          emailAddresses:
-          - melinda14@example.org
-    engagement-response:
-      summary: Engagement response
-      value:
-        id: 8e557fd6-580a-43b3-8cf9-db8169f4af5a
-        status: COMPLETED
-        direction: INBOUND
-        startDate: '2019-07-23T17:45:21.002Z'
-        updateDate: '2019-07-23T17:47:21.002Z'
-        endDate: '2019-07-23T17:50:21.002Z'
-        channels:
-        - id: Voice
-          type: VOICE
         identifiers:
           phoneNumbers:
           - 019 718 0171
@@ -1203,62 +1208,69 @@ components:
           emailAddresses:
           - melinda14@example.org
           - cmartin@example.org
-        participants:
-        - id: 443f413f-75f4-4ee4-a261-275e2c4a4c6f
-          joinedAt: '2019-07-23T17:45:21.002Z'
-          leftAt: '2019-07-23T17:58:32.002Z'
-          type: EXTERNAL
-          channelId: Voice
-          channelType: VOICE
-          callingNumber: 087 12345
-          dialledNumber: 1590 12345
-          dialogId: 67ec5131-259c-4924-bb08-d87cf315e5e3
-        - id: e5e8b989-c0d3-493e-9c6c-a1e482c42946
-          agentDisplayName: John Smith
-          joinedAt: '2019-07-23T17:46:42.002Z'
-          leftAt: '2019-07-23T18:00:32.002Z'
-          type: AGENT
-          channelId: Voice
-          channelType: VOICE
-          extension: ext/1234
-          dialogId: 67ec5131-259c-4924-bb08-d87cf315e5e3
         conversations:
         - Mortgage Application
         - First-time Buyer
         data:
           referenceNumber: ref-4bf68d57-c189-4ad9-986f-e56ede9cdc32
           currentStatus: Under review
-        attributes:
-        - Broadband.billing
-        queues:
-        - queueId: a12d14a2-99ad-4aed-8f55-5e87d18e9b9c
-          channelId: Voice
-          queueName: Default
-          priority: 1
-          rank: 2147483647
-          proficiencyRangeMin: 4
-          proficiencyRangeMax: 10
-          queuedAt: '2021-04-09T17:00:00.1Z'
-          agentId: 93649e2e-f576-44b6-b002-fe61379cc4e5
-          acceptedAt: '2021-04-09T17:00:00.1Z'
-        transfers:
-        - initiatingAgentId: 3228e28c-e992-4933-943e-6681b7bfe934
-          queueId: 3fb467ed-9136-4542-898d-988a0c3028af
-          queueName: Default
-          channelProviderId: 4db6bf64-1684-4841-9446-a5fa2d186e6d
-          connectionId: 9a42578a-b883-4b9d-9da0-9e4096334503
-          dialogId: cb127356-134f-49ad-b5e0-37baaa400bfc
-          providerDialogId: caa30030-89f1-4b0c-a8f0-93230f92a96c
-          channelId: Chat
-          correlationId: 2d721d22-d020-4297-8180-fe86c0848cbd
-          fallbackQueueId: 3fb467ed-9136-4542-898d-988a0c3028af
-          timestamp: '2023-08-25T06:53:15.743Z'
-          destinationAgentId: 3228e28c-e992-4933-943e-6681b7bfe934
-          destinationAgentName: John Smith
-          destinationAgentJoinedAt: '2023-08-25T07:07:49.652Z'
-          description: New Car inquiry
-          transferType: TRANSFER_TO_AGENT
+    ErrorInternalServerError:
+      description: Server Error
+      value:
+        type: https://developers.avayacloud.com/avaya-experience-platform/docs/error-handling#server-error
+        title: Server Error
+        status: 500
+        detail: An internal server error was encountered.
+  responses:
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorUnauthorized'
+    Forbidden:
+      description: Forbidden
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorForbidden'
+    NotFound:
+      description: Not Found
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorNotFound'
+    InternalServer:
+      description: Internal Server Error
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorInternalServerError'
   parameters:
+    pageSize:
+      name: pageSize
+      description: The maximum number of results per page.
+      required: false
+      in: query
+      example: 10
+      schema:
+        type: integer
+        format: int32
+        default: 50
+        minimum: 1
+        maximum: 50
     engagementId:
       name: engagementId
       description: The unique 36 character internal id that represents the engagement.
@@ -1281,18 +1293,6 @@ components:
         format: int32
         default: 1
         minimum: 1
-    pageSize:
-      name: pageSize
-      description: The maximum number of results per page.
-      required: false
-      in: query
-      example: 10
-      schema:
-        type: integer
-        format: int32
-        default: 50
-        minimum: 1
-        maximum: 50
     accountId:
       name: accountId
       description: The unique 6 character internal id that represents the customer account.

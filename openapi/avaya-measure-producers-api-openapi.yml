@@ -123,14 +123,289 @@ paths:
         '500':
           $ref: '#/components/responses/InternalServer'
 components:
+  examples:
+    ErrorForbidden:
+      description: Forbidden
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#forbidden
+        title: Forbidden
+        status: 403
+        detail: According to the access control policy the current user and/or accountId does not have permission to access this resource.
+    ListMeasureProducers:
+      value:
+      - measureProducerId: AgentByChannel_itd_1.0.0
+        measureProducerName: AgentByChannel
+        processorType: ITD
+        description: Avaya Experience Platform™ metrics
+        version: 1.0.0
+        measureSets:
+        - keys:
+          - agentId
+          - channelId
+          measures:
+          - name: agentId
+            type: STRING
+            displayName: Agent Id
+            active: true
+    QueueByChannel:
+      value:
+        measureProducerId: QueueByChannel_itd_1.0.0
+        measureProducerName: QueueByChannel
+        processorType: ITD
+        description: Avaya Experience Platform™ metrics
+        version: 1.0.0
+        measureSets:
+        - keys:
+          - channelId
+          - queueId
+          measures:
+          - name: abandonedFromAlerting
+            type: NUMBER
+            displayName: Abandoned From Alerting
+            active: true
+          - name: abandonedFromQueue
+            type: NUMBER
+            displayName: Abandoned From Queue
+            active: true
+    AgentProducer:
+      value:
+        measureProducerId: Agent_itd_1.0.0
+        measureProducerName: Agent
+        processorType: ITD
+        description: Avaya Experience Platform™ metrics
+        version: 1.0.0
+        measureSets:
+        - keys:
+          - agentId
+          measures:
+          - name: abandonedFromAlerting
+            type: NUMBER
+            displayName: Abandoned From Alerting
+            active: true
+          - name: activeDuration
+            type: DURATION
+            displayName: Active Duration
+            active: true
+          - name: timeActive
+            type: TIME_IN_STATE
+            displayName: Time Active
+            active: true
+    QueueMeasureProducer:
+      value:
+        measureProducerId: Queue_itd_1.0.0
+        measureProducerName: Queue
+        processorType: ITD
+        description: Avaya Experience Platform™ metrics
+        version: 1.0.0
+        measureSets:
+        - keys:
+          - queueId
+          measures:
+          - name: abandonedFromAlerting
+            type: NUMBER
+            displayName: Abandoned From Alerting
+            active: true
+          - name: abandonedFromQueue
+            type: NUMBER
+            displayName: Abandoned From Queue
+            active: true
+    DialogDetailMeasure:
+      value:
+        measureProducerId: DialogDetail_cdr_1.0.0
+        measureProducerName: DialogDetail
+        processorType: CDR
+        description: Avaya Experience Platform™ metrics
+        version: 1.0.0
+        measureSets:
+        - keys:
+          - agentId
+          - channelId
+          measures:
+          - name: abandonedIndicator
+            type: STRING
+            displayName: Abandoned Indicator
+            active: true
+          - name: acwEndTimestamp
+            type: DATE
+            displayName: Acw End Timestamp
+            active: true
+    AgentByChannel:
+      value:
+        measureProducerId: AgentByChannel_itd_1.0.0
+        measureProducerName: AgentByChannel
+        processorType: ITD
+        description: Avaya Experience Platform™ metrics
+        version: 1.0.0
+        measureSets:
+        - keys:
+          - agentId
+          - channelId
+          measures:
+          - name: abandonedFromAlerting
+            type: NUMBER
+            displayName: Abandoned From Alerting
+            active: true
+          - name: activeDuration
+            type: DURATION
+            displayName: Active Duration
+            active: true
+    ErrorNotFound:
+      description: Not Found
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#resource-not-found
+        title: Resource Not Found
+        status: 404
+        detail: Resource not found.
+    ErrorUnauthorized:
+      description: Unauthorized
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#unauthorized
+        title: Unauthorized
+        status: 401
+        detail: This operation requires authentication. See https://developers.avayacloud.com/onecloud-ccaas/docs/how-to-authenticate-with-ccaas-apis
+    ErrorConstraintViolation:
+      description: Constraint Violation
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#constraint-violation
+        title: Constraint Violation
+        status: 400
+        detail: A problem that indicates a syntactically correct, yet semantically illegal request. The Server can not process this request until the client resolves the semantic errors described in the violations section.
+        violations:
+        - field: accountId
+          message: must not be null
+    ErrorInternalServerError:
+      description: Server Error
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#server-error
+        title: Server Error
+        status: 500
+        detail: An internal server error was encountered.
+  responses:
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorUnauthorized'
+    Forbidden:
+      description: Forbidden
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorForbidden'
+    NotFound:
+      description: Not Found
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorNotFound'
+    BadRequest:
+      description: BadRequest
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorConstraintViolation'
+    InternalServer:
+      description: Internal Server Error
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorInternalServerError'
   schemas:
-    MeasureSets:
-      type: array
-      description: Array of attributes providing information about data e.g. Agent, Routing Service.
-      minItems: 1
-      maxItems: 25
-      items:
-        $ref: '#/components/schemas/MeasureSet'
+    Measure:
+      type: object
+      description: Property which can be calculated by events in the system. e.g. AgentId, AgentState, Calls Waiting, Total Call Duration.
+      required:
+      - name
+      - type
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 256
+          description: Name of the measure
+          example: agentId
+        type:
+          type: string
+          minLength: 1
+          maxLength: 36
+          description: The type of the measure value.
+          enum:
+          - STRING
+          - NUMBER
+          - DURATION
+          - DATE
+          - TIME_IN_STATE
+        displayName:
+          type: string
+          description: TODO
+          example: Agent Id
+        active:
+          type: boolean
+          description: Indicates if the measure is actively being calculated by Analytics.
+          example: true
+    MeasureProducer:
+      type: object
+      description: Detailed information about a measure producer registered in Analytics. Includes measure sets and measure data.
+      required:
+      - measureProducerName
+      - processorType
+      - version
+      - measureSets
+      properties:
+        measureProducerId:
+          type: string
+          readOnly: true
+          minLength: 1
+          maxLength: 36
+          description: The id that represents the measure producer.
+          example: AgentByChannel_itd_1.0.0
+        measureProducerName:
+          type: string
+          minLength: 1
+          maxLength: 256
+          description: The name of the measure producer.
+          example: AgentByChannel
+        processorType:
+          type: string
+          minLength: 1
+          maxLength: 36
+          description: 'Type of processor associated with this Measure Producer. Possible values include: ITD (Interval To Date), JRNL (Journal), ADM (Admin), CDR (Contact Details Report)'
+          example: ITD
+          enum:
+          - ITD
+          - JRNL
+          - ADM
+          - CDR
+        description:
+          type: string
+          minLength: 1
+          maxLength: 256
+          description: A short description of the measure producer.
+          example: Avaya Experience Platform™ metrics
+        version:
+          type: string
+          minLength: 1
+          maxLength: 36
+          description: The version number of the measure producer.
+          example: 1.0.0
+        measureSets:
+          $ref: '#/components/schemas/MeasureSets'
     MeasureSet:
       type: object
       description: Specific Attribute providing information about a measure set.
@@ -155,6 +430,13 @@ components:
           description: Array of attributes providing information about measures e.g. answered, offered.
           items:
             $ref: '#/components/schemas/Measure'
+    MeasureSets:
+      type: array
+      description: Array of attributes providing information about data e.g. Agent, Routing Service.
+      minItems: 1
+      maxItems: 25
+      items:
+        $ref: '#/components/schemas/MeasureSet'
     Problem:
       type: object
       description: '<b>Problem Detail</b> as a way to carry machine-readable details of errors in a HTTP response to avoid the need to define new error response formats for HTTP APIs <a href="https://tools.ietf.org/html/rfc7807">RFC 7807</a>
@@ -240,299 +522,17 @@ components:
           - field: accountId
             message: must match "^[a-zA-Z]{6}$"
             code: 20006
-    MeasureProducer:
-      type: object
-      description: Detailed information about a measure producer registered in Analytics. Includes measure sets and measure data.
-      required:
-      - measureProducerName
-      - processorType
-      - version
-      - measureSets
-      properties:
-        measureProducerId:
-          type: string
-          readOnly: true
-          minLength: 1
-          maxLength: 36
-          description: The id that represents the measure producer.
-          example: AgentByChannel_itd_1.0.0
-        measureProducerName:
-          type: string
-          minLength: 1
-          maxLength: 256
-          description: The name of the measure producer.
-          example: AgentByChannel
-        processorType:
-          type: string
-          minLength: 1
-          maxLength: 36
-          description: 'Type of processor associated with this Measure Producer. Possible values include: ITD (Interval To Date), JRNL (Journal), ADM (Admin), CDR (Contact Details Report)'
-          example: ITD
-          enum:
-          - ITD
-          - JRNL
-          - ADM
-          - CDR
-        description:
-          type: string
-          minLength: 1
-          maxLength: 256
-          description: A short description of the measure producer.
-          example: Avaya Experience Platform™ metrics
-        version:
-          type: string
-          minLength: 1
-          maxLength: 36
-          description: The version number of the measure producer.
-          example: 1.0.0
-        measureSets:
-          $ref: '#/components/schemas/MeasureSets'
-    Measure:
-      type: object
-      description: Property which can be calculated by events in the system. e.g. AgentId, AgentState, Calls Waiting, Total Call Duration.
-      required:
-      - name
-      - type
-      properties:
-        name:
-          type: string
-          minLength: 1
-          maxLength: 256
-          description: Name of the measure
-          example: agentId
-        type:
-          type: string
-          minLength: 1
-          maxLength: 36
-          description: The type of the measure value.
-          enum:
-          - STRING
-          - NUMBER
-          - DURATION
-          - DATE
-          - TIME_IN_STATE
-        displayName:
-          type: string
-          description: TODO
-          example: Agent Id
-        active:
-          type: boolean
-          description: Indicates if the measure is actively being calculated by Analytics.
-          example: true
-  responses:
-    NotFound:
-      description: Not Found
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorNotFound'
-    Unauthorized:
-      description: Unauthorized
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorUnauthorized'
-    BadRequest:
-      description: BadRequest
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorConstraintViolation'
-    InternalServer:
-      description: Internal Server Error
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorInternalServerError'
-    Forbidden:
-      description: Forbidden
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorForbidden'
-  examples:
-    QueueMeasureProducer:
-      value:
-        measureProducerId: Queue_itd_1.0.0
-        measureProducerName: Queue
-        processorType: ITD
-        description: Avaya Experience Platform™ metrics
-        version: 1.0.0
-        measureSets:
-        - keys:
-          - queueId
-          measures:
-          - name: abandonedFromAlerting
-            type: NUMBER
-            displayName: Abandoned From Alerting
-            active: true
-          - name: abandonedFromQueue
-            type: NUMBER
-            displayName: Abandoned From Queue
-            active: true
-    ListMeasureProducers:
-      value:
-      - measureProducerId: AgentByChannel_itd_1.0.0
-        measureProducerName: AgentByChannel
-        processorType: ITD
-        description: Avaya Experience Platform™ metrics
-        version: 1.0.0
-        measureSets:
-        - keys:
-          - agentId
-          - channelId
-          measures:
-          - name: agentId
-            type: STRING
-            displayName: Agent Id
-            active: true
-    AgentByChannel:
-      value:
-        measureProducerId: AgentByChannel_itd_1.0.0
-        measureProducerName: AgentByChannel
-        processorType: ITD
-        description: Avaya Experience Platform™ metrics
-        version: 1.0.0
-        measureSets:
-        - keys:
-          - agentId
-          - channelId
-          measures:
-          - name: abandonedFromAlerting
-            type: NUMBER
-            displayName: Abandoned From Alerting
-            active: true
-          - name: activeDuration
-            type: DURATION
-            displayName: Active Duration
-            active: true
-    ErrorNotFound:
-      description: Not Found
-      value:
-        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#resource-not-found
-        title: Resource Not Found
-        status: 404
-        detail: Resource not found.
-    ErrorUnauthorized:
-      description: Unauthorized
-      value:
-        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#unauthorized
-        title: Unauthorized
-        status: 401
-        detail: This operation requires authentication. See https://developers.avayacloud.com/onecloud-ccaas/docs/how-to-authenticate-with-ccaas-apis
-    ErrorInternalServerError:
-      description: Server Error
-      value:
-        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#server-error
-        title: Server Error
-        status: 500
-        detail: An internal server error was encountered.
-    ErrorForbidden:
-      description: Forbidden
-      value:
-        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#forbidden
-        title: Forbidden
-        status: 403
-        detail: According to the access control policy the current user and/or accountId does not have permission to access this resource.
-    ErrorConstraintViolation:
-      description: Constraint Violation
-      value:
-        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#constraint-violation
-        title: Constraint Violation
-        status: 400
-        detail: A problem that indicates a syntactically correct, yet semantically illegal request. The Server can not process this request until the client resolves the semantic errors described in the violations section.
-        violations:
-        - field: accountId
-          message: must not be null
-    AgentProducer:
-      value:
-        measureProducerId: Agent_itd_1.0.0
-        measureProducerName: Agent
-        processorType: ITD
-        description: Avaya Experience Platform™ metrics
-        version: 1.0.0
-        measureSets:
-        - keys:
-          - agentId
-          measures:
-          - name: abandonedFromAlerting
-            type: NUMBER
-            displayName: Abandoned From Alerting
-            active: true
-          - name: activeDuration
-            type: DURATION
-            displayName: Active Duration
-            active: true
-          - name: timeActive
-            type: TIME_IN_STATE
-            displayName: Time Active
-            active: true
-    QueueByChannel:
-      value:
-        measureProducerId: QueueByChannel_itd_1.0.0
-        measureProducerName: QueueByChannel
-        processorType: ITD
-        description: Avaya Experience Platform™ metrics
-        version: 1.0.0
-        measureSets:
-        - keys:
-          - channelId
-          - queueId
-          measures:
-          - name: abandonedFromAlerting
-            type: NUMBER
-            displayName: Abandoned From Alerting
-            active: true
-          - name: abandonedFromQueue
-            type: NUMBER
-            displayName: Abandoned From Queue
-            active: true
-    DialogDetailMeasure:
-      value:
-        measureProducerId: DialogDetail_cdr_1.0.0
-        measureProducerName: DialogDetail
-        processorType: CDR
-        description: Avaya Experience Platform™ metrics
-        version: 1.0.0
-        measureSets:
-        - keys:
-          - agentId
-          - channelId
-          measures:
-          - name: abandonedIndicator
-            type: STRING
-            displayName: Abandoned Indicator
-            active: true
-          - name: acwEndTimestamp
-            type: DATE
-            displayName: Acw End Timestamp
-            active: true
   parameters:
-    processorType:
-      in: query
-      name: processorType
-      description: 'Possible values include: ITD, JRNL, ADM, CDR and more.'
-      required: false
+    measureProducerId:
+      in: path
+      name: measureProducerId
+      description: MeasureProducer unique Id.
+      required: true
       schema:
         type: string
         minLength: 1
         maxLength: 36
-        example: ITD
+        example: Queue_itd_1.0.0
     accountId:
       in: path
       name: accountId
@@ -544,16 +544,16 @@ components:
         maxLength: 6
         pattern: ^[a-zA-Z]{6}$
         example: ABCDEF
-    measureProducerId:
-      in: path
-      name: measureProducerId
-      description: MeasureProducer unique Id.
-      required: true
+    processorType:
+      in: query
+      name: processorType
+      description: 'Possible values include: ITD, JRNL, ADM, CDR and more.'
+      required: false
       schema:
         type: string
         minLength: 1
         maxLength: 36
-        example: Queue_itd_1.0.0
+        example: ITD
   securitySchemes:
     BearerAuth:
       type: http
