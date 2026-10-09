@@ -2,7 +2,7 @@
 name: Bulk-provision Avaya Experience Platform users as an async job
 description: Submit a bulk user add or update on AXP, poll the resulting job to completion, export the failures, and stop a job that is going wrong.
 api: openapi/avaya-axp-admin-user-openapi.yml
-operations: [downloadBulkTemplate, bulkAddUsers, bulkUpdateUsers, listJobs, getJob, listUsersByJob, exportFailedUsers, downloadExportedUsers, stopJob, searchUsers]
+operations: [getUsersBulkTemplate, postUsers:bulkAdd, postUsers:bulkUpdate, listJobs, getJob, listUsersByJob, exportFailedUsers, downloadExportedUsers, stopJob, searchUsers]
 generated: '2026-09-14'
 method: generated
 source: derived from openapi/avaya-axp-admin-user-openapi.yml and conventions/avaya-conventions.yml
