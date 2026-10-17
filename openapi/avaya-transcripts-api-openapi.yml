@@ -525,35 +525,37 @@ components:
           format: date-time
           description: ISO 8601 timestamp indicating when the message was created. Optional — defaults to server time if omitted.
           example: '2024-10-17T10:30:56.789Z'
-    TranscriptMessageAuthorDetails:
-      title: TranscriptMessageAuthorDetails
+    ErrorResponse:
+      title: ErrorResponse
       type: object
-      description: Detailed information about the message author, as returned in the GET response.
+      description: Standard error response.
       properties:
-        id:
-          type:
-          - string
-          - 'null'
-          description: The author's unique identifier.
-          example: 0020005ca02e4654dfde78
-        displayName:
-          type:
-          - string
-          - 'null'
-          description: The author's display name.
-          example: Agent Smith
-        email:
-          type:
-          - string
-          - 'null'
-          description: The author's email address.
-          example: agent@example.com
-        title:
-          type:
-          - string
-          - 'null'
-          description: The author's title or role.
-          example: Support Agent
+        message:
+          type: string
+          description: Human-readable error message.
+          example: Not found
+        error:
+          type: string
+          description: Error identifier or short description.
+          example: id parameter is required (interactionId or workflow session id)
+        errors:
+          type: array
+          description: Additional error detail array. May be empty.
+          items:
+            type: object
+    PostTranscriptBatchRequest:
+      title: PostTranscriptBatchRequest
+      type: object
+      description: Request body for sending a batch of transcript messages.
+      required:
+      - messages
+      properties:
+        messages:
+          type: array
+          description: A non-empty array of transcript messages to send. Each message is processed sequentially.
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/BatchMessage'
     Author:
       title: Author
       type: object
@@ -582,20 +584,29 @@ components:
           type: string
           description: The name of the author. Optional.
           example: John Doe
-    ValidationErrorResponse:
-      title: ValidationErrorResponse
+    MessageProcessError:
+      title: MessageProcessError
       type: object
-      description: Response body for 422 Unprocessable Entity validation errors.
+      description: Error detail for a message that failed to process in the batch.
       properties:
+        index:
+          type: integer
+          description: The zero-based index of the message in the request array.
+          example: 1
         message:
           type: string
-          description: High-level description of the failure.
-          example: Validation failed
-        errors:
-          type: array
-          description: Array of individual validation errors.
-          items:
-            $ref: '#/components/schemas/ValidationErrorItem'
+          description: A truncated preview of the message content (up to 50 characters).
+          example: I need help with my...
+        error:
+          type: string
+          description: The error message.
+          example: Channel not found
+        status:
+          type: integer
+          description: HTTP status code associated with the error.
+          example: 404
+        details:
+          description: Additional error details. Optional.
     MessageProcessResult:
       title: MessageProcessResult
       type: object
@@ -628,68 +639,49 @@ components:
                       type: string
                       description: The ID of the newly created channel message.
                       example: 049d011029452f5a95fa42e9a7
-    PostTranscriptBatchRequest:
-      title: PostTranscriptBatchRequest
+    TranscriptMessageAuthorDetails:
+      title: TranscriptMessageAuthorDetails
       type: object
-      description: Request body for sending a batch of transcript messages.
-      required:
-      - messages
+      description: Detailed information about the message author, as returned in the GET response.
       properties:
-        messages:
-          type: array
-          description: A non-empty array of transcript messages to send. Each message is processed sequentially.
-          minItems: 1
-          items:
-            $ref: '#/components/schemas/BatchMessage'
-    MessageContentItem:
-      title: MessageContentItem
-      type: object
-      description: A single content component within a message as returned by the GET endpoint.
-      properties:
-        type:
-          type: string
-          description: The content type of this component (e.g. `text`).
-          example: text
-        text:
-          type: string
-          description: The text content of this component.
-          example: Hello, how can I help you today?
-        isTextOnlyEmojis:
-          type: boolean
-          description: Indicates whether the text content consists entirely of emoji characters.
-          example: false
-    GetTranscriptsResponse:
-      title: GetTranscriptsResponse
-      type: object
-      description: Response containing transcript messages for an interaction.
-      properties:
-        messages:
-          type: array
-          description: Array of transcript messages for the interaction. Returns an empty array if no messages exist.
-          items:
-            $ref: '#/components/schemas/TranscriptMessage'
-    TranscriptMessageAuthor:
-      title: TranscriptMessageAuthor
-      type: object
-      description: Author information attached to a retrieved transcript message in the GET response.
-      properties:
-        type:
-          type: string
-          description: The role of the author. In GET responses, this may include `email` or `phoneNumber` in addition to `user` and `customer`.
-          enum:
-          - user
-          - customer
-          - email
-          - phoneNumber
-          example: user
+        id:
+          type:
+          - string
+          - 'null'
+          description: The author's unique identifier.
+          example: 0020005ca02e4654dfde78
         displayName:
           type:
           - string
           - 'null'
-          description: Root-level display name of the author. Present on customer author objects — may appear outside the `details` object.
-          example: John Doe
-        details:
-          $ref: '#/components/schemas/TranscriptMessageAuthorDetails'
+          description: The author's display name.
+          example: Agent Smith
+        email:
+          type:
+          - string
+          - 'null'
+          description: The author's email address.
+          example: agent@example.com
+        title:
+          type:
+          - string
+          - 'null'
+          description: The author's title or role.
+          example: Support Agent
+    ValidationErrorResponse:
+      title: ValidationErrorResponse
+      type: object
+      description: Response body for 422 Unprocessable Entity validation errors.
+      properties:
+        message:
+          type: string
+          description: High-level description of the failure.
+          example: Validation failed
+        errors:
+          type: array
+          description: Array of individual validation errors.
+          items:
+            $ref: '#/components/schemas/ValidationErrorItem'
     PostTranscriptBatchResponse:
       title: PostTranscriptBatchResponse
       type: object
@@ -717,47 +709,28 @@ components:
           description: Array of errors for messages that failed. Omitted when all messages succeed.
           items:
             $ref: '#/components/schemas/MessageProcessError'
-    MessageProcessError:
-      title: MessageProcessError
+    TranscriptMessageAuthor:
+      title: TranscriptMessageAuthor
       type: object
-      description: Error detail for a message that failed to process in the batch.
+      description: Author information attached to a retrieved transcript message in the GET response.
       properties:
-        index:
-          type: integer
-          description: The zero-based index of the message in the request array.
-          example: 1
-        message:
+        type:
           type: string
-          description: A truncated preview of the message content (up to 50 characters).
-          example: I need help with my...
-        error:
-          type: string
-          description: The error message.
-          example: Channel not found
-        status:
-          type: integer
-          description: HTTP status code associated with the error.
-          example: 404
+          description: The role of the author. In GET responses, this may include `email` or `phoneNumber` in addition to `user` and `customer`.
+          enum:
+          - user
+          - customer
+          - email
+          - phoneNumber
+          example: user
+        displayName:
+          type:
+          - string
+          - 'null'
+          description: Root-level display name of the author. Present on customer author objects — may appear outside the `details` object.
+          example: John Doe
         details:
-          description: Additional error details. Optional.
-    ErrorResponse:
-      title: ErrorResponse
-      type: object
-      description: Standard error response.
-      properties:
-        message:
-          type: string
-          description: Human-readable error message.
-          example: Not found
-        error:
-          type: string
-          description: Error identifier or short description.
-          example: id parameter is required (interactionId or workflow session id)
-        errors:
-          type: array
-          description: Additional error detail array. May be empty.
-          items:
-            type: object
+          $ref: '#/components/schemas/TranscriptMessageAuthorDetails'
     TranscriptMessage:
       title: TranscriptMessage
       type: object
@@ -834,6 +807,33 @@ components:
           type: string
           description: Where in the request the field was found (e.g. `body`).
           example: body
+    MessageContentItem:
+      title: MessageContentItem
+      type: object
+      description: A single content component within a message as returned by the GET endpoint.
+      properties:
+        type:
+          type: string
+          description: The content type of this component (e.g. `text`).
+          example: text
+        text:
+          type: string
+          description: The text content of this component.
+          example: Hello, how can I help you today?
+        isTextOnlyEmojis:
+          type: boolean
+          description: Indicates whether the text content consists entirely of emoji characters.
+          example: false
+    GetTranscriptsResponse:
+      title: GetTranscriptsResponse
+      type: object
+      description: Response containing transcript messages for an interaction.
+      properties:
+        messages:
+          type: array
+          description: Array of transcript messages for the interaction. Returns an empty array if no messages exist.
+          items:
+            $ref: '#/components/schemas/TranscriptMessage'
   securitySchemes:
     Bearer:
       type: http

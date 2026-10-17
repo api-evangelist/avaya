@@ -336,19 +336,6 @@ paths:
                     message: An unexpected error occurred while creating the interaction
 components:
   schemas:
-    ErrorResponse:
-      type: object
-      properties:
-        error:
-          type: string
-          description: A brief description of the error
-          example: Invalid interaction ID
-        message:
-          type: string
-          description: Detailed error message
-          example: The specified interaction ID does not exist or is invalid
-      required:
-      - error
     InteractionCreateRequest:
       type: object
       required:
@@ -373,6 +360,19 @@ components:
           type: string
           description: Sub-classification of the communication type
           example: other
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+          description: A brief description of the error
+          example: Invalid interaction ID
+        message:
+          type: string
+          description: Detailed error message
+          example: The specified interaction ID does not exist or is invalid
+      required:
+      - error
   securitySchemes:
     BearerAuth:
       type: http

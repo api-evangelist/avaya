@@ -89,31 +89,46 @@ paths:
         '500':
           $ref: '#/components/responses/InternalServer'
 components:
+  examples:
+    ErrorUnauthorized:
+      description: Unauthorized
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#unauthorized
+        title: Unauthorized
+        status: 401
+        detail: This operation requires authentication. See https://developers.avayacloud.com/onecloud-ccaas/docs/how-to-authenticate-with-ccaas-apis
+    ErrorInternalServerError:
+      description: Server Error
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#server-error
+        title: Server Error
+        status: 500
+        detail: An internal server error was encountered.
+    ErrorConstraintViolation:
+      description: Constraint Violation
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#constraint-violation
+        title: Constraint Violation
+        status: 400
+        detail: A problem that indicates a syntactically correct, yet semantically illegal request. The Server can not process this request until the client resolves the semantic errors described in the violations section.
+        violations:
+        - field: accountId
+          message: must not be null
+    ErrorForbidden:
+      description: Forbidden
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#forbidden
+        title: Forbidden
+        status: 403
+        detail: According to the access control policy the current user and/or accountId does not have permission to access this resource.
+    ErrorNotFound:
+      description: Not Found
+      value:
+        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#resource-not-found
+        title: Resource Not Found
+        status: 404
+        detail: Resource not found.
   schemas:
-    Dictionary:
-      type: object
-      description: A dictionary is composed of a locale field and a translations array. It represents a collection of translations for dimensions and measures in the locale.
-      required:
-      - locale
-      - description
-      - measures
-      properties:
-        locale:
-          type: string
-          description: Language and region that the dictionary pertains to.
-          example: en-US
-        description:
-          type: string
-          minLength: 1
-          maxLength: 256
-          description: A short description of the dictionary
-          example: Avaya Experience Platform™ metrics
-        measures:
-          type: array
-          minItems: 1
-          description: An array containing all the translations for the dictionary.
-          items:
-            $ref: '#/components/schemas/Translation'
     Translation:
       type: object
       description: The Translation for dimensions and measures from english to a specific locale. The translation is composed of a measure and its corresponding measureProducer translated from english to another language.
@@ -217,73 +232,31 @@ components:
           - field: accountId
             message: must match "^[a-zA-Z]{6}$"
             code: 20006
-  examples:
-    ErrorForbidden:
-      description: Forbidden
-      value:
-        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#forbidden
-        title: Forbidden
-        status: 403
-        detail: According to the access control policy the current user and/or accountId does not have permission to access this resource.
-    ErrorNotFound:
-      description: Not Found
-      value:
-        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#resource-not-found
-        title: Resource Not Found
-        status: 404
-        detail: Resource not found.
-    ErrorUnauthorized:
-      description: Unauthorized
-      value:
-        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#unauthorized
-        title: Unauthorized
-        status: 401
-        detail: This operation requires authentication. See https://developers.avayacloud.com/onecloud-ccaas/docs/how-to-authenticate-with-ccaas-apis
-    ErrorConstraintViolation:
-      description: Constraint Violation
-      value:
-        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#constraint-violation
-        title: Constraint Violation
-        status: 400
-        detail: A problem that indicates a syntactically correct, yet semantically illegal request. The Server can not process this request until the client resolves the semantic errors described in the violations section.
-        violations:
-        - field: accountId
-          message: must not be null
-    ErrorInternalServerError:
-      description: Server Error
-      value:
-        type: https://developers.avayacloud.com/onecloud-ccaas/docs/error-handling#server-error
-        title: Server Error
-        status: 500
-        detail: An internal server error was encountered.
+    Dictionary:
+      type: object
+      description: A dictionary is composed of a locale field and a translations array. It represents a collection of translations for dimensions and measures in the locale.
+      required:
+      - locale
+      - description
+      - measures
+      properties:
+        locale:
+          type: string
+          description: Language and region that the dictionary pertains to.
+          example: en-US
+        description:
+          type: string
+          minLength: 1
+          maxLength: 256
+          description: A short description of the dictionary
+          example: Avaya Experience Platform™ metrics
+        measures:
+          type: array
+          minItems: 1
+          description: An array containing all the translations for the dictionary.
+          items:
+            $ref: '#/components/schemas/Translation'
   responses:
-    NotFound:
-      description: Not Found
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorNotFound'
-    Unauthorized:
-      description: Unauthorized
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorUnauthorized'
-    BadRequest:
-      description: BadRequest
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-          examples:
-            default:
-              $ref: '#/components/examples/ErrorConstraintViolation'
     InternalServer:
       description: Internal Server Error
       content:
@@ -293,6 +266,15 @@ components:
           examples:
             default:
               $ref: '#/components/examples/ErrorInternalServerError'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorUnauthorized'
     Forbidden:
       description: Forbidden
       content:
@@ -302,6 +284,24 @@ components:
           examples:
             default:
               $ref: '#/components/examples/ErrorForbidden'
+    NotFound:
+      description: Not Found
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorNotFound'
+    BadRequest:
+      description: BadRequest
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorConstraintViolation'
   parameters:
     locale:
       in: path
