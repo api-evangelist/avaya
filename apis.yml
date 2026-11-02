@@ -77,8 +77,11 @@ accessModel:
   public: false
   label: Unknown
   confidence: low
-  source: []
-  generated: '2026-07-22'
+  source:
+  - authentication
+  - rate-limits
+  - security
+  generated: '2026-11-02'
   method: derived
 maintainers:
 - FN: Kin Lane
